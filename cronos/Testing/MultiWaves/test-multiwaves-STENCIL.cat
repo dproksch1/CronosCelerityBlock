@@ -1,0 +1,63 @@
+------------------- Timing ---------------
+cfl_threshold = 0.4
+cfl_min       = 0.2
+runtime     = 14400
+t_end       = <T_END>
+dt          = 0.0002
+dt_bin      = 10.
+num_bin     = 10000
+dt_float    = <DT_FL>
+num_float   = 20000
+dt_ascii    = 40.
+num_ascii   = 10
+dt_info     = 40.
+num_info    = 10
+dt_mov   = 10.
+dt_debug = 0 1
+------------------- Spatial resolution ---
+Nx = 400 
+Ny = 1
+Nz = 1
+xb = 0.
+xe = <X_END>
+yb = 0.
+ye = 1.
+zb = 0.
+ze = 1.
+scale_x = pi
+scale_y = 1
+scale_z = 1
+ScaleGrid = 1
+------------------- Problem_Type ----------
+type = 241
+restart = 0
+mag = 1
+Limiter = 2 1->minmod 2 van Leer
+thermal = 1
+debug = 257
+RiemannSolver = hll
+------------------- Forcing & BCs ---------
+bc_x_bot = 0
+bc_x_top = 0
+bc_y_bot = 0
+bc_y_top = 0
+bc_z_bot = 0
+bc_z_top = 0
+------------------- Physics stuff ---------
+Isothermal_Soundspeed = 1.
+Adiabatic_exponent = 1.
+Initial_density = 1.
+Initial_Temp = 1
+Plasma_beta = 1
+
+B0mag = 1.
+B1mag = 0.05
+dens0 = 1.0
+------------------- PhysTest --------------
+rhomin = 1.e-6
+pmin = 1.e-6
+Tmin = 1.
+TempKeep = 0
+vmax = 300.
+rand = 0
+WriteGrid

@@ -1,0 +1,34 @@
+#------- gcc-switches: -----------------
+#X_OFLAGS       = -O3 -fno-exceptions -mfpmath=sse -msse3 -ffast-math -funroll-loops -fomit-frame-pointer -fexpensive-optimizations -march=corei7-avx -std=c++11
+X_OFLAGS       = -O3 -mtune=native -std=c++11
+#X_OFLAGS       = -g -std=c++11
+#------- gcc-Valgrind-switches: -----------------
+# X_OFLAGS       = -O0 -g
+#------- old gcc-switches: -----------------
+# X_OFLAGS	= -O3 -Wno-deprecated -ffast-math -funroll-loops -fomit-frame-pointer -fexpensive-optimizations
+#------- switches for valgrind -----------------------
+# X_OFLAGS       = -O0 -g
+#------- hdf5 switches -- old version: -----------------
+# X_HDF5_LIBS     = -lz -Wl,-Bstatic -lhdf5_cpp -lz -lhdf5_hl -lhdf5 -Wl,-Bdynamic
+#-------general hdf5 switches: -----------------
+#X_HDF5_LIBS     = -lhdf5_cpp -lhdf5 -lz -lm
+X_HDF5_LIBS     = -lhdf5 -lm -lgsl -lgslcblas
+X_HDF_LIBS	= -lmfhdf -ldf -lz -ljpeg
+X_COMPLEX_LIB   =
+X_FFLAGS	= -a
+X_F77_LIB	=  /usr/lib/libf2c.a
+X_THREADS	= -lpthread
+X_SYS		= 
+
+X_CLEAN		= rm -rf ../*~ ../*% *.o *.a core ../core
+
+INSTALL		= install
+
+CXX             = g++ -DOMPI_SKIP_MPICXX
+# -L /usr/lib/openmpi/lib/
+MPICXX          = mpiCC
+CC		= gcc
+FC		= fort77
+
+LIBNUMREC	= -lnumrec_mt -lF77
+

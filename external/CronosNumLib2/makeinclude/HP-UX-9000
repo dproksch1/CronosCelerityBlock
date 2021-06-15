@@ -1,0 +1,18 @@
+X_OFLAGS	= +O2 
+X_HDF_LIBS	= -lmfhdf -ldf -lz -ljpeg -lnsl
+X_COMPLEX_LIB   =
+X_FFLAGS	= +ppu +O4 +fastallocatable +extend_source
+X_THREADS	= -lpthread -lrt
+X_SYS		= 
+
+X_CLEAN		= rm -rf ../*~ ../*% *.o *.a core ../core
+
+INSTALL		= /usr/local/gnu/bin/install
+
+AR		= /usr/bin/ar
+CXX		= aCC -AA -mt -w +DD64
+CC		= aCC -Ae -mt +DD64
+FC		= f90 +DD64
+
+LIBNUMREC	= -lnumrec_mt -lF77
+

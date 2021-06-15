@@ -1,0 +1,17 @@
+Values with standard parameter file
+
+16  rms deviation: 2.22232e-08-> relative 0.00360391
+32  rms deviation: 5.49467e-09-> relative 0.000893484
+64  rms deviation: 1.36296e-09-> relative 0.000221779
+128 rms deviation: 3.39905e-10-> relative 5.53181e-05
+256 rms deviation: 8.46566e-11-> relative 1.38143e-05
+512 rms deviation: 2.12193e-11-> relative 3.45807e-06
+
+
+Values with Cartesian parameter file
+16     rms deviation: 8.69867e-09-> relative 0.0014519
+32     rms deviation: 2.68904e-09-> relative 0.000443988
+64     rms deviation: 7.5461e-10-> relative 0.000123768
+128    rms deviation: 2.00473e-10-> relative 3.2759e-05
+256    rms deviation: 5.18339e-11-> relative 8.43614e-06
+512    rms deviation: 1.31987e-11-> relative 2.14815e-06

@@ -1,0 +1,71 @@
+------------------- MPI -----------------
+nprocx  = 2 2 4
+nprocy  = 2 2 4 2
+nprocz  = 1 2
+periodx = 1
+periody = 1
+periodz = 1
+reorder = 0
+------------------- Stuff ---------------
+cfl_min = 0.2
+cfl_threshold = 0.4
+N_OMINT = 8
+------------------- Timing ---------------
+runtime     = 1440000
+t_end       = 0.1 0.26 1.
+dt          = 0.000001
+dt_bin      = 3. -> Restart Schritt
+num_bin     = 2000 
+dt_float    = 0.01 0.5 1. -> Daten Ausgabe Schritt
+num_float   = 1000
+dt_ascii    = 100. -> Bildschirmausgabe
+num_ascii   = 100
+dt_info     = 100. -> Datei der Bildschirmausgabe
+num_info    = 3
+dt_mov      = 0.0002  0.5  50.0  Movie output time
+------------------- Spatial resolution ---
+mx = 128 512 256 128 
+my = 128 64 
+mz = 128 100 64 
+xb = -0.5
+xe =  0.5
+yb = -0.5
+ye =  0.5
+zb = -0.5
+ze =  0.5
+ScaleGrid = 0
+------------------- Problem_Type ----------
+type = 84 
+restart = 0
+debug = 1024
+Limiter = 2
+thermal = 1
+EulerType = 0
+RiemannSolver = hll
+------------------- Forcing & BCs ---------
+bc_x_bot = 2
+bc_x_top = 2
+bc_y_bot = 2
+bc_y_top = 2
+bc_z_bot = 2
+bc_z_top = 2
+------------------- Physics stuff ---------
+Isothermal_Soundspeed = 1.
+Adiabatic_exponent = 1.4 1.66666666666666667
+Initial_Density = 1.0
+Initial_density = 1.
+Initial_Temp = 1.e-6 1.
+mag = 0
+
+Injected_Energy = 1.
+------------------- Normalisation ---------
+Norm_NumDens = 10.e6
+Norm_Temp = 10000;
+Plasma_beta  = 1.
+------------------- PhysTest --------------
+rhomin = 1.e-6
+pmin = 1.e-6
+vmax = 3000.
+rand = 0
+EintMin = 1.e-10
+-------------------------------------------

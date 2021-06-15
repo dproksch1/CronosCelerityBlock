@@ -1,0 +1,80 @@
+------------------- MPI -----------------
+nprocx  = 1 2 4
+nprocy  = 1 2 4 2
+nprocz  = 1 2
+periodx = 1
+periody = 1
+periodz = 1
+reorder = 0
+------------------- Timing ---------------
+cfl_threshold = 0.4
+cfl_min       = 0.2
+runtime     = 14400
+t_end       = 0.1 0.1001 0.15
+dt          = 0.0002
+dt_bin      = 10.
+num_bin     = 10000
+dt_float    = 0.01 
+num_float   = 20000
+dt_ascii    = 40.
+num_ascii   = 10
+dt_info     = 40.
+num_info    = 10
+dt_mov   = 10. 100.0 Movie output time
+dt_debug = 0 1
+------------------- Spatial resolution ---
+mx = 800 
+my = 1
+mz = 1
+xb = 0.
+xe = 1.
+yb = 0.
+ye = 1.
+zb = 0.
+ze = 1.
+ScaleGrid = 0
+------------------- Problem_Type ----------
+type = 92 
+restart = 0
+mag = 1
+Limiter = 2 1->minmod 2 van Leer
+thermal = 1
+debug = 257
+RiemannSolver = hlld
+------------------- Forcing & BCs ---------
+bc_x_bot = 3
+bc_x_top = 3
+bc_y_bot = 2
+bc_y_top = 2
+bc_z_bot = 2
+bc_z_top = 2
+------------------- Physics stuff ---------
+Isothermal_Soundspeed = 1.
+Adiabatic_exponent = 2. 1.66666667
+Initial_density = 1.
+Initial_Temp = 1
+Plasma_beta = 1
+------------------- Briu Wu states --------
+shockdir = 1
+rho0L = 1.
+v0xL  = 0.
+v0yL  = 0.
+v0zL  = 0.
+B0Lpar  = 0.75
+B0Lperp = 1.
+PL0   = 1.
+rho0R = 0.125
+v0xR  = 0.
+v0yR  = 0.
+v0zR  = 0.
+B0Rpar  = 0.75
+B0Rperp = -1.
+PR0   = 0.1
+------------------- PhysTest --------------
+rhomin = 1.e-6
+pmin = 1.e-6
+Tmin = 1.
+TempKeep = 0
+vmax = 300.
+rand = 0
+

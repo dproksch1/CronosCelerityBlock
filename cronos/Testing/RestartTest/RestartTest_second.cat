@@ -1,0 +1,71 @@
+# ================== ATTENTION ==================
+#  Do not use this file for other purposes!
+# ===============================================
+
+------------------- MPI -----------------
+nprocx       = 2 4 16
+nprocy       = 2 4 1
+nprocz       = 1 2 1
+periodx = 1
+periody = 1
+periodz = 1
+reorder = 0
+------------------- Timing ---------------
+cfl_threshold = 1
+cfl_min       = 1
+runtime     = 144000
+t_end       = 2
+dt          = 1.
+num_bin     = 1
+num_float   = 1
+num_ascii   = 10
+num_info    = 10
+dt_bin      = 10.
+dt_float    = 100
+dt_ascii    = 40.
+dt_info     = 40.
+dt_mov   = 1.e-2 10.
+dt_debug = 0 1
+use_carbuncleFlag
+alpha_carbuncle = 0.1
+write_carbuncleFlag
+------------------- Spatial resolution ---
+Nx = 8
+Ny = 8
+Nz = 8
+xb = 0. 
+xe = 1. 
+yb = 0.
+ye = 1. 
+zb = 0
+ze = 1
+ScaleGrid = 0
+_Include_CoordinateAxis
+------------------- Problem_Type ----------
+type = 0
+restart = 1
+restart_step = 1
+mag = 1
+Limiter = 1 1->minmod 2 van Leer
+Theta = 1
+thermal = 1
+debug = 257
+RiemannSolver = hll
+------------------- BCs -------------------
+Include_CoordinateAxis
+bc_x_bot = 0
+bc_x_top = 0
+bc_y_bot = 0
+bc_y_top = 0
+bc_z_bot = 2
+bc_z_top = 2
+------------------- Physics stuff ---------
+Isothermal_Soundspeed = 1.
+Adiabatic_exponent = 1.6666667 1.4
+Plasma_beta = 1.
+------------------- PhysTest --------------
+Initial_density = 1
+rhomin = 1.e-6
+pmin = 1.e-6
+vmax = 300.
+Velocity = 0.0

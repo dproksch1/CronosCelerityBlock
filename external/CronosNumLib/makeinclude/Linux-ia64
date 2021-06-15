@@ -1,0 +1,25 @@
+#X_OFLAGS        = -O3 -DMIPSEL -D_REENTRANT 
+X_OFLAGS        = -O3 -std=c++11
+#X_HDF_LIBS	= -lmfhdf -ldf -lz -ljpeg
+X_HDF_LIBS	= -lmfhdf -ldf -lz -ljpeg
+X_HDF5_LIBS     = -lhdf5_cpp -lhdf5 -lz -lm
+X_COMPLEX_LIB   =
+X_FFLAGS	= -auto -WB 
+X_F77_LIB	= 
+X_THREADS	= -lpthread
+X_SYS		= 
+
+X_CLEAN		= rm -rf ../*~ ../*% *.o *.a core ../core
+
+INSTALL		= install
+
+#CXX		= ecc
+CXX		= g++
+MPICXX		= /usr/bin/mpiCC.mpich
+#MPICXX		= /usr/lib/mpich/bin/mpiCC
+#MPICXX		= /opt/lam-7.0/bin/mpiCC
+CC		= ecc
+FC		= efc 
+
+LIBNUMREC	= -lnumrec_mt
+

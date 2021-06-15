@@ -1,0 +1,21 @@
+X_OFLAGS	= -O3 -fno-exceptions
+#X_OFLAGS	= -O3 -fschedule-insns -fno-rtti-information -fno-exceptions
+#X_OFLAGS	= -O9 -ccarg -ffast-math -ccarg -O5 -m686
+X_HDF_LIBS	= -lmfhdf -ldf -lz -ljpeg -lrpc
+X_COMPLEX_LIB   =
+X_FFLAGS	= -a
+X_F77_LIB	=  /usr/lib/libf2c.a
+X_THREADS	= -lpthread
+X_SYS		= 
+
+X_CLEAN		= rm -rf ../*~ ../*% *.o *.a core ../core
+
+INSTALL		= install
+
+CXX		= c++
+MPICXX          = /usr/lib/mpich/bin/mpiCC
+CC		= cc
+FC		= fort77
+
+LIBNUMREC	= -lnumrec_mt -lF77
+

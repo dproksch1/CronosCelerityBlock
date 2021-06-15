@@ -1,0 +1,2058 @@
+The MPI test test_mpi for C in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_efa30/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_efa30.dir/build.make CMakeFiles/cmTC_efa30.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_efa30.dir/test_mpi.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_efa30.dir/test_mpi.c.o   -c /usr/share/cmake/Modules/FindMPI/test_mpi.c
+/usr/share/cmake/Modules/FindMPI/test_mpi.c:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_efa30.dir/build.make:86: CMakeFiles/cmTC_efa30.dir/test_mpi.c.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_efa30/fast] Error 2
+
+
+
+The MPI test test_mpi for CXX in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_86a42/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_86a42.dir/build.make CMakeFiles/cmTC_86a42.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_86a42.dir/test_mpi.cpp.o
+/usr/bin/c++    -std=gnu++17 -o CMakeFiles/cmTC_86a42.dir/test_mpi.cpp.o -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_86a42.dir/build.make:86: CMakeFiles/cmTC_86a42.dir/test_mpi.cpp.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_86a42/fast] Error 2
+
+
+
+The MPI test test_mpi for C in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_507fe/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_507fe.dir/build.make CMakeFiles/cmTC_507fe.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_507fe.dir/test_mpi.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_507fe.dir/test_mpi.c.o   -c /usr/share/cmake/Modules/FindMPI/test_mpi.c
+/usr/share/cmake/Modules/FindMPI/test_mpi.c:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_507fe.dir/build.make:86: CMakeFiles/cmTC_507fe.dir/test_mpi.c.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_507fe/fast] Error 2
+
+
+
+The MPI test test_mpi for CXX in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_2a61e/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_2a61e.dir/build.make CMakeFiles/cmTC_2a61e.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_2a61e.dir/test_mpi.cpp.o
+/usr/bin/c++    -std=gnu++17 -o CMakeFiles/cmTC_2a61e.dir/test_mpi.cpp.o -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_2a61e.dir/build.make:86: CMakeFiles/cmTC_2a61e.dir/test_mpi.cpp.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_2a61e/fast] Error 2
+
+
+
+The MPI test test_mpi for C in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_a30d8/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_a30d8.dir/build.make CMakeFiles/cmTC_a30d8.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_a30d8.dir/test_mpi.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_a30d8.dir/test_mpi.c.o   -c /usr/share/cmake/Modules/FindMPI/test_mpi.c
+/usr/share/cmake/Modules/FindMPI/test_mpi.c:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_a30d8.dir/build.make:86: CMakeFiles/cmTC_a30d8.dir/test_mpi.c.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_a30d8/fast] Error 2
+
+
+
+The MPI test test_mpi for CXX in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_814c8/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_814c8.dir/build.make CMakeFiles/cmTC_814c8.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_814c8.dir/test_mpi.cpp.o
+/usr/bin/c++    -std=gnu++17 -o CMakeFiles/cmTC_814c8.dir/test_mpi.cpp.o -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_814c8.dir/build.make:86: CMakeFiles/cmTC_814c8.dir/test_mpi.cpp.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_814c8/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_731c5/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_731c5.dir/build.make CMakeFiles/cmTC_731c5.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_731c5.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_731c5.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:3: Error: Can't open included file 'mpif.h'
+gmake[1]: *** [CMakeFiles/cmTC_731c5.dir/build.make:86: CMakeFiles/cmTC_731c5.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_731c5/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F90_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_8b9dd/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_8b9dd.dir/build.make CMakeFiles/cmTC_8b9dd.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_8b9dd.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_8b9dd.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:2:10:
+
+    2 |       use mpi
+      |          1
+Fatal Error: Cannot open module file ‘mpi.mod’ for reading at (1): No such file or directory
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_8b9dd.dir/build.make:86: CMakeFiles/cmTC_8b9dd.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_8b9dd/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_70563/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_70563.dir/build.make CMakeFiles/cmTC_70563.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_70563.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_70563.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:2:10:
+
+    2 |       use mpi_f08
+      |          1
+Fatal Error: Cannot open module file ‘mpi_f08.mod’ for reading at (1): No such file or directory
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_70563.dir/build.make:86: CMakeFiles/cmTC_70563.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_70563/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER_NOKIND failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_fca6f/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_fca6f.dir/build.make CMakeFiles/cmTC_fca6f.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_fca6f.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_fca6f.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:3: Error: Can't open included file 'mpif.h'
+gmake[1]: *** [CMakeFiles/cmTC_fca6f.dir/build.make:86: CMakeFiles/cmTC_fca6f.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_fca6f/fast] Error 2
+
+
+
+The MPI test test_mpi for C in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_c812e/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_c812e.dir/build.make CMakeFiles/cmTC_c812e.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_c812e.dir/test_mpi.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_c812e.dir/test_mpi.c.o   -c /usr/share/cmake/Modules/FindMPI/test_mpi.c
+/usr/share/cmake/Modules/FindMPI/test_mpi.c:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_c812e.dir/build.make:86: CMakeFiles/cmTC_c812e.dir/test_mpi.c.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_c812e/fast] Error 2
+
+
+
+The MPI test test_mpi for CXX in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_c4a88/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_c4a88.dir/build.make CMakeFiles/cmTC_c4a88.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_c4a88.dir/test_mpi.cpp.o
+/usr/bin/c++    -std=gnu++17 -o CMakeFiles/cmTC_c4a88.dir/test_mpi.cpp.o -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_c4a88.dir/build.make:86: CMakeFiles/cmTC_c4a88.dir/test_mpi.cpp.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_c4a88/fast] Error 2
+
+
+
+The MPI test test_mpi for C in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_bdd78/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_bdd78.dir/build.make CMakeFiles/cmTC_bdd78.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_bdd78.dir/test_mpi.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_bdd78.dir/test_mpi.c.o   -c /usr/share/cmake/Modules/FindMPI/test_mpi.c
+/usr/share/cmake/Modules/FindMPI/test_mpi.c:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_bdd78.dir/build.make:86: CMakeFiles/cmTC_bdd78.dir/test_mpi.c.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_bdd78/fast] Error 2
+
+
+
+The MPI test test_mpi for CXX in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_e0bbe/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_e0bbe.dir/build.make CMakeFiles/cmTC_e0bbe.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_e0bbe.dir/test_mpi.cpp.o
+/usr/bin/c++    -std=gnu++17 -o CMakeFiles/cmTC_e0bbe.dir/test_mpi.cpp.o -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_e0bbe.dir/build.make:86: CMakeFiles/cmTC_e0bbe.dir/test_mpi.cpp.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_e0bbe/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_b7af4/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_b7af4.dir/build.make CMakeFiles/cmTC_b7af4.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_b7af4.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_b7af4.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:3: Error: Can't open included file 'mpif.h'
+gmake[1]: *** [CMakeFiles/cmTC_b7af4.dir/build.make:86: CMakeFiles/cmTC_b7af4.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_b7af4/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F90_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_36e95/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_36e95.dir/build.make CMakeFiles/cmTC_36e95.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_36e95.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_36e95.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:2:10:
+
+    2 |       use mpi
+      |          1
+Fatal Error: Cannot open module file ‘mpi.mod’ for reading at (1): No such file or directory
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_36e95.dir/build.make:86: CMakeFiles/cmTC_36e95.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_36e95/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_5c64d/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_5c64d.dir/build.make CMakeFiles/cmTC_5c64d.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_5c64d.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_5c64d.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:2:10:
+
+    2 |       use mpi_f08
+      |          1
+Fatal Error: Cannot open module file ‘mpi_f08.mod’ for reading at (1): No such file or directory
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_5c64d.dir/build.make:86: CMakeFiles/cmTC_5c64d.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_5c64d/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER_NOKIND failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_37613/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_37613.dir/build.make CMakeFiles/cmTC_37613.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_37613.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_37613.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:3: Error: Can't open included file 'mpif.h'
+gmake[1]: *** [CMakeFiles/cmTC_37613.dir/build.make:86: CMakeFiles/cmTC_37613.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_37613/fast] Error 2
+
+
+
+The MPI test test_mpi for C in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_77b62/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_77b62.dir/build.make CMakeFiles/cmTC_77b62.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_77b62.dir/test_mpi.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_77b62.dir/test_mpi.c.o   -c /usr/share/cmake/Modules/FindMPI/test_mpi.c
+/usr/share/cmake/Modules/FindMPI/test_mpi.c:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_77b62.dir/build.make:86: CMakeFiles/cmTC_77b62.dir/test_mpi.c.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_77b62/fast] Error 2
+
+
+
+The MPI test test_mpi for CXX in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_f0f5e/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_f0f5e.dir/build.make CMakeFiles/cmTC_f0f5e.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_f0f5e.dir/test_mpi.cpp.o
+/usr/bin/c++    -std=gnu++17 -o CMakeFiles/cmTC_f0f5e.dir/test_mpi.cpp.o -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_f0f5e.dir/build.make:86: CMakeFiles/cmTC_f0f5e.dir/test_mpi.cpp.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_f0f5e/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_406a3/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_406a3.dir/build.make CMakeFiles/cmTC_406a3.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_406a3.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_406a3.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:3: Error: Can't open included file 'mpif.h'
+gmake[1]: *** [CMakeFiles/cmTC_406a3.dir/build.make:86: CMakeFiles/cmTC_406a3.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_406a3/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F90_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_edd9b/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_edd9b.dir/build.make CMakeFiles/cmTC_edd9b.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_edd9b.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_edd9b.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:2:10:
+
+    2 |       use mpi
+      |          1
+Fatal Error: Cannot open module file ‘mpi.mod’ for reading at (1): No such file or directory
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_edd9b.dir/build.make:86: CMakeFiles/cmTC_edd9b.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_edd9b/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_58538/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_58538.dir/build.make CMakeFiles/cmTC_58538.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_58538.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_58538.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:2:10:
+
+    2 |       use mpi_f08
+      |          1
+Fatal Error: Cannot open module file ‘mpi_f08.mod’ for reading at (1): No such file or directory
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_58538.dir/build.make:86: CMakeFiles/cmTC_58538.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_58538/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER_NOKIND failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_eb4e2/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_eb4e2.dir/build.make CMakeFiles/cmTC_eb4e2.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_eb4e2.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_eb4e2.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:3: Error: Can't open included file 'mpif.h'
+gmake[1]: *** [CMakeFiles/cmTC_eb4e2.dir/build.make:86: CMakeFiles/cmTC_eb4e2.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_eb4e2/fast] Error 2
+
+
+
+The MPI test test_mpi for C in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_45b09/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_45b09.dir/build.make CMakeFiles/cmTC_45b09.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_45b09.dir/test_mpi.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_45b09.dir/test_mpi.c.o   -c /usr/share/cmake/Modules/FindMPI/test_mpi.c
+/usr/share/cmake/Modules/FindMPI/test_mpi.c:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_45b09.dir/build.make:86: CMakeFiles/cmTC_45b09.dir/test_mpi.c.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_45b09/fast] Error 2
+
+
+
+The MPI test test_mpi for CXX in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_92e0d/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_92e0d.dir/build.make CMakeFiles/cmTC_92e0d.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_92e0d.dir/test_mpi.cpp.o
+/usr/bin/c++    -std=gnu++17 -o CMakeFiles/cmTC_92e0d.dir/test_mpi.cpp.o -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_92e0d.dir/build.make:86: CMakeFiles/cmTC_92e0d.dir/test_mpi.cpp.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_92e0d/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_d3a77/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_d3a77.dir/build.make CMakeFiles/cmTC_d3a77.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_d3a77.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_d3a77.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:3: Error: Can't open included file 'mpif.h'
+gmake[1]: *** [CMakeFiles/cmTC_d3a77.dir/build.make:86: CMakeFiles/cmTC_d3a77.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_d3a77/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F90_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_ca0f6/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_ca0f6.dir/build.make CMakeFiles/cmTC_ca0f6.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_ca0f6.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_ca0f6.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:2:10:
+
+    2 |       use mpi
+      |          1
+Fatal Error: Cannot open module file ‘mpi.mod’ for reading at (1): No such file or directory
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_ca0f6.dir/build.make:86: CMakeFiles/cmTC_ca0f6.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_ca0f6/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_0565b/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_0565b.dir/build.make CMakeFiles/cmTC_0565b.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_0565b.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_0565b.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:2:10:
+
+    2 |       use mpi_f08
+      |          1
+Fatal Error: Cannot open module file ‘mpi_f08.mod’ for reading at (1): No such file or directory
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_0565b.dir/build.make:86: CMakeFiles/cmTC_0565b.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_0565b/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER_NOKIND failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_83cdd/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_83cdd.dir/build.make CMakeFiles/cmTC_83cdd.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_83cdd.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_83cdd.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:3: Error: Can't open included file 'mpif.h'
+gmake[1]: *** [CMakeFiles/cmTC_83cdd.dir/build.make:86: CMakeFiles/cmTC_83cdd.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_83cdd/fast] Error 2
+
+
+
+The MPI test test_mpi for C in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_1c076/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_1c076.dir/build.make CMakeFiles/cmTC_1c076.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_1c076.dir/test_mpi.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_1c076.dir/test_mpi.c.o   -c /usr/share/cmake/Modules/FindMPI/test_mpi.c
+/usr/share/cmake/Modules/FindMPI/test_mpi.c:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_1c076.dir/build.make:86: CMakeFiles/cmTC_1c076.dir/test_mpi.c.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_1c076/fast] Error 2
+
+
+
+The MPI test test_mpi for CXX in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_1303b/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_1303b.dir/build.make CMakeFiles/cmTC_1303b.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_1303b.dir/test_mpi.cpp.o
+/usr/bin/c++    -std=gnu++17 -o CMakeFiles/cmTC_1303b.dir/test_mpi.cpp.o -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_1303b.dir/build.make:86: CMakeFiles/cmTC_1303b.dir/test_mpi.cpp.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_1303b/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_cf4b7/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_cf4b7.dir/build.make CMakeFiles/cmTC_cf4b7.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_cf4b7.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_cf4b7.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:3: Error: Can't open included file 'mpif.h'
+gmake[1]: *** [CMakeFiles/cmTC_cf4b7.dir/build.make:86: CMakeFiles/cmTC_cf4b7.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_cf4b7/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F90_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_b4c18/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_b4c18.dir/build.make CMakeFiles/cmTC_b4c18.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_b4c18.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_b4c18.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:2:10:
+
+    2 |       use mpi
+      |          1
+Fatal Error: Cannot open module file ‘mpi.mod’ for reading at (1): No such file or directory
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_b4c18.dir/build.make:86: CMakeFiles/cmTC_b4c18.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_b4c18/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_a30a4/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_a30a4.dir/build.make CMakeFiles/cmTC_a30a4.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_a30a4.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_a30a4.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:2:10:
+
+    2 |       use mpi_f08
+      |          1
+Fatal Error: Cannot open module file ‘mpi_f08.mod’ for reading at (1): No such file or directory
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_a30a4.dir/build.make:86: CMakeFiles/cmTC_a30a4.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_a30a4/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER_NOKIND failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_2eef0/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_2eef0.dir/build.make CMakeFiles/cmTC_2eef0.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_2eef0.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_2eef0.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:3: Error: Can't open included file 'mpif.h'
+gmake[1]: *** [CMakeFiles/cmTC_2eef0.dir/build.make:86: CMakeFiles/cmTC_2eef0.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_2eef0/fast] Error 2
+
+
+
+The MPI test test_mpi for C in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_77def/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_77def.dir/build.make CMakeFiles/cmTC_77def.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_77def.dir/test_mpi.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_77def.dir/test_mpi.c.o   -c /usr/share/cmake/Modules/FindMPI/test_mpi.c
+/usr/share/cmake/Modules/FindMPI/test_mpi.c:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_77def.dir/build.make:86: CMakeFiles/cmTC_77def.dir/test_mpi.c.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_77def/fast] Error 2
+
+
+
+The MPI test test_mpi for CXX in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_27f0e/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_27f0e.dir/build.make CMakeFiles/cmTC_27f0e.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_27f0e.dir/test_mpi.cpp.o
+/usr/bin/c++    -std=gnu++17 -o CMakeFiles/cmTC_27f0e.dir/test_mpi.cpp.o -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_27f0e.dir/build.make:86: CMakeFiles/cmTC_27f0e.dir/test_mpi.cpp.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_27f0e/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_d1dd6/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_d1dd6.dir/build.make CMakeFiles/cmTC_d1dd6.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_d1dd6.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_d1dd6.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:3: Error: Can't open included file 'mpif.h'
+gmake[1]: *** [CMakeFiles/cmTC_d1dd6.dir/build.make:86: CMakeFiles/cmTC_d1dd6.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_d1dd6/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F90_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_942b2/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_942b2.dir/build.make CMakeFiles/cmTC_942b2.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_942b2.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_942b2.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:2:10:
+
+    2 |       use mpi
+      |          1
+Fatal Error: Cannot open module file ‘mpi.mod’ for reading at (1): No such file or directory
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_942b2.dir/build.make:86: CMakeFiles/cmTC_942b2.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_942b2/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_7bfde/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_7bfde.dir/build.make CMakeFiles/cmTC_7bfde.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_7bfde.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_7bfde.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:2:10:
+
+    2 |       use mpi_f08
+      |          1
+Fatal Error: Cannot open module file ‘mpi_f08.mod’ for reading at (1): No such file or directory
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_7bfde.dir/build.make:86: CMakeFiles/cmTC_7bfde.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_7bfde/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER_NOKIND failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_7b58d/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_7b58d.dir/build.make CMakeFiles/cmTC_7b58d.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_7b58d.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_7b58d.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:3: Error: Can't open included file 'mpif.h'
+gmake[1]: *** [CMakeFiles/cmTC_7b58d.dir/build.make:86: CMakeFiles/cmTC_7b58d.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_7b58d/fast] Error 2
+
+
+
+The MPI test test_mpi for C in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_af987/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_af987.dir/build.make CMakeFiles/cmTC_af987.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_af987.dir/test_mpi.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_af987.dir/test_mpi.c.o   -c /usr/share/cmake/Modules/FindMPI/test_mpi.c
+/usr/share/cmake/Modules/FindMPI/test_mpi.c:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_af987.dir/build.make:86: CMakeFiles/cmTC_af987.dir/test_mpi.c.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_af987/fast] Error 2
+
+
+
+The MPI test test_mpi for CXX in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_d5df4/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_d5df4.dir/build.make CMakeFiles/cmTC_d5df4.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_d5df4.dir/test_mpi.cpp.o
+/usr/bin/c++    -std=gnu++17 -o CMakeFiles/cmTC_d5df4.dir/test_mpi.cpp.o -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_d5df4.dir/build.make:86: CMakeFiles/cmTC_d5df4.dir/test_mpi.cpp.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_d5df4/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_fb1f5/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_fb1f5.dir/build.make CMakeFiles/cmTC_fb1f5.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_fb1f5.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_fb1f5.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:3: Error: Can't open included file 'mpif.h'
+gmake[1]: *** [CMakeFiles/cmTC_fb1f5.dir/build.make:86: CMakeFiles/cmTC_fb1f5.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_fb1f5/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F90_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_95e6a/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_95e6a.dir/build.make CMakeFiles/cmTC_95e6a.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_95e6a.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_95e6a.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:2:10:
+
+    2 |       use mpi
+      |          1
+Fatal Error: Cannot open module file ‘mpi.mod’ for reading at (1): No such file or directory
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_95e6a.dir/build.make:86: CMakeFiles/cmTC_95e6a.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_95e6a/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_b9926/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_b9926.dir/build.make CMakeFiles/cmTC_b9926.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_b9926.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_b9926.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:2:10:
+
+    2 |       use mpi_f08
+      |          1
+Fatal Error: Cannot open module file ‘mpi_f08.mod’ for reading at (1): No such file or directory
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_b9926.dir/build.make:86: CMakeFiles/cmTC_b9926.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_b9926/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER_NOKIND failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_9a8be/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_9a8be.dir/build.make CMakeFiles/cmTC_9a8be.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_9a8be.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_9a8be.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:3: Error: Can't open included file 'mpif.h'
+gmake[1]: *** [CMakeFiles/cmTC_9a8be.dir/build.make:86: CMakeFiles/cmTC_9a8be.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_9a8be/fast] Error 2
+
+
+
+The MPI test test_mpi for C in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_30a6e/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_30a6e.dir/build.make CMakeFiles/cmTC_30a6e.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_30a6e.dir/test_mpi.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_30a6e.dir/test_mpi.c.o   -c /usr/share/cmake/Modules/FindMPI/test_mpi.c
+/usr/share/cmake/Modules/FindMPI/test_mpi.c:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_30a6e.dir/build.make:86: CMakeFiles/cmTC_30a6e.dir/test_mpi.c.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_30a6e/fast] Error 2
+
+
+
+The MPI test test_mpi for CXX in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_fe974/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_fe974.dir/build.make CMakeFiles/cmTC_fe974.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_fe974.dir/test_mpi.cpp.o
+/usr/bin/c++    -std=gnu++17 -o CMakeFiles/cmTC_fe974.dir/test_mpi.cpp.o -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_fe974.dir/build.make:86: CMakeFiles/cmTC_fe974.dir/test_mpi.cpp.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_fe974/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_86089/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_86089.dir/build.make CMakeFiles/cmTC_86089.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_86089.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_86089.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:3: Error: Can't open included file 'mpif.h'
+gmake[1]: *** [CMakeFiles/cmTC_86089.dir/build.make:86: CMakeFiles/cmTC_86089.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_86089/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F90_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_fa089/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_fa089.dir/build.make CMakeFiles/cmTC_fa089.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_fa089.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_fa089.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:2:10:
+
+    2 |       use mpi
+      |          1
+Fatal Error: Cannot open module file ‘mpi.mod’ for reading at (1): No such file or directory
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_fa089.dir/build.make:86: CMakeFiles/cmTC_fa089.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_fa089/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_84fe0/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_84fe0.dir/build.make CMakeFiles/cmTC_84fe0.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_84fe0.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_84fe0.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:2:10:
+
+    2 |       use mpi_f08
+      |          1
+Fatal Error: Cannot open module file ‘mpi_f08.mod’ for reading at (1): No such file or directory
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_84fe0.dir/build.make:86: CMakeFiles/cmTC_84fe0.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_84fe0/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER_NOKIND failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_78802/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_78802.dir/build.make CMakeFiles/cmTC_78802.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_78802.dir/test_mpi.f90.o
+/usr/bin/gfortran    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_78802.dir/test_mpi.f90.o
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90:3: Error: Can't open included file 'mpif.h'
+gmake[1]: *** [CMakeFiles/cmTC_78802.dir/build.make:86: CMakeFiles/cmTC_78802.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_78802/fast] Error 2
+
+
+
+The MPI test test_mpi for C in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_527c0/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_527c0.dir/build.make CMakeFiles/cmTC_527c0.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_527c0.dir/test_mpi.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_527c0.dir/test_mpi.c.o   -c /usr/share/cmake/Modules/FindMPI/test_mpi.c
+/usr/share/cmake/Modules/FindMPI/test_mpi.c:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_527c0.dir/build.make:86: CMakeFiles/cmTC_527c0.dir/test_mpi.c.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_527c0/fast] Error 2
+
+
+
+The MPI test test_mpi for CXX in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_9094e/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_9094e.dir/build.make CMakeFiles/cmTC_9094e.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_9094e.dir/test_mpi.cpp.o
+/usr/bin/c++    -std=gnu++17 -o CMakeFiles/cmTC_9094e.dir/test_mpi.cpp.o -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_9094e.dir/build.make:86: CMakeFiles/cmTC_9094e.dir/test_mpi.cpp.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_9094e/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_d3381/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_d3381.dir/build.make CMakeFiles/cmTC_d3381.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_d3381.dir/test_mpi.f90.o
+/usr/bin/gfortran   -heap-arrays 0    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_d3381.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_d3381.dir/build.make:86: CMakeFiles/cmTC_d3381.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_d3381/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F90_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_427e6/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_427e6.dir/build.make CMakeFiles/cmTC_427e6.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_427e6.dir/test_mpi.f90.o
+/usr/bin/gfortran   -heap-arrays 0    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_427e6.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_427e6.dir/build.make:86: CMakeFiles/cmTC_427e6.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_427e6/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_e3aba/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_e3aba.dir/build.make CMakeFiles/cmTC_e3aba.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_e3aba.dir/test_mpi.f90.o
+/usr/bin/gfortran   -heap-arrays 0    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_e3aba.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_e3aba.dir/build.make:86: CMakeFiles/cmTC_e3aba.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_e3aba/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER_NOKIND failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_2f081/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_2f081.dir/build.make CMakeFiles/cmTC_2f081.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_2f081.dir/test_mpi.f90.o
+/usr/bin/gfortran   -heap-arrays 0    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_2f081.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_2f081.dir/build.make:86: CMakeFiles/cmTC_2f081.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_2f081/fast] Error 2
+
+
+
+The MPI test test_mpi for C in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_128c0/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_128c0.dir/build.make CMakeFiles/cmTC_128c0.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_128c0.dir/test_mpi.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_128c0.dir/test_mpi.c.o   -c /usr/share/cmake/Modules/FindMPI/test_mpi.c
+/usr/share/cmake/Modules/FindMPI/test_mpi.c:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_128c0.dir/build.make:86: CMakeFiles/cmTC_128c0.dir/test_mpi.c.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_128c0/fast] Error 2
+
+
+
+The MPI test test_mpi for CXX in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_18637/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_18637.dir/build.make CMakeFiles/cmTC_18637.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_18637.dir/test_mpi.cpp.o
+/usr/bin/c++    -std=gnu++17 -o CMakeFiles/cmTC_18637.dir/test_mpi.cpp.o -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_18637.dir/build.make:86: CMakeFiles/cmTC_18637.dir/test_mpi.cpp.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_18637/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_8a271/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_8a271.dir/build.make CMakeFiles/cmTC_8a271.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_8a271.dir/test_mpi.f90.o
+/usr/bin/gfortran   -heap-arrays 0    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_8a271.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_8a271.dir/build.make:86: CMakeFiles/cmTC_8a271.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_8a271/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F90_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_0eeb5/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_0eeb5.dir/build.make CMakeFiles/cmTC_0eeb5.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_0eeb5.dir/test_mpi.f90.o
+/usr/bin/gfortran   -heap-arrays 0    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_0eeb5.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_0eeb5.dir/build.make:86: CMakeFiles/cmTC_0eeb5.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_0eeb5/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_30cec/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_30cec.dir/build.make CMakeFiles/cmTC_30cec.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_30cec.dir/test_mpi.f90.o
+/usr/bin/gfortran   -heap-arrays 0    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_30cec.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_30cec.dir/build.make:86: CMakeFiles/cmTC_30cec.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_30cec/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER_NOKIND failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_5dd9a/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_5dd9a.dir/build.make CMakeFiles/cmTC_5dd9a.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_5dd9a.dir/test_mpi.f90.o
+/usr/bin/gfortran   -heap-arrays 0    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_5dd9a.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_5dd9a.dir/build.make:86: CMakeFiles/cmTC_5dd9a.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_5dd9a/fast] Error 2
+
+
+
+The MPI test test_mpi for C in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_6d7fd/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_6d7fd.dir/build.make CMakeFiles/cmTC_6d7fd.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_6d7fd.dir/test_mpi.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_6d7fd.dir/test_mpi.c.o   -c /usr/share/cmake/Modules/FindMPI/test_mpi.c
+/usr/share/cmake/Modules/FindMPI/test_mpi.c:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_6d7fd.dir/build.make:86: CMakeFiles/cmTC_6d7fd.dir/test_mpi.c.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_6d7fd/fast] Error 2
+
+
+
+The MPI test test_mpi for CXX in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_c5368/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_c5368.dir/build.make CMakeFiles/cmTC_c5368.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_c5368.dir/test_mpi.cpp.o
+/usr/bin/c++    -std=gnu++17 -o CMakeFiles/cmTC_c5368.dir/test_mpi.cpp.o -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_c5368.dir/build.make:86: CMakeFiles/cmTC_c5368.dir/test_mpi.cpp.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_c5368/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_294fc/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_294fc.dir/build.make CMakeFiles/cmTC_294fc.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_294fc.dir/test_mpi.f90.o
+/usr/bin/gfortran   -heap-arrays 0    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_294fc.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_294fc.dir/build.make:86: CMakeFiles/cmTC_294fc.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_294fc/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F90_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_6691a/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_6691a.dir/build.make CMakeFiles/cmTC_6691a.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_6691a.dir/test_mpi.f90.o
+/usr/bin/gfortran   -heap-arrays 0    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_6691a.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_6691a.dir/build.make:86: CMakeFiles/cmTC_6691a.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_6691a/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_55fd2/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_55fd2.dir/build.make CMakeFiles/cmTC_55fd2.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_55fd2.dir/test_mpi.f90.o
+/usr/bin/gfortran   -heap-arrays 0    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_55fd2.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_55fd2.dir/build.make:86: CMakeFiles/cmTC_55fd2.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_55fd2/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER_NOKIND failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_b1020/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_b1020.dir/build.make CMakeFiles/cmTC_b1020.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_b1020.dir/test_mpi.f90.o
+/usr/bin/gfortran   -heap-arrays 0    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_b1020.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_b1020.dir/build.make:86: CMakeFiles/cmTC_b1020.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_b1020/fast] Error 2
+
+
+
+The MPI test test_mpi for C in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_378da/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_378da.dir/build.make CMakeFiles/cmTC_378da.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_378da.dir/test_mpi.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_378da.dir/test_mpi.c.o   -c /usr/share/cmake/Modules/FindMPI/test_mpi.c
+/usr/share/cmake/Modules/FindMPI/test_mpi.c:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_378da.dir/build.make:86: CMakeFiles/cmTC_378da.dir/test_mpi.c.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_378da/fast] Error 2
+
+
+
+The MPI test test_mpi for CXX in mode normal failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_26623/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_26623.dir/build.make CMakeFiles/cmTC_26623.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_26623.dir/test_mpi.cpp.o
+/usr/bin/c++    -std=gnu++17 -o CMakeFiles/cmTC_26623.dir/test_mpi.cpp.o -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp
+/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.cpp:1:10: fatal error: mpi.h: No such file or directory
+    1 | #include <mpi.h>
+      |          ^~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_26623.dir/build.make:86: CMakeFiles/cmTC_26623.dir/test_mpi.cpp.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_26623/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_d5e27/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_d5e27.dir/build.make CMakeFiles/cmTC_d5e27.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_d5e27.dir/test_mpi.f90.o
+/usr/bin/gfortran   -heap-arrays 0    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_d5e27.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_d5e27.dir/build.make:86: CMakeFiles/cmTC_d5e27.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_d5e27/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F90_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_a02cd/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_a02cd.dir/build.make CMakeFiles/cmTC_a02cd.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_a02cd.dir/test_mpi.f90.o
+/usr/bin/gfortran   -heap-arrays 0    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_a02cd.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_a02cd.dir/build.make:86: CMakeFiles/cmTC_a02cd.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_a02cd/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_e578e/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_e578e.dir/build.make CMakeFiles/cmTC_e578e.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_e578e.dir/test_mpi.f90.o
+/usr/bin/gfortran   -heap-arrays 0    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_e578e.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_e578e.dir/build.make:86: CMakeFiles/cmTC_e578e.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_e578e/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER_NOKIND failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_61563/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_61563.dir/build.make CMakeFiles/cmTC_61563.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_61563.dir/test_mpi.f90.o
+/usr/bin/gfortran   -heap-arrays 0    -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_61563.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_61563.dir/build.make:86: CMakeFiles/cmTC_61563.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_61563/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_2ea49/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_2ea49.dir/build.make CMakeFiles/cmTC_2ea49.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_2ea49.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_2ea49.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_2ea49.dir/build.make:86: CMakeFiles/cmTC_2ea49.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_2ea49/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F90_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_1b82a/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_1b82a.dir/build.make CMakeFiles/cmTC_1b82a.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_1b82a.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_1b82a.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_1b82a.dir/build.make:86: CMakeFiles/cmTC_1b82a.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_1b82a/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_c2e9d/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_c2e9d.dir/build.make CMakeFiles/cmTC_c2e9d.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_c2e9d.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_c2e9d.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_c2e9d.dir/build.make:86: CMakeFiles/cmTC_c2e9d.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_c2e9d/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER_NOKIND failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_5a14d/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_5a14d.dir/build.make CMakeFiles/cmTC_5a14d.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_5a14d.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_5a14d.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_5a14d.dir/build.make:86: CMakeFiles/cmTC_5a14d.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_5a14d/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_3567d/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_3567d.dir/build.make CMakeFiles/cmTC_3567d.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_3567d.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_3567d.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_3567d.dir/build.make:86: CMakeFiles/cmTC_3567d.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_3567d/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F90_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_c671b/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_c671b.dir/build.make CMakeFiles/cmTC_c671b.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_c671b.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_c671b.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_c671b.dir/build.make:86: CMakeFiles/cmTC_c671b.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_c671b/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_5323b/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_5323b.dir/build.make CMakeFiles/cmTC_5323b.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_5323b.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_5323b.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_5323b.dir/build.make:86: CMakeFiles/cmTC_5323b.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_5323b/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER_NOKIND failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_08540/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_08540.dir/build.make CMakeFiles/cmTC_08540.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_08540.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_08540.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_08540.dir/build.make:86: CMakeFiles/cmTC_08540.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_08540/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_5b5b3/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_5b5b3.dir/build.make CMakeFiles/cmTC_5b5b3.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_5b5b3.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_5b5b3.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_5b5b3.dir/build.make:86: CMakeFiles/cmTC_5b5b3.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_5b5b3/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F90_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_6331a/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_6331a.dir/build.make CMakeFiles/cmTC_6331a.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_6331a.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_6331a.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_6331a.dir/build.make:86: CMakeFiles/cmTC_6331a.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_6331a/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_9a5b2/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_9a5b2.dir/build.make CMakeFiles/cmTC_9a5b2.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_9a5b2.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_9a5b2.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_9a5b2.dir/build.make:86: CMakeFiles/cmTC_9a5b2.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_9a5b2/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER_NOKIND failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_8f7e4/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_8f7e4.dir/build.make CMakeFiles/cmTC_8f7e4.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_8f7e4.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_8f7e4.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_8f7e4.dir/build.make:86: CMakeFiles/cmTC_8f7e4.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_8f7e4/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_ded75/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_ded75.dir/build.make CMakeFiles/cmTC_ded75.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_ded75.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_ded75.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_ded75.dir/build.make:86: CMakeFiles/cmTC_ded75.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_ded75/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F90_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_4997d/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_4997d.dir/build.make CMakeFiles/cmTC_4997d.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_4997d.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_4997d.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_4997d.dir/build.make:86: CMakeFiles/cmTC_4997d.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_4997d/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_f5ad5/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_f5ad5.dir/build.make CMakeFiles/cmTC_f5ad5.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_f5ad5.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_f5ad5.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_f5ad5.dir/build.make:86: CMakeFiles/cmTC_f5ad5.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_f5ad5/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER_NOKIND failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_0dd05/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_0dd05.dir/build.make CMakeFiles/cmTC_0dd05.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_0dd05.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_0dd05.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_0dd05.dir/build.make:86: CMakeFiles/cmTC_0dd05.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_0dd05/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_e71d0/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_e71d0.dir/build.make CMakeFiles/cmTC_e71d0.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_e71d0.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_e71d0.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_e71d0.dir/build.make:86: CMakeFiles/cmTC_e71d0.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_e71d0/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F90_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_6ff0e/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_6ff0e.dir/build.make CMakeFiles/cmTC_6ff0e.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_6ff0e.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_6ff0e.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_6ff0e.dir/build.make:86: CMakeFiles/cmTC_6ff0e.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_6ff0e/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_2978d/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_2978d.dir/build.make CMakeFiles/cmTC_2978d.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_2978d.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_2978d.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_2978d.dir/build.make:86: CMakeFiles/cmTC_2978d.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_2978d/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER_NOKIND failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_f7e7d/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_f7e7d.dir/build.make CMakeFiles/cmTC_f7e7d.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_f7e7d.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_f7e7d.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_f7e7d.dir/build.make:86: CMakeFiles/cmTC_f7e7d.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_f7e7d/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_ad804/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_ad804.dir/build.make CMakeFiles/cmTC_ad804.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_ad804.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_ad804.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_ad804.dir/build.make:86: CMakeFiles/cmTC_ad804.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_ad804/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F90_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_89d9d/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_89d9d.dir/build.make CMakeFiles/cmTC_89d9d.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_89d9d.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_89d9d.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_89d9d.dir/build.make:86: CMakeFiles/cmTC_89d9d.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_89d9d/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_103d6/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_103d6.dir/build.make CMakeFiles/cmTC_103d6.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_103d6.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_103d6.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_103d6.dir/build.make:86: CMakeFiles/cmTC_103d6.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_103d6/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER_NOKIND failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_1f698/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_1f698.dir/build.make CMakeFiles/cmTC_1f698.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_1f698.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_1f698.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_1f698.dir/build.make:86: CMakeFiles/cmTC_1f698.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_1f698/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_7478b/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_7478b.dir/build.make CMakeFiles/cmTC_7478b.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_7478b.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_7478b.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_7478b.dir/build.make:86: CMakeFiles/cmTC_7478b.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_7478b/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F90_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_745bc/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_745bc.dir/build.make CMakeFiles/cmTC_745bc.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_745bc.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_745bc.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_745bc.dir/build.make:86: CMakeFiles/cmTC_745bc.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_745bc/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_b0b66/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_b0b66.dir/build.make CMakeFiles/cmTC_b0b66.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_b0b66.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_b0b66.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_b0b66.dir/build.make:86: CMakeFiles/cmTC_b0b66.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_b0b66/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER_NOKIND failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_f7976/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_f7976.dir/build.make CMakeFiles/cmTC_f7976.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_f7976.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_f7976.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_f7976.dir/build.make:86: CMakeFiles/cmTC_f7976.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_f7976/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_25927/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_25927.dir/build.make CMakeFiles/cmTC_25927.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_25927.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_25927.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_25927.dir/build.make:86: CMakeFiles/cmTC_25927.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_25927/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F90_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_8552c/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_8552c.dir/build.make CMakeFiles/cmTC_8552c.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_8552c.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_8552c.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_8552c.dir/build.make:86: CMakeFiles/cmTC_8552c.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_8552c/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_eb37f/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_eb37f.dir/build.make CMakeFiles/cmTC_eb37f.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_eb37f.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_eb37f.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_eb37f.dir/build.make:86: CMakeFiles/cmTC_eb37f.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_eb37f/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER_NOKIND failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_a8c2c/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_a8c2c.dir/build.make CMakeFiles/cmTC_a8c2c.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_a8c2c.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_a8c2c.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_a8c2c.dir/build.make:86: CMakeFiles/cmTC_a8c2c.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_a8c2c/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_bcecc/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_bcecc.dir/build.make CMakeFiles/cmTC_bcecc.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_bcecc.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_bcecc.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_bcecc.dir/build.make:86: CMakeFiles/cmTC_bcecc.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_bcecc/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F90_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_24506/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_24506.dir/build.make CMakeFiles/cmTC_24506.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_24506.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_24506.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_24506.dir/build.make:86: CMakeFiles/cmTC_24506.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_24506/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_03ce2/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_03ce2.dir/build.make CMakeFiles/cmTC_03ce2.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_03ce2.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_03ce2.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_03ce2.dir/build.make:86: CMakeFiles/cmTC_03ce2.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_03ce2/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER_NOKIND failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_6d534/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_6d534.dir/build.make CMakeFiles/cmTC_6d534.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_6d534.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_6d534.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_6d534.dir/build.make:86: CMakeFiles/cmTC_6d534.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_6d534/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_b3bba/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_b3bba.dir/build.make CMakeFiles/cmTC_b3bba.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_b3bba.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_b3bba.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_b3bba.dir/build.make:86: CMakeFiles/cmTC_b3bba.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_b3bba/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F90_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_ee9b2/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_ee9b2.dir/build.make CMakeFiles/cmTC_ee9b2.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_ee9b2.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_ee9b2.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_ee9b2.dir/build.make:86: CMakeFiles/cmTC_ee9b2.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_ee9b2/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_614c8/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_614c8.dir/build.make CMakeFiles/cmTC_614c8.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_614c8.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_614c8.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_614c8.dir/build.make:86: CMakeFiles/cmTC_614c8.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_614c8/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER_NOKIND failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_0cc1e/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_0cc1e.dir/build.make CMakeFiles/cmTC_0cc1e.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_0cc1e.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_0cc1e.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_0cc1e.dir/build.make:86: CMakeFiles/cmTC_0cc1e.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_0cc1e/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_e8a58/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_e8a58.dir/build.make CMakeFiles/cmTC_e8a58.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_e8a58.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_e8a58.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_e8a58.dir/build.make:86: CMakeFiles/cmTC_e8a58.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_e8a58/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F90_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_9aa39/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_9aa39.dir/build.make CMakeFiles/cmTC_9aa39.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_9aa39.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_9aa39.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_9aa39.dir/build.make:86: CMakeFiles/cmTC_9aa39.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_9aa39/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_37f7f/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_37f7f.dir/build.make CMakeFiles/cmTC_37f7f.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_37f7f.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_37f7f.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_37f7f.dir/build.make:86: CMakeFiles/cmTC_37f7f.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_37f7f/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER_NOKIND failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_ef30c/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_ef30c.dir/build.make CMakeFiles/cmTC_ef30c.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_ef30c.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_ef30c.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_ef30c.dir/build.make:86: CMakeFiles/cmTC_ef30c.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_ef30c/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_a3a0d/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_a3a0d.dir/build.make CMakeFiles/cmTC_a3a0d.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_a3a0d.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_a3a0d.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_a3a0d.dir/build.make:86: CMakeFiles/cmTC_a3a0d.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_a3a0d/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F90_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_ad1b3/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_ad1b3.dir/build.make CMakeFiles/cmTC_ad1b3.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_ad1b3.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_ad1b3.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_ad1b3.dir/build.make:86: CMakeFiles/cmTC_ad1b3.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_ad1b3/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_ad533/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_ad533.dir/build.make CMakeFiles/cmTC_ad533.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_ad533.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_ad533.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_ad533.dir/build.make:86: CMakeFiles/cmTC_ad533.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_ad533/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER_NOKIND failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_06a82/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_06a82.dir/build.make CMakeFiles/cmTC_06a82.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_06a82.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_06a82.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_06a82.dir/build.make:86: CMakeFiles/cmTC_06a82.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_06a82/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_f9a26/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_f9a26.dir/build.make CMakeFiles/cmTC_f9a26.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_f9a26.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_f9a26.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_f9a26.dir/build.make:86: CMakeFiles/cmTC_f9a26.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_f9a26/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F90_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_e6bd6/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_e6bd6.dir/build.make CMakeFiles/cmTC_e6bd6.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_e6bd6.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_e6bd6.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_e6bd6.dir/build.make:86: CMakeFiles/cmTC_e6bd6.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_e6bd6/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_8ff05/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_8ff05.dir/build.make CMakeFiles/cmTC_8ff05.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_8ff05.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_8ff05.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_8ff05.dir/build.make:86: CMakeFiles/cmTC_8ff05.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_8ff05/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F77_HEADER_NOKIND failed to compile with the following output:
+Change Dir: /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_a6d4a/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_a6d4a.dir/build.make CMakeFiles/cmTC_a6d4a.dir/build
+gmake[1]: Entering directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_a6d4a.dir/test_mpi.f90.o
+/usr/bin/gfortran  -I/usr/include/openmpi-x86_64 -I/usr/lib64/openmpi/lib  -heap-arrays 0    -pthread -c /home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_a6d4a.dir/test_mpi.f90.o
+gfortran: error: 0: No such file or directory
+gfortran: error: unrecognized command line option ‘-h’
+gmake[1]: *** [CMakeFiles/cmTC_a6d4a.dir/build.make:86: CMakeFiles/cmTC_a6d4a.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/home/dproksch/Documents/master/master_thesis/repos/cronos-celerity/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:141: cmTC_a6d4a/fast] Error 2
+
+
+

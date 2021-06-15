@@ -1,0 +1,43 @@
+\documentclass[12pt]{article}
+\usepackage{epsf,epsfig}
+\usepackage{graphicx}
+\usepackage{amsfonts}
+\usepackage{exscale}
+\usepackage{natbib}
+\setlength{\textwidth}{17cm}
+\setlength{\textheight}{23cm}
+\setlength{\paperheight}{30cm}
+\setlength{\oddsidemargin}{-5mm}
+% \setlength{\footskip}{cm}
+% \setlength{\evensidemargin}{-0.5cm}
+% \setlength{\headsep}{1cm}
+\setlength{\topmargin}{-1cm}
+\usepackage[plainpages=false,pdfpagelabels,
+naturalnames=true,linktocpage]{hyperref}
+\usepackage[nottoc]{tocbibind}
+\newcommand{\ul}{\underline}
+\hypersetup{
+  pdfauthor = {Jens Kleimann},
+  pdftitle = {Cronos manual},
+  pdfcreator = {LaTeX with hyperref package},
+  pdfproducer = {dvipdf}
+}
+\begin{document}
+
+\centerline{\huge CRONOS Manual}
+\vspace*{1cm}
+\centerline{\large Jens Kleimann {\tt <jk@tp4.rub.de>}}
+\centerline{Draft of 17 October 2018}
+
+\tableofcontents
+\newpage
+
+\input{sections/Sec01_Introduction.tex}
+\input{sections/Sec02_Installation.tex}
+\input{sections/Sec03_Setup.tex}
+\input{sections/Sec04_Output.tex}
+\input{sections/Sec05_DataProcessing.tex}
+\input{sections/Sec06_Troubleshooting.tex}
+\input{sections/Bibliography.tex}
+
+\end{document}
