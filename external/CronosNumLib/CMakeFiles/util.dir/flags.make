@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_FLAGS =   -std=gnu++14
 
-CXX_DEFINES = -DAPP_GIT_COMMIT=\"\" -DAPP_GIT_REPO=\"https://github.com/philippgs/CronosCelerity.git\" -DAPP_GIT_VERSION=\"\" -DBUILD_DATE=\"2021-06-15T14:29:14\" -DCL_TARGET_OPENCL_VERSION=220 -DCRONOS_GIT_COMMIT=\"\" -DCRONOS_GIT_VERSION=\"\" -DCRONOS_ROOT_DIR=\"/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity\"
+CXX_DEFINES = -DAPP_GIT_COMMIT=\"2d4b117266324367b0bae607b8b6363dcaae4ecc\" -DAPP_GIT_REPO=\"https://github.com/philippgs/CronosCelerity.git\" -DAPP_GIT_VERSION=\"2d4b117\" -DBUILD_DATE=\"2021-06-15T14:32:20\" -DCL_TARGET_OPENCL_VERSION=220 -DCRONOS_GIT_COMMIT=\"2d4b117266324367b0bae607b8b6363dcaae4ecc\" -DCRONOS_GIT_VERSION=\"2d4b117\" -DCRONOS_ROOT_DIR=\"/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity\"
 
 CXX_INCLUDES = -I/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/external/CronosNumLib/Matrix -I/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/external/CronosNumLib/util -isystem /usr/include/openmpi-x86_64 
 

@@ -13,13 +13,13 @@ set(CMAKE_CXX_COMPILER_ID "GNU")
 
 # Preprocessor definitions for this target.
 set(CMAKE_TARGET_DEFINITIONS_CXX
-  "APP_GIT_COMMIT=\"\""
+  "APP_GIT_COMMIT=\"2d4b117266324367b0bae607b8b6363dcaae4ecc\""
   "APP_GIT_REPO=\"https://github.com/philippgs/CronosCelerity.git\""
-  "APP_GIT_VERSION=\"\""
-  "BUILD_DATE=\"2021-06-15T14:29:14\""
+  "APP_GIT_VERSION=\"2d4b117\""
+  "BUILD_DATE=\"2021-06-15T14:32:20\""
   "CL_TARGET_OPENCL_VERSION=220"
-  "CRONOS_GIT_COMMIT=\"\""
-  "CRONOS_GIT_VERSION=\"\""
+  "CRONOS_GIT_COMMIT=\"2d4b117266324367b0bae607b8b6363dcaae4ecc\""
+  "CRONOS_GIT_VERSION=\"2d4b117\""
   "CRONOS_ROOT_DIR=\"/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity\""
   )
 
