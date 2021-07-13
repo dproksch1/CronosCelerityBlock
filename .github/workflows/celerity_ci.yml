@@ -1,0 +1,70 @@
+name: Cronos Celerity CI
+
+on:
+  # Run workflow on any push to any branch.
+  push:
+  # Also run on internal PRs. The difference to the "push" trigger
+  # being, that the workflow will run on the result of merging the PR's
+  # commits into the target branch.
+  pull_request:
+    branches-ignore:
+      # Ignore branches from forks (which contain a colon).
+      - '**:**'
+  # Finally, also run on external PRs. By using the "_target" trigger,
+  # we can ensure that the workflow definition itself will always come
+  # from the main repository, not the fork (for security reasons).
+  pull_request_target:
+    branches:
+      # Only consider branches from forks (which contain a colon).
+      - '**:**'
+
+jobs:
+  build-and-test:
+    runs-on: ${{ matrix.platform }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [self-hosted, "intel", "nvidia"]
+        SYCL-impl: ["hipSYCL", "ComputeCpp"]
+        build-type: ["Debug", "Release"]
+        exclude:
+          - platform: "intel"
+            SYCL-impl: "hipSYCL"
+          - platform: "nvidia"
+            SYCL-impl: "ComputeCpp"
+    env:
+      build-name: ${{ matrix.platform }}-${{ matrix.SYCL-impl }}-${{ matrix.build-type }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Run build script
+        run: cmake .
+      - name: Upload build output-log
+        uses: actions/upload-artifact@v1
+        with:
+          name: CMakeOutput
+          path: CMakeFiles/CMakeOutput.log
+      - name: Upload build error-log
+        uses: actions/upload-artifact@v1
+        with:
+          name: CMakeError
+          path: CMakeFiles/CMakeError.log
+      - name: Run unit tests
+        working-directory: ${{ env.build-name }}
+        run: ctest .
+
+  report:
+    needs: [build-and-test]
+    runs-on: self-hosted
+    steps:
+      - name: Check code formatting
+        id: formatting
+        run: |
+          unformatted=$("./ci/find-unformatted-files.sh")
+          unformatted=${unformatted//$'\n'/'%0A'}
+          echo "::set-output name=unformatted-files::$unformatted"
+      - uses: "celerity/ci-report-action@v4"
+        with:
+          gh-token: ${{ secrets.GITHUB_TOKEN }}
+          unformatted-files: ${{ steps.formatting.outputs.unformatted-files }}

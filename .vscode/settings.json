@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "singlestep_general.C": "cpp",
+        "singlestep_block.C": "cpp"
+    }
+}
