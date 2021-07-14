@@ -1,6 +1,12 @@
 {
     "files.associations": {
         "singlestep_general.C": "cpp",
-        "singlestep_block.C": "cpp"
+        "singlestep_block.C": "cpp",
+        "proj.C": "cpp",
+        "H5Convert.C": "cpp",
+        "playground.C": "cpp",
+        "randgen.C": "cpp",
+        "queue.C": "cpp",
+        "timestepping.C": "cpp"
     }
 }

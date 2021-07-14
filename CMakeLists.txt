@@ -117,10 +117,10 @@ include_directories(${GSL_INCLUDE_DIRS})
 # TODO: properly lookup package via find cmake or at least a root_path variable
 #include_directories(../CronosNumLib/Matrix)
 #include_directories(../CronosNumLib/util)
-include_directories(external/CronosNumLib/Matrix)
-include_directories(external/CronosNumLib/util)
-#find_package(CronosNumLib REQUIRED)
-#include_directories(${CRONOSNUMLIB_INCLUDE_DIR})
+#include_directories(external/CronosNumLib/Matrix)
+#include_directories(external/CronosNumLib/util)
+find_package(CronosNumLib REQUIRED)
+include_directories(${CRONOSNUMLIB_INCLUDE_DIR}/CronosNumLib)
 
 include_directories(cronos/DataReader        )
 include_directories(cronos/Geom              )
@@ -235,10 +235,10 @@ endif()
 
 # link to numeric library
 
-target_link_libraries(proj PRIVATE matrix util)
-target_link_libraries(playground PRIVATE matrix util)
-#target_link_libraries(proj PRIVATE ${CRONOSNUMLIB_MATRIX} ${CRONOSNUMLIB_UTIL})
-#target_link_libraries(playground PRIVATE ${CRONOSNUMLIB_MATRIX} ${CRONOSNUMLIB_UTIL})
+#target_link_libraries(proj PRIVATE matrix util)
+#target_link_libraries(playground PRIVATE matrix util)
+target_link_libraries(proj PUBLIC ${CRONOSNUMLIB_MATRIX} ${CRONOSNUMLIB_UTIL})
+target_link_libraries(playground PUBLIC ${CRONOSNUMLIB_MATRIX} ${CRONOSNUMLIB_UTIL})
 
 # link to third-party libraries
 
