@@ -7,6 +7,9 @@
         "playground.C": "cpp",
         "randgen.C": "cpp",
         "queue.C": "cpp",
-        "timestepping.C": "cpp"
+        "timestepping.C": "cpp",
+        "singlestep_CTSecond.C": "cpp",
+        "singlestep_multifluid.C": "cpp",
+        "reconst.C": "cpp"
     }
 }
