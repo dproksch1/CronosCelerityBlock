@@ -10,6 +10,24 @@
         "timestepping.C": "cpp",
         "singlestep_CTSecond.C": "cpp",
         "singlestep_multifluid.C": "cpp",
-        "reconst.C": "cpp"
+        "reconst.C": "cpp",
+        "modules.C": "cpp",
+        "hllc_hd.C": "cpp",
+        "specific.C": "cpp",
+        "solver.C": "cpp",
+        "gridgen.C": "cpp",
+        "changes.C": "cpp",
+        "grid.C": "cpp",
+        "PhysFluxesHD.C": "cpp",
+        "reconst_WENO.C": "cpp",
+        "transformations.C": "cpp",
+        "trafo.C": "cpp",
+        "singlestep.C": "cpp",
+        "data.C": "cpp",
+        "fields_local.C": "cpp",
+        "cmath": "cpp",
+        "*.tcc": "cpp",
+        "CTLondrilloDelZanna.C": "cpp",
+        "cfl.C": "cpp"
     }
 }
