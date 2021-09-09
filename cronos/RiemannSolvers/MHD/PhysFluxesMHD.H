@@ -9,7 +9,7 @@ public:
 	~PhysFluxesMHD(){};
 	void get_PhysFlux(Queue /*queue*/, Data &, ProblemType &, cronos::vector<REAL> &,
 	                  phys_fields_1D &, const int &, REAL, int iFluid=0);
-	void get_PhysFlux(Queue /*queue*/, Data &gdata, ProblemType &Problem, phys_fields_0D &fields,
+	void get_PhysFlux(/*Queue queue, */const Data &gdata, const ProblemType &Problem, phys_fields_0D &fields,
 			int ix, int iy, int iz, int face, int iFluid=0);
 	void get_PhysEmfs(Data &, ProblemType &, cronos::vector<REAL> &,
 	                  phys_fields_2D &, const int &);

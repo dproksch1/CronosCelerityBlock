@@ -5,7 +5,7 @@
 #include "RiemannSolverHD.H"
 //#include "RiemannSolverMHD.H"
 #include "PhysFluxesHD.H"
-//#include "PhysFluxesMHD.H"
+#include "PhysFluxesMHD.H"
 #include "CTLondrilloDelZanna.H"
 //#include "CTStone.H"
 #include "timewrapper.H"
@@ -189,7 +189,6 @@ HyperbolicSolver::HyperbolicSolver(Data &gdata, ProblemType &Problem)
 //		RiemannY->reset_Indices(gdata.fluid);
 //		RiemannZ->reset_Indices(gdata.fluid);
 //	}
-
 	fieldsX = std::make_unique<fields_1D>(gdata, 0, gdata.fluid);
 	fieldsY = std::make_unique<fields_1D>(gdata, 1, gdata.fluid);
 	fieldsZ = std::make_unique<fields_1D>(gdata, 2, gdata.fluid);
@@ -318,7 +317,6 @@ HyperbolicSolver::HyperbolicSolver(Data &gdata, ProblemType &Problem)
 
 //	// Physical fluxes
 //	PhysFluxMulti = new PhysFluxesMHD[numFluids];
-
 	for(int iFluid=0; iFluid<numFluids; ++iFluid) {
 		// get number of fields
 		int n_omIntLocal = gdata.fluids->get_N_OMINT(iFluid);

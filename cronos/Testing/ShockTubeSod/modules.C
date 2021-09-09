@@ -7,7 +7,7 @@ void Environment::setType(Data &gdata) {
 	if (type == 99) {
 		Problem = std::make_unique<ShockTubeTestHydro>(gdata);
 	} else {
-		cerr << "   Unknown problem type -- exiting " << endl;
+		cerr << "   Unknown problem type: " << type <<" -- exiting " << endl;
 		exit(-22);
 	}
 

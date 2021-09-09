@@ -167,7 +167,7 @@ void PhysFluxesMHD::get_PhysFlux(Queue queue, Data &gdata,
 
 
 
-void PhysFluxesMHD::get_PhysFlux(Queue queue, Data &gdata, ProblemType &Problem, phys_fields_0D &fields,
+void PhysFluxesMHD::get_PhysFlux(/*Queue queue, */const Data &gdata, const ProblemType &Problem, phys_fields_0D &fields,
 		int ix, int iy, int iz, int face, int iFluid) {
 
 	int dir = face/2;

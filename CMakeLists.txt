@@ -131,7 +131,10 @@ include_directories(cronos/RiemannSolvers/HD    )
 include_directories(cronos/RiemannSolvers/MHD    )
 include_directories(cronos/StandardTests     )
 include_directories(cronos/Testing           )
+# You can always only include 1 -> find solutions for that
 include_directories(cronos/Testing/ShockTubeSod)
+#include_directories(cronos/Testing/SedovExplosion)
+#include_directories(cronos/Testing/BrioWu)
 include_directories(cronos/UnitTests         )
 include_directories(cronos/User              )
 include_directories(cronos/Util              )
@@ -185,7 +188,7 @@ set(SOURCES
 	cronos/RiemannSolvers/MHD/vChar.C
 	cronos/RiemannSolvers/MHD/hll.C
 	cronos/RiemannSolvers/MHD/hlld.C
-	#cronos/RiemannSolvers/MHD/PhysFluxesMHD.C
+	#cronos/RiemannSolvers/MHD/PhysFluxesMHD.C #commented out
 	cronos/RiemannSolvers/MHD/bc_emf.C
 	cronos/RiemannSolvers/cfl.C
 	cronos/RiemannSolvers/changes.C
@@ -194,6 +197,8 @@ set(SOURCES
 	cronos/RiemannSolvers/singlestep_block.C
 	# application-specific source files
 	cronos/Testing/ShockTubeSod/modules.C
+	#cronos/Testing/SedovExplosion/modules.C
+	#cronos/Testing/BrioWu/modules.C
 	# fall-back files if no application-specific versions found
 	cronos/InterfaceFunctions/solver.C
 	cronos/InterfaceFunctions/user_pde.C
@@ -272,6 +277,9 @@ enable_testing()
 configure_file(${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_tiny/SodToro5HllcRef.cat ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_tiny/SodToro5HllcRef.cat COPYONLY)
 configure_file(${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_small/SodToro5HllcRef.cat ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_small/SodToro5HllcRef.cat COPYONLY)
 configure_file(${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef.cat ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef.cat COPYONLY)
+#configure_file(${CMAKE_SOURCE_DIR}/tests/SedovSphericalHllcRef_medium/SedovSphericalHllcRef.cat ${CMAKE_BINARY_DIR}/tests/SedovSphericalHllcRef_medium/SedovSphericalHllcRef.cat COPYONLY)
+#configure_file(${CMAKE_SOURCE_DIR}/tests/SedovCartHllcRef_medium/SedovCartHllcRef.cat ${CMAKE_BINARY_DIR}/tests/SedovCartHllcRef_medium/SedovCartHllcRef.cat COPYONLY)
+#configure_file(${CMAKE_SOURCE_DIR}/tests/BrioWuHlldRef_medium/BrioWuHlldRef.cat ${CMAKE_BINARY_DIR}/tests/BrioWuHlldRef_medium/BrioWuHlldRef.cat COPYONLY)
 
 #if(MSVC)
 #	add_test(small ${CMAKE_BINARY_DIR}/proj.exe ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef SodToro5HllcRef && h5diff --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_float/SodToro5HllcRef_flt_step990_coord0-0-0.h5 ${CMAKE_SOURCE__DIR}/tests/SodToro5HllcRef/SodToro5HllcRef_float/SodToro5HllcRef_flt_step990.h5)
@@ -286,6 +294,14 @@ configure_file(${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef.
 
 	add_test(NAME medium_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_medium SodToro5HllcRef)
 	add_test(NAME medium_compare COMMAND ${HDF5_DIFF_EXECUTABLE} --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef_float/SodToro5HllcRef_flt_step990.h5 ${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef_float/SodToro5HllcRef_flt_step990.h5)
+	
+	#add_test(NAME sedov_medium_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SedovSphericalHllcRef_medium SedovSphericalHllcRef)
+	#add_test(NAME sedov_medium_compare COMMAND ${HDF5_DIFF_EXECUTABLE} --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SedovSphericalHllcRef_medium/SedovSphericalHllcRef_float/SedovSphericalHllcRef_flt_step990.h5 ${CMAKE_SOURCE_DIR}/tests/SedovSphericalHllcRef_medium/SedovSphericalHllcRef_float/SedovSphericalHllcRef_flt_step990.h5)
+
+	#add_test(NAME sedov_cart_medium_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SedovCartHllcRef_medium SedovCartHllcRef)
+
+	#add_test(NAME brio_wu_medium_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/BrioWuHlldRef_medium BrioWuHlldRef)
+
 	set_tests_properties(tiny_run PROPERTIES DEPENDS proj)
 	set_tests_properties(tiny_run PROPERTIES FIXTURES_SETUP EXEC_TINY)
 	set_tests_properties(tiny_compare PROPERTIES FIXTURES_REQUIRED EXEC_TINY)
@@ -297,6 +313,14 @@ configure_file(${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef.
 	set_tests_properties(medium_run PROPERTIES DEPENDS proj)
 	set_tests_properties(medium_run PROPERTIES FIXTURES_SETUP EXEC_MEDIUM)
 	set_tests_properties(medium_compare PROPERTIES FIXTURES_REQUIRED EXEC_MEDIUM)
+
+	#set_tests_properties(sedov_medium_run PROPERTIES DEPENDS proj)
+	#set_tests_properties(sedov_medium_run PROPERTIES FIXTURES_SETUP EXEC_SEDOV_MEDIUM)
+	#set_tests_properties(sedov_medium_compare PROPERTIES FIXTURES_REQUIRED EXEC_SEDOV_MEDIUM)
+
+	#set_tests_properties(sedov_cart_medium_run PROPERTIES DEPENDS proj)
+
+	#set_tests_properties(brio_wu_medium_run PROPERTIES DEPENDS proj)
 	
 	#test currently failing
 	#add_test(NAME small COMMAND ${CMAKE_COMMAND} -DCMD1=$<TARGET_FILE:proj> -P ${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef/run_test.cmake)
