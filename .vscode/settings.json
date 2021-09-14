@@ -99,6 +99,9 @@
         "hlld.C": "cpp",
         "hll.C": "cpp",
         "PhysFluxesMHD.C": "cpp",
-        "hll_hd.C": "cpp"
+        "hll_hd.C": "cpp",
+        "RiemannSolver.C": "cpp",
+        "save_data.C": "cpp",
+        "CException.C": "cpp"
     }
 }

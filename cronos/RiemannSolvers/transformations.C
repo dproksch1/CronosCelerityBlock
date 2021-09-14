@@ -1324,7 +1324,7 @@ void Transformations::get_ConsUser(Data &gdata, phys_fields_1D &fields,
 }
 
 inline double Transformations::get_EMag(const Data &gdata,
-                                        int ix, int iy, int iz) {
+                                        int ix, int iy, int iz) const {
 	//! Compute magnetic energy
 	REAL E_mag = 0.5*(sqr(0.5*(gdata.om[q_Bx](ix  ,iy  ,iz  ) +
 	                           gdata.om[q_Bx](ix-1,iy  ,iz  ))) +
@@ -1389,7 +1389,7 @@ void Transformations::get_Cons(Queue queue, Data &gdata,
 void Transformations::get_Cons(const Data &gdata, const ProblemType &Problem,
 	const EquationOfState &eos, phys_fields_0D &fields, int ix, int iy, int iz, int face) {
 #if (FLUID_TYPE == CRONOS_MHD)
-	return get_Cons_MHD(gdata, Problem, eos, fields, ix, iy, iz, face);
+	/*return*/ get_Cons_MHD(gdata, Problem, eos, fields, ix, iy, iz, face);
 #elif (FLUID_TYPE == CRONOS_HYDRO)
 	return get_Cons_HD(gdata, Problem, eos, fields, ix, iy, iz, face);
 #else

@@ -3,7 +3,7 @@
 #include <iomanip>
 
 #include "RiemannSolverHD.H"
-//#include "RiemannSolverMHD.H"
+#include "RiemannSolverMHD.H"
 #include "PhysFluxesHD.H"
 #include "PhysFluxesMHD.H"
 #include "CTLondrilloDelZanna.H"

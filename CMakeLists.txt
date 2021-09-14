@@ -188,7 +188,7 @@ set(SOURCES
 	cronos/RiemannSolvers/MHD/vChar.C
 	cronos/RiemannSolvers/MHD/hll.C
 	cronos/RiemannSolvers/MHD/hlld.C
-	#cronos/RiemannSolvers/MHD/PhysFluxesMHD.C #commented out
+	cronos/RiemannSolvers/MHD/PhysFluxesMHD.C #commented out
 	cronos/RiemannSolvers/MHD/bc_emf.C
 	cronos/RiemannSolvers/cfl.C
 	cronos/RiemannSolvers/changes.C

@@ -89,26 +89,26 @@ void Saves::save_vars(const Data &gdata, fields_1D &fields, const int &dir,
 
 #ifndef CRONOS_SAVEMEM
 			// Saving momentum reconstruction
-			save_field_x[0](i,j,k) = fields.deriv[q_sx](i);
-			save_field_x[1](i,j,k) = fields.deriv[q_sy](i);
-			save_field_x[2](i,j,k) = fields.deriv[q_sz](i);
+			save_field_x[0](i,j,k) = fields.derivORIG[q_sx](i);
+			save_field_x[1](i,j,k) = fields.derivORIG[q_sy](i);
+			save_field_x[2](i,j,k) = fields.derivORIG[q_sz](i);
 
 			// Saving magnetic induction
-			save_field_x[3](i,j,k) = fields.deriv[q_By](i);
-			save_field_x[4](i,j,k) = fields.deriv[q_Bz](i);
+			save_field_x[3](i,j,k) = fields.derivORIG[q_By](i);
+			save_field_x[4](i,j,k) = fields.derivORIG[q_Bz](i);
 #endif
 			// Saving characteristic velocities
-			save_field_x[5](i,j,k) = fields.v_ch_p(i);
-			save_field_x[6](i,j,k) = fields.v_ch_m(i);
+			save_field_x[5](i,j,k) = fields.v_ch_pORIG(i);
+			save_field_x[6](i,j,k) = fields.v_ch_mORIG(i);
 
 #elif CT_TYPE == STONE
 
-			save_field_x[0](i,j,k) = fields.flux[q_By](i);
-			save_field_x[1](i,j,k) = fields.flux[q_Bz](i);
+			save_field_x[0](i,j,k) = fields.fluxORIG[q_By](i);
+			save_field_x[1](i,j,k) = fields.fluxORIG[q_Bz](i);
 
 #if STONE_TYPE == STONE_CENTRE
 
-			save_field_x[2](i,j,k) = fields.flux[q_rho](i);
+			save_field_x[2](i,j,k) = fields.fluxORIG[q_rho](i);
 
 #endif
 
@@ -122,26 +122,26 @@ void Saves::save_vars(const Data &gdata, fields_1D &fields, const int &dir,
 
 #ifndef CRONOS_SAVEMEM
 			// Saving momentum reconstruction
-			save_field_y[0](j,i,k) = fields.deriv[q_sx](i);
-			save_field_y[1](j,i,k) = fields.deriv[q_sy](i);
-			save_field_y[2](j,i,k) = fields.deriv[q_sz](i);
+			save_field_y[0](j,i,k) = fields.derivORIG[q_sx](i);
+			save_field_y[1](j,i,k) = fields.derivORIG[q_sy](i);
+			save_field_y[2](j,i,k) = fields.derivORIG[q_sz](i);
 
 			// Saving magnetic induction
-			save_field_y[3](j,i,k) = fields.deriv[q_Bx](i);
-			save_field_y[4](j,i,k) = fields.deriv[q_Bz](i);
+			save_field_y[3](j,i,k) = fields.derivORIG[q_Bx](i);
+			save_field_y[4](j,i,k) = fields.derivORIG[q_Bz](i);
 #endif
 			// Saving characteristic velocities
-			save_field_y[5](j,i,k) = fields.v_ch_p(i);
-			save_field_y[6](j,i,k) = fields.v_ch_m(i);
+			save_field_y[5](j,i,k) = fields.v_ch_pORIG(i);
+			save_field_y[6](j,i,k) = fields.v_ch_mORIG(i);
 
 #elif CT_TYPE == STONE
 
-			save_field_y[0](j,i,k) = fields.flux[q_Bx](i);
-			save_field_y[1](j,i,k) = fields.flux[q_Bz](i);
+			save_field_y[0](j,i,k) = fields.fluxORIG[q_Bx](i);
+			save_field_y[1](j,i,k) = fields.fluxORIG[q_Bz](i);
 
 #if STONE_TYPE == STONE_CENTRE
 
-			save_field_y[2](j,i,k) = fields.flux[q_rho](i);
+			save_field_y[2](j,i,k) = fields.fluxORIG[q_rho](i);
 
 #endif
 
@@ -155,26 +155,26 @@ void Saves::save_vars(const Data &gdata, fields_1D &fields, const int &dir,
 
 #ifndef CRONOS_SAVEMEM
 			// Saving momentum reconstruction
-			save_field_z[0](j,k,i) = fields.deriv[q_sx](i);
-			save_field_z[1](j,k,i) = fields.deriv[q_sy](i);
-			save_field_z[2](j,k,i) = fields.deriv[q_sz](i);
+			save_field_z[0](j,k,i) = fields.derivORIG[q_sx](i);
+			save_field_z[1](j,k,i) = fields.derivORIG[q_sy](i);
+			save_field_z[2](j,k,i) = fields.derivORIG[q_sz](i);
 
 			// Saving magnetic induction
-			save_field_z[3](j,k,i) = fields.deriv[q_Bx](i);
-			save_field_z[4](j,k,i) = fields.deriv[q_By](i);
+			save_field_z[3](j,k,i) = fields.derivORIG[q_Bx](i);
+			save_field_z[4](j,k,i) = fields.derivORIG[q_By](i);
 #endif
 			// Saving characteristic velocities
-			save_field_z[5](j,k,i) = fields.v_ch_p(i);
-			save_field_z[6](j,k,i) = fields.v_ch_m(i);
+			save_field_z[5](j,k,i) = fields.v_ch_pORIG(i);
+			save_field_z[6](j,k,i) = fields.v_ch_mORIG(i);
 
 #elif CT_TYPE == STONE
 
-			save_field_z[0](j,k,i) = fields.flux[q_Bx](i);
-			save_field_z[1](j,k,i) = fields.flux[q_By](i);
+			save_field_z[0](j,k,i) = fields.fluxORIG[q_Bx](i);
+			save_field_z[1](j,k,i) = fields.fluxORIG[q_By](i);
 
 #if STONE_TYPE == STONE_CENTRE
 
-			save_field_z[2](j,k,i) = fields.flux[q_rho](i);
+			save_field_z[2](j,k,i) = fields.fluxORIG[q_rho](i);
 
 #endif
 
