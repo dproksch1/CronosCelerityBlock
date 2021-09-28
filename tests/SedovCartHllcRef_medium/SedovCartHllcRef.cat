@@ -1,3 +1,4 @@
+WriteGrid
 ------------------- MPI -----------------
 nprocx  = 2 2 4
 nprocy  = 2 2 4 2
@@ -12,7 +13,7 @@ cfl_threshold = 0.4
 N_OMINT = 8
 ------------------- Timing ---------------
 runtime     = 1440000
-t_end       = 0.1 0.26 1.
+t_end       = 0.000001 0.0000026 0.00001
 dt          = 0.000001
 dt_bin      = 3. -> Restart Schritt
 num_bin     = 2000 

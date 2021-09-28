@@ -102,6 +102,8 @@
         "hll_hd.C": "cpp",
         "RiemannSolver.C": "cpp",
         "save_data.C": "cpp",
-        "CException.C": "cpp"
+        "CException.C": "cpp",
+        "problem.C": "cpp",
+        "ParameterFileReader.C": "cpp"
     }
 }

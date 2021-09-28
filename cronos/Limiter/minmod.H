@@ -9,7 +9,7 @@ using namespace std;
 class minmod /*: public limiter_func*/ {
 public:
 	minmod() {
-		Theta = value((char*)"Theta");
+		Theta = value_exists((char*)"Theta") ? value((char*)"Theta") : 1;
 	}
 
 	minmod(const minmod&) = default;

@@ -277,7 +277,6 @@ enable_testing()
 configure_file(${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_tiny/SodToro5HllcRef.cat ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_tiny/SodToro5HllcRef.cat COPYONLY)
 configure_file(${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_small/SodToro5HllcRef.cat ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_small/SodToro5HllcRef.cat COPYONLY)
 configure_file(${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef.cat ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef.cat COPYONLY)
-#configure_file(${CMAKE_SOURCE_DIR}/tests/SedovSphericalHllcRef_medium/SedovSphericalHllcRef.cat ${CMAKE_BINARY_DIR}/tests/SedovSphericalHllcRef_medium/SedovSphericalHllcRef.cat COPYONLY)
 #configure_file(${CMAKE_SOURCE_DIR}/tests/SedovCartHllcRef_medium/SedovCartHllcRef.cat ${CMAKE_BINARY_DIR}/tests/SedovCartHllcRef_medium/SedovCartHllcRef.cat COPYONLY)
 #configure_file(${CMAKE_SOURCE_DIR}/tests/BrioWuHlldRef_medium/BrioWuHlldRef.cat ${CMAKE_BINARY_DIR}/tests/BrioWuHlldRef_medium/BrioWuHlldRef.cat COPYONLY)
 
@@ -295,10 +294,8 @@ configure_file(${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef.
 	add_test(NAME medium_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_medium SodToro5HllcRef)
 	add_test(NAME medium_compare COMMAND ${HDF5_DIFF_EXECUTABLE} --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef_float/SodToro5HllcRef_flt_step990.h5 ${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef_float/SodToro5HllcRef_flt_step990.h5)
 	
-	#add_test(NAME sedov_medium_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SedovSphericalHllcRef_medium SedovSphericalHllcRef)
-	#add_test(NAME sedov_medium_compare COMMAND ${HDF5_DIFF_EXECUTABLE} --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SedovSphericalHllcRef_medium/SedovSphericalHllcRef_float/SedovSphericalHllcRef_flt_step990.h5 ${CMAKE_SOURCE_DIR}/tests/SedovSphericalHllcRef_medium/SedovSphericalHllcRef_float/SedovSphericalHllcRef_flt_step990.h5)
-
 	#add_test(NAME sedov_cart_medium_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SedovCartHllcRef_medium SedovCartHllcRef)
+	#add_test(NAME sedov_cart_medium_compare COMMAND ${HDF5_DIFF_EXECUTABLE} --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SedovCartHllcRef_medium/SedovCartHllcRef_float/SedovCartHllcRef_flt_step2.h5 ${CMAKE_SOURCE_DIR}/tests/SedovCartHllcRef_medium/SedovCartHllcRef_float/SedovCartHllcRef_flt_step2.h5)
 
 	#add_test(NAME brio_wu_medium_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/BrioWuHlldRef_medium BrioWuHlldRef)
 
@@ -314,11 +311,9 @@ configure_file(${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef.
 	set_tests_properties(medium_run PROPERTIES FIXTURES_SETUP EXEC_MEDIUM)
 	set_tests_properties(medium_compare PROPERTIES FIXTURES_REQUIRED EXEC_MEDIUM)
 
-	#set_tests_properties(sedov_medium_run PROPERTIES DEPENDS proj)
-	#set_tests_properties(sedov_medium_run PROPERTIES FIXTURES_SETUP EXEC_SEDOV_MEDIUM)
-	#set_tests_properties(sedov_medium_compare PROPERTIES FIXTURES_REQUIRED EXEC_SEDOV_MEDIUM)
-
 	#set_tests_properties(sedov_cart_medium_run PROPERTIES DEPENDS proj)
+	#set_tests_properties(sedov_cart_medium_run PROPERTIES FIXTURES_SETUP EXEC_SEDOV_CART_MEDIUM)
+	#set_tests_properties(sedov_cart_medium_compare PROPERTIES FIXTURES_REQUIRED EXEC_SEDOV_CART_MEDIUM)
 
 	#set_tests_properties(brio_wu_medium_run PROPERTIES DEPENDS proj)
 	
@@ -328,9 +323,9 @@ configure_file(${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef.
 	
 #endif()
 
-set_tests_properties(small_run PROPERTIES FAIL_REGULAR_EXPRESSION "Error;error;ERROR")
+##set_tests_properties(small_run PROPERTIES FAIL_REGULAR_EXPRESSION "Error;error;ERROR")
 # The following command required CMake 3.17 or higher
-list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
+##list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
 
 #set_target_properties(proj PROPERTIES COMPILE_DEFINITIONS BUILDER_STATIC_DEFINE)
 
