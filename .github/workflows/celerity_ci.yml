@@ -1,0 +1,40 @@
+name: Cronos Celerity CI
+
+on:
+  # Run workflow on any push to any branch.
+  push:
+  # Also run on internal PRs. The difference to the "push" trigger
+  # being, that the workflow will run on the result of merging the PR's
+  # commits into the target branch.
+  pull_request:
+    branches-ignore:
+      # Ignore branches from forks (which contain a colon).
+      - '**:**'
+  # Finally, also run on external PRs. By using the "_target" trigger,
+  # we can ensure that the workflow definition itself will always come
+  # from the main repository, not the fork (for security reasons).
+  pull_request_target:
+    branches:
+      # Only consider branches from forks (which contain a colon).
+      - '**:**'
+
+jobs:
+  build-and-test:
+    runs-on: [self-hosted, linux]
+    strategy:
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Run build script
+        run: | 
+          cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
+          cmake --build ${{github.workspace}}/build --config Release
+      - name: Upload build output-log
+        uses: actions/upload-artifact@v1
+        with:
+          name: CMakeOutput
+          path: ${{github.workspace}}/build/CMakeFiles/CMakeOutput.log
+      - name: Run unit tests
+        run: ctest ${{github.workspace}}/build
