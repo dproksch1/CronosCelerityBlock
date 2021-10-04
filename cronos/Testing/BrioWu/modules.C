@@ -6,9 +6,9 @@ void Environment::setType(Data &gdata) {
 	int type = static_cast<int>(value((char*)"type"));
 
 	if (type == 92) {
-		Problem = new BrioWuTest(gdata);
+		Problem = std::make_unique<BrioWuTest>(gdata);
 	} else if (type == 93) {
-		Problem = new BrioWuTest2D(gdata);
+		Problem = std::make_unique<BrioWuTest2D>(gdata);
 	} else {
 		cerr << "   Unknown problem type -- exiting " << endl;
 		exit(-22);

@@ -997,7 +997,6 @@ proj: CMakeFiles/proj.dir/build.make
 proj: /usr/local/lib/libhipSYCL-rt.so
 proj: /usr/local/lib/CronosNumLib/Linux-amd64/libmatrix_mt.a
 proj: /usr/local/lib/CronosNumLib/Linux-amd64/libutil_mt.a
-proj: /usr/lib64/openmpi/lib/libmpi.so
 proj: /usr/lib64/libgsl.so
 proj: /usr/lib64/libgslcblas.so
 proj: /usr/lib64/libhdf5.so

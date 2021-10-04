@@ -52,7 +52,6 @@ Reconstruction::Reconstruction(const Data &gdata, int dir, const CronosFluid &fl
 		}
 	}
 
-
 	if(has_magField) {
 		if(dir == 0) {
 			ListParallel.push_back(q_Bx);
@@ -71,9 +70,8 @@ Reconstruction::Reconstruction(const Data &gdata, int dir, const CronosFluid &fl
 
 	}
 
-
 #endif
-
+	
 	set_singleReconstructions(gdata, fluid);
 }
 

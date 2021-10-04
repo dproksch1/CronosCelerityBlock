@@ -78,5 +78,6 @@ Find_package_handle_standard_args( CronosNumLib DEFAULT_MSG
 )
 
 if(CRONOSNUMLIB_FOUND)
+  message("-- Found CronosNumLib: " ${CRONOSNUMLIB_INCLUDE_DIR} "/CronosNumLib")
   mark_as_advanced(FORCE CRONOSNUMLIB_INCLUDE_DIR CRONOSNUMLIB_MATRIX CRONOSNUMLIB_UTIL)
 endif()

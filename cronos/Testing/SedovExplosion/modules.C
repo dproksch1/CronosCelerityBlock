@@ -9,13 +9,13 @@ void Environment::setType(Data &gdata) {
 	int type = static_cast<int>(value((char*)"type"));
 
 	if (type == 84) {
-		Problem = new Sedov3D(gdata);
+		Problem = std::make_unique<Sedov3D>(gdata);
 	} else if (type==83) {
-		Problem = new Sedov2D(gdata);
+		Problem = std::make_unique<Sedov2D>(gdata);
 	} else if (type==86) {
-		Problem = new Sedov3DSpherical(gdata);
+		Problem = std::make_unique<Sedov3DSpherical>(gdata);
 	} else {
-		cerr << "   Unknown problem type -- exiting " << endl;
+		cerr << "   Unknown problem type: " << type << " -- exiting " << endl;
 		exit(-22);
 	}
 

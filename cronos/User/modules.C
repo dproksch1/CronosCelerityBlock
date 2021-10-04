@@ -63,7 +63,7 @@ void Environment::setType(Data &gdata) {
 // 		Problem = new MultTest(gdata);
 // #endif
 	} else {
-		cerr << "   Unknown problem type -- exiting " << endl;
+		cerr << "   Unknown problem type: " << type << " -- exiting " << endl;
 		exit(-22);
 	}
 
