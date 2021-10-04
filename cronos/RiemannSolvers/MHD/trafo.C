@@ -140,8 +140,8 @@ void Transformations::get_Cons_MHD(Data &gdata,
 
 
 
-void Transformations::get_Cons_MHD(Data &gdata, ProblemType &Problem,
-		EquationOfState  &eos, phys_fields_0D &fields, int ix, int iy, int iz, int face) {
+void Transformations::get_Cons_MHD(const Data &gdata, const ProblemType &Problem,
+		const EquationOfState  &eos, phys_fields_0D &fields, int ix, int iy, int iz, int face) {
 
 	NumArray<REAL> Pos(3);
 	Pos(0) = gdata.getCen_x(ix);

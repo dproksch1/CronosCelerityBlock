@@ -463,7 +463,6 @@ void HLLCSolver_Hydro::get_NumFlux(const Data &gdata, const phys_fields_0D &pfM,
 
 
 	// In case of multifluid run, need to re-evaluate indices:
-
 #if(FLUID_TYPE == CRONOS_MULTIFLUID)
 	if(dir == 0) {
 		this->qvPar = q_sx;

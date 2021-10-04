@@ -90,9 +90,9 @@ private:
 			cronos::vector<REAL> &, phys_fields_1D &, int, REAL);
 	void get_Cons_HD(const Data &, const ProblemType &, const EquationOfState &,
 				phys_fields_0D &, int ix, int iy, int iz, int face) const;
-	void get_Cons_MHD(Data &, ProblemType &, EquationOfState &,
+	void get_Cons_MHD(const Data &, const ProblemType &, const EquationOfState &,
 				phys_fields_0D &, int ix, int iy, int iz, int face);
-	inline double get_EMag(const Data &, int ix, int iy, int iz);
+	inline double get_EMag(const Data &, int ix, int iy, int iz) const;
 	REAL max(const REAL &, const REAL &, const REAL &, const REAL &,
 	         const REAL &, const REAL &, const REAL &);
 	REAL min(const REAL &, const REAL &, const REAL &, const REAL &,
