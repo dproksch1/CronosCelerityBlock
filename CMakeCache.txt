@@ -288,6 +288,12 @@ HDF5_DIFF_EXECUTABLE:FILEPATH=/usr/bin/h5diff
 //The directory containing a CMake configuration file for HDF5.
 HDF5_DIR:PATH=HDF5_DIR-NOTFOUND
 
+Celerity_INCLUDE_DIR:PATH=/usr/local/include/celerity/
+
+Celerity_LIBRARY:FILEPATH=/usr/local/lib/libcelerity_runtime.a
+
+Celerity_DIR:PATH=/usr/local/lib/cmake/
+
 //Clang compiler executable used for compilation.
 HIPSYCL_CLANG:STRING=
 
