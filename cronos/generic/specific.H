@@ -67,13 +67,13 @@ private:
 			NumArray<REAL> &, NumArray<REAL> &, NumArray<REAL> &, NumArray<REAL> &,
 			NumMatrix<REAL,3> [], double, int, int, int, int, int iFluid=0);
 	void get_Changes(const Data &, const num_fields_0D &, const num_fields_0D &,
-			NumMatrix<REAL,3> [], int, int, int, int dir, int, int iFluid=0);
+			NumMatrix<REAL,3> [], int, int, int, int dir, int, int iFluid=0) const;
 //	void get_Changes(Data &, NumArray<REAL> &, NumArray<REAL> &,
 //			NumMatrix<REAL,3> [], double, double, int, int, int, int dir, int, int iFluid=0);
 	void get_ChangesX(Data &, NumMatrix<REAL, 1> &, NumMatrix<REAL, 1> &, NumMatrix<REAL,3> [],
 			NumMatrix<REAL,1> &, int, int, int, int, int iFluid=0);
 	REAL get_Changes1DCart(const Data &, const NumArray<REAL> &, const NumArray<REAL> &,
-			int, int, int);
+			int, int, int) const;
 	REAL compute_cfl(Data &, ProblemType &, REAL, REAL, int);
 	void gen_MagBoundValues(Data &, gridFunc &, ProblemType &);
 	/**Compute magnetic field from vector potential
@@ -184,6 +184,12 @@ private:
 	fields_1D *fieldsXUser, *fieldsYUser, *fieldsZUser;
 	
 };
+
+void get_Changes2(const Data &, const num_fields_0D &, const num_fields_0D &,
+			NumMatrix<REAL,3> [], int, int, int, int dir, int, int iFluid=0);
+
+REAL get_Changes1DCart2(const Data &, const NumArray<REAL> &, const NumArray<REAL> &,
+			int, int, int);
 
 
 inline REAL HyperbolicSolver::pressure(const REAL &dens)

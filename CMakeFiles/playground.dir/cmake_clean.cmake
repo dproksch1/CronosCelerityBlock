@@ -12,6 +12,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/playground.dir/cronos/RiemannSolvers/MHD/CTStone.C.o"
   "CMakeFiles/playground.dir/cronos/RiemannSolvers/MHD/ConstrainedTransport.C.o"
   "CMakeFiles/playground.dir/cronos/RiemannSolvers/MHD/DissipationMHD.C.o"
+  "CMakeFiles/playground.dir/cronos/RiemannSolvers/MHD/PhysFluxesMHD.C.o"
   "CMakeFiles/playground.dir/cronos/RiemannSolvers/MHD/bc_emf.C.o"
   "CMakeFiles/playground.dir/cronos/RiemannSolvers/MHD/hll.C.o"
   "CMakeFiles/playground.dir/cronos/RiemannSolvers/MHD/hlld.C.o"

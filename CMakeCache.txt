@@ -25,13 +25,13 @@ CMAKE_AR:FILEPATH=/usr/bin/ar
 
 //Choose the type of build, options are: None Debug Release RelWithDebInfo
 // MinSizeRel ...
-CMAKE_BUILD_TYPE:STRING=
+CMAKE_BUILD_TYPE:STRING=Release
 
 //Enable/Disable color output during build.
 CMAKE_COLOR_MAKEFILE:BOOL=ON
 
 //CXX compiler
-CMAKE_CXX_COMPILER:FILEPATH=/usr/bin/c++
+CMAKE_CXX_COMPILER:STRING=/usr/bin/c++
 
 //A wrapper around 'ar' adding the appropriate '--plugin' option
 // for the GCC compiler
@@ -57,7 +57,7 @@ CMAKE_CXX_FLAGS_RELEASE:STRING=-O2 -DNDEBUG
 CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
 
 //C compiler
-CMAKE_C_COMPILER:FILEPATH=/usr/bin/cc
+CMAKE_C_COMPILER:STRING=/usr/bin/cc
 
 //A wrapper around 'ar' adding the appropriate '--plugin' option
 // for the GCC compiler
@@ -104,7 +104,7 @@ CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 CMAKE_EXPORT_COMPILE_COMMANDS:BOOL=
 
 //Fortran compiler
-CMAKE_Fortran_COMPILER:FILEPATH=/usr/bin/gfortran
+CMAKE_Fortran_COMPILER:STRING=/usr/bin/gfortran
 
 //A wrapper around 'ar' adding the appropriate '--plugin' option
 // for the GCC compiler
@@ -247,6 +247,12 @@ CRONOSNUMLIB_MATRIX:FILEPATH=/usr/local/lib/CronosNumLib/Linux-amd64/libmatrix_m
 //Path to a library.
 CRONOSNUMLIB_UTIL:FILEPATH=/usr/local/lib/CronosNumLib/Linux-amd64/libutil_mt.a
 
+Celerity_DIR:PATH=/usr/local/lib/cmake/
+
+Celerity_INCLUDE_DIR:PATH=/usr/local/include/celerity/
+
+Celerity_LIBRARY:FILEPATH=/usr/local/lib/libcelerity_runtime.a
+
 //Value Computed by CMake
 CronosCode_BINARY_DIR:STATIC=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity
 
@@ -287,12 +293,6 @@ HDF5_DIFF_EXECUTABLE:FILEPATH=/usr/bin/h5diff
 
 //The directory containing a CMake configuration file for HDF5.
 HDF5_DIR:PATH=HDF5_DIR-NOTFOUND
-
-Celerity_INCLUDE_DIR:PATH=/usr/local/include/celerity/
-
-Celerity_LIBRARY:FILEPATH=/usr/local/lib/libcelerity_runtime.a
-
-Celerity_DIR:PATH=/usr/local/lib/cmake/
 
 //Clang compiler executable used for compilation.
 HIPSYCL_CLANG:STRING=
@@ -467,9 +467,9 @@ CMAKE_CACHEFILE_DIR:INTERNAL=/home/dproksch/Documents/master/master_thesis/repos
 //Major version of cmake used to create the current loaded cache
 CMAKE_CACHE_MAJOR_VERSION:INTERNAL=3
 //Minor version of cmake used to create the current loaded cache
-CMAKE_CACHE_MINOR_VERSION:INTERNAL=17
+CMAKE_CACHE_MINOR_VERSION:INTERNAL=19
 //Patch version of cmake used to create the current loaded cache
-CMAKE_CACHE_PATCH_VERSION:INTERNAL=4
+CMAKE_CACHE_PATCH_VERSION:INTERNAL=7
 //ADVANCED property for variable: CMAKE_COLOR_MAKEFILE
 CMAKE_COLOR_MAKEFILE-ADVANCED:INTERNAL=1
 //Path to CMake executable.
@@ -554,6 +554,14 @@ CMAKE_GENERATOR_INSTANCE:INTERNAL=
 CMAKE_GENERATOR_PLATFORM:INTERNAL=
 //Name of generator toolset.
 CMAKE_GENERATOR_TOOLSET:INTERNAL=
+//Test CMAKE_HAVE_LIBC_PTHREAD
+CMAKE_HAVE_LIBC_PTHREAD:INTERNAL=
+//Have library pthreads
+CMAKE_HAVE_PTHREADS_CREATE:INTERNAL=
+//Have library pthread
+CMAKE_HAVE_PTHREAD_CREATE:INTERNAL=1
+//Have include pthread.h
+CMAKE_HAVE_PTHREAD_H:INTERNAL=1
 //Source directory with the top level CMakeLists.txt file for this
 // project
 CMAKE_HOME_DIRECTORY:INTERNAL=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity
@@ -630,7 +638,7 @@ FIND_PACKAGE_MESSAGE_DETAILS_CronosNumLib:INTERNAL=[/usr/local/include][/usr/loc
 //Details about finding GSL
 FIND_PACKAGE_MESSAGE_DETAILS_GSL:INTERNAL=[/usr/include][/usr/lib64/libgsl.so][/usr/lib64/libgslcblas.so][v2.5()]
 //Details about finding HDF5
-FIND_PACKAGE_MESSAGE_DETAILS_HDF5:INTERNAL=[/usr/lib64/libhdf5.so][cfound components: C ][v1.10.5()]
+FIND_PACKAGE_MESSAGE_DETAILS_HDF5:INTERNAL=[/usr/lib64/libhdf5.so][cfound components: C ][v1.10.6()]
 //Details about finding MPI
 FIND_PACKAGE_MESSAGE_DETAILS_MPI:INTERNAL=[TRUE][TRUE][TRUE][c ][v3.1()]
 //Details about finding MPI_C
@@ -641,6 +649,8 @@ FIND_PACKAGE_MESSAGE_DETAILS_MPI_CXX:INTERNAL=[/usr/lib64/openmpi/lib/libmpi_cxx
 FIND_PACKAGE_MESSAGE_DETAILS_MPI_Fortran:INTERNAL=[/usr/lib64/openmpi/lib/libmpi_usempif08.so][/usr/lib64/openmpi/lib/libmpi_usempi_ignore_tkr.so][/usr/lib64/openmpi/lib/libmpi_mpifh.so][/usr/lib64/openmpi/lib/libmpi.so][mpi_usempif08;mpi_usempi_ignore_tkr;mpi_mpifh;mpi][TRUE][v3.1()]
 //Details about finding PkgConfig
 FIND_PACKAGE_MESSAGE_DETAILS_PkgConfig:INTERNAL=[/usr/bin/pkg-config][v1.6.3()]
+//Details about finding Threads
+FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
 //ADVANCED property for variable: GSL_CBLAS_LIBRARY
 GSL_CBLAS_LIBRARY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: GSL_CBLAS_LIBRARY_DEBUG

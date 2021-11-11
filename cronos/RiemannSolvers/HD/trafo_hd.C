@@ -249,7 +249,7 @@ void Transformations::get_Cons_HD(Queue queue, Data &gdata,
 void Transformations::get_Cons_HD(const Data &gdata, const ProblemType &Problem,
 		const EquationOfState  &eos, phys_fields_0D &fields, int /*ix*/, int /*iy*/, int /*iz*/, int face) const {
 
-	NumArray<REAL> Pos(3);
+	NumArray<REAL> Pos(3); //stays uninitialized
 	//Pos(0) = gdata.getCen_x(ix);
 	//Pos(1) = gdata.getCen_y(iy);
 	//Pos(2) = gdata.getCen_z(iz);

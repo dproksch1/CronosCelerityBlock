@@ -251,8 +251,9 @@ void Reconstruction::compute(const Data& gdata, std::vector<phys_fields_0D> &all
 
 	// Todo: Andere Generalisierung für punktweise rekonstruktion einführen?
 	for(int q=0; q<ListNormal.size(); ++q) {
+		
 		// First compute all derivatives
-		ListReconstructionNormal[q]->perpareDerivs(gdata, ix, iy, iz);
+		ListReconstructionNormal[q]->prepareDerivs(gdata, ix, iy, iz);
 
 		if (dir == -1 || dir == DirX) {
 			// Get Values in east and west direction:

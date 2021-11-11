@@ -131,7 +131,7 @@ using namespace std;
 
 
 
-//void SingleReconstruction_2nd::perpareDerivs(const Data &gdata, int ix, int iy, int iz) {
+//void SingleReconstruction_2nd::prepareDerivs(const Data &gdata, int ix, int iy, int iz) {
 //	//! Compute derivate from at given position
 //
 //	getDerivs(gdata, ix, iy, iz);

@@ -1099,7 +1099,6 @@ void HyperbolicSolver::restart(Data &gdata, gridFunc &gfunc,
 		gfunc.prep_boundaries(gdata, Problem);
 	}
 	init_general(gdata, gfunc, Problem);
-
 }
 
 

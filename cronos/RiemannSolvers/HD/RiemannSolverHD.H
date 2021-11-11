@@ -3,6 +3,8 @@
 
 #include "RiemannSolver.H"
 
+#define HLLCSOLVER_HYDRO_VEPS 1.e-120
+
 class RiemannSolverHD: public RiemannSolver {
 public:
 	RiemannSolverHD(){}
@@ -57,5 +59,11 @@ private:
 	REAL veps;
 	REAL gamma;
 };
+
+void get_vChar2(const Data &, const ProblemType &, const phys_fields_0D &, const phys_fields_0D &,
+			num_fields_0D &, int dir, REAL &);
+
+void get_NumFlux2(const Data &, const phys_fields_0D &, const phys_fields_0D &,
+			num_fields_0D &, int dir, int iFluid=0);
 
 #endif

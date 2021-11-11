@@ -13,7 +13,7 @@ cfl_threshold = 0.4
 N_OMINT = 8
 ------------------- Timing ---------------
 runtime     = 1440000
-t_end       = 0.000001 0.0000026 0.00001
+t_end       = 0.00000001 0.000000026 0.0000001  -> added two zeros
 dt          = 0.000001
 dt_bin      = 3. -> Restart Schritt
 num_bin     = 2000 

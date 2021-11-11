@@ -187,7 +187,6 @@ void PhysFluxesHD::get_PhysFlux(Queue queue, Data &gdata,
   
 }
 
-
 void PhysFluxesHD::get_PhysFlux(const Data &gdata,
 	const ProblemType &Problem, phys_fields_0D &fields,
         int /*ix*/, int /*iy*/, int /*iz*/, int face, int iFluid) {
@@ -252,7 +251,5 @@ void PhysFluxesHD::get_PhysFlux(const Data &gdata,
 #endif
 
 }
-
-
 
 

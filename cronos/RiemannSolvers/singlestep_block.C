@@ -6,6 +6,8 @@
 #include "DissipationMHD.H"
 #include "reconst.H"
 
+#include "HD/RiemannSolverHD.H"
+
 using namespace std;
 
 REAL HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
@@ -308,8 +310,8 @@ REAL HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		if (ix >= -1 && iy >= -1 && iz >= -1) {
 			for (int dir = 0; dir < DirMax; ++dir) {
 				int face = dir * 2;
-				Riemann[dir]->get_vChar(gdata, Problem, physVals[face], physVals[face + 1], numVals[dir], ix, iy, iz, dir, cfl_lin);
-				Riemann[dir]->get_NumFlux(gdata, physVals[face + 1], physVals[face], numVals[dir], dir);
+				get_vChar2(gdata, Problem, physVals[face], physVals[face + 1], numVals[dir], dir, cfl_lin);
+				get_NumFlux2(gdata, physVals[face + 1], physVals[face], numVals[dir], dir);
 			}
 		}
 
@@ -323,30 +325,27 @@ REAL HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		for (int iy = -n_ghost[1]+1; iy <= gdata.mx[1]+n_ghost[1]-1; ++iy){
 
 			for (int ix = ixStart; ix <= ixEnd; ++ix){
-
+				if (ix == ixEnd && iy == gdata.mx[1]+n_ghost[1]-1 && iz == gdata.mx[2]+n_ghost[2]-1) cout << "reach limit: " << ix << "." <<  iy << "." << iz << "\n";
 				const int fluidType = Riemann[DirX]->get_Fluid_Type();
 
 				if(ix >= 0 && ix <= gdata.mx[0] && iy >= 0 && iy <= gdata.mx[1] && iz >= 0 && iz <= gdata.mx[2]) {
-
 					const auto numVals = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix, iy, iz, cfl_lin);
 
+					//gdata.nom update n_OMINT
 					const auto numValsX = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix + 1, iy, iz, cfl_lin);
-					get_Changes(gdata, numVals[DirX], numValsX[DirX], gdata.nom, ix, iy, iz, DirX, fluidType);
+					get_Changes2(gdata, numVals[DirX], numValsX[DirX], gdata.nom, ix, iy, iz, DirX, fluidType);
 
 					const auto numValsY = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix, iy + 1, iz, cfl_lin);
-					get_Changes(gdata, numVals[DirY], numValsY[DirY], gdata.nom, ix, iy, iz, DirY, fluidType);
+					get_Changes2(gdata, numVals[DirY], numValsY[DirY], gdata.nom, ix, iy, iz, DirY, fluidType);
 
 					const auto numValsZ = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix, iy, iz + 1, cfl_lin);
-					get_Changes(gdata, numVals[DirZ], numValsZ[DirZ], gdata.nom, ix, iy, iz, DirZ, fluidType);
-
+					get_Changes2(gdata, numVals[DirZ], numValsZ[DirZ], gdata.nom, ix, iy, iz, DirZ, fluidType);
 				}
 
 			}
 
 		}
 	}
-
-	gettimeofday(&tin5, 0);
 
 // ----------------------------------------------------------------
 //   Check for errors:

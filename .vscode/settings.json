@@ -104,6 +104,23 @@
         "save_data.C": "cpp",
         "CException.C": "cpp",
         "problem.C": "cpp",
-        "ParameterFileReader.C": "cpp"
+        "ParameterFileReader.C": "cpp",
+        "trafo_hd.C": "cpp",
+        "vChar_hd.C": "cpp",
+        "matrix.C": "cpp",
+        "reconst_const.C": "cpp",
+        "CoolingSolver.C": "cpp",
+        "*.ipp": "cpp",
+        "boundary.C": "cpp",
+        "sources.C": "cpp",
+        "multifluid.C": "cpp",
+        "ConstrainedTransport.C": "cpp",
+        "reconst_2nd.C": "cpp",
+        "compare": "cpp",
+        "concepts": "cpp",
+        "ranges": "cpp",
+        "stop_token": "cpp",
+        "vChar.C": "cpp",
+        "RiemannSolverHD.C": "cpp"
     }
 }

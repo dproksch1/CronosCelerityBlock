@@ -121,9 +121,8 @@ public:
 	/**
 	 * Compute limited version of derivatives for block-structured version of code
 	 * */
-	void perpareDerivs(const Data& gdata, int ix, int iy, int iz) {
+	void prepareDerivs(const Data& gdata, int ix, int iy, int iz) {
 		//! Compute derivate from at given position
-
 		getDerivs(gdata, ix, iy, iz);
 
 		deriv_x = Limiter.compute(dudxp_q, dudx0_q, dudxm_q);
@@ -192,7 +191,7 @@ public:
 	}
 
 	void computePar(const Data& gdata,
-		NumMatrix<REAL,1> &inputPar, NumMatrix<REAL,1> &lhs, NumMatrix<REAL,1> &rhs) {
+		NumMatrix<REAL,1> &inputPar, NumMatrix<REAL,1> &lhs, NumMatrix<REAL,1> &rhs) {cout<<"used\n";
 		for (int i = -2; i <= gdata.mx[dir] + 1; ++i) {
 			lhs(i) = inputPar(i - 1);
 			rhs(i) = inputPar(i);

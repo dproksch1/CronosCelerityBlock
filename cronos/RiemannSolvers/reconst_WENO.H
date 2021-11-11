@@ -34,7 +34,7 @@ public:
 	/**
 	 * Compute limited version of derivatives for block-structured version of code
 	 * */
-	void perpareDerivs(const Data &, int ix, int iy, int iz);
+	void prepareDerivs(const Data &, int ix, int iy, int iz);
 	void computeNormal(const Data &, NumMatrix<REAL,1> &, NumMatrix<REAL,1> &,
 	                   NumMatrix<REAL,1> &, NumMatrix<REAL,1> &, Buffer<REAL, 1>&);
 	void computePar(const Data &, NumMatrix<REAL,1> &, NumMatrix<REAL,1> &,

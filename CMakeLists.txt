@@ -328,9 +328,9 @@ configure_file(${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef.
 	
 #endif()
 
-##set_tests_properties(small_run PROPERTIES FAIL_REGULAR_EXPRESSION "Error;error;ERROR")
+set_tests_properties(small_run PROPERTIES FAIL_REGULAR_EXPRESSION "Error;error;ERROR")
 # The following command required CMake 3.17 or higher
-##list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
+list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
 
 #set_target_properties(proj PROPERTIES COMPILE_DEFINITIONS BUILDER_STATIC_DEFINE)
 

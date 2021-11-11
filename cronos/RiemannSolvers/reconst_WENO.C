@@ -176,7 +176,7 @@ void SingleReconstruction_WENO::get_Vals_BT(const Data &gdata, phys_fields_0D &x
 }
 
 
-void SingleReconstruction_WENO::perpareDerivs(const Data &gdata, int ix, int iy, int iz) {
+void SingleReconstruction_WENO::prepareDerivs(const Data &gdata, int ix, int iy, int iz) {
 	//! Compute derivate from at given position
 
 	// Compute local derivatives in all directions

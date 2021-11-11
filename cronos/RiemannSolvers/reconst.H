@@ -90,7 +90,6 @@ namespace gpu {
 		auto prepareDerivs(AccessorType& omAcc, size_t ix, size_t iy, size_t iz) {
 
 			//! Compute derivate from at given position
-
 			auto [dudx, dudy, dudz] = getDerivs(omAcc, ix, iy, iz);
 
 			// TODO: read from project parameters
@@ -138,11 +137,10 @@ namespace gpu {
 
 		template<typename AccessorType, typename FieldAccessorType>
 		void compute(AccessorType& omAcc, FieldAccessorType& fieldAcc, size_t ix, size_t iy, size_t iz) {
-
 			// Todo: Andere Generalisierung für punktweise rekonstruktion einführen?
 			//for (size_t q = 0; q < ListNormal.size(); ++q) {
 				// First compute all derivatives
-				//ListReconstructionNormal[q].perpareDerivs(omAcc, ix, iy, iz);
+				//ListReconstructionNormal[q].prepareDerivs(omAcc, ix, iy, iz);
 				auto [deriv_x, deriv_y, deriv_z] = prepareDerivs(omAcc, ix, iy, iz);
 
 				// Get Values in east and west direction:
@@ -204,7 +202,7 @@ public:
 							 NumMatrix<REAL, 1>& /*lhs*/, NumMatrix<REAL, 1>& /*rhs*/, NumMatrix<REAL, 1>& /*derivP*/,
 							 Buffer<REAL, 1> /*inputPerpPSYCL*/, Buffer<REAL, 1> /*inputPerpMSYCL*/, Buffer<REAL, 1> /*derivSYCL*/) = 0;
 
-	virtual void perpareDerivs(const Data& gdata, int ix, int iy, int iz) {};
+	virtual void prepareDerivs(const Data& gdata, int ix, int iy, int iz) {};
 
 	virtual void get_Vals_EW(const Data &, phys_fields_0D &xFieldsW,
 			phys_fields_0D &xFieldsE, int, int, int) = 0;
