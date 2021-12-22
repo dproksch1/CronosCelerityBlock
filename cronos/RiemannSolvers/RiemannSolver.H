@@ -36,17 +36,9 @@ public:
 		}
 	};
 	virtual ~RiemannSolver(){};
-	virtual void get_vChar(Queue /*queue*/, Data &, ProblemType &, cronos::vector<double> &,
-	                       phys_fields_1D &, phys_fields_1D &,
-	                       NumMatrix<REAL,1> &, NumMatrix<REAL,1> &,
-						   Buffer<REAL, 1> /*v_ch_mSYCL*/, Buffer<REAL, 1> /*v_ch_pSYCL*/,
-	                       const int &, REAL &) const = 0;
 	virtual void get_vChar(const Data &, const ProblemType &, const phys_fields_0D &, const phys_fields_0D &,
 			num_fields_0D &,
 			int ix, int iy, int iz, int dir, REAL &cfl_lin) const = 0;
-//	virtual void get_vChar(Data &, ProblemType &, cronos::vector<double> &,
-//	    	                       phys_fields_1D &, phys_fields_1D &, fields_1D &,
-//	    	                       const int &, REAL &) = 0;
 	virtual void get_NumFlux(Queue /*queue*/, Data &, phys_fields_1D &,
 			phys_fields_1D &, fields_1D &, const int &, int iFluid=0) const = 0;
 	virtual void get_NumFlux(const Data &, const phys_fields_0D &,

@@ -17,32 +17,6 @@
 
 using namespace std;
 
-/*
-  Base class for specific numerical problem. Derived classes have at
-  least to supply the routine:
-
-  init_fields(q, i, j, k)
-
-  for initialisation of all relevant quantities and a corresponding
-  constructor.
-
-  Routines:
-
-  bc_User(gdata, omb, dir, top, q, rim)
-  bc_periodic(gdata, Send, omb, q, dir, top)
-  bc_Flux(gdata, HXpmWE, HXpmSN, HXpmBT);
-  bc_Flux(gdata, HXpmWE, direction);
-  bc_emf(gdata, Ex, Ey, Ez);
-  src_User(gdata, nom, nom_user)
-  computePhystest(gdata)
-  writePhystest(gdata, outfile)
-  computeFluct(gdata, EkinFluct, EmagFluct)
-  get_NameMovie(gdata, q)
-  set_MovieOut(gdata, q)
-
-  are optional and are used as to do nothing, when not redeclared in
-  derived class.
-*/
 
 class ProblemType {
 public:

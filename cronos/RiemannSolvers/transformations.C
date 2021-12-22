@@ -3,46 +3,6 @@
 #include <stdlib.h>
 
 
-//Transformations::Transformations(ProblemType &Problem, bool TPhys) {
-//	TempErr = 0;
-//
-//	// Copying some constants from Problem-class to use locally
-//	this->q_rho = Problem.q_rho;
-//	this->q_sx = Problem.q_sx;
-//	this->q_sy = Problem.q_sy;
-//	this->q_sz = Problem.q_sz;
-//	this->q_Bx = Problem.q_Bx;
-//	this->q_By = Problem.q_By;
-//	this->q_Bz = Problem.q_Bz;
-//	this->q_Eges = Problem.q_Eges;
-//	this->q_Eadd = Problem.q_Eadd;
-//	this->iFluid = 0;
-//
-//	this->TPhys = TPhys;
-//#if(FLUID_TYPE == CRONOS_MHD)
-//	magFluid = true;
-//#elif(FLUID_TYPE == CRONOS_HYDRO)
-//	magFluid = false;
-//#endif
-//
-//	if(ENERGETICS == FULL && this->TPhys) {
-//		TNorm = value((char*)"TempNorm");   // K
-//		TNorm = Problem.TrafoNorm->get_num(Problem.TrafoNorm->TEMP, 1*CRONOS_CONSTANTS::Kelvin);
-//	} else {
-//		TNorm = 1.;
-//	}
-//
-//	if(ENERGETICS == FULL) {
-//		thermal = static_cast<int>(value((char*)"thermal"));
-//	}
-//
-//#if (USE_COROTATION == CRONOS_ON)
-//	omegaZ = value((char*)"omegaZ");
-//#endif
-//
-//
-//}
-
 Transformations::Transformations(const CronosFluid &fluid, ProblemType &Problem, bool TPhys, int iFluid) {
 	TempErr = 0;
 

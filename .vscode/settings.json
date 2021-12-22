@@ -121,6 +121,22 @@
         "ranges": "cpp",
         "stop_token": "cpp",
         "vChar.C": "cpp",
-        "RiemannSolverHD.C": "cpp"
+        "RiemannSolverHD.C": "cpp",
+        "units.C": "cpp",
+        "normalisation.C": "cpp",
+        "user_equations.C": "cpp",
+        "Hdf5File.C": "cpp",
+        "gridfunc.C": "cpp",
+        "main.C": "cpp",
+        "Hdf5File_cbase.C": "cpp",
+        "num_matrix_1d_inc.C": "cpp",
+        "fluid.C": "cpp",
+        "test_data.C": "cpp",
+        "gridParam.C": "cpp",
+        "buildinfo.C": "cpp",
+        "user_pde.C": "cpp",
+        "movie.C": "cpp",
+        "limiter.C": "cpp",
+        "singlestep_stub.C": "cpp"
     }
 }

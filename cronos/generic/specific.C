@@ -1,6 +1,7 @@
 #include "gridgen.H"
 #include "specific.H"
 #include <iomanip>
+#include <assert.h>
 
 #include "RiemannSolverHD.H"
 #include "RiemannSolverMHD.H"
@@ -708,8 +709,8 @@ void HyperbolicSolver::init(Data &gdata, gridFunc &gfunc,
 
 
 void HyperbolicSolver::init_general(Data &gdata, gridFunc &gfunc,
-                                    ProblemType &Problem) {
-
+                                    ProblemType &Problem)
+{
 	// General initialisation procedure
 	// This routine is executed for normal start AND for a restart
 	
@@ -924,7 +925,8 @@ void HyperbolicSolver::set_TimeIntegrator(const Data &gdata,
 
 
 void HyperbolicSolver::gen_MagBoundValues(Data &gdata, gridFunc &gfunc,
-                                          ProblemType &Problem) {
+                                          ProblemType &Problem)
+{
 	//! Compute the values at the boundary for the magnetic field
 
 
@@ -1054,7 +1056,8 @@ void HyperbolicSolver::gen_MagBoundValues(Data &gdata, gridFunc &gfunc,
 
 
 void HyperbolicSolver::restart(Data &gdata, gridFunc &gfunc,
-                               ProblemType &Problem) {
+                               ProblemType &Problem)
+{
 	// If a vector potential is supplied in the restart process -
 	// compute the magnetic induction
 //#if (FLUID_TYPE == CRONOS_MHD)

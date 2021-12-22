@@ -1,0 +1,121 @@
+cmake_minimum_required (VERSION 3.16.3)
+project (CronosCodeBlock C CXX)
+enable_language(Fortran)
+
+set(CMAKE_CXX_STANDARD 17)
+
+##################
+# Compiler Setup #
+##################
+
+if(MSVC)
+
+	# disable "register no longer supported storage class" warning
+	add_compile_options("/wd5033")
+	# disable "sprintf is unsafe, use sprintf_s" warning
+	add_compile_options("/wd4996")
+	# disable "possible loss of data in numeric conversion" warning
+	add_compile_options("/wd4244")
+	# enable parallel build in Visual Studio
+	add_compile_options("/MP")
+	# required for some symbols to be available, such as SZ_encoder_enabled
+	add_compile_options("-DH5_BUILT_AS_DYNAMIC_LIB")
+	# enable debug information in object files
+	add_compile_options("$<$<CONFIG:DEBUG>:/Z7;/DEBUG>")
+	# set iterator checking
+	add_compile_options("$<$<CONFIG:DEBUG>:-D_ITERATOR_DEBUG_LEVEL=2>")
+	add_compile_options("$<$<CONFIG:RELEASE>:-D_ITERATOR_DEBUG_LEVEL=0>")
+	# enable debug information in object files
+	#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MD")
+
+else()
+
+
+endif()
+
+############################
+# Third-party Dependencies #
+############################
+
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+find_package(GSL REQUIRED)
+find_package(MPI REQUIRED)
+find_package(HDF5 REQUIRED COMPONENTS C) # CXX HL
+find_package(CronosNumLib REQUIRED)
+
+if(CMAKE_GENERATOR STREQUAL "Ninja")
+  # Force colored warnings in Ninja's output, if the compiler has -fdiagnostics-color support.
+  # Rationale in https://github.com/ninja-build/ninja/issues/814
+  set(CMAKE_SYCL_FLAGS "${CMAKE_SYCL_FLAGS} -fdiagnostics-color=always")
+endif()
+
+
+##############################
+# Application-specific Setup #
+##############################
+
+include_directories(${HDF5_INCLUDE_DIRS})
+include_directories(${GSL_INCLUDE_DIRS})
+include_directories(${CRONOSNUMLIB_INCLUDE_DIR}/CronosNumLib)
+
+include_directories(test)
+include_directories(general)
+include_directories(interface_functions)
+include_directories(kernel)
+include_directories(riemann_solver)
+include_directories(reconstruction)
+include_directories(utils)
+include_directories(configuration/ShockTubeSod)
+
+set(SOURCES
+    general/buildinfo.C
+    general/CException.C
+    general/data.C
+    general/eos.C
+    general/fluid.C
+    general/grid.C
+    general/gridfunc.C
+    general/gridgen.C
+    general/gridParam.C
+    general/Hdf5File_cbase.C
+    general/movie.C
+    general/normalisation.C
+    general/proj.C
+    general/sources.C
+    general/specific.C
+    general/timestepping.C
+    general/units.C
+    interface_functions/problem.C
+    interface_functions/solver.C
+    kernel/fields_local.C
+    kernel/transformations.C
+    riemann_solver/hllc_hd.C
+    riemann_solver/PhysFluxesHD.C
+    riemann_solver/RiemannSolver.C
+    riemann_solver/vChar_hd.C
+    reconstruction/reconst.C
+    #test/proj.C
+    #test/test_data.C
+    test/singlestep_stub.C
+    configuration/ShockTubeSod/modules.C
+)
+
+FILE(GLOB_RECURSE HEADERS "*.h")
+
+add_executable(proj ${SOURCES} general/proj.C ${HEADERS})
+#add_executable(proj ${SOURCES} test/proj.C ${HEADERS})
+
+set_property(TARGET proj PROPERTY CXX_STANDARD 17)
+
+if(NOT MSVC)
+	target_link_libraries(proj PRIVATE stdc++fs)
+endif()
+
+target_link_libraries(proj PUBLIC ${CRONOSNUMLIB_MATRIX} ${CRONOSNUMLIB_UTIL})
+target_link_libraries(proj PRIVATE ${MPI_C_LIBRARIES})
+target_link_libraries(proj PRIVATE GSL::gsl GSL::gslcblas)
+target_link_libraries(proj PRIVATE ${HDF5_LIBRARIES})
+
+#########
+# TESTS #
+#########

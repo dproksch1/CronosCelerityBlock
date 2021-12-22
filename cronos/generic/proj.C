@@ -27,6 +27,7 @@ cronos_ostream ccerr(std::cerr, 0);
 
 int main(int argc, char* argv[])
 {
+
 #ifdef parallel
 	int ntasks;
 	MPI_Init(&argc, &argv);
@@ -66,7 +67,6 @@ int main(int argc, char* argv[])
 	signal(SIGABRT, stacktraceHandler); // install the stacktracer for aborts (e.g. by failed asserts)
 
 #ifdef RK_STEPS
-
 	// N_P is given in constants.H - number of poisson-steps
 	if (N_P) {
 		cerr << "N_P should be 0 for Runge Kutta" << endl;

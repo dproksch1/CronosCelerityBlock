@@ -109,7 +109,7 @@ add_compile_definitions(CL_TARGET_OPENCL_VERSION=220)
 
 # import numeric library
 
-add_subdirectory(external/CronosNumLib)
+#add_subdirectory(external/CronosNumLib)
 
 # add include directories
 

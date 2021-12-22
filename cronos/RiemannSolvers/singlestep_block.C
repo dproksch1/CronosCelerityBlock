@@ -226,7 +226,7 @@ REAL HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	//	ptotalCur[q] = Buffer<REAL, 3>(Range<3>(zMax, yMax, xMax));
 	//}
 
-	std::vector<Buffer<REAL, 2>> physValsSYCL(gdata.omSYCL.size(), Buffer<REAL, 2>(Range<2>(gpu::FaceMax, gpu::TypeMax)));
+	//std::vector<Buffer<REAL, 2>> physValsSYCL(gdata.omSYCL.size(), Buffer<REAL, 2>(Range<2>(gpu::FaceMax, gpu::TypeMax)));
 
 	const int izStart = -n_ghost[2] + 1;
 	const int izEnd = gdata.mx[2] + n_ghost[2] - 1;
