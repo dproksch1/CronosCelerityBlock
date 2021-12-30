@@ -61,6 +61,9 @@ public:
 	virtual void get_PhysFlux(Data &gdata, cronos::vector<REAL> &iPos,
 			phys_fields_1D &pf, int dir, REAL shift) {}*/
 
+	virtual void TransPrim2Cons(Data &) {}
+	virtual void TransCons2Prim(Data &) {}
+
 	void name_User(Data &);
 	/**Routine to access some internal variables from anywhere (e.g. from an Euler solver)*/
 	double get_internalValue(int){return 0.;}

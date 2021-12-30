@@ -329,6 +329,7 @@ REAL HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 				const int fluidType = Riemann[DirX]->get_Fluid_Type();
 
 				if(ix >= 0 && ix <= gdata.mx[0] && iy >= 0 && iy <= gdata.mx[1] && iz >= 0 && iz <= gdata.mx[2]) {
+
 					const auto numVals = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix, iy, iz, cfl_lin);
 
 					//gdata.nom update n_OMINT

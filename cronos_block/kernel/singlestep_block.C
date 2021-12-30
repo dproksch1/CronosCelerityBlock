@@ -5,6 +5,8 @@
 #include <vector>
 //#include "DissipationMHD.H"
 #include "reconst.H"
+#include "changes.H"
+#include "utils.H"
 
 using namespace std;
 
@@ -233,7 +235,7 @@ REAL HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	const int ixStart = -n_ghost[0] + 1;
 	const int ixEnd = gdata.mx[0] + n_ghost[0] - 1;
 
-	auto range = Range<3>(izEnd-izStart, iyEnd-iyStart, ixEnd-ixStart);
+	//auto range = Range<3>(izEnd-izStart, iyEnd-iyStart, ixEnd-ixStart);
 
 	//for (int q = 0; q < gdata.omSYCL.size(); ++q) {
 	//	queue.submit([&](sycl::handler& cgh) {
@@ -292,10 +294,10 @@ REAL HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 			int face = dir * 2;
 
-			Trafo->get_Cons_HD(gdata, Problem, *eos, physVals[face], face);
+			Trafo->get_Cons(gdata, Problem, *eos, physVals[face], ix, iy, iz, face);
 			PhysFlux->get_PhysFlux(gdata, Problem, physVals[face], ix, iy, iz, face);
 			// i-1,j,k - East
-			Trafo->get_Cons_HD(gdata, Problem, *eos, physVals[face + 1], face + 1);
+			Trafo->get_Cons(gdata, Problem, *eos, physVals[face + 1], ix, iy, iz, face + 1);
 			PhysFlux->get_PhysFlux(gdata, Problem, physVals[face + 1], ixOff, iyOff, izOff, face + 1);
 
 		}
@@ -308,8 +310,8 @@ REAL HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		if (ix >= -1 && iy >= -1 && iz >= -1) {
 			for (int dir = 0; dir < DirMax; ++dir) {
 				int face = dir * 2;
-				get_vChar_HD(gdata, Problem, physVals[face], physVals[face + 1], numVals[dir], ix, iy, iz, dir, cfl_lin);
-				get_NumFlux_HD(gdata, physVals[face + 1], physVals[face], numVals[dir], dir);
+				get_vChar2(gdata, Problem, physVals[face], physVals[face + 1], numVals[dir], dir, cfl_lin);
+				get_NumFlux2(gdata, physVals[face + 1], physVals[face], numVals[dir], dir);
 			}
 		}
 
@@ -359,7 +361,7 @@ REAL HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 // ----------------------------------------------------------------
 
 	REAL cfl = compute_cfl(gdata, Problem, cfl_eta, cfl_lin, n);
-	
+	//REAL cfl = 0.0;
 // ----------------------------------------------------------------
 //   Geometrical source terms:
 // ----------------------------------------------------------------
@@ -405,7 +407,7 @@ REAL HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 // ----------------------------------------------------------------
 
 	Trafo->TransPrim2Cons(gdata, gfunc, Problem);
-	
+
 	Problem.TransPrim2Cons(gdata);
 
 // ----------------------------------------------------------------
@@ -471,7 +473,6 @@ REAL HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	// Transform to co-rotating frame velocity for BCs
 	Trafo->TransInertToCorot(gdata, gfunc, Problem);
 #endif
-
 
 #if(ENERGETICS == FULL)
 	int q_max = q_Eges;
@@ -553,7 +554,6 @@ REAL HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		}
 
 	}
-
 
 // ----------------------------------------------------------------
 //   Test physical state

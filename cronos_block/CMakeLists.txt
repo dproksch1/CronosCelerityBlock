@@ -70,6 +70,7 @@ include_directories(configuration/ShockTubeSod)
 set(SOURCES
     general/buildinfo.C
     general/CException.C
+    general/cfl.C
     general/data.C
     general/eos.C
     general/fluid.C
@@ -87,7 +88,9 @@ set(SOURCES
     general/units.C
     interface_functions/problem.C
     interface_functions/solver.C
+    kernel/changes.C
     kernel/fields_local.C
+    kernel/singlestep_block.C
     kernel/transformations.C
     riemann_solver/hllc_hd.C
     riemann_solver/PhysFluxesHD.C
@@ -96,7 +99,7 @@ set(SOURCES
     reconstruction/reconst.C
     #test/proj.C
     #test/test_data.C
-    test/singlestep_stub.C
+    #test/singlestep_stub.C
     configuration/ShockTubeSod/modules.C
 )
 

@@ -19,8 +19,8 @@
 #include "data.H"
 #include "gridgen.H"
 
-//cronos_ostream ccout(std::cout, 0);
-//cronos_ostream ccerr(std::cerr, 0);
+cronos_ostream ccout(std::cout, 0);
+cronos_ostream ccerr(std::cerr, 0);
 
 int main(int argc, char* argv[])
 {
@@ -66,8 +66,34 @@ int main(int argc, char* argv[])
 	Data gdata;
 	Environment solver(gdata);
 
-	std::cout << "Hello World 2\n";
+	//cout << gdata.fluid.get_fieldName(qReconst) << "\n";
 
+	bool RESTART = bool(value((char*)"restart"));
+
+	if (RESTART) {
+		solver.LoadData(gdata);
+		try {
+			solver.RKSolver->restart(gdata, *solver.gfunc, *solver.Problem);
+		} catch (CException exep) {
+			solver.Abort(gdata, exep);
+		}
+	} else {
+		gdata.time = 0.;
+		try {
+			solver.RKSolver->init(gdata, *solver.gfunc, *solver.Problem);
+			// solver->EulerSolver->init(gdata, *solver->gfunc, *solver->Problem);
+		} catch (CException exep) {
+			solver.Abort(gdata, exep);
+		}
+		solver.InitOutput(gdata);
+	}
+
+	// for (;;) {
+	while (EndProgram == 0) {
+		EndProgram = solver.integrate(gdata);
+	//	// EndProgram = solver.Finalize(gdata, static_cast<string>("Stopping for gdm"));
+
+	}
 
 	if (EndProgram == 1) {
 		// Everything is fine -> exit normally

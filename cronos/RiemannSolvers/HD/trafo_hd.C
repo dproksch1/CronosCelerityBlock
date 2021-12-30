@@ -1,5 +1,6 @@
 #include "transformations.H"
 
+
 inline REAL Transformations::TransEth2E_HD(REAL rhoinv, REAL psq, REAL Bsq, REAL ETherm)
 {
 	REAL Energy(ETherm + 0.5*psq*rhoinv);

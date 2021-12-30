@@ -38,7 +38,7 @@ public:
 			phys_fields_0D &xFieldsN, int, int, int);
 	void get_Vals_BT(const Data &, phys_fields_0D &xFieldsB,
 			phys_fields_0D &xFieldsT, int, int, int);
-            
+      int qReconst;      
 protected:
 	/**
 	 * Compute left-handed, centred, and right-handed derivatives in all spatial directions
@@ -46,7 +46,7 @@ protected:
 	 * */
 	void getDerivs(const Data &, int ix, int iy, int iz);
 	int dir;
-	int qReconst;
+	
 	int substep;
 
 	NumMatrix<REAL, 1> derivPerp, derivM;

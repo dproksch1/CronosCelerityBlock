@@ -250,6 +250,33 @@ general/buildinfo.C.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/proj.dir/build.make CMakeFiles/proj.dir/general/buildinfo.C.s
 .PHONY : general/buildinfo.C.s
 
+general/cfl.o: general/cfl.C.o
+
+.PHONY : general/cfl.o
+
+# target to build an object file
+general/cfl.C.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/proj.dir/build.make CMakeFiles/proj.dir/general/cfl.C.o
+.PHONY : general/cfl.C.o
+
+general/cfl.i: general/cfl.C.i
+
+.PHONY : general/cfl.i
+
+# target to preprocess a source file
+general/cfl.C.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/proj.dir/build.make CMakeFiles/proj.dir/general/cfl.C.i
+.PHONY : general/cfl.C.i
+
+general/cfl.s: general/cfl.C.s
+
+.PHONY : general/cfl.s
+
+# target to generate assembly for a file
+general/cfl.C.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/proj.dir/build.make CMakeFiles/proj.dir/general/cfl.C.s
+.PHONY : general/cfl.C.s
+
 general/data.o: general/data.C.o
 
 .PHONY : general/data.o
@@ -682,6 +709,33 @@ interface_functions/solver.C.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/proj.dir/build.make CMakeFiles/proj.dir/interface_functions/solver.C.s
 .PHONY : interface_functions/solver.C.s
 
+kernel/changes.o: kernel/changes.C.o
+
+.PHONY : kernel/changes.o
+
+# target to build an object file
+kernel/changes.C.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/proj.dir/build.make CMakeFiles/proj.dir/kernel/changes.C.o
+.PHONY : kernel/changes.C.o
+
+kernel/changes.i: kernel/changes.C.i
+
+.PHONY : kernel/changes.i
+
+# target to preprocess a source file
+kernel/changes.C.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/proj.dir/build.make CMakeFiles/proj.dir/kernel/changes.C.i
+.PHONY : kernel/changes.C.i
+
+kernel/changes.s: kernel/changes.C.s
+
+.PHONY : kernel/changes.s
+
+# target to generate assembly for a file
+kernel/changes.C.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/proj.dir/build.make CMakeFiles/proj.dir/kernel/changes.C.s
+.PHONY : kernel/changes.C.s
+
 kernel/fields_local.o: kernel/fields_local.C.o
 
 .PHONY : kernel/fields_local.o
@@ -708,6 +762,33 @@ kernel/fields_local.s: kernel/fields_local.C.s
 kernel/fields_local.C.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/proj.dir/build.make CMakeFiles/proj.dir/kernel/fields_local.C.s
 .PHONY : kernel/fields_local.C.s
+
+kernel/singlestep_block.o: kernel/singlestep_block.C.o
+
+.PHONY : kernel/singlestep_block.o
+
+# target to build an object file
+kernel/singlestep_block.C.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/proj.dir/build.make CMakeFiles/proj.dir/kernel/singlestep_block.C.o
+.PHONY : kernel/singlestep_block.C.o
+
+kernel/singlestep_block.i: kernel/singlestep_block.C.i
+
+.PHONY : kernel/singlestep_block.i
+
+# target to preprocess a source file
+kernel/singlestep_block.C.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/proj.dir/build.make CMakeFiles/proj.dir/kernel/singlestep_block.C.i
+.PHONY : kernel/singlestep_block.C.i
+
+kernel/singlestep_block.s: kernel/singlestep_block.C.s
+
+.PHONY : kernel/singlestep_block.s
+
+# target to generate assembly for a file
+kernel/singlestep_block.C.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/proj.dir/build.make CMakeFiles/proj.dir/kernel/singlestep_block.C.s
+.PHONY : kernel/singlestep_block.C.s
 
 kernel/transformations.o: kernel/transformations.C.o
 
@@ -871,33 +952,6 @@ riemann_solver/vChar_hd.C.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/proj.dir/build.make CMakeFiles/proj.dir/riemann_solver/vChar_hd.C.s
 .PHONY : riemann_solver/vChar_hd.C.s
 
-test/singlestep_stub.o: test/singlestep_stub.C.o
-
-.PHONY : test/singlestep_stub.o
-
-# target to build an object file
-test/singlestep_stub.C.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/proj.dir/build.make CMakeFiles/proj.dir/test/singlestep_stub.C.o
-.PHONY : test/singlestep_stub.C.o
-
-test/singlestep_stub.i: test/singlestep_stub.C.i
-
-.PHONY : test/singlestep_stub.i
-
-# target to preprocess a source file
-test/singlestep_stub.C.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/proj.dir/build.make CMakeFiles/proj.dir/test/singlestep_stub.C.i
-.PHONY : test/singlestep_stub.C.i
-
-test/singlestep_stub.s: test/singlestep_stub.C.s
-
-.PHONY : test/singlestep_stub.s
-
-# target to generate assembly for a file
-test/singlestep_stub.C.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/proj.dir/build.make CMakeFiles/proj.dir/test/singlestep_stub.C.s
-.PHONY : test/singlestep_stub.C.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -919,6 +973,9 @@ help:
 	@echo "... general/buildinfo.o"
 	@echo "... general/buildinfo.i"
 	@echo "... general/buildinfo.s"
+	@echo "... general/cfl.o"
+	@echo "... general/cfl.i"
+	@echo "... general/cfl.s"
 	@echo "... general/data.o"
 	@echo "... general/data.i"
 	@echo "... general/data.s"
@@ -967,9 +1024,15 @@ help:
 	@echo "... interface_functions/solver.o"
 	@echo "... interface_functions/solver.i"
 	@echo "... interface_functions/solver.s"
+	@echo "... kernel/changes.o"
+	@echo "... kernel/changes.i"
+	@echo "... kernel/changes.s"
 	@echo "... kernel/fields_local.o"
 	@echo "... kernel/fields_local.i"
 	@echo "... kernel/fields_local.s"
+	@echo "... kernel/singlestep_block.o"
+	@echo "... kernel/singlestep_block.i"
+	@echo "... kernel/singlestep_block.s"
 	@echo "... kernel/transformations.o"
 	@echo "... kernel/transformations.i"
 	@echo "... kernel/transformations.s"
@@ -988,9 +1051,6 @@ help:
 	@echo "... riemann_solver/vChar_hd.o"
 	@echo "... riemann_solver/vChar_hd.i"
 	@echo "... riemann_solver/vChar_hd.s"
-	@echo "... test/singlestep_stub.o"
-	@echo "... test/singlestep_stub.i"
-	@echo "... test/singlestep_stub.s"
 .PHONY : help
 
 

@@ -34,15 +34,12 @@ void get_Changes(const Data &gdata,
 
 
 	for (int q = 0; q < num; ++q){
-#if(FLUID_TYPE == CRONOS_MULTIFLUID)
-		int q_global = gdata.fluids->fluids[iFluid].get_IndexGlobal(q);
-#else
+		
 		int q_global = q;
-#endif
 
 #if (GEOM == CARTESIAN)
 		// Cartesian case
-		nom[q_global](ix, iy, iz) += get_Changes1DCart2(gdata, numfP.flux_num, numfM.flux_num, dir, iPos, q);
+		nom[q_global](ix, iy, iz) += get_Changes1DCart(gdata, numfP.flux_num, numfM.flux_num, dir, iPos, q);
 #else
 
 		// general case

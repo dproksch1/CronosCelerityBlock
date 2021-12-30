@@ -102,9 +102,22 @@ CMakeFiles/proj.dir/general/CException.C.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/proj.dir/general/CException.C.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/CException.C -o CMakeFiles/proj.dir/general/CException.C.s
 
+CMakeFiles/proj.dir/general/cfl.C.o: CMakeFiles/proj.dir/flags.make
+CMakeFiles/proj.dir/general/cfl.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/cfl.C
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/proj.dir/general/cfl.C.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/cfl.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/cfl.C
+
+CMakeFiles/proj.dir/general/cfl.C.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/general/cfl.C.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/cfl.C > CMakeFiles/proj.dir/general/cfl.C.i
+
+CMakeFiles/proj.dir/general/cfl.C.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/proj.dir/general/cfl.C.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/cfl.C -o CMakeFiles/proj.dir/general/cfl.C.s
+
 CMakeFiles/proj.dir/general/data.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/data.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/data.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/proj.dir/general/data.C.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/proj.dir/general/data.C.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/data.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/data.C
 
 CMakeFiles/proj.dir/general/data.C.i: cmake_force
@@ -117,7 +130,7 @@ CMakeFiles/proj.dir/general/data.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/eos.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/eos.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/eos.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/proj.dir/general/eos.C.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/proj.dir/general/eos.C.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/eos.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/eos.C
 
 CMakeFiles/proj.dir/general/eos.C.i: cmake_force
@@ -130,7 +143,7 @@ CMakeFiles/proj.dir/general/eos.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/fluid.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/fluid.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/fluid.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/proj.dir/general/fluid.C.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/proj.dir/general/fluid.C.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/fluid.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/fluid.C
 
 CMakeFiles/proj.dir/general/fluid.C.i: cmake_force
@@ -143,7 +156,7 @@ CMakeFiles/proj.dir/general/fluid.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/grid.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/grid.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/grid.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/proj.dir/general/grid.C.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/proj.dir/general/grid.C.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/grid.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/grid.C
 
 CMakeFiles/proj.dir/general/grid.C.i: cmake_force
@@ -156,7 +169,7 @@ CMakeFiles/proj.dir/general/grid.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/gridfunc.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/gridfunc.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/gridfunc.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/proj.dir/general/gridfunc.C.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/proj.dir/general/gridfunc.C.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/gridfunc.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/gridfunc.C
 
 CMakeFiles/proj.dir/general/gridfunc.C.i: cmake_force
@@ -169,7 +182,7 @@ CMakeFiles/proj.dir/general/gridfunc.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/gridgen.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/gridgen.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/gridgen.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/proj.dir/general/gridgen.C.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/proj.dir/general/gridgen.C.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/gridgen.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/gridgen.C
 
 CMakeFiles/proj.dir/general/gridgen.C.i: cmake_force
@@ -182,7 +195,7 @@ CMakeFiles/proj.dir/general/gridgen.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/gridParam.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/gridParam.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/gridParam.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/proj.dir/general/gridParam.C.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/proj.dir/general/gridParam.C.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/gridParam.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/gridParam.C
 
 CMakeFiles/proj.dir/general/gridParam.C.i: cmake_force
@@ -195,7 +208,7 @@ CMakeFiles/proj.dir/general/gridParam.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/Hdf5File_cbase.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/Hdf5File_cbase.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/Hdf5File_cbase.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/proj.dir/general/Hdf5File_cbase.C.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/proj.dir/general/Hdf5File_cbase.C.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/Hdf5File_cbase.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/Hdf5File_cbase.C
 
 CMakeFiles/proj.dir/general/Hdf5File_cbase.C.i: cmake_force
@@ -208,7 +221,7 @@ CMakeFiles/proj.dir/general/Hdf5File_cbase.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/movie.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/movie.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/movie.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/proj.dir/general/movie.C.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/proj.dir/general/movie.C.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/movie.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/movie.C
 
 CMakeFiles/proj.dir/general/movie.C.i: cmake_force
@@ -221,7 +234,7 @@ CMakeFiles/proj.dir/general/movie.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/normalisation.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/normalisation.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/normalisation.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/proj.dir/general/normalisation.C.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/proj.dir/general/normalisation.C.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/normalisation.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/normalisation.C
 
 CMakeFiles/proj.dir/general/normalisation.C.i: cmake_force
@@ -234,7 +247,7 @@ CMakeFiles/proj.dir/general/normalisation.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/proj.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/proj.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/proj.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/proj.dir/general/proj.C.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/proj.dir/general/proj.C.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/proj.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/proj.C
 
 CMakeFiles/proj.dir/general/proj.C.i: cmake_force
@@ -247,7 +260,7 @@ CMakeFiles/proj.dir/general/proj.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/sources.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/sources.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/sources.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/proj.dir/general/sources.C.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/proj.dir/general/sources.C.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/sources.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/sources.C
 
 CMakeFiles/proj.dir/general/sources.C.i: cmake_force
@@ -260,7 +273,7 @@ CMakeFiles/proj.dir/general/sources.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/specific.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/specific.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/specific.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/proj.dir/general/specific.C.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/proj.dir/general/specific.C.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/specific.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/specific.C
 
 CMakeFiles/proj.dir/general/specific.C.i: cmake_force
@@ -273,7 +286,7 @@ CMakeFiles/proj.dir/general/specific.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/timestepping.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/timestepping.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/timestepping.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/proj.dir/general/timestepping.C.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/proj.dir/general/timestepping.C.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/timestepping.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/timestepping.C
 
 CMakeFiles/proj.dir/general/timestepping.C.i: cmake_force
@@ -286,7 +299,7 @@ CMakeFiles/proj.dir/general/timestepping.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/units.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/units.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/units.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/proj.dir/general/units.C.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/proj.dir/general/units.C.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/units.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/units.C
 
 CMakeFiles/proj.dir/general/units.C.i: cmake_force
@@ -299,7 +312,7 @@ CMakeFiles/proj.dir/general/units.C.s: cmake_force
 
 CMakeFiles/proj.dir/interface_functions/problem.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/interface_functions/problem.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/interface_functions/problem.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/proj.dir/interface_functions/problem.C.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/proj.dir/interface_functions/problem.C.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/interface_functions/problem.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/interface_functions/problem.C
 
 CMakeFiles/proj.dir/interface_functions/problem.C.i: cmake_force
@@ -312,7 +325,7 @@ CMakeFiles/proj.dir/interface_functions/problem.C.s: cmake_force
 
 CMakeFiles/proj.dir/interface_functions/solver.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/interface_functions/solver.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/interface_functions/solver.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/proj.dir/interface_functions/solver.C.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/proj.dir/interface_functions/solver.C.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/interface_functions/solver.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/interface_functions/solver.C
 
 CMakeFiles/proj.dir/interface_functions/solver.C.i: cmake_force
@@ -323,9 +336,22 @@ CMakeFiles/proj.dir/interface_functions/solver.C.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/proj.dir/interface_functions/solver.C.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/interface_functions/solver.C -o CMakeFiles/proj.dir/interface_functions/solver.C.s
 
+CMakeFiles/proj.dir/kernel/changes.C.o: CMakeFiles/proj.dir/flags.make
+CMakeFiles/proj.dir/kernel/changes.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/changes.C
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/proj.dir/kernel/changes.C.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/kernel/changes.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/changes.C
+
+CMakeFiles/proj.dir/kernel/changes.C.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/kernel/changes.C.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/changes.C > CMakeFiles/proj.dir/kernel/changes.C.i
+
+CMakeFiles/proj.dir/kernel/changes.C.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/proj.dir/kernel/changes.C.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/changes.C -o CMakeFiles/proj.dir/kernel/changes.C.s
+
 CMakeFiles/proj.dir/kernel/fields_local.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/kernel/fields_local.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/fields_local.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/proj.dir/kernel/fields_local.C.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building CXX object CMakeFiles/proj.dir/kernel/fields_local.C.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/kernel/fields_local.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/fields_local.C
 
 CMakeFiles/proj.dir/kernel/fields_local.C.i: cmake_force
@@ -336,9 +362,22 @@ CMakeFiles/proj.dir/kernel/fields_local.C.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/proj.dir/kernel/fields_local.C.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/fields_local.C -o CMakeFiles/proj.dir/kernel/fields_local.C.s
 
+CMakeFiles/proj.dir/kernel/singlestep_block.C.o: CMakeFiles/proj.dir/flags.make
+CMakeFiles/proj.dir/kernel/singlestep_block.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/singlestep_block.C
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building CXX object CMakeFiles/proj.dir/kernel/singlestep_block.C.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/kernel/singlestep_block.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/singlestep_block.C
+
+CMakeFiles/proj.dir/kernel/singlestep_block.C.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/kernel/singlestep_block.C.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/singlestep_block.C > CMakeFiles/proj.dir/kernel/singlestep_block.C.i
+
+CMakeFiles/proj.dir/kernel/singlestep_block.C.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/proj.dir/kernel/singlestep_block.C.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/singlestep_block.C -o CMakeFiles/proj.dir/kernel/singlestep_block.C.s
+
 CMakeFiles/proj.dir/kernel/transformations.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/kernel/transformations.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/transformations.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/proj.dir/kernel/transformations.C.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building CXX object CMakeFiles/proj.dir/kernel/transformations.C.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/kernel/transformations.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/transformations.C
 
 CMakeFiles/proj.dir/kernel/transformations.C.i: cmake_force
@@ -351,7 +390,7 @@ CMakeFiles/proj.dir/kernel/transformations.C.s: cmake_force
 
 CMakeFiles/proj.dir/riemann_solver/hllc_hd.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/riemann_solver/hllc_hd.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/hllc_hd.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building CXX object CMakeFiles/proj.dir/riemann_solver/hllc_hd.C.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Building CXX object CMakeFiles/proj.dir/riemann_solver/hllc_hd.C.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/riemann_solver/hllc_hd.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/hllc_hd.C
 
 CMakeFiles/proj.dir/riemann_solver/hllc_hd.C.i: cmake_force
@@ -364,7 +403,7 @@ CMakeFiles/proj.dir/riemann_solver/hllc_hd.C.s: cmake_force
 
 CMakeFiles/proj.dir/riemann_solver/PhysFluxesHD.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/riemann_solver/PhysFluxesHD.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/PhysFluxesHD.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building CXX object CMakeFiles/proj.dir/riemann_solver/PhysFluxesHD.C.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building CXX object CMakeFiles/proj.dir/riemann_solver/PhysFluxesHD.C.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/riemann_solver/PhysFluxesHD.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/PhysFluxesHD.C
 
 CMakeFiles/proj.dir/riemann_solver/PhysFluxesHD.C.i: cmake_force
@@ -377,7 +416,7 @@ CMakeFiles/proj.dir/riemann_solver/PhysFluxesHD.C.s: cmake_force
 
 CMakeFiles/proj.dir/riemann_solver/RiemannSolver.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/riemann_solver/RiemannSolver.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/RiemannSolver.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building CXX object CMakeFiles/proj.dir/riemann_solver/RiemannSolver.C.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building CXX object CMakeFiles/proj.dir/riemann_solver/RiemannSolver.C.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/riemann_solver/RiemannSolver.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/RiemannSolver.C
 
 CMakeFiles/proj.dir/riemann_solver/RiemannSolver.C.i: cmake_force
@@ -390,7 +429,7 @@ CMakeFiles/proj.dir/riemann_solver/RiemannSolver.C.s: cmake_force
 
 CMakeFiles/proj.dir/riemann_solver/vChar_hd.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/riemann_solver/vChar_hd.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/vChar_hd.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Building CXX object CMakeFiles/proj.dir/riemann_solver/vChar_hd.C.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Building CXX object CMakeFiles/proj.dir/riemann_solver/vChar_hd.C.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/riemann_solver/vChar_hd.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/vChar_hd.C
 
 CMakeFiles/proj.dir/riemann_solver/vChar_hd.C.i: cmake_force
@@ -403,7 +442,7 @@ CMakeFiles/proj.dir/riemann_solver/vChar_hd.C.s: cmake_force
 
 CMakeFiles/proj.dir/reconstruction/reconst.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/reconstruction/reconst.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/reconstruction/reconst.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building CXX object CMakeFiles/proj.dir/reconstruction/reconst.C.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Building CXX object CMakeFiles/proj.dir/reconstruction/reconst.C.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/reconstruction/reconst.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/reconstruction/reconst.C
 
 CMakeFiles/proj.dir/reconstruction/reconst.C.i: cmake_force
@@ -414,22 +453,9 @@ CMakeFiles/proj.dir/reconstruction/reconst.C.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/proj.dir/reconstruction/reconst.C.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/reconstruction/reconst.C -o CMakeFiles/proj.dir/reconstruction/reconst.C.s
 
-CMakeFiles/proj.dir/test/singlestep_stub.C.o: CMakeFiles/proj.dir/flags.make
-CMakeFiles/proj.dir/test/singlestep_stub.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/test/singlestep_stub.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building CXX object CMakeFiles/proj.dir/test/singlestep_stub.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/test/singlestep_stub.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/test/singlestep_stub.C
-
-CMakeFiles/proj.dir/test/singlestep_stub.C.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/test/singlestep_stub.C.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/test/singlestep_stub.C > CMakeFiles/proj.dir/test/singlestep_stub.C.i
-
-CMakeFiles/proj.dir/test/singlestep_stub.C.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/proj.dir/test/singlestep_stub.C.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/test/singlestep_stub.C -o CMakeFiles/proj.dir/test/singlestep_stub.C.s
-
 CMakeFiles/proj.dir/configuration/ShockTubeSod/modules.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/configuration/ShockTubeSod/modules.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/configuration/ShockTubeSod/modules.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Building CXX object CMakeFiles/proj.dir/configuration/ShockTubeSod/modules.C.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_30) "Building CXX object CMakeFiles/proj.dir/configuration/ShockTubeSod/modules.C.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/configuration/ShockTubeSod/modules.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/configuration/ShockTubeSod/modules.C
 
 CMakeFiles/proj.dir/configuration/ShockTubeSod/modules.C.i: cmake_force
@@ -444,6 +470,7 @@ CMakeFiles/proj.dir/configuration/ShockTubeSod/modules.C.s: cmake_force
 proj_OBJECTS = \
 "CMakeFiles/proj.dir/general/buildinfo.C.o" \
 "CMakeFiles/proj.dir/general/CException.C.o" \
+"CMakeFiles/proj.dir/general/cfl.C.o" \
 "CMakeFiles/proj.dir/general/data.C.o" \
 "CMakeFiles/proj.dir/general/eos.C.o" \
 "CMakeFiles/proj.dir/general/fluid.C.o" \
@@ -461,14 +488,15 @@ proj_OBJECTS = \
 "CMakeFiles/proj.dir/general/units.C.o" \
 "CMakeFiles/proj.dir/interface_functions/problem.C.o" \
 "CMakeFiles/proj.dir/interface_functions/solver.C.o" \
+"CMakeFiles/proj.dir/kernel/changes.C.o" \
 "CMakeFiles/proj.dir/kernel/fields_local.C.o" \
+"CMakeFiles/proj.dir/kernel/singlestep_block.C.o" \
 "CMakeFiles/proj.dir/kernel/transformations.C.o" \
 "CMakeFiles/proj.dir/riemann_solver/hllc_hd.C.o" \
 "CMakeFiles/proj.dir/riemann_solver/PhysFluxesHD.C.o" \
 "CMakeFiles/proj.dir/riemann_solver/RiemannSolver.C.o" \
 "CMakeFiles/proj.dir/riemann_solver/vChar_hd.C.o" \
 "CMakeFiles/proj.dir/reconstruction/reconst.C.o" \
-"CMakeFiles/proj.dir/test/singlestep_stub.C.o" \
 "CMakeFiles/proj.dir/configuration/ShockTubeSod/modules.C.o"
 
 # External object files for target proj
@@ -476,6 +504,7 @@ proj_EXTERNAL_OBJECTS =
 
 proj: CMakeFiles/proj.dir/general/buildinfo.C.o
 proj: CMakeFiles/proj.dir/general/CException.C.o
+proj: CMakeFiles/proj.dir/general/cfl.C.o
 proj: CMakeFiles/proj.dir/general/data.C.o
 proj: CMakeFiles/proj.dir/general/eos.C.o
 proj: CMakeFiles/proj.dir/general/fluid.C.o
@@ -493,14 +522,15 @@ proj: CMakeFiles/proj.dir/general/timestepping.C.o
 proj: CMakeFiles/proj.dir/general/units.C.o
 proj: CMakeFiles/proj.dir/interface_functions/problem.C.o
 proj: CMakeFiles/proj.dir/interface_functions/solver.C.o
+proj: CMakeFiles/proj.dir/kernel/changes.C.o
 proj: CMakeFiles/proj.dir/kernel/fields_local.C.o
+proj: CMakeFiles/proj.dir/kernel/singlestep_block.C.o
 proj: CMakeFiles/proj.dir/kernel/transformations.C.o
 proj: CMakeFiles/proj.dir/riemann_solver/hllc_hd.C.o
 proj: CMakeFiles/proj.dir/riemann_solver/PhysFluxesHD.C.o
 proj: CMakeFiles/proj.dir/riemann_solver/RiemannSolver.C.o
 proj: CMakeFiles/proj.dir/riemann_solver/vChar_hd.C.o
 proj: CMakeFiles/proj.dir/reconstruction/reconst.C.o
-proj: CMakeFiles/proj.dir/test/singlestep_stub.C.o
 proj: CMakeFiles/proj.dir/configuration/ShockTubeSod/modules.C.o
 proj: CMakeFiles/proj.dir/build.make
 proj: /usr/local/lib/CronosNumLib/Linux-amd64/libmatrix_mt.a
@@ -510,7 +540,7 @@ proj: /usr/lib64/libgsl.so
 proj: /usr/lib64/libgslcblas.so
 proj: /usr/lib64/libhdf5.so
 proj: CMakeFiles/proj.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Linking CXX executable proj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_31) "Linking CXX executable proj"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/proj.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

@@ -1336,7 +1336,7 @@ void HyperbolicSolver::phystest(Data &gdata, gridFunc &gfunc,
 void HyperbolicSolver::phystest(Data &gdata, gridFunc &gfunc,
                                 ProblemType &Problem, int rkstep, int iFluid)
 {
-
+	
 	bool init(false);
 	if(rkstep < 0) {
 		init = true;
@@ -1414,7 +1414,9 @@ void HyperbolicSolver::phystest(Data &gdata, gridFunc &gfunc,
 #if(FLUID_TYPE==CRONOS_MULTIFLUID)
 			TrafoMulti[iFluid]->TransEth2E(gdata, gfunc, Problem);
 #else
+
 			Trafo->TransEth2E(gdata, gfunc, Problem);
+
 #endif
 		} else {
 #if(FLUID_TYPE==CRONOS_MULTIFLUID)
@@ -2001,7 +2003,7 @@ void HyperbolicSolver::phystest(Data &gdata, gridFunc &gfunc,
 		}
 		fclose(fo);
 	}
-	
+
 	bool abortProgram(true);
 	int nan_sum(0);
 #ifdef parallel

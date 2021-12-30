@@ -212,7 +212,6 @@ void Transformations::TransE2Eth(Data &gdata, gridFunc &gfunc,
 
 	if(gdata.om[q_sx].getName() == "v_x" && gdata.om[q_sy].getName() == "v_y" &&
 	   gdata.om[q_sz].getName() == "v_z") {
-		
 		// CRONOS_CRIT: Formerly done only in computational domain
 		// The idea was that values in ghost cells are provided by BCs
 		// If no BCs are given, however, the option is to do computation
@@ -220,7 +219,6 @@ void Transformations::TransE2Eth(Data &gdata, gridFunc &gfunc,
 
 		// This, however, does not work, when there are significant changes for the total
 		// energy near the boundary...
-
 		 for(int k = -B+1; k<=gdata.mx[2]+B; ++k){
 		 	for(int j = -B+1; j<=gdata.mx[1]+B; ++j){
 		 		for(int i = -B+1; i<=gdata.mx[0]+B; ++i){

@@ -49,7 +49,6 @@ private:
 	void compute_B(Data &, gridFunc &, ProblemType &, bool initial_setup=false);//not used
 	REAL compute_divB(Data &, gridFunc &, ProblemType &);//not used
 	REAL compute_divB(Data &, gridFunc &, ProblemType &, NumMatrix<double,3> &);//not used
-	void phystest(Data &, gridFunc &, ProblemType &);//not used (drop)
 	void CheckNan(NumMatrix<double,3> &, int, int, int, string);//used
 	void TransPot2Mag(Data &, gridFunc &, ProblemType &); //not used
 	void TransMag2Pot(Data &, gridFunc &, ProblemType &); //not used

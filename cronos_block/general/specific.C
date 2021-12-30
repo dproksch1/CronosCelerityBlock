@@ -442,10 +442,207 @@ void HyperbolicSolver::restart(Data &gdata, gridFunc &gfunc,
 }
 
 
+
+
+
+REAL HyperbolicSolver::compute_divB(Data &gdata, gridFunc &gfunc,
+                                    ProblemType &Problem)
+{
+	if(Problem.get_Info() && Problem.checkout(4)) {
+
+		REAL divVal;
+		if(N_ADD >= 2) {
+			Pot & divB = gdata.om[n_omInt+1];
+			divVal = compute_divB(gdata, gfunc, Problem, divB);
+		} else {
+			NumMatrix<double,3> divB(Index::set(-3,-3,-3),
+			                         Index::set(gdata.mx[0]+3,gdata.mx[1]+3,gdata.mx[2]+3));
+			divVal = compute_divB(gdata, gfunc, Problem, divB);
+		}
+		return divVal;
+	} else {
+		return 42.;
+	}
+}
+
+
+
+REAL HyperbolicSolver::compute_divB(Data &gdata, gridFunc &gfunc,
+                                    ProblemType &Problem,
+                                    NumMatrix<double,3> &divB)
+{
+	// Calculation of divB and saving into additional array
+
+	double divBSum  = 0;
+	double BSum     = 0;
+	double JSum     = 0;
+	double max_divB = -10;
+	double min_divB = 10;
+	int minloc[3] = {0, 0, 0};
+	int maxloc[3] = {0, 0, 0};
+	int min[3] = {0, 0, 0};
+	int max[3] = {gdata.mx[0], gdata.mx[1], gdata.mx[2]};
+  
+	if(gfunc.get_bc_Type(1) == 1) {
+		max[0] = gdata.mx[0]-1;
+	}
+	if(gfunc.get_bc_Type(3) == 1) {
+		max[1] = gdata.mx[1]-1;
+	}
+	if(gfunc.get_bc_Type(5) == 1) {
+		max[2] = gdata.mx[2]-1;
+	}
+  
+#if (NON_LINEAR_GRID == CRONOS_OFF)
+	REAL idx[3]= {(1./gdata.dx[0]), (1./gdata.dx[1]), (1./gdata.dx[2])};
+#endif
+	for (int k = min[2]; k <= max[2]; k++) {   // compute J = rot(B) and 
+		for (int j = min[1]; j <= max[1]; j++) {   // div(B) as om fields
+			for (int i = min[0]; i <= max[0]; i++) {
+
+#if (NON_LINEAR_GRID == CRONOS_ON)
+				REAL idx[3] = {(gdata.getCen_idx(0,i)), (gdata.getCen_idx(1,j)),
+				               (gdata.getCen_idx(2,k))};
+#endif
+
+
+#if GEOM > 1
+				REAL f_geom = 1./gdata.get_CellGeomTrafo(i,j,k);
+#endif
+#if GEOM > 1
+				double dxBx = (gdata.h1(i,j,k, 1,0,0)*gdata.h2(i,j,k, 1,0,0)*gdata.om[q_Bx](i,j,k) -
+				               gdata.h1(i,j,k,-1,0,0)*gdata.h2(i,j,k,-1,0,0)*gdata.om[q_Bx](i-1,j,k))*idx[0]*f_geom;
+				double dxBy = ((gdata.h1(i+1,j,k,0, 1,0)*gdata.om[q_By](i+1,j  ,k) -
+				                gdata.h1(i-1,j,k,0, 1,0)*gdata.om[q_By](i-1,j  ,k)) +
+				               (gdata.h1(i+1,j,k,0,-1,0)*gdata.om[q_By](i+1,j-1,k) -
+				                gdata.h1(i-1,j,k,0,-1,0)*gdata.om[q_By](i-1,j-1,k)))*idx[0]*0.25;
+				double dxBz = ((gdata.h2(i+1,j,k,0,0, 1)*gdata.om[q_Bz](i+1,j,k  ) -
+				                gdata.h2(i-1,j,k,0,0, 1)*gdata.om[q_Bz](i-1,j,k  )) +
+				               (gdata.h2(i+1,j,k,0,0,-1)*gdata.om[q_Bz](i+1,j,k-1) -
+				                gdata.h2(i-1,j,k,0,0,-1)*gdata.om[q_Bz](i-1,j,k-1)))*idx[0]*0.25;
+#else
+				double dxBx = (gdata.om[q_Bx](i  ,j,k)-gdata.om[q_Bx](i-1,j,k))*idx[0];
+				double dxBy = ((gdata.om[q_By](i+1,j  ,k) -
+				                gdata.om[q_By](i-1,j  ,k)) +
+				               (gdata.om[q_By](i+1,j-1,k) -
+				                gdata.om[q_By](i-1,j-1,k)))*idx[0]*0.25;
+				double dxBz = ((gdata.om[q_Bz](i+1,j,k  ) -
+				                gdata.om[q_Bz](i-1,j,k  )) +
+				               (gdata.om[q_Bz](i+1,j,k-1) - 
+				                gdata.om[q_Bz](i-1,j,k-1)))*idx[0]*0.25;
+#endif
+	
+#if (GEOM > 1)
+				double dyBx = ((gdata.h0(i,j+1,k, 1,0,0)*gdata.om[q_Bx](i  ,j+1,k) - 
+				                gdata.h0(i,j-1,k, 1,0,0)*gdata.om[q_Bx](i  ,j-1,k)) +
+				               (gdata.h0(i,j+1,k,-1,0,0)*gdata.om[q_Bx](i-1,j+1,k) -
+				                gdata.h0(i,j-1,k,-1,0,0)*gdata.om[q_Bx](i-1,j-1,k)))*idx[1]*0.25;
+				double dyBy = (gdata.h0(i,j,k,0, 1,0)*gdata.h2(i,j,k,0, 1,0)*gdata.om[q_By](i,j,k) - 
+				               gdata.h0(i,j,k,0,-1,0)*gdata.h2(i,j,k,0,-1,0)*gdata.om[q_By](i,j-1,k))*idx[1]*f_geom;
+				double dyBz = ((gdata.h2(i,j+1,k,0,0, 1)*gdata.om[q_Bz](i,j+1,k  ) - 
+				                gdata.h2(i,j-1,k,0,0, 1)*gdata.om[q_Bz](i,j-1,k  )) +
+				               (gdata.h2(i,j+1,k,0,0,-1)*gdata.om[q_Bz](i,j+1,k-1) -
+				                gdata.h2(i,j-1,k,0,0,-1)*gdata.om[q_Bz](i,j-1,k-1)))*idx[1]*0.25;
+#else
+				double dyBx = ((gdata.om[q_Bx](i  ,j+1,k) -
+				                gdata.om[q_Bx](i  ,j-1,k)) +
+				               (gdata.om[q_Bx](i-1,j+1,k) -
+				                gdata.om[q_Bx](i-1,j-1,k)))*idx[1]*0.25;
+				double dyBy = (gdata.om[q_By](i,j,k) - gdata.om[q_By](i,j-1,k))*idx[1];
+				double dyBz = ((gdata.om[q_Bz](i,j+1,k  ) - 
+				                gdata.om[q_Bz](i,j-1,k  )) +
+				               (gdata.om[q_Bz](i,j+1,k-1) - 
+				                gdata.om[q_Bz](i,j-1,k-1)))*idx[1]*0.25;
+#endif
+	
+#if (GEOM > 1)
+				double dzBx = ((gdata.h0(i,j,k+1, 1,0,0)*gdata.om[q_Bx](i  ,j,k+1) - 
+				                gdata.h0(i,j,k-1, 1,0,0)*gdata.om[q_Bx](i  ,j,k-1)) +
+				               (gdata.h0(i,j,k+1,-1,0,0)*gdata.om[q_Bx](i-1,j,k+1) -
+				                gdata.h0(i,j,k-1,-1,0,0)*gdata.om[q_Bx](i-1,j,k-1)))*idx[2]*0.25;
+				double dzBy = ((gdata.h1(i,j,k+1,0, 1,0)*gdata.om[q_By](i,j  ,k+1) - 
+				                gdata.h1(i,j,k-1,0, 1,0)*gdata.om[q_By](i,j  ,k-1)) +
+				               (gdata.h1(i,j,k+1,0,-1,0)*gdata.om[q_By](i,j-1,k+1) -
+				                gdata.h1(i,j,k-1,0,-1,0)*gdata.om[q_By](i,j-1,k-1)))*idx[2]*0.25;
+				double dzBz = (gdata.h0(i,j,k,0,0, 1)*gdata.h1(i,j,k,0,0, 1)*gdata.om[q_Bz](i,j,k) -
+				               gdata.h0(i,j,k,0,0,-1)*gdata.h1(i,j,k,0,0,-1)*gdata.om[q_Bz](i,j,k-1))*idx[2]*f_geom;
+#else
+				double dzBx = ((gdata.om[q_Bx](i  ,j,k+1) - 
+				                gdata.om[q_Bx](i  ,j,k-1)) +
+				               (gdata.om[q_Bx](i-1,j,k+1) - 
+				                gdata.om[q_Bx](i-1,j,k-1)))*idx[2]*0.25;
+				double dzBy = ((gdata.om[q_By](i,j  ,k+1) - 
+				                gdata.om[q_By](i,j  ,k-1)) +
+				               (gdata.om[q_By](i,j-1,k+1) - 
+				                gdata.om[q_By](i,j-1,k-1)))*idx[2]*0.25;
+
+				double dzBz = (gdata.om[q_Bz](i,j,k)-gdata.om[q_Bz](i,j,k-1))*idx[2];	
+#endif
+	
+				double BAbs = sqrt(sqr(0.5*(gdata.om[q_Bx](i,j,k) + gdata.om[q_Bx](i-1,j,k))) +
+				                   sqr(0.5*(gdata.om[q_By](i,j,k) + gdata.om[q_By](i,j-1,k))) +
+				                   sqr(0.5*(gdata.om[q_Bz](i,j,k) + gdata.om[q_Bz](i,j,k-1))));
+	
+#if (GEOM > 1)
+				double Jx   = (dyBz-dzBy)/(gdata.getCen_h1(i,j,k)*gdata.getCen_h2(i,j,k));
+				double Jy   = (dzBx-dxBz)/(gdata.getCen_h0(i,j,k)*gdata.getCen_h2(i,j,k));  // J = rot(B)
+				double Jz   = (dxBy-dyBx)/(gdata.getCen_h0(i,j,k)*gdata.getCen_h1(i,j,k));
+#else
+				double Jx   = dyBz-dzBy;
+				double Jy   = dzBx-dxBz;  // J = rot(B)
+				double Jz   = dxBy-dyBx;
+#endif
+				double JAbs = sqrt(sqr(Jx)+sqr(Jy)+sqr(Jz));
+	
+				divB(i,j,k) = dxBx+dyBy+dzBz;
+	
+				double divBval = divB(i,j,k);
+	
+				if(divBval > max_divB){
+					max_divB = std::max(max_divB,divBval);
+					maxloc[0] = i;
+					maxloc[1] = j;
+					maxloc[2] = k;
+				}
+				if(divBval < min_divB){
+					minloc[0] = i;
+					minloc[1] = j;
+					minloc[2] = k;
+				}
+				min_divB = std::min(min_divB,divBval);
+				divBSum += abs(divB(i,j,k));
+				BSum    += BAbs;
+				JSum    += JAbs;
+			}
+		}
+	}
+
+	if(gdata.rank==0) {
+		cout << "-------div B:-----------------------------------------" << endl;
+		//    cout << "........................div B:................." << endl;
+		cout << " Min / Max: " <<  min_divB << " " << max_divB << endl;
+		cout << " Location: " << minloc[0] << " " << minloc[1];
+		cout << " " << minloc[2] << "    ";
+		cout << maxloc[0] << " " << maxloc[1] << " " << maxloc[2] << endl;
+	}
+
+	gfunc.boundary(gdata, Problem, divB,3);
+
+	if(gdata.rank==0){
+		divBSum /= BSum;
+		cout << " Ave: " << divBSum << " " << divBSum*BSum/JSum << endl;
+		//   cout << "Sum of B: " << BSum << endl;
+		//     cout << "---------------------------------------------" << endl;
+	}
+
+	REAL divVal =  divBSum;
+	return divVal;
+}
+
+
 void HyperbolicSolver::phystest(Data &gdata, gridFunc &gfunc,
                                 ProblemType &Problem, int rkstep, int iFluid)
 {
-
 	bool init(false);
 	if(rkstep < 0) {
 		init = true;
@@ -476,7 +673,6 @@ void HyperbolicSolver::phystest(Data &gdata, gridFunc &gfunc,
 			gdata.om[q].set_max(Problem.max_Val(q));
 		}
 	}
-
 	// Conservative quantities only to be evaluated, when output is
 	// desired -- not anymore...
 	//  if(Problem.get_AsciiOut() || Problem.get_Info()) {
@@ -498,7 +694,6 @@ void HyperbolicSolver::phystest(Data &gdata, gridFunc &gfunc,
 
 	}
 #endif
-  
 	if(gdata.om[q_sx].getName() == "v_x" && gdata.om[q_sy].getName() == "v_y" &&
 	   gdata.om[q_sz].getName() == "v_z") {
 		Trafo->TransVel2Momen(gdata, gfunc, Problem);
@@ -519,7 +714,6 @@ void HyperbolicSolver::phystest(Data &gdata, gridFunc &gfunc,
 	mvrms[1] = gdata.computeRMS(q_sy);
 	mvrms[2] = gdata.computeRMS(q_sz);
 
-
 	// Making certain to use primitve Variables for the rest of the
 	// computations
 
@@ -538,7 +732,6 @@ void HyperbolicSolver::phystest(Data &gdata, gridFunc &gfunc,
 		Trafo->TransE2Eth(gdata, gfunc, Problem);
 	}
 	//    exit(2);
-
 
 	if(rkstep == TIME_SUBSTEPS-1) {
   
@@ -952,7 +1145,7 @@ void HyperbolicSolver::phystest(Data &gdata, gridFunc &gfunc,
 		}
 		fclose(fo);
 	}
-	
+
 	bool abortProgram(true);
 	int nan_sum(0);
 

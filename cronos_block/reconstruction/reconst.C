@@ -31,6 +31,15 @@ SingleReconstruction::SingleReconstruction(const Data& gdata, int dir, int subst
 
 SingleReconstruction::SingleReconstruction(const Data& gdata, const CronosFluid& fluid, int dir, int qReconst, int substep)
 {
+	derivPerp.resize(Index::set(-2),Index::set(gdata.mx[dir]+1));
+	derivM.resize(Index::set(-2), Index::set(gdata.mx[dir] + 1));
+
+	assert(dir>=0  && dir<=2);
+	this->dir = dir;
+
+	this->qReconst = qReconst;
+	this->substep = substep;
+
     int limiterID = -1;
     string fieldName = fluid.get_fieldName(qReconst);
 
@@ -68,6 +77,7 @@ void SingleReconstruction::getDerivs(const Data &gdata, int ix, int iy, int iz) 
 
 	// Start with getting the properties of the cell
 #if (NON_LINEAR_GRID == CRONOS_ON)
+
 	REAL delxm = 0.5*(gdata.getCen_dx(0, ix-1) + gdata.getCen_dx(0, ix  ));
 	REAL delxp = 0.5*(gdata.getCen_dx(0, ix  ) + gdata.getCen_dx(0, ix+1));
 	REAL delx0 = delxm + delxp;
@@ -83,6 +93,7 @@ void SingleReconstruction::getDerivs(const Data &gdata, int ix, int iy, int iz) 
 
 	int q = qReconst;
 #if (NON_LINEAR_GRID == CRONOS_ON)
+
 	dudxm_q = (gdata.om[q](ix  ,iy,iz) - gdata.om[q](ix-1,iy,iz))/delxm;
 	dudx0_q = (-sqr(delxp)*gdata.om[q](ix-1,iy,iz) +
 			(sqr(delxp) - sqr(delxm))*gdata.om[q](ix,iy,iz) +
@@ -101,6 +112,7 @@ void SingleReconstruction::getDerivs(const Data &gdata, int ix, int iy, int iz) 
 			sqr(delzm)*gdata.om[q](ix,iy,iz+1))/(delzp*delzm*(delz0));
 	dudzp_q = (gdata.om[q](ix,iy,iz+1) - gdata.om[q](ix,iy,iz  ))/delzp;
 #else
+
 	dudxm_q =  gdata.om[q](ix  ,iy,iz) - gdata.om[q](ix-1,iy,iz);
 //	REAL dudx0 = (gdata.om[q](ix+1,iy,iz) - gdata.om[q](ix-1,iy,iz))*0.5;
 	dudxp_q =  gdata.om[q](ix+1,iy,iz) - gdata.om[q](ix  ,iy,iz);
@@ -245,7 +257,7 @@ void Reconstruction::compute(const Data& gdata, std::vector<phys_fields_0D> &all
 
 	// Todo: Andere Generalisierung für punktweise rekonstruktion einführen?
 	for(int q=0; q<ListNormal.size(); ++q) {
-		
+
 		// First compute all derivatives
 		ListReconstructionNormal[q]->prepareDerivs(gdata, ix, iy, iz);
 
