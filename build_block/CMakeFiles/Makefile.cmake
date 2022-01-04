@@ -17,6 +17,9 @@ set(CMAKE_MAKEFILE_DEPENDS
   "CMakeFiles/hdf5/cmake_hdf5_test.c"
   "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/CMakeLists.txt"
   "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/cmake/FindCronosNumLib.cmake"
+  "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/tests/SodToro5HllcRef_medium/SodToro5HllcRef.cat"
+  "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/tests/SodToro5HllcRef_small/SodToro5HllcRef.cat"
+  "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/tests/SodToro5HllcRef_tiny/SodToro5HllcRef.cat"
   "/usr/share/cmake/Modules/CMakeCInformation.cmake"
   "/usr/share/cmake/Modules/CMakeCXXInformation.cmake"
   "/usr/share/cmake/Modules/CMakeCommonLanguageInclude.cmake"
@@ -62,6 +65,9 @@ set(CMAKE_MAKEFILE_PRODUCTS
   "CMakeFiles/FindMPI/test_mpi.f90"
   "CMakeFiles/FindMPI/test_mpi.f90"
   "CMakeFiles/FindMPI/mpiver.f90"
+  "tests/SodToro5HllcRef_tiny/SodToro5HllcRef.cat"
+  "tests/SodToro5HllcRef_small/SodToro5HllcRef.cat"
+  "tests/SodToro5HllcRef_medium/SodToro5HllcRef.cat"
   "CMakeFiles/CMakeDirectoryInformation.cmake"
   )
 
