@@ -14,6 +14,21 @@
 gridFunc::gridFunc(Data &gdata)
 {
 
+	// Use a value that is not used (-1 used by user fields -> so, I am using -2)
+	q_Bx = -2;
+	q_By = -2;
+	q_Bz = -2;
+
+	n_om = N_OM;
+	n_omInt = N_OMINT;
+#if (OMS_USER == TRUE)
+	n_omUser = N_OM_USER;
+	n_omIntUser = N_OMINT_USER;
+#else
+	n_omIntUser = 0;
+#endif
+	n_omIntAll = N_OMINT_ALL;
+
 #ifndef parallel
 	bc_Type[0] = int(value((char*)"bc_x_bot"));
 	bc_Type[1] = int(value((char*)"bc_x_top"));
@@ -2920,7 +2935,6 @@ void gridFunc::dataout(Data &gdata,  Hdf5Stream &h5out, ProblemType & Problem,
 		/*
 		if(gdata.mag || (qout <4 || qout>6)) {
 		*/
-
 		string dsetName = gdata.om[qout].getName();
 #if (USE_COROTATION == CRONOS_ON)
 		if(dsetName=="v_x_Corot") dsetName = "v_x";
@@ -2965,7 +2979,7 @@ void gridFunc::dataout(Data &gdata,  Hdf5Stream &h5out, ProblemType & Problem,
 			NumMatrix<double,3> data(Index::set(-rim,-rim,-rim),
 			                         Index::set(gdata.mx[0]+rim, gdata.mx[1]+rim,
 			                                    gdata.mx[2]+rim));
-			
+
 			for (int k = -rim; k <= gdata.mx[2]+rim; k++) {
 				for (int j = -rim; j <= gdata.mx[1]+rim; j++) {
 					for (int i = -rim; i <= gdata.mx[0]+rim; i++) {
