@@ -25,13 +25,13 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/units.C" "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles/proj.dir/general/units.C.o"
   "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/interface_functions/problem.C" "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles/proj.dir/interface_functions/problem.C.o"
   "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/interface_functions/solver.C" "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles/proj.dir/interface_functions/solver.C.o"
-  "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/changes.C" "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles/proj.dir/kernel/changes.C.o"
   "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/fields_local.C" "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles/proj.dir/kernel/fields_local.C.o"
   "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/singlestep_block.C" "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles/proj.dir/kernel/singlestep_block.C.o"
   "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/transformations.C" "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles/proj.dir/kernel/transformations.C.o"
   "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/reconstruction/reconst.C" "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles/proj.dir/reconstruction/reconst.C.o"
   "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/PhysFluxesHD.C" "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles/proj.dir/riemann_solver/PhysFluxesHD.C.o"
   "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/RiemannSolver.C" "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles/proj.dir/riemann_solver/RiemannSolver.C.o"
+  "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/changes.C" "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles/proj.dir/riemann_solver/changes.C.o"
   "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/hllc_hd.C" "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles/proj.dir/riemann_solver/hllc_hd.C.o"
   "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/vChar_hd.C" "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles/proj.dir/riemann_solver/vChar_hd.C.o"
   )
@@ -48,6 +48,7 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/reconstruction"
   "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/utils"
   "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/configuration/ShockTubeSod"
+  "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/configuration/standalone/cronos_block"
   )
 
 # Targets to which this target links.

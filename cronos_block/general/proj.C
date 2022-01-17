@@ -3,7 +3,7 @@
 #include <fstream>
 #include <matrix.H>
 
-#define ISODD(i) ((i)&1)     
+#define ISODD(i) ((i)&1)
 
 #include <sys/types.h>
 #include <sys/stat.h>   
@@ -18,6 +18,7 @@
 #include "CException.H"
 #include "data.H"
 #include "gridgen.H"
+#include "queue.H"
 
 cronos_ostream ccout(std::cout, 0);
 cronos_ostream ccerr(std::cerr, 0);
@@ -63,6 +64,9 @@ int main(int argc, char* argv[])
 
 	int EndProgram(0);
 
+	DeviceSelector device_selector;
+	Queue queue(device_selector);
+
 	Data gdata;
 	Environment solver(gdata);
 
@@ -90,7 +94,7 @@ int main(int argc, char* argv[])
 
 	// for (;;) {
 	while (EndProgram == 0) {
-		EndProgram = solver.integrate(gdata);
+		EndProgram = solver.integrate(gdata, queue);
 	//	// EndProgram = solver.Finalize(gdata, static_cast<string>("Stopping for gdm"));
 
 	}

@@ -78,8 +78,10 @@ include CMakeFiles/proj.dir/flags.make
 
 CMakeFiles/proj.dir/general/buildinfo.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/buildinfo.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/buildinfo.C
+CMakeFiles/proj.dir/general/buildinfo.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/general/buildinfo.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/proj.dir/general/buildinfo.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/buildinfo.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/buildinfo.C
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/buildinfo.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/buildinfo.C
 
 CMakeFiles/proj.dir/general/buildinfo.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/general/buildinfo.C.i"
@@ -91,8 +93,10 @@ CMakeFiles/proj.dir/general/buildinfo.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/CException.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/CException.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/CException.C
+CMakeFiles/proj.dir/general/CException.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/general/CException.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/proj.dir/general/CException.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/CException.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/CException.C
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/CException.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/CException.C
 
 CMakeFiles/proj.dir/general/CException.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/general/CException.C.i"
@@ -104,8 +108,10 @@ CMakeFiles/proj.dir/general/CException.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/cfl.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/cfl.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/cfl.C
+CMakeFiles/proj.dir/general/cfl.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/general/cfl.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/proj.dir/general/cfl.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/cfl.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/cfl.C
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/cfl.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/cfl.C
 
 CMakeFiles/proj.dir/general/cfl.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/general/cfl.C.i"
@@ -117,8 +123,10 @@ CMakeFiles/proj.dir/general/cfl.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/data.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/data.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/data.C
+CMakeFiles/proj.dir/general/data.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/general/data.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/proj.dir/general/data.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/data.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/data.C
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/data.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/data.C
 
 CMakeFiles/proj.dir/general/data.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/general/data.C.i"
@@ -130,8 +138,10 @@ CMakeFiles/proj.dir/general/data.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/eos.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/eos.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/eos.C
+CMakeFiles/proj.dir/general/eos.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/general/eos.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/proj.dir/general/eos.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/eos.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/eos.C
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/eos.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/eos.C
 
 CMakeFiles/proj.dir/general/eos.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/general/eos.C.i"
@@ -143,8 +153,10 @@ CMakeFiles/proj.dir/general/eos.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/fluid.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/fluid.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/fluid.C
+CMakeFiles/proj.dir/general/fluid.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/general/fluid.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/proj.dir/general/fluid.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/fluid.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/fluid.C
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/fluid.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/fluid.C
 
 CMakeFiles/proj.dir/general/fluid.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/general/fluid.C.i"
@@ -156,8 +168,10 @@ CMakeFiles/proj.dir/general/fluid.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/grid.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/grid.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/grid.C
+CMakeFiles/proj.dir/general/grid.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/general/grid.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/proj.dir/general/grid.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/grid.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/grid.C
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/grid.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/grid.C
 
 CMakeFiles/proj.dir/general/grid.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/general/grid.C.i"
@@ -169,8 +183,10 @@ CMakeFiles/proj.dir/general/grid.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/gridfunc.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/gridfunc.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/gridfunc.C
+CMakeFiles/proj.dir/general/gridfunc.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/general/gridfunc.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/proj.dir/general/gridfunc.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/gridfunc.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/gridfunc.C
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/gridfunc.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/gridfunc.C
 
 CMakeFiles/proj.dir/general/gridfunc.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/general/gridfunc.C.i"
@@ -182,8 +198,10 @@ CMakeFiles/proj.dir/general/gridfunc.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/gridgen.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/gridgen.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/gridgen.C
+CMakeFiles/proj.dir/general/gridgen.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/general/gridgen.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/proj.dir/general/gridgen.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/gridgen.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/gridgen.C
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/gridgen.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/gridgen.C
 
 CMakeFiles/proj.dir/general/gridgen.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/general/gridgen.C.i"
@@ -195,8 +213,10 @@ CMakeFiles/proj.dir/general/gridgen.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/gridParam.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/gridParam.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/gridParam.C
+CMakeFiles/proj.dir/general/gridParam.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/general/gridParam.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/proj.dir/general/gridParam.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/gridParam.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/gridParam.C
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/gridParam.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/gridParam.C
 
 CMakeFiles/proj.dir/general/gridParam.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/general/gridParam.C.i"
@@ -208,8 +228,10 @@ CMakeFiles/proj.dir/general/gridParam.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/Hdf5File_cbase.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/Hdf5File_cbase.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/Hdf5File_cbase.C
+CMakeFiles/proj.dir/general/Hdf5File_cbase.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/general/Hdf5File_cbase.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/proj.dir/general/Hdf5File_cbase.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/Hdf5File_cbase.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/Hdf5File_cbase.C
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/Hdf5File_cbase.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/Hdf5File_cbase.C
 
 CMakeFiles/proj.dir/general/Hdf5File_cbase.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/general/Hdf5File_cbase.C.i"
@@ -221,8 +243,10 @@ CMakeFiles/proj.dir/general/Hdf5File_cbase.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/movie.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/movie.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/movie.C
+CMakeFiles/proj.dir/general/movie.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/general/movie.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/proj.dir/general/movie.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/movie.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/movie.C
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/movie.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/movie.C
 
 CMakeFiles/proj.dir/general/movie.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/general/movie.C.i"
@@ -234,8 +258,10 @@ CMakeFiles/proj.dir/general/movie.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/normalisation.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/normalisation.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/normalisation.C
+CMakeFiles/proj.dir/general/normalisation.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/general/normalisation.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/proj.dir/general/normalisation.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/normalisation.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/normalisation.C
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/normalisation.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/normalisation.C
 
 CMakeFiles/proj.dir/general/normalisation.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/general/normalisation.C.i"
@@ -247,8 +273,12 @@ CMakeFiles/proj.dir/general/normalisation.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/proj.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/proj.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/proj.C
+CMakeFiles/proj.dir/general/proj.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/general/proj.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
+CMakeFiles/proj.dir/general/proj.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/general/proj.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/proj.dir/general/proj.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/proj.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/proj.C
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/proj.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/proj.C
 
 CMakeFiles/proj.dir/general/proj.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/general/proj.C.i"
@@ -260,8 +290,10 @@ CMakeFiles/proj.dir/general/proj.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/sources.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/sources.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/sources.C
+CMakeFiles/proj.dir/general/sources.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/general/sources.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/proj.dir/general/sources.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/sources.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/sources.C
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/sources.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/sources.C
 
 CMakeFiles/proj.dir/general/sources.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/general/sources.C.i"
@@ -273,8 +305,10 @@ CMakeFiles/proj.dir/general/sources.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/specific.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/specific.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/specific.C
+CMakeFiles/proj.dir/general/specific.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/general/specific.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/proj.dir/general/specific.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/specific.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/specific.C
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/specific.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/specific.C
 
 CMakeFiles/proj.dir/general/specific.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/general/specific.C.i"
@@ -286,8 +320,10 @@ CMakeFiles/proj.dir/general/specific.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/timestepping.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/timestepping.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/timestepping.C
+CMakeFiles/proj.dir/general/timestepping.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/general/timestepping.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/proj.dir/general/timestepping.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/timestepping.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/timestepping.C
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/timestepping.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/timestepping.C
 
 CMakeFiles/proj.dir/general/timestepping.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/general/timestepping.C.i"
@@ -299,8 +335,10 @@ CMakeFiles/proj.dir/general/timestepping.C.s: cmake_force
 
 CMakeFiles/proj.dir/general/units.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/general/units.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/units.C
+CMakeFiles/proj.dir/general/units.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/general/units.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/proj.dir/general/units.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/units.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/units.C
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/general/units.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/general/units.C
 
 CMakeFiles/proj.dir/general/units.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/general/units.C.i"
@@ -312,8 +350,10 @@ CMakeFiles/proj.dir/general/units.C.s: cmake_force
 
 CMakeFiles/proj.dir/interface_functions/problem.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/interface_functions/problem.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/interface_functions/problem.C
+CMakeFiles/proj.dir/interface_functions/problem.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/interface_functions/problem.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/proj.dir/interface_functions/problem.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/interface_functions/problem.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/interface_functions/problem.C
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/interface_functions/problem.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/interface_functions/problem.C
 
 CMakeFiles/proj.dir/interface_functions/problem.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/interface_functions/problem.C.i"
@@ -325,8 +365,10 @@ CMakeFiles/proj.dir/interface_functions/problem.C.s: cmake_force
 
 CMakeFiles/proj.dir/interface_functions/solver.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/interface_functions/solver.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/interface_functions/solver.C
+CMakeFiles/proj.dir/interface_functions/solver.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/interface_functions/solver.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/proj.dir/interface_functions/solver.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/interface_functions/solver.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/interface_functions/solver.C
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/interface_functions/solver.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/interface_functions/solver.C
 
 CMakeFiles/proj.dir/interface_functions/solver.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/interface_functions/solver.C.i"
@@ -336,23 +378,12 @@ CMakeFiles/proj.dir/interface_functions/solver.C.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/proj.dir/interface_functions/solver.C.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/interface_functions/solver.C -o CMakeFiles/proj.dir/interface_functions/solver.C.s
 
-CMakeFiles/proj.dir/kernel/changes.C.o: CMakeFiles/proj.dir/flags.make
-CMakeFiles/proj.dir/kernel/changes.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/changes.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/proj.dir/kernel/changes.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/kernel/changes.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/changes.C
-
-CMakeFiles/proj.dir/kernel/changes.C.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/kernel/changes.C.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/changes.C > CMakeFiles/proj.dir/kernel/changes.C.i
-
-CMakeFiles/proj.dir/kernel/changes.C.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/proj.dir/kernel/changes.C.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/changes.C -o CMakeFiles/proj.dir/kernel/changes.C.s
-
 CMakeFiles/proj.dir/kernel/fields_local.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/kernel/fields_local.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/fields_local.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building CXX object CMakeFiles/proj.dir/kernel/fields_local.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/kernel/fields_local.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/fields_local.C
+CMakeFiles/proj.dir/kernel/fields_local.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/kernel/fields_local.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/proj.dir/kernel/fields_local.C.o"
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/kernel/fields_local.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/fields_local.C
 
 CMakeFiles/proj.dir/kernel/fields_local.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/kernel/fields_local.C.i"
@@ -364,8 +395,10 @@ CMakeFiles/proj.dir/kernel/fields_local.C.s: cmake_force
 
 CMakeFiles/proj.dir/kernel/singlestep_block.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/kernel/singlestep_block.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/singlestep_block.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building CXX object CMakeFiles/proj.dir/kernel/singlestep_block.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/kernel/singlestep_block.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/singlestep_block.C
+CMakeFiles/proj.dir/kernel/singlestep_block.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/kernel/singlestep_block.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building CXX object CMakeFiles/proj.dir/kernel/singlestep_block.C.o"
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/kernel/singlestep_block.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/singlestep_block.C
 
 CMakeFiles/proj.dir/kernel/singlestep_block.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/kernel/singlestep_block.C.i"
@@ -377,8 +410,10 @@ CMakeFiles/proj.dir/kernel/singlestep_block.C.s: cmake_force
 
 CMakeFiles/proj.dir/kernel/transformations.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/kernel/transformations.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/transformations.C
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building CXX object CMakeFiles/proj.dir/kernel/transformations.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/kernel/transformations.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/transformations.C
+CMakeFiles/proj.dir/kernel/transformations.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/kernel/transformations.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building CXX object CMakeFiles/proj.dir/kernel/transformations.C.o"
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/kernel/transformations.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/transformations.C
 
 CMakeFiles/proj.dir/kernel/transformations.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/kernel/transformations.C.i"
@@ -388,10 +423,27 @@ CMakeFiles/proj.dir/kernel/transformations.C.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/proj.dir/kernel/transformations.C.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/kernel/transformations.C -o CMakeFiles/proj.dir/kernel/transformations.C.s
 
+CMakeFiles/proj.dir/riemann_solver/changes.C.o: CMakeFiles/proj.dir/flags.make
+CMakeFiles/proj.dir/riemann_solver/changes.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/changes.C
+CMakeFiles/proj.dir/riemann_solver/changes.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/riemann_solver/changes.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building CXX object CMakeFiles/proj.dir/riemann_solver/changes.C.o"
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/riemann_solver/changes.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/changes.C
+
+CMakeFiles/proj.dir/riemann_solver/changes.C.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/riemann_solver/changes.C.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/changes.C > CMakeFiles/proj.dir/riemann_solver/changes.C.i
+
+CMakeFiles/proj.dir/riemann_solver/changes.C.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/proj.dir/riemann_solver/changes.C.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/changes.C -o CMakeFiles/proj.dir/riemann_solver/changes.C.s
+
 CMakeFiles/proj.dir/riemann_solver/hllc_hd.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/riemann_solver/hllc_hd.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/hllc_hd.C
+CMakeFiles/proj.dir/riemann_solver/hllc_hd.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/riemann_solver/hllc_hd.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Building CXX object CMakeFiles/proj.dir/riemann_solver/hllc_hd.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/riemann_solver/hllc_hd.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/hllc_hd.C
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/riemann_solver/hllc_hd.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/hllc_hd.C
 
 CMakeFiles/proj.dir/riemann_solver/hllc_hd.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/riemann_solver/hllc_hd.C.i"
@@ -403,8 +455,10 @@ CMakeFiles/proj.dir/riemann_solver/hllc_hd.C.s: cmake_force
 
 CMakeFiles/proj.dir/riemann_solver/PhysFluxesHD.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/riemann_solver/PhysFluxesHD.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/PhysFluxesHD.C
+CMakeFiles/proj.dir/riemann_solver/PhysFluxesHD.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/riemann_solver/PhysFluxesHD.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building CXX object CMakeFiles/proj.dir/riemann_solver/PhysFluxesHD.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/riemann_solver/PhysFluxesHD.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/PhysFluxesHD.C
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/riemann_solver/PhysFluxesHD.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/PhysFluxesHD.C
 
 CMakeFiles/proj.dir/riemann_solver/PhysFluxesHD.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/riemann_solver/PhysFluxesHD.C.i"
@@ -416,8 +470,10 @@ CMakeFiles/proj.dir/riemann_solver/PhysFluxesHD.C.s: cmake_force
 
 CMakeFiles/proj.dir/riemann_solver/RiemannSolver.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/riemann_solver/RiemannSolver.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/RiemannSolver.C
+CMakeFiles/proj.dir/riemann_solver/RiemannSolver.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/riemann_solver/RiemannSolver.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building CXX object CMakeFiles/proj.dir/riemann_solver/RiemannSolver.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/riemann_solver/RiemannSolver.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/RiemannSolver.C
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/riemann_solver/RiemannSolver.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/RiemannSolver.C
 
 CMakeFiles/proj.dir/riemann_solver/RiemannSolver.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/riemann_solver/RiemannSolver.C.i"
@@ -429,8 +485,10 @@ CMakeFiles/proj.dir/riemann_solver/RiemannSolver.C.s: cmake_force
 
 CMakeFiles/proj.dir/riemann_solver/vChar_hd.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/riemann_solver/vChar_hd.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/vChar_hd.C
+CMakeFiles/proj.dir/riemann_solver/vChar_hd.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/riemann_solver/vChar_hd.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Building CXX object CMakeFiles/proj.dir/riemann_solver/vChar_hd.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/riemann_solver/vChar_hd.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/vChar_hd.C
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/riemann_solver/vChar_hd.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/riemann_solver/vChar_hd.C
 
 CMakeFiles/proj.dir/riemann_solver/vChar_hd.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/riemann_solver/vChar_hd.C.i"
@@ -442,8 +500,10 @@ CMakeFiles/proj.dir/riemann_solver/vChar_hd.C.s: cmake_force
 
 CMakeFiles/proj.dir/reconstruction/reconst.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/reconstruction/reconst.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/reconstruction/reconst.C
+CMakeFiles/proj.dir/reconstruction/reconst.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/reconstruction/reconst.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Building CXX object CMakeFiles/proj.dir/reconstruction/reconst.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/reconstruction/reconst.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/reconstruction/reconst.C
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/reconstruction/reconst.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/reconstruction/reconst.C
 
 CMakeFiles/proj.dir/reconstruction/reconst.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/reconstruction/reconst.C.i"
@@ -455,8 +515,10 @@ CMakeFiles/proj.dir/reconstruction/reconst.C.s: cmake_force
 
 CMakeFiles/proj.dir/configuration/ShockTubeSod/modules.C.o: CMakeFiles/proj.dir/flags.make
 CMakeFiles/proj.dir/configuration/ShockTubeSod/modules.C.o: /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/configuration/ShockTubeSod/modules.C
+CMakeFiles/proj.dir/configuration/ShockTubeSod/modules.C.o: /usr/local/lib/cmake/hipSYCL/syclcc-launcher
+CMakeFiles/proj.dir/configuration/ShockTubeSod/modules.C.o: CMakeFiles/hipsycl-syclcc-launch.rule
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/build_block/CMakeFiles --progress-num=$(CMAKE_PROGRESS_30) "Building CXX object CMakeFiles/proj.dir/configuration/ShockTubeSod/modules.C.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/configuration/ShockTubeSod/modules.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/configuration/ShockTubeSod/modules.C
+	/usr/local/lib/cmake/hipSYCL/syclcc-launcher --launcher-cxx-compiler=/usr/bin/c++ --launcher-syclcc=/usr/local/bin/syclcc-clang  --hipsycl-platform=omp /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/proj.dir/configuration/ShockTubeSod/modules.C.o -c /home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/configuration/ShockTubeSod/modules.C
 
 CMakeFiles/proj.dir/configuration/ShockTubeSod/modules.C.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proj.dir/configuration/ShockTubeSod/modules.C.i"
@@ -488,10 +550,10 @@ proj_OBJECTS = \
 "CMakeFiles/proj.dir/general/units.C.o" \
 "CMakeFiles/proj.dir/interface_functions/problem.C.o" \
 "CMakeFiles/proj.dir/interface_functions/solver.C.o" \
-"CMakeFiles/proj.dir/kernel/changes.C.o" \
 "CMakeFiles/proj.dir/kernel/fields_local.C.o" \
 "CMakeFiles/proj.dir/kernel/singlestep_block.C.o" \
 "CMakeFiles/proj.dir/kernel/transformations.C.o" \
+"CMakeFiles/proj.dir/riemann_solver/changes.C.o" \
 "CMakeFiles/proj.dir/riemann_solver/hllc_hd.C.o" \
 "CMakeFiles/proj.dir/riemann_solver/PhysFluxesHD.C.o" \
 "CMakeFiles/proj.dir/riemann_solver/RiemannSolver.C.o" \
@@ -522,10 +584,10 @@ proj: CMakeFiles/proj.dir/general/timestepping.C.o
 proj: CMakeFiles/proj.dir/general/units.C.o
 proj: CMakeFiles/proj.dir/interface_functions/problem.C.o
 proj: CMakeFiles/proj.dir/interface_functions/solver.C.o
-proj: CMakeFiles/proj.dir/kernel/changes.C.o
 proj: CMakeFiles/proj.dir/kernel/fields_local.C.o
 proj: CMakeFiles/proj.dir/kernel/singlestep_block.C.o
 proj: CMakeFiles/proj.dir/kernel/transformations.C.o
+proj: CMakeFiles/proj.dir/riemann_solver/changes.C.o
 proj: CMakeFiles/proj.dir/riemann_solver/hllc_hd.C.o
 proj: CMakeFiles/proj.dir/riemann_solver/PhysFluxesHD.C.o
 proj: CMakeFiles/proj.dir/riemann_solver/RiemannSolver.C.o
@@ -533,6 +595,7 @@ proj: CMakeFiles/proj.dir/riemann_solver/vChar_hd.C.o
 proj: CMakeFiles/proj.dir/reconstruction/reconst.C.o
 proj: CMakeFiles/proj.dir/configuration/ShockTubeSod/modules.C.o
 proj: CMakeFiles/proj.dir/build.make
+proj: /usr/local/lib/libhipSYCL-rt.so
 proj: /usr/local/lib/CronosNumLib/Linux-amd64/libmatrix_mt.a
 proj: /usr/local/lib/CronosNumLib/Linux-amd64/libutil_mt.a
 proj: /usr/lib64/openmpi/lib/libmpi.so

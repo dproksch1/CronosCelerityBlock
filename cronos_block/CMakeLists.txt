@@ -43,6 +43,37 @@ find_package(MPI REQUIRED)
 find_package(HDF5 REQUIRED COMPONENTS C) # CXX HL
 find_package(CronosNumLib REQUIRED)
 
+# SYCL-specific dependency setup
+
+option(CELERITY_SYCL_IMPL "hipSYCL|ComputeCpp")
+
+# Find SYCL implementation.
+if(CELERITY_SYCL_IMPL STREQUAL "hipSYCL")
+  find_package(hipSYCL CONFIG REQUIRED)
+elseif(CELERITY_SYCL_IMPL STREQUAL "ComputeCpp")
+  find_package(ComputeCpp REQUIRED)
+else()
+  # We first check if hipSYCL can be found, otherwise we try ComputeCpp.
+  find_package(hipSYCL CONFIG)
+  if(hipSYCL_FOUND)
+    set(CELERITY_SYCL_IMPL "hipSYCL")
+  else()
+    find_package(ComputeCpp REQUIRED)
+    set(CELERITY_SYCL_IMPL "ComputeCpp")
+  endif()
+endif()
+
+if(CELERITY_SYCL_IMPL STREQUAL "hipSYCL")
+  message(STATUS "Found hipSYCL: ${hipSYCL_DIR}")
+else()
+  message(STATUS "Found ComputeCpp: ${ComputeCpp_DIR}")
+endif()
+
+if(CELERITY_SYCL_IMPL STREQUAL "ComputeCpp" AND NOT COMPUTECPP_USER_FLAGS MATCHES "-D_CRT_SECURE_NO_WARNINGS")
+  set(COMPUTECPP_USER_FLAGS "${COMPUTECPP_USER_FLAGS};-D_CRT_SECURE_NO_WARNINGS=1"
+    CACHE STRING "" FORCE)
+endif()
+
 if(CMAKE_GENERATOR STREQUAL "Ninja")
   # Force colored warnings in Ninja's output, if the compiler has -fdiagnostics-color support.
   # Rationale in https://github.com/ninja-build/ninja/issues/814
@@ -66,6 +97,7 @@ include_directories(riemann_solver)
 include_directories(reconstruction)
 include_directories(utils)
 include_directories(configuration/ShockTubeSod)
+include_directories(configuration/standalone/cronos_block)
 
 set(SOURCES
     general/buildinfo.C
@@ -88,10 +120,10 @@ set(SOURCES
     general/units.C
     interface_functions/problem.C
     interface_functions/solver.C
-    kernel/changes.C
     kernel/fields_local.C
     kernel/singlestep_block.C
     kernel/transformations.C
+    riemann_solver/changes.C
     riemann_solver/hllc_hd.C
     riemann_solver/PhysFluxesHD.C
     riemann_solver/RiemannSolver.C
@@ -109,6 +141,18 @@ add_executable(proj ${SOURCES} general/proj.C ${HEADERS})
 #add_executable(proj ${SOURCES} test/proj.C ${HEADERS})
 
 set_property(TARGET proj PROPERTY CXX_STANDARD 17)
+
+# properly set up SYCL compiler in case of hipSYCL
+
+set(DEVICE_SOURCES "")
+if(CELERITY_SYCL_IMPL STREQUAL "hipSYCL")
+  # For hipSYCL we have to pass all source files into add_sycl_to_target
+  # Don't just do it in general (yields better ComputeCpp build performance)
+  set(DEVICE_SOURCES ${SOURCES} cronos/generic/proj.C cronos/generic/playground.C)
+endif()
+add_sycl_to_target(TARGET proj SOURCES ${DEVICE_SOURCES})
+
+#add_celerity_to_target(TARGET proj SOURCES cronos/generic/proj.C ${HEADERS})
 
 if(NOT MSVC)
 	target_link_libraries(proj PRIVATE stdc++fs)

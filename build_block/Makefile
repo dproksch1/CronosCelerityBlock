@@ -720,33 +720,6 @@ interface_functions/solver.C.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/proj.dir/build.make CMakeFiles/proj.dir/interface_functions/solver.C.s
 .PHONY : interface_functions/solver.C.s
 
-kernel/changes.o: kernel/changes.C.o
-
-.PHONY : kernel/changes.o
-
-# target to build an object file
-kernel/changes.C.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/proj.dir/build.make CMakeFiles/proj.dir/kernel/changes.C.o
-.PHONY : kernel/changes.C.o
-
-kernel/changes.i: kernel/changes.C.i
-
-.PHONY : kernel/changes.i
-
-# target to preprocess a source file
-kernel/changes.C.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/proj.dir/build.make CMakeFiles/proj.dir/kernel/changes.C.i
-.PHONY : kernel/changes.C.i
-
-kernel/changes.s: kernel/changes.C.s
-
-.PHONY : kernel/changes.s
-
-# target to generate assembly for a file
-kernel/changes.C.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/proj.dir/build.make CMakeFiles/proj.dir/kernel/changes.C.s
-.PHONY : kernel/changes.C.s
-
 kernel/fields_local.o: kernel/fields_local.C.o
 
 .PHONY : kernel/fields_local.o
@@ -909,6 +882,33 @@ riemann_solver/RiemannSolver.C.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/proj.dir/build.make CMakeFiles/proj.dir/riemann_solver/RiemannSolver.C.s
 .PHONY : riemann_solver/RiemannSolver.C.s
 
+riemann_solver/changes.o: riemann_solver/changes.C.o
+
+.PHONY : riemann_solver/changes.o
+
+# target to build an object file
+riemann_solver/changes.C.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/proj.dir/build.make CMakeFiles/proj.dir/riemann_solver/changes.C.o
+.PHONY : riemann_solver/changes.C.o
+
+riemann_solver/changes.i: riemann_solver/changes.C.i
+
+.PHONY : riemann_solver/changes.i
+
+# target to preprocess a source file
+riemann_solver/changes.C.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/proj.dir/build.make CMakeFiles/proj.dir/riemann_solver/changes.C.i
+.PHONY : riemann_solver/changes.C.i
+
+riemann_solver/changes.s: riemann_solver/changes.C.s
+
+.PHONY : riemann_solver/changes.s
+
+# target to generate assembly for a file
+riemann_solver/changes.C.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/proj.dir/build.make CMakeFiles/proj.dir/riemann_solver/changes.C.s
+.PHONY : riemann_solver/changes.C.s
+
 riemann_solver/hllc_hd.o: riemann_solver/hllc_hd.C.o
 
 .PHONY : riemann_solver/hllc_hd.o
@@ -1036,9 +1036,6 @@ help:
 	@echo "... interface_functions/solver.o"
 	@echo "... interface_functions/solver.i"
 	@echo "... interface_functions/solver.s"
-	@echo "... kernel/changes.o"
-	@echo "... kernel/changes.i"
-	@echo "... kernel/changes.s"
 	@echo "... kernel/fields_local.o"
 	@echo "... kernel/fields_local.i"
 	@echo "... kernel/fields_local.s"
@@ -1057,6 +1054,9 @@ help:
 	@echo "... riemann_solver/RiemannSolver.o"
 	@echo "... riemann_solver/RiemannSolver.i"
 	@echo "... riemann_solver/RiemannSolver.s"
+	@echo "... riemann_solver/changes.o"
+	@echo "... riemann_solver/changes.i"
+	@echo "... riemann_solver/changes.s"
 	@echo "... riemann_solver/hllc_hd.o"
 	@echo "... riemann_solver/hllc_hd.i"
 	@echo "... riemann_solver/hllc_hd.s"

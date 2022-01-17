@@ -568,7 +568,7 @@ phys_fields_2D::phys_fields_2D(const Data &gdata, const int &dir) {
 }
 
 
-phys_fields_0D::phys_fields_0D(const Data &gdata, int face, const CronosFluid &fluid) {
+/*phys_fields_0D::phys_fields_0D(const Data &gdata, int face, const CronosFluid &fluid) {
 
 #if (FLUID_TYPE == CRONOS_MULTIFLUID)
 //	fieldLists List(fluid, dir);
@@ -608,4 +608,4 @@ num_fields_0D::num_fields_0D(const Data &, const CronosFluid &fluid) {
 	v_ch_m = 1.;
 	flux_num.resize(num);
 
-}
+}*/

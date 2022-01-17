@@ -142,6 +142,9 @@ include_directories(cronos/User              )
 include_directories(cronos/Util              )
 include_directories(cronos/generic           )
 include_directories(cronos/release_docs      )
+include_directories(cronos/cronos_block/configuration/standalone/cronos)
+include_directories(cronos/cronos_block/kernel)
+include_directories(cronos/cronos_block/riemann_solver)
 
 include_directories(SYSTEM ${MPI_INCLUDE_PATH})
 
@@ -172,7 +175,7 @@ set(SOURCES
 	#cronos/InterfaceFunctions/singlestep.C
 	cronos/Geom/sources.C
 	#cronos/RiemannSolvers/reconst_const.C
-	cronos/RiemannSolvers/transformations.C
+	#cronos/RiemannSolvers/transformations.C
 	cronos/RiemannSolvers/save_data.C
 	cronos/RiemannSolvers/reconst_2nd.C
 	cronos/RiemannSolvers/fieldLists.C
@@ -196,7 +199,7 @@ set(SOURCES
 	cronos/RiemannSolvers/changes.C
 	#cronos/RiemannSolvers/reconst_WENO.C
 	#cronos/RiemannSolvers/singlestep_general.C
-	cronos/RiemannSolvers/singlestep_block.C
+	##cronos/RiemannSolvers/singlestep_block.C
 	# application-specific source files
 	cronos/Testing/ShockTubeSod/modules.C
 	#cronos/Testing/SedovExplosion/modules.C
@@ -207,7 +210,9 @@ set(SOURCES
 	#cronos/generic/Hdf5File.C # deprecated, see comment at the beginning of the source file
 	#cronos/RiemannSolvers/singlestep_CTSecond.C # produces compiler error due to non-existing SourceTerms constructor signature
 	#cronos/RiemannSolvers/singlestep_block.C # produces compiler error due to non-existing SourceTerms constructor signature
-
+	cronos/cronos_block/kernel/singlestep_block.C
+	cronos/cronos_block/kernel/transformations.C
+	cronos/cronos_block/kernel/fields_local.C
 )
 
 # glob for all headers (used for better MSVC integration)
