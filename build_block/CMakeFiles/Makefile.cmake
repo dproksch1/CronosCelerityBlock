@@ -7,6 +7,7 @@ set(CMAKE_DEPENDS_GENERATOR "Unix Makefiles")
 # The top level Makefile was generated from the following files:
 set(CMAKE_MAKEFILE_DEPENDS
   "CMakeCache.txt"
+  "../CMakeLists.txt"
   "CMakeFiles/3.19.7/CMakeCCompiler.cmake"
   "CMakeFiles/3.19.7/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.19.7/CMakeFortranCompiler.cmake"
@@ -15,11 +16,10 @@ set(CMAKE_MAKEFILE_DEPENDS
   "CMakeFiles/FindMPI/test_mpi.cpp"
   "CMakeFiles/FindMPI/test_mpi.f90"
   "CMakeFiles/hdf5/cmake_hdf5_test.c"
-  "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/CMakeLists.txt"
-  "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/cmake/FindCronosNumLib.cmake"
-  "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/tests/SodToro5HllcRef_medium/SodToro5HllcRef.cat"
-  "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/tests/SodToro5HllcRef_small/SodToro5HllcRef.cat"
-  "/home/dproksch/Documents/master/master_thesis/repos/CronosCelerity/cronos_block/tests/SodToro5HllcRef_tiny/SodToro5HllcRef.cat"
+  "../cmake/FindCronosNumLib.cmake"
+  "../tests/SodToro5HllcRef_medium/SodToro5HllcRef.cat"
+  "../tests/SodToro5HllcRef_small/SodToro5HllcRef.cat"
+  "../tests/SodToro5HllcRef_tiny/SodToro5HllcRef.cat"
   "/usr/local/lib/cmake/hipSYCL/hipsycl-config-version.cmake"
   "/usr/local/lib/cmake/hipSYCL/hipsycl-config.cmake"
   "/usr/local/lib/cmake/hipSYCL/hipsycl-targets-release.cmake"
