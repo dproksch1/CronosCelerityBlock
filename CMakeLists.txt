@@ -128,7 +128,7 @@ set(SOURCES
     cronos_block/riemann_solver/PhysFluxesHD.C
     cronos_block/riemann_solver/RiemannSolver.C
     cronos_block/riemann_solver/vChar_hd.C
-    cronos_block/reconstruction/reconst.C
+    cronos_block/reconstruction/reconst_block.C
     #test/proj.C
     #test/test_data.C
     #test/singlestep_stub.C

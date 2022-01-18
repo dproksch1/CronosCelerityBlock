@@ -108,7 +108,7 @@ HyperbolicSolver::HyperbolicSolver(Data &gdata, ProblemType &Problem)
 		exit(-201);
 	}
 
-	ReconstX.resize(TIME_SUBSTEPS);// = new Reconstruction * [TIME_SUBSTEPS];
+	/*ReconstX.resize(TIME_SUBSTEPS);// = new Reconstruction * [TIME_SUBSTEPS];
 	ReconstY.resize(TIME_SUBSTEPS);// = new Reconstruction * [TIME_SUBSTEPS];
 	ReconstZ.resize(TIME_SUBSTEPS);// = new Reconstruction * [TIME_SUBSTEPS];
 
@@ -116,7 +116,7 @@ HyperbolicSolver::HyperbolicSolver(Data &gdata, ProblemType &Problem)
 		ReconstX[i] = std::make_unique<Reconstruction>(gdata, 0, gdata.fluid, i);
 		ReconstY[i] = std::make_unique<Reconstruction>(gdata, 1, gdata.fluid, i);
 		ReconstZ[i] = std::make_unique<Reconstruction>(gdata, 2, gdata.fluid, i);
-	}
+	}*/
 
 
 #if (FLUID_TYPE == CRONOS_HYDRO)

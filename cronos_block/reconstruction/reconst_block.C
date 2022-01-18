@@ -1,13 +1,17 @@
-#include "reconst.H"
+#include "reconst_block.H"
 #include "CException.H"
 
 #include <stdlib.h>
 #include <iostream>
 
+#if(STANDALONE_USAGE==FALSE)
+#include "reconst.H"
+#endif
+
 using namespace std;
 
 
-SingleReconstruction::SingleReconstruction(const Data& gdata, int dir, int substep)
+SingleReconstruction_Block::SingleReconstruction_Block(const Data& gdata, int dir, int substep)
 {
     int limiterID = -1;
 
@@ -29,7 +33,7 @@ SingleReconstruction::SingleReconstruction(const Data& gdata, int dir, int subst
 
 }
 
-SingleReconstruction::SingleReconstruction(const Data& gdata, const CronosFluid& fluid, int dir, int qReconst, int substep)
+SingleReconstruction_Block::SingleReconstruction_Block(const Data& gdata, const CronosFluid& fluid, int dir, int qReconst, int substep)
 {
 	derivPerp.resize(Index::set(-2),Index::set(gdata.mx[dir]+1));
 	derivM.resize(Index::set(-2), Index::set(gdata.mx[dir] + 1));
@@ -69,10 +73,10 @@ SingleReconstruction::SingleReconstruction(const Data& gdata, const CronosFluid&
     }
 }
 
-SingleReconstruction::~SingleReconstruction () {
+SingleReconstruction_Block::~SingleReconstruction_Block () {
 }
 
-void SingleReconstruction::getDerivs(const Data &gdata, int ix, int iy, int iz) {
+void SingleReconstruction_Block::getDerivs(const Data &gdata, int ix, int iy, int iz) {
 	//! Compute derivate from at given position
 
 	// Start with getting the properties of the cell
@@ -134,7 +138,7 @@ void SingleReconstruction::getDerivs(const Data &gdata, int ix, int iy, int iz) 
 /**
  * Compute limited version of derivatives for block-structured version of code
  * */
-void SingleReconstruction::prepareDerivs(const Data& gdata, int ix, int iy, int iz) {
+void SingleReconstruction_Block::prepareDerivs(const Data& gdata, int ix, int iy, int iz) {
     //! Compute derivate from at given position
 
     getDerivs(gdata, ix, iy, iz);
@@ -148,7 +152,7 @@ void SingleReconstruction::prepareDerivs(const Data& gdata, int ix, int iy, int 
     //deriv_z = Limiter.compute(dud_q[DudDir::_z]);
 }
 
-void SingleReconstruction::get_Vals_EW(const Data& gdata, phys_fields_0D& xFieldsW,
+void SingleReconstruction_Block::get_Vals_EW(const Data& gdata, phys_fields_0D& xFieldsW,
     phys_fields_0D &xFieldsE, int ix, int iy, int iz) {
         {
 
@@ -174,7 +178,7 @@ void SingleReconstruction::get_Vals_EW(const Data& gdata, phys_fields_0D& xField
         }
 }
 
-void SingleReconstruction::get_Vals_SN(const Data& gdata, phys_fields_0D& xFieldsS,
+void SingleReconstruction_Block::get_Vals_SN(const Data& gdata, phys_fields_0D& xFieldsS,
     phys_fields_0D &xFieldsN, int ix, int iy, int iz) {
         {
 
@@ -194,7 +198,7 @@ void SingleReconstruction::get_Vals_SN(const Data& gdata, phys_fields_0D& xField
         }
 }
 
-void SingleReconstruction::get_Vals_BT(const Data& gdata, phys_fields_0D& xFieldsB, 
+void SingleReconstruction_Block::get_Vals_BT(const Data& gdata, phys_fields_0D& xFieldsB, 
     phys_fields_0D &xFieldsT, int ix, int iy, int iz) {
         {
 
@@ -215,7 +219,7 @@ void SingleReconstruction::get_Vals_BT(const Data& gdata, phys_fields_0D& xField
         }
 }
 
-Reconstruction::Reconstruction(const Data &gdata, int dir, const CronosFluid &fluid, int substep) {
+Reconstruction_Block::Reconstruction_Block(const Data &gdata, int dir, const CronosFluid &fluid, int substep) {
 
 	assert(dir>=0  && dir<=2);
 	this->dir = dir;
@@ -234,7 +238,7 @@ Reconstruction::Reconstruction(const Data &gdata, int dir, const CronosFluid &fl
 	set_singleReconstructions(gdata, fluid);
 }
 
-Reconstruction::Reconstruction(const Data &gdata, int dir, int num, int substep) {
+Reconstruction_Block::Reconstruction_Block(const Data &gdata, int dir, int num, int substep) {
 
 	assert(dir >= 0 && dir <= 2);
 	this->dir = dir;
@@ -249,10 +253,10 @@ Reconstruction::Reconstruction(const Data &gdata, int dir, int num, int substep)
 }
 
 
-Reconstruction::~Reconstruction() {
+Reconstruction_Block::~Reconstruction_Block() {
 }
 
-void Reconstruction::compute(const Data& gdata, std::vector<phys_fields_0D> &allFields,
+void Reconstruction_Block::compute(const Data& gdata, std::vector<phys_fields_0D> &allFields,
 		int ix, int iy, int iz, Direction dir) {
 
 	// Todo: Andere Generalisierung für punktweise rekonstruktion einführen?
@@ -282,9 +286,9 @@ void Reconstruction::compute(const Data& gdata, std::vector<phys_fields_0D> &all
 }
 
 template <typename ... Ts>
-SingleReconstruction * get_reconst(string ch_reconst, const Ts & ... ts)
+SingleReconstruction_Block * get_reconst_block(string ch_reconst, const Ts & ... ts)
 {
-	SingleReconstruction * reconst;
+	SingleReconstruction_Block * reconst;
 
 	/*if(ch_reconst == "WENO") {
 		reconst = new SingleReconstruction_WENO(ts...);
@@ -293,7 +297,7 @@ SingleReconstruction * get_reconst(string ch_reconst, const Ts & ... ts)
 		reconst = new SingleReconstruction_constant(ts...);
 	}
 	else*/ if(ch_reconst == "slope_limiter") {
-		reconst = new SingleReconstruction(ts...);
+		reconst = new SingleReconstruction_Block(ts...);
 	}
 	else {
 	    throw CException("No such reconstruction available: " + ch_reconst);
@@ -302,6 +306,7 @@ SingleReconstruction * get_reconst(string ch_reconst, const Ts & ... ts)
 	return reconst;
 }
 
+#if(STANDALONE_USAGE==TRUE)
 string read_reconst(string fieldName, const int substep) {
 	string reconstName = "";
 
@@ -328,53 +333,53 @@ string read_reconst(string fieldName, const int substep) {
 
 	return reconstName;
 }
+#endif
 
-
-void Reconstruction::set_singleReconstructions(const Data & gdata) {
+void Reconstruction_Block::set_singleReconstructions(const Data & gdata) {
 
 	string ch_reconst = read_reconst("", substep);
 
 	for(iter = ListNormal.begin(); iter != ListNormal.end(); ++iter) {
 		ListReconstructionNormal.push_back(
-				get_reconst(ch_reconst, gdata, dir, substep)
+				get_reconst_block(ch_reconst, gdata, dir, substep)
 		);
 	}
 
 	for(iter = ListParallel.begin(); iter != ListParallel.end(); ++iter) {
 		ListReconstructionPar.push_back(
-				get_reconst(ch_reconst, gdata, dir, substep)
+				get_reconst_block(ch_reconst, gdata, dir, substep)
 		);
 	}
 
 	for(iter = ListPerp.begin(); iter != ListPerp.end(); ++iter) {
 		ListReconstructionPerp.push_back(
-				get_reconst(ch_reconst, gdata, dir, substep)
+				get_reconst_block(ch_reconst, gdata, dir, substep)
 		);
 	}
 }
 
-void Reconstruction::set_singleReconstructions(const Data & gdata, const CronosFluid &fluid) {
+void Reconstruction_Block::set_singleReconstructions(const Data & gdata, const CronosFluid &fluid) {
 
 	string ch_reconst = "";
 
 	for(iter = ListNormal.begin(); iter != ListNormal.end(); ++iter) {
 		ch_reconst = read_reconst(fluid.get_fieldName(*iter), substep);
 		ListReconstructionNormal.push_back(
-				get_reconst(ch_reconst, gdata, fluid, dir, *iter, substep)
+				get_reconst_block(ch_reconst, gdata, fluid, dir, *iter, substep)
 		);
 	}
 
 	for(iter = ListParallel.begin(); iter != ListParallel.end(); ++iter) {
 		ch_reconst = read_reconst(fluid.get_fieldName(*iter), substep);
 		ListReconstructionPar.push_back(
-				get_reconst(ch_reconst, gdata, fluid, dir, *iter, substep)
+				get_reconst_block(ch_reconst, gdata, fluid, dir, *iter, substep)
 		);
 	}
 
 	for(iter = ListPerp.begin(); iter != ListPerp.end(); ++iter) {
 		ch_reconst = read_reconst(fluid.get_fieldName(*iter), substep);
 		ListReconstructionPerp.push_back(
-				get_reconst(ch_reconst, gdata, fluid, dir, *iter, substep)
+				get_reconst_block(ch_reconst, gdata, fluid, dir, *iter, substep)
 		);
 	}
 }

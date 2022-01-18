@@ -1,14 +1,19 @@
-#ifndef CRONOS_RECONST_H
-#define CRONOS_RECONST_H = 1
+#ifndef CRONOS_RECONST_BLOCK_H
+#define CRONOS_RECONST_BLOCK_H = 1
+
+#include <vector>
 
 #include "matrix.H"
 #include "data.H"
 #include "limiter.H"
 #include "fields_local.H"
-#include "direction.H"
-#include <vector>
+#include "standalone_usage.H"
 
-class SingleReconstruction{
+#if(STANDALONE_USAGE == TRUE)
+#include "direction.H"
+#endif
+
+class SingleReconstruction_Block{
 public:
 
 	enum DudIndex {
@@ -25,10 +30,10 @@ public:
 		Max_Dir,
 	};
 
-	SingleReconstruction() {}
-	SingleReconstruction(const Data &, int dir, int substep);
-	SingleReconstruction(const Data &, const CronosFluid &fluid, int dir, int qReconst, int substep);
-	virtual ~SingleReconstruction();
+	SingleReconstruction_Block() {}
+	SingleReconstruction_Block(const Data &, int dir, int substep);
+	SingleReconstruction_Block(const Data &, const CronosFluid &fluid, int dir, int qReconst, int substep);
+	virtual ~SingleReconstruction_Block();
 
 	void prepareDerivs(const Data& gdata, int ix, int iy, int iz);
 
@@ -64,12 +69,12 @@ private:
  	limiter Limiter;
 };
 
-class Reconstruction{
+class Reconstruction_Block{
 public:
-	Reconstruction(){}
-	Reconstruction(const Data &, int dir, const CronosFluid &fluid, int substep=-1);
-	Reconstruction(const Data &, int dir, int num, int substep=-1);
-	virtual ~Reconstruction();
+	Reconstruction_Block(){}
+	Reconstruction_Block(const Data &, int dir, const CronosFluid &fluid, int substep=-1);
+	Reconstruction_Block(const Data &, int dir, int num, int substep=-1);
+	virtual ~Reconstruction_Block();
 
 	/**
 	 * Compute reconstruction for block-structured code
@@ -87,9 +92,9 @@ protected:
 	std::vector<int> ListParallel;
 	std::vector<int> ListPerp;
 
-	std::vector<SingleReconstruction*> ListReconstructionNormal;
-	std::vector<SingleReconstruction*> ListReconstructionPar;
-	std::vector<SingleReconstruction*> ListReconstructionPerp;
+	std::vector<SingleReconstruction_Block*> ListReconstructionNormal;
+	std::vector<SingleReconstruction_Block*> ListReconstructionPar;
+	std::vector<SingleReconstruction_Block*> ListReconstructionPerp;
 
 };
 

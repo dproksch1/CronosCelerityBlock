@@ -4,7 +4,7 @@
 #include <sys/time.h>
 #include <vector>
 //#include "DissipationMHD.H"
-#include "reconst.H"
+#include "reconst_block.H"
 #include <CL/sycl.hpp>
 
 using namespace std;

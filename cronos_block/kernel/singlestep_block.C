@@ -4,7 +4,7 @@
 #include <sys/time.h>
 #include <vector>
 //#include "DissipationMHD.H"
-#include "reconst.H"
+#include "reconst_block.H"
 #include "changes.H"
 #include "standalone_usage.H"
 
@@ -186,7 +186,7 @@ REAL HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	//num_fields_0D numVals_oldT(gdata, gdata.fluid);
 
 	// TODO PHILGS: we need to specify a direction here, not sure whether it is used...
-	Reconstruction reconst(gdata, 0, gdata.fluid);
+	Reconstruction_Block reconst(gdata, 0, gdata.fluid);
 
 	//cronos::vector<REAL> pos(0,0,0);
 	//cronos::vector<int> ipos(0,0,0);
@@ -266,7 +266,7 @@ REAL HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	//	});
 	//}
 
-	auto computeStep = [](Reconstruction& reconst, const std::unique_ptr<Transformations>& Trafo, const std::unique_ptr<PhysFluxes>& PhysFlux, const std::vector<std::unique_ptr<RiemannSolver>>& Riemann, const ProblemType& Problem, const std::unique_ptr<EquationOfState>& eos, const Data& gdata, int ix, int iy, int iz, REAL& cfl_lin) {
+	auto computeStep = [](Reconstruction_Block& reconst, const std::unique_ptr<Transformations>& Trafo, const std::unique_ptr<PhysFluxes>& PhysFlux, const std::vector<std::unique_ptr<RiemannSolver>>& Riemann, const ProblemType& Problem, const std::unique_ptr<EquationOfState>& eos, const Data& gdata, int ix, int iy, int iz, REAL& cfl_lin) {
 
 
 		// Reconstruction at given position

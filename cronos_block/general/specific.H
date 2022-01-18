@@ -24,7 +24,7 @@
 #include "RiemannSolverHD.H"
 #include "PhysFluxes.H"
 #include "PhysFluxesHD.H"
-#include "reconst.H"
+#include "reconst_block.H"
 #include "queue.H"
 
 
@@ -101,7 +101,7 @@ private:
 	// For the new solver:
 	std::vector<std::unique_ptr<RiemannSolver>> Riemann;
 	
-	std::vector<std::unique_ptr<Reconstruction>> ReconstX, ReconstY, ReconstZ;
+	//std::vector<std::unique_ptr<Reconstruction>> ReconstX, ReconstY, ReconstZ;
 	std::unique_ptr<PhysFluxes> PhysFlux;
 	//Saves *Save;
 
