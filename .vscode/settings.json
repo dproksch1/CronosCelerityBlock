@@ -137,6 +137,7 @@
         "user_pde.C": "cpp",
         "movie.C": "cpp",
         "limiter.C": "cpp",
-        "singlestep_stub.C": "cpp"
+        "singlestep_stub.C": "cpp",
+        "reconst_block.C": "cpp"
     }
 }

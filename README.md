@@ -1,10 +1,22 @@
-# CronosCode
+# CronosCode Block Proxyapp
 
-#### Steps to use the Cronos code by way of a standard testing example:
+#### Standalone usage of the proxyapp:
+1. Install the dependencies CronosNumLib, GSL, MPI, HDF5, Git and either hipSYCL or ComputeCpp
+2. Build the CronosCode Block Project by executing (from the directory containing this file):
+            `cmake -B [PATH_TO_BUILD_DIR] -DCMAKE_BUILD_TYPE=Release`
+3. If one of the dependencies isn't found on its own, add its path using `-DCMAKE_PREFIX_PATH`
+4. After the build succeeds, compile the project by executing:
+            `cmake -build [PATH_TO_BUILD_DIR] --config Release`
+5. For testing the project you can execute `ctest .` from inside the build directory
 
-1. Checkout and install the CronosNumLib project (follow the README there)
-2. Checkout the CronosCode project
-3. From the CronosCode directory execute `./configure.sh 'path-to-CronosNumLib'`
-4. Change to the desired working directory, e.g., to cronos/Testing/LinearWaves
-and compile the setup via make.
-5. You can built your own project, e.g., by copying any directory in the testing path and creating new module files. Check the documentation under `cronos/release_docs` for further instructions.
+
+#### Usage as a submodule of Cronos:
+1. Add to Cronos using Git Submodule
+2. Add directories to include list in CMakeList.txt:
+    `cronos_block/configuration/standalone/cronos`
+    `cronos_block/kernel`
+    `cronos_block/reconstruction`
+    `cronos_block/riemann_solver`
+3. Add all `.C`-files in directories to SOURCES in CMakeList.txt:
+    `cronos_block/kernel`
+    `cronos_block/reconstruction`
