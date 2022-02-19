@@ -37,6 +37,4 @@ jobs:
         cd build_block
         ctest .
         cd ..
-
-        
       
