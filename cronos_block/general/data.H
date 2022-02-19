@@ -13,13 +13,14 @@
 #include "grid.H"
 #include "fluid.H"
 #include "constants.H"
+#include "queue.H"
 
 #ifndef DATA_TYPE
-#define DATA_TYPE REAL
+#define DATA_TYPE double
 #define REAL_FLAG
 #endif
 
-#define REAL double
+//#define REAL double
 
 class Pot : public NumMatrix<DATA_TYPE,DIM>
 {
@@ -33,8 +34,8 @@ public:
 	void set_max(const double &);
 	void set_min(const double &);
 	Pot& operator=(const double&);  
-	REAL get_max();
-	REAL get_min();
+	double get_max();
+	double get_min();
 // 	std::string get_FieldType();
 // 	void set_FieldType(std::string);
 // private:
@@ -44,9 +45,9 @@ public:
 class id_handler {
 public:
 	id_handler();
-	unsigned int get_fieldId(NumMatrix<REAL,3> &omField);
-	unsigned int get_userFieldId(NumMatrix<REAL,3> &omField);
-	bool is_generic(NumMatrix<REAL,3> &omField);
+	unsigned int get_fieldId(NumMatrix<double,3> &omField);
+	unsigned int get_userFieldId(NumMatrix<double,3> &omField);
+	bool is_generic(NumMatrix<double,3> &omField);
 	void enter_fieldId(std::string);
 	void print_map();
 	std::map<std::string, unsigned int> fieldIds;
@@ -71,14 +72,14 @@ public:
 	double getMax(int [], int);
 
 	void set_fieldIds();
-	bool is_userField(NumMatrix<REAL,3> &omField);
+	bool is_userField(NumMatrix<double,3> &omField);
 
 	NumMatrix<float,3> float_data(int, int, bool);
 	CronosFluid fluid;
 
 	Pot *om;
-	//std::vector<Buffer<REAL, 3>> omSYCL;
-	NumMatrix<REAL,3> *nom;
+	std::vector<CelerityBuffer<double, 3>> omSYCL;
+	NumMatrix<double,3> *nom;
 //	Pot om[N_OM+N_P];
 //	Pot om[31];
 //	std::vector<Pot> om;
@@ -88,7 +89,7 @@ public:
 #endif
 
 	// This is set to NULL for OMS_USER == false (has to exist due to design decisions)
-	NumMatrix<REAL,3> *nom_user;
+	NumMatrix<double,3> *nom_user;
 
 #if (GEOM == SPHERICAL)
 	NumMatrix<double,1> massFlux;
@@ -98,8 +99,8 @@ public:
 	NumMatrix<double,3> pTherm; // can store thermal pressure
 	NumMatrix<int,3> carbuncleFlag; // flag, where carbuncle problem might occur
 
-	REAL time, dt, t_end;
-	REAL cfl;
+	double time, dt, t_end;
+	double cfl;
 	int tstep;
 
 	bool mag, storePressure, use_carbuncleFlag;

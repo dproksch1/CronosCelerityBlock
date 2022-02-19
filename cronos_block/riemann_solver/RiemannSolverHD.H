@@ -10,7 +10,7 @@ public:
 	RiemannSolverHD(){}
 	RiemannSolverHD(const Data &gdata, int, int);
 	virtual void get_vChar(const Data &, const ProblemType &, const phys_fields_0D &, const phys_fields_0D &,
-				num_fields_0D &, int ix, int iy, int iz, int dir, REAL &cfl_lin) const;
+				num_fields_0D &, int ix, int iy, int iz, int dir, double &cfl_lin) const;
 	void reset_Indices(const CronosFluid &fluid) {
 		//! Reset field indices (only necessary for multifluid simulations)
 		this->q_rho = fluid.get_q_rho();
@@ -33,12 +33,12 @@ public:
 	~HLLCSolver_Hydro(){};
 private:
 	int qvPar, qvP1, qvP2;
-	REAL veps;
-	REAL gamma;
+	double veps;
+	double gamma;
 };
 
 void get_vChar2(const Data &, const ProblemType &, const phys_fields_0D &, const phys_fields_0D &,
-			num_fields_0D &, int dir, REAL &);
+			num_fields_0D &, int dir, double &);
 
 void get_NumFlux2(const Data &, const phys_fields_0D &, const phys_fields_0D &,
 			num_fields_0D &, int dir, int iFluid=0);

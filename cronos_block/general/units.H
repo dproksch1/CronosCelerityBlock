@@ -9,8 +9,8 @@
 #include <cassert>
 #include <initializer_list>
 
-#ifndef REAL
-#define REAL double
+#ifndef double
+//#define REAL double
 #endif
 
 
@@ -32,28 +32,28 @@ public:
 			);
 
 	Quantity(
-			const REAL value,
-			const REAL unitDimension[N_PHYSICAL_DIMENSIONS]
+			const double value,
+			const double unitDimension[N_PHYSICAL_DIMENSIONS]
 			);
 
 	Quantity(
-			const REAL value,
-			const std::initializer_list<REAL> unitDimension
+			const double value,
+			const std::initializer_list<double> unitDimension
 			);
 
-	inline REAL normalizeTo(
+	inline double normalizeTo(
 			const Quantity & quantity
 			) const;
 
 	inline const Quantity & set_value(
-			const REAL value
+			const double value
 			);
 
-	inline const REAL & get_value(
+	inline const double & get_value(
 			) const;
 
-	const REAL * get_unitDimension() const;
-	const REAL & get_unitDimension(const int & idx) const;
+	const double * get_unitDimension() const;
+	const double & get_unitDimension(const int & idx) const;
 
 
 	std::string get_si_units() const;
@@ -65,8 +65,8 @@ public:
 	template<typename T> operator T() const {return T(value);}
 
 protected:
-	REAL value;
-	REAL unitDimension[N_PHYSICAL_DIMENSIONS];
+	double value;
+	double unitDimension[N_PHYSICAL_DIMENSIONS];
 
 
 private:
@@ -82,25 +82,25 @@ private:
 	friend Quantity operator*(const Quantity & qL, const Quantity & qR);
 	friend Quantity operator/(const Quantity & qL, const Quantity & qR);
 
-	friend Quantity & operator*=(Quantity & q, const REAL & x);
-	friend Quantity & operator/=(Quantity & q, const REAL & x);
+	friend Quantity & operator*=(Quantity & q, const double & x);
+	friend Quantity & operator/=(Quantity & q, const double & x);
 
-	friend Quantity operator*(const Quantity & q, const REAL & x);
-	friend Quantity operator/(const Quantity & q, const REAL & x);
-	friend Quantity operator*(const REAL & x, const Quantity & q);
-	friend Quantity operator/(const REAL & x, const Quantity & q);
+	friend Quantity operator*(const Quantity & q, const double & x);
+	friend Quantity operator/(const Quantity & q, const double & x);
+	friend Quantity operator*(const double & x, const Quantity & q);
+	friend Quantity operator/(const double & x, const Quantity & q);
 
-	friend bool operator>(const REAL & x, const Quantity & q);
-	friend bool operator>(const Quantity & q, const REAL & x);
+	friend bool operator>(const double & x, const Quantity & q);
+	friend bool operator>(const Quantity & q, const double & x);
 	friend bool operator>(const Quantity & qL, const Quantity & qR);
-	friend bool operator<(const REAL & x, const Quantity & q);
-	friend bool operator<(const Quantity & q, const REAL & x);
+	friend bool operator<(const double & x, const Quantity & q);
+	friend bool operator<(const Quantity & q, const double & x);
 	friend bool operator<(const Quantity & qL, const Quantity & qR);
 
 	friend Quantity sqr(const Quantity & q);
 	friend Quantity cube(const Quantity & q);
 	friend Quantity sqrt(const Quantity & q);
-	friend Quantity pow(const Quantity & q, const REAL & exp);
+	friend Quantity pow(const Quantity & q, const double & exp);
 
 };
 
@@ -115,10 +115,10 @@ public:
 			const int id
 			);
 	UnitQuantity(
-			const REAL unitDimension[N_PHYSICAL_DIMENSIONS]
+			const double unitDimension[N_PHYSICAL_DIMENSIONS]
 			);
 	UnitQuantity(
-			const std::initializer_list<REAL> unitDimension
+			const std::initializer_list<double> unitDimension
 			);
 };
 
@@ -128,7 +128,7 @@ public:
 //	Inline Method definitions
 //
 
-inline REAL Quantity::normalizeTo(
+inline double Quantity::normalizeTo(
 		const Quantity & quantity
 		) const
 {
@@ -137,14 +137,14 @@ inline REAL Quantity::normalizeTo(
 }
 
 inline const Quantity & Quantity::set_value(
-		const REAL value
+		const double value
 		)
 {
 	this->value = value;
 	return * this;
 }
 
-inline const REAL & Quantity::get_value(
+inline const double & Quantity::get_value(
 		) const
 {
 	return value;

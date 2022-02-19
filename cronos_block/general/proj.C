@@ -4,6 +4,8 @@
 #include <matrix.H>
 
 #define ISODD(i) ((i)&1)
+////#define REAL double
+//#define NONE -1
 
 #include <sys/types.h>
 #include <sys/stat.h>   
@@ -12,6 +14,7 @@
 #else
 #include <utime.h>
 #endif
+//#include "celerity_test.H"
 
 #include <fenv.h>
 #include <signal.h>
@@ -66,6 +69,7 @@ int main(int argc, char* argv[])
 
 	DeviceSelector device_selector;
 	Queue queue(device_selector);
+	//Queue queue;
 
 	Data gdata;
 	Environment solver(gdata);

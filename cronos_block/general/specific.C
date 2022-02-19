@@ -61,7 +61,7 @@ HyperbolicSolver::HyperbolicSolver(Data &gdata, ProblemType &Problem)
 		if(gdata.rank==0) {
 			cout << " Using the HLL solver " << endl;
 		}
-		assert_fail() << "not implemented";
+		assert_fail_lazy() << "not implemented";
 
 	} else if(RiemannSolver == "hlld") {
 		if(FLUID_TYPE != CRONOS_MHD) {
@@ -73,7 +73,7 @@ HyperbolicSolver::HyperbolicSolver(Data &gdata, ProblemType &Problem)
 		if(gdata.rank==0) {
 			cout << " Using the HLLD solver " << endl;
 		}
-		assert_fail() << "not implemented";
+		assert_fail_lazy() << "not implemented";
 		//RiemannX = std::make_unique<HLLDSolver>(gdata, 0, CRONOS_MHD);
 		//RiemannY = std::make_unique<HLLDSolver>(gdata, 1, CRONOS_MHD);
 		//RiemannZ = std::make_unique<HLLDSolver>(gdata, 2, CRONOS_MHD);
@@ -445,12 +445,12 @@ void HyperbolicSolver::restart(Data &gdata, gridFunc &gfunc,
 
 
 
-REAL HyperbolicSolver::compute_divB(Data &gdata, gridFunc &gfunc,
+double HyperbolicSolver::compute_divB(Data &gdata, gridFunc &gfunc,
                                     ProblemType &Problem)
 {
 	if(Problem.get_Info() && Problem.checkout(4)) {
 
-		REAL divVal;
+		double divVal;
 		if(N_ADD >= 2) {
 			Pot & divB = gdata.om[n_omInt+1];
 			divVal = compute_divB(gdata, gfunc, Problem, divB);
@@ -467,7 +467,7 @@ REAL HyperbolicSolver::compute_divB(Data &gdata, gridFunc &gfunc,
 
 
 
-REAL HyperbolicSolver::compute_divB(Data &gdata, gridFunc &gfunc,
+double HyperbolicSolver::compute_divB(Data &gdata, gridFunc &gfunc,
                                     ProblemType &Problem,
                                     NumMatrix<double,3> &divB)
 {
@@ -494,20 +494,20 @@ REAL HyperbolicSolver::compute_divB(Data &gdata, gridFunc &gfunc,
 	}
   
 #if (NON_LINEAR_GRID == CRONOS_OFF)
-	REAL idx[3]= {(1./gdata.dx[0]), (1./gdata.dx[1]), (1./gdata.dx[2])};
+	double idx[3]= {(1./gdata.dx[0]), (1./gdata.dx[1]), (1./gdata.dx[2])};
 #endif
 	for (int k = min[2]; k <= max[2]; k++) {   // compute J = rot(B) and 
 		for (int j = min[1]; j <= max[1]; j++) {   // div(B) as om fields
 			for (int i = min[0]; i <= max[0]; i++) {
 
 #if (NON_LINEAR_GRID == CRONOS_ON)
-				REAL idx[3] = {(gdata.getCen_idx(0,i)), (gdata.getCen_idx(1,j)),
+				double idx[3] = {(gdata.getCen_idx(0,i)), (gdata.getCen_idx(1,j)),
 				               (gdata.getCen_idx(2,k))};
 #endif
 
 
 #if GEOM > 1
-				REAL f_geom = 1./gdata.get_CellGeomTrafo(i,j,k);
+				double f_geom = 1./gdata.get_CellGeomTrafo(i,j,k);
 #endif
 #if GEOM > 1
 				double dxBx = (gdata.h1(i,j,k, 1,0,0)*gdata.h2(i,j,k, 1,0,0)*gdata.om[q_Bx](i,j,k) -
@@ -635,7 +635,7 @@ REAL HyperbolicSolver::compute_divB(Data &gdata, gridFunc &gfunc,
 		//     cout << "---------------------------------------------" << endl;
 	}
 
-	REAL divVal =  divBSum;
+	double divVal =  divBSum;
 	return divVal;
 }
 
@@ -649,7 +649,7 @@ void HyperbolicSolver::phystest(Data &gdata, gridFunc &gfunc,
 		rkstep = TIME_SUBSTEPS-1;
 	}
   
-	REAL dV(gdata.get_CellVolume(0,0,0));
+	double dV(gdata.get_CellVolume(0,0,0));
 	double Vol(gdata.get_Volume());
 	double Mass(0.), Eges(0.);
 	double mv[3] = {0., 0., 0.};
@@ -659,7 +659,7 @@ void HyperbolicSolver::phystest(Data &gdata, gridFunc &gfunc,
 	double Vorticity(0.), Enstrophy(0.);
 	double sqrdivv(0.), sqrdissv(0.);
 	double v2ave(0.);
-	REAL mvrms[3] = {0., 0., 0.};
+	double mvrms[3] = {0., 0., 0.};
 	int q_min = 0;
 
 	// Enforce min and max values if desired by the user -- this is
@@ -791,7 +791,7 @@ void HyperbolicSolver::phystest(Data &gdata, gridFunc &gfunc,
 		// Compute Velocity Stats:
 		Vol = 0.;
 #if (NON_LINEAR_GRID == CRONOS_OFF)
-		REAL hx[3]= {(gdata.hx[0]), (gdata.hx[1]), (gdata.hx[2])};
+		double hx[3]= {(gdata.hx[0]), (gdata.hx[1]), (gdata.hx[2])};
 #endif
 		for (int k = 0; k < gdata.mx[2]; k++) {
 			for (int j = 0; j < gdata.mx[1]; j++) {
@@ -801,31 +801,31 @@ void HyperbolicSolver::phystest(Data &gdata, gridFunc &gfunc,
 					dV = gdata.get_CellVolume(i,j,k);
 #endif
 #if (NON_LINEAR_GRID == CRONOS_ON)
-					REAL hx[3]= {(gdata.getCen_hx(0,i)), (gdata.getCen_hx(1,j)),
+					double hx[3]= {(gdata.getCen_hx(0,i)), (gdata.getCen_hx(1,j)),
 					             (gdata.getCen_hx(2,k))};	
 #endif
 
 	  
 #if (GEOM > 1)
-					REAL f_geom = 1./gdata.get_CellGeomTrafo(i,j,k);
+					double f_geom = 1./gdata.get_CellGeomTrafo(i,j,k);
 
-					REAL dxVx = (gdata.getCen_h1(i+1,j,k)*gdata.getCen_h2(i+1,j,k)*gdata.om[q_sx](i+1,j,k) -
+					double dxVx = (gdata.getCen_h1(i+1,j,k)*gdata.getCen_h2(i+1,j,k)*gdata.om[q_sx](i+1,j,k) -
 					             gdata.getCen_h1(i-1,j,k)*gdata.getCen_h2(i-1,j,k)*gdata.om[q_sx](i-1,j,k))*hx[0]*f_geom;
-					REAL dxVy = (gdata.getCen_h1(i+1,j,k)*gdata.om[q_sy](i+1,j,k) -
+					double dxVy = (gdata.getCen_h1(i+1,j,k)*gdata.om[q_sy](i+1,j,k) -
 					             gdata.getCen_h1(i-1,j,k)*gdata.om[q_sy](i-1,j,k))*hx[0];
-					REAL dxVz = (gdata.getCen_h2(i+1,j,k)*gdata.om[q_sz](i+1,j,k) -
+					double dxVz = (gdata.getCen_h2(i+1,j,k)*gdata.om[q_sz](i+1,j,k) -
 					             gdata.getCen_h2(i-1,j,k)*gdata.om[q_sz](i-1,j,k))*hx[0];
-					REAL dyVx = (gdata.getCen_h0(i,j+1,k)*gdata.om[q_sx](i,j+1,k) -
+					double dyVx = (gdata.getCen_h0(i,j+1,k)*gdata.om[q_sx](i,j+1,k) -
 					             gdata.getCen_h0(i,j-1,k)*gdata.om[q_sx](i,j-1,k))*hx[1];
-					REAL  dyVy = (gdata.getCen_h0(i,j+1,k)*gdata.getCen_h2(i,j+1,k)*gdata.om[q_sy](i,j+1,k) -
+					double  dyVy = (gdata.getCen_h0(i,j+1,k)*gdata.getCen_h2(i,j+1,k)*gdata.om[q_sy](i,j+1,k) -
 					              gdata.getCen_h0(i,j-1,k)*gdata.getCen_h2(i,j-1,k)*gdata.om[q_sy](i,j-1,k))*hx[1]*f_geom;
-					REAL dyVz = (gdata.getCen_h2(i,j+1,k)*gdata.om[q_sz](i,j+1,k) -
+					double dyVz = (gdata.getCen_h2(i,j+1,k)*gdata.om[q_sz](i,j+1,k) -
 					             gdata.getCen_h2(i,j-1,k)*gdata.om[q_sz](i,j-1,k))*hx[1];
-					REAL dzVx = (gdata.getCen_h0(i,j,k+1)*gdata.om[q_sx](i,j,k+1) -
+					double dzVx = (gdata.getCen_h0(i,j,k+1)*gdata.om[q_sx](i,j,k+1) -
 					             gdata.getCen_h0(i,j,k-1)*gdata.om[q_sx](i,j,k-1))*hx[2];
-					REAL dzVy = (gdata.getCen_h1(i,j,k+1)*gdata.om[q_sy](i,j,k+1) -
+					double dzVy = (gdata.getCen_h1(i,j,k+1)*gdata.om[q_sy](i,j,k+1) -
 					             gdata.getCen_h1(i,j,k-1)*gdata.om[q_sy](i,j,k-1))*hx[2];
-					REAL dzVz = (gdata.getCen_h0(i,j,k+1)*gdata.getCen_h1(i,j,k+1)*gdata.om[q_sz](i,j,k+1) -
+					double dzVz = (gdata.getCen_h0(i,j,k+1)*gdata.getCen_h1(i,j,k+1)*gdata.om[q_sz](i,j,k+1) -
 					             gdata.getCen_h0(i,j,k-1)*gdata.getCen_h1(i,j,k-1)*gdata.om[q_sz](i,j,k-1))*hx[2]*f_geom;
 #else
 					double dxVx = (gdata.om[q_sx](i+1,j,k) -
@@ -849,15 +849,15 @@ void HyperbolicSolver::phystest(Data &gdata, gridFunc &gfunc,
 #endif
 	  
 #if (GEOM > 1)
-					REAL curl_x = (dyVz - dzVy)/(gdata.getCen_h1(i,j,k)*gdata.getCen_h2(i,j,k));
-					REAL curl_y = (dzVx - dxVz)/(gdata.getCen_h0(i,j,k)*gdata.getCen_h2(i,j,k));
-					REAL curl_z = (dxVy - dyVx)/(gdata.getCen_h0(i,j,k)*gdata.getCen_h1(i,j,k));
+					double curl_x = (dyVz - dzVy)/(gdata.getCen_h1(i,j,k)*gdata.getCen_h2(i,j,k));
+					double curl_y = (dzVx - dxVz)/(gdata.getCen_h0(i,j,k)*gdata.getCen_h2(i,j,k));
+					double curl_z = (dxVy - dyVx)/(gdata.getCen_h0(i,j,k)*gdata.getCen_h1(i,j,k));
 #else
-					REAL curl_x = (dyVz - dzVy);
-					REAL curl_y = (dzVx - dxVz);
-					REAL curl_z = (dxVy - dyVx);
+					double curl_x = (dyVz - dzVy);
+					double curl_y = (dzVx - dxVz);
+					double curl_z = (dxVy - dyVx);
 #endif
-					REAL curl_val = (sqr(curl_x) + sqr(curl_y) + sqr(curl_z));
+					double curl_val = (sqr(curl_x) + sqr(curl_y) + sqr(curl_z));
 	    
 					Vorticity += sqrt(curl_val)*dV;
 					Enstrophy += (curl_val)*dV;
@@ -1005,7 +1005,7 @@ void HyperbolicSolver::phystest(Data &gdata, gridFunc &gfunc,
 		for (int j = 0; j <= gdata.mx[1]; j++) {
 			for (int i = 0; i <= gdata.mx[0]; i++) {
 
-				REAL vabs = sqrt(sqr(gdata.om[q_sx](i,j,k)) +
+				double vabs = sqrt(sqr(gdata.om[q_sx](i,j,k)) +
 				                 sqr(gdata.om[q_sy](i,j,k)) +
 				                 sqr(gdata.om[q_sz](i,j,k)));
 				
@@ -1102,7 +1102,7 @@ void HyperbolicSolver::phystest(Data &gdata, gridFunc &gfunc,
 					for (int i = 0; i <= gdata.mx[0]; i++) {
 						double xx = gdata.getCen_x(i);
 	    
-						REAL vabs = sqrt(sqr(gdata.om[q_sx](i,j,k)) +
+						double vabs = sqrt(sqr(gdata.om[q_sx](i,j,k)) +
 						                 sqr(gdata.om[q_sy](i,j,k)) +
 						                 sqr(gdata.om[q_sz](i,j,k)));
 	    
@@ -1200,7 +1200,7 @@ void HyperbolicSolver::phystest(Data &gdata, gridFunc &gfunc,
 }
 
 
-void HyperbolicSolver::CheckNan(NumMatrix<REAL,3> &field, 
+void HyperbolicSolver::CheckNan(NumMatrix<double,3> &field, 
                                 int q, int rim, int pos,
                                 string fieldname)
 {

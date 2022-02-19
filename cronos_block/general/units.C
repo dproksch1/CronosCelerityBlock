@@ -14,8 +14,8 @@ Quantity::Quantity(
 }
 
 Quantity::Quantity(
-		const REAL value,
-		const REAL unitDimension[N_PHYSICAL_DIMENSIONS]
+		const double value,
+		const double unitDimension[N_PHYSICAL_DIMENSIONS]
 		)
 {
 	this->value = value;
@@ -26,8 +26,8 @@ Quantity::Quantity(
 }
 
 Quantity::Quantity(
-		const REAL value,
-		const std::initializer_list<REAL> unitDimension
+		const double value,
+		const std::initializer_list<double> unitDimension
 		)
 {
 	assert(unitDimension.size() == N_PHYSICAL_DIMENSIONS);
@@ -36,13 +36,13 @@ Quantity::Quantity(
 	std::copy(unitDimension.begin(), unitDimension.end(), this->unitDimension);
 }
 
-const REAL * Quantity::get_unitDimension(
+const double * Quantity::get_unitDimension(
 		) const
 {
 	return unitDimension;
 }
 
-const REAL & Quantity::get_unitDimension(
+const double & Quantity::get_unitDimension(
 		const int & idx
 		) const
 {
@@ -99,7 +99,7 @@ std::string Quantity::get_si_units(
 		} else {
 			int exp = unitDimension[i];
 
-			if (REAL(exp) == unitDimension[i]) {
+			if (double(exp) == unitDimension[i]) {
 				stream << symb_loc << "^" << exp;
 			}
 			else {
@@ -160,7 +160,7 @@ Quantity & operator /=(
 
 Quantity & operator *=(
 		Quantity & q,
-		const REAL & x
+		const double & x
 		)
 {
 	q.value *= x;
@@ -169,7 +169,7 @@ Quantity & operator *=(
 
 Quantity & operator /=(
 		Quantity & q,
-		const REAL & x
+		const double & x
 		)
 {
 	q.value /= x;
@@ -219,7 +219,7 @@ Quantity operator/(
 
 Quantity operator*(
 		const Quantity & q,
-		const REAL & x
+		const double & x
 		)
 {
 	Quantity newQuant(q);
@@ -229,7 +229,7 @@ Quantity operator*(
 
 Quantity operator/(
 		const Quantity & q,
-		const REAL & x
+		const double & x
 		)
 {
 	Quantity newQuant(q);
@@ -238,7 +238,7 @@ Quantity operator/(
 }
 
 Quantity operator*(
-		const REAL & x,
+		const double & x,
 		const Quantity & q
 		)
 {
@@ -246,7 +246,7 @@ Quantity operator*(
 }
 
 Quantity operator/(
-		const REAL & x,
+		const double & x,
 		const Quantity & q
 		)
 {
@@ -279,7 +279,7 @@ std::ostream& operator<<(
 
 
 bool operator>(
-		const REAL & x,
+		const double & x,
 		const Quantity & q
 		)
 {
@@ -288,7 +288,7 @@ bool operator>(
 
 bool operator>(
 		const Quantity & q,
-		const REAL & x
+		const double & x
 		)
 {
 	return q.value > x;
@@ -305,7 +305,7 @@ bool operator>(
 
 
 bool operator<(
-		const REAL & x,
+		const double & x,
 		const Quantity & q
 		)
 {
@@ -314,7 +314,7 @@ bool operator<(
 
 bool operator<(
 		const Quantity & q,
-		const REAL & x
+		const double & x
 		)
 {
 	return q.value < x;
@@ -346,7 +346,7 @@ Quantity cube(
 
 Quantity pow(
 		const Quantity & q,
-		const REAL & exp
+		const double & exp
 		)
 {
 	Quantity newQuant(q);
@@ -382,14 +382,14 @@ UnitQuantity::UnitQuantity(
 }
 
 UnitQuantity::UnitQuantity(
-		const REAL unitDimension[Quantity::N_PHYSICAL_DIMENSIONS]
+		const double unitDimension[Quantity::N_PHYSICAL_DIMENSIONS]
 		):
 				Quantity(1., unitDimension)
 {
 }
 
 UnitQuantity::UnitQuantity(
-		const std::initializer_list<REAL> unitDimension
+		const std::initializer_list<double> unitDimension
 		):
 				Quantity(1., unitDimension)
 {

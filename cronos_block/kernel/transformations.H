@@ -19,38 +19,38 @@ public:
     void TransEth2E(const Data &, gridFunc &, ProblemType &) const;
     void TransE2Eth(Data &, gridFunc &, ProblemType &);
 	void TransE2Eth(Data &, gridFunc &, ProblemType &, int, bool);
-	REAL TransE2T(Data &, gridFunc &, ProblemType &);
+	double TransE2T(Data &, gridFunc &, ProblemType &);
     void TransT2E(const Data &, gridFunc &, ProblemType &) const;
 	void TransT2Eth(const Data &, gridFunc &, ProblemType &) const;
-    REAL TransEth2T(Data &, gridFunc &, ProblemType &);
+    double TransEth2T(Data &, gridFunc &, ProblemType &);
 	void get_Cons(const Data &, const ProblemType &, const EquationOfState &,
 			phys_fields_0D &, int ix, int iy, int iz, int face);
     void set_thermal(bool thermal);
 
-	REAL TransEth2E(REAL, REAL, REAL, REAL) const;
-	REAL TransT2E(const ProblemType &, REAL, REAL, REAL, REAL) const;
+	double TransEth2E(double, double, double, double) const;
+	double TransT2E(const ProblemType &, double, double, double, double) const;
 
 #if (USE_COROTATION == CRONOS_ON)
 	void TransCorotToInert(Data &, gridFunc &, ProblemType &);
 	void TransInertToCorot(Data &, gridFunc &, ProblemType &);
-	REAL TransCorotToInert_x(Data &, REAL vCorot, int ix, int iy, int iz);
-	REAL TransCorotToInert_y(Data &, REAL vCorot, int ix, int iy, int iz);
-	REAL TransCorotToInert_z(Data &, REAL vCorot, int ix, int iy, int iz);
-	REAL TransInertToCorot_x(Data &, REAL vInert, int ix, int iy, int iz);
-	REAL TransInertToCorot_y(Data &, REAL vInert, int ix, int iy, int iz);
-	REAL TransInertToCorot_z(Data &, REAL vInert, int ix, int iy, int iz);
+	double TransCorotToInert_x(Data &, double vCorot, int ix, int iy, int iz);
+	double TransCorotToInert_y(Data &, double vCorot, int ix, int iy, int iz);
+	double TransCorotToInert_z(Data &, double vCorot, int ix, int iy, int iz);
+	double TransInertToCorot_x(Data &, double vInert, int ix, int iy, int iz);
+	double TransInertToCorot_y(Data &, double vInert, int ix, int iy, int iz);
+	double TransInertToCorot_z(Data &, double vInert, int ix, int iy, int iz);
 //	void setOmega(double OmegaZ);
-	void src_Corotating(Data &, ProblemType &, NumMatrix<REAL, 3> nom[]);
+	void src_Corotating(Data &, ProblemType &, NumMatrix<double, 3> nom[]);
 	void store_uInert(Data &gdata, phys_fields_0D &fields, int ix, int iy, int iz);
 #endif
 
 private:
-	REAL TransEth2E_HD(REAL, REAL, REAL, REAL);
-	REAL TransEth2E_MHD(REAL, REAL, REAL, REAL) const;
-	REAL TransT2E_HD(ProblemType &, REAL, REAL, REAL, REAL);
-	REAL TransT2E_MHD(const ProblemType &, REAL, REAL, REAL, REAL) const;
-    REAL TNorm;
-	REAL kBoverMeanMolWeight_num;
+	double TransEth2E_HD(double, double, double, double);
+	double TransEth2E_MHD(double, double, double, double) const;
+	double TransT2E_HD(ProblemType &, double, double, double, double);
+	double TransT2E_MHD(const ProblemType &, double, double, double, double) const;
+    double TNorm;
+	double kBoverMeanMolWeight_num;
 #if (USE_COROTATION == CRONOS_ON)
 	double omegaZ;
 #endif

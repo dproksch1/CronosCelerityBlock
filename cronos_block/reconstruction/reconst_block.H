@@ -54,15 +54,15 @@ protected:
 	
 	int substep;
 
-	NumMatrix<REAL, 1> derivPerp, derivM;
-	REAL deriv_x, deriv_y, deriv_z;
-	REAL dudxp_q, dudx0_q, dudxm_q;
-	REAL dudyp_q, dudy0_q, dudym_q;
-	REAL dudzp_q, dudz0_q, dudzm_q;
-	//std::vector<Buffer<REAL, 1>> dud_q = std::vector<Buffer<REAL, 1>>(DudDir::Max_Dir, Range<1>(DudIndex::Max_Index));
+	NumMatrix<double, 1> derivPerp, derivM;
+	double deriv_x, deriv_y, deriv_z;
+	double dudxp_q, dudx0_q, dudxm_q;
+	double dudyp_q, dudy0_q, dudym_q;
+	double dudzp_q, dudz0_q, dudzm_q;
+	//std::vector<Buffer<double, 1>> dud_q = std::vector<Buffer<double, 1>>(DudDir::Max_Dir, Range<1>(DudIndex::Max_Index));
 
-	//REAL dudxp, dudx0, dudxm;
-	//Buffer<REAL, 1> dudx;
+	//double dudxp, dudx0, dudxm;
+	//Buffer<double, 1> dudx;
     
 private:
 

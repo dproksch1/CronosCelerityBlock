@@ -38,7 +38,7 @@
 
 // Available types of auxiliary energy (for dual energy treatment)
 #define ENTROPY 2
-#define NONE -1
+//#define NONE -1
 
 // Available Time integration schemes:
 #define RUNGEKUTTA 1

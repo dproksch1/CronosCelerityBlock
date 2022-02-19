@@ -20,7 +20,7 @@ void Environment::pdestep(Data &gdata, Queue& queue)
 {
 	gdata.cfl = 0.;
 
-	// REAL timeinit(gdata.time);
+	// double timeinit(gdata.time);
 
 #ifdef TIME_INTEGRATOR
 

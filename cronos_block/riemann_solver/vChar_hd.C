@@ -13,7 +13,7 @@ RiemannSolverHD::RiemannSolverHD(const Data &gdata, int dir, int Fluid_Type) : R
 
 void RiemannSolverHD::get_vChar(const Data &gdata, const ProblemType &Problem,
 		const phys_fields_0D &pfL, const phys_fields_0D &pfR, num_fields_0D &f_num,
-		int /*ix*/, int /*iy*/, int /*iz*/, int dir, REAL &cfl_lin) const {
+		int /*ix*/, int /*iy*/, int /*iz*/, int dir, double &cfl_lin) const {
 	//! Compute characteristic velocities
 
 	int shift_vec[3] = {0,0,0};
@@ -21,38 +21,38 @@ void RiemannSolverHD::get_vChar(const Data &gdata, const ProblemType &Problem,
 
 	//int iPos[3] = {ix, iy, iz};
 
-	REAL rhoinv_p = 1./pfL.uCon[q_rho];
-	REAL rhoinv_m = 1./pfR.uCon[q_rho];
+	double rhoinv_p = 1./pfL.uCon[q_rho];
+	double rhoinv_m = 1./pfR.uCon[q_rho];
 
 	// Flow velocity
-	REAL u_p = pfL.uPri[dir+q_sx];
-	REAL u_m = pfR.uPri[dir+q_sx];
+	double u_p = pfL.uPri[dir+q_sx];
+	double u_m = pfR.uPri[dir+q_sx];
 
-	REAL pres_p = pfL.ptherm;
-	REAL pres_m = pfR.ptherm;
+	double pres_p = pfL.ptherm;
+	double pres_m = pfR.ptherm;
 
 	// Sound speed
-	REAL cs_p   = sqrt(Problem.gamma*pres_p*rhoinv_p);
-	REAL cs_m   = sqrt(Problem.gamma*pres_m*rhoinv_m);
+	double cs_p   = sqrt(Problem.gamma*pres_p*rhoinv_p);
+	double cs_m   = sqrt(Problem.gamma*pres_m*rhoinv_m);
 
-	REAL v_ch_p = std::max(std::max(cs_p+u_p,cs_m+u_m),0.);
-	REAL v_ch_m = std::max(std::max(cs_p-u_p,cs_m-u_m),0.);
+	double v_ch_p = std::max(std::max(cs_p+u_p,cs_m+u_m),0.);
+	double v_ch_m = std::max(std::max(cs_p-u_p,cs_m-u_m),0.);
 
 	f_num.v_ch_p = v_ch_p;
 	f_num.v_ch_m = v_ch_m;
 
-	REAL vmax = std::max(v_ch_p, v_ch_m);
+	double vmax = std::max(v_ch_p, v_ch_m);
 
 	//		fields.v_ch_p(i) = std::max(std::max(cs_p+u_p,cs_m+u_m),0.);
 	//		fields.v_ch_m(i) = std::max(std::max(cs_p-u_p,cs_m-u_m),0.);
 	//
-	//		REAL vmax = std::max(fields.v_ch_p(i),fields.v_ch_m(i));
+	//		double vmax = std::max(fields.v_ch_p(i),fields.v_ch_m(i));
 
 	// Local computation of cfl number
 #if  (NON_LINEAR_GRID == CRONOS_OFF)
-	REAL cfl_loc = vmax*gdata.idx[dir];
+	double cfl_loc = vmax*gdata.idx[dir];
 #else
-	REAL cfl_loc = vmax*gdata.getCen_idx(dir, iPos[dir]);
+	double cfl_loc = vmax*gdata.getCen_idx(dir, iPos[dir]);
 #endif
 
 #ifdef GEOM
@@ -71,7 +71,7 @@ void RiemannSolverHD::get_vChar(const Data &gdata, const ProblemType &Problem,
 }
 
 void get_vChar2(const Data &gdata, const ProblemType &Problem,
-		const phys_fields_0D &pfL, const phys_fields_0D &pfR, num_fields_0D &f_num, int dir, REAL &cfl_lin) {
+		const phys_fields_0D &pfL, const phys_fields_0D &pfR, num_fields_0D &f_num, int dir, double &cfl_lin) {
 	//! Compute characteristic velocities
 
 	int shift_vec[3] = {0,0,0};
@@ -81,38 +81,38 @@ void get_vChar2(const Data &gdata, const ProblemType &Problem,
 	int q_rho = gdata.fluid.get_q_rho();
 	int q_sx = gdata.fluid.get_q_sx();
 
-	REAL rhoinv_p = 1./pfL.uCon[q_rho];
-	REAL rhoinv_m = 1./pfR.uCon[q_rho];
+	double rhoinv_p = 1./pfL.uCon[q_rho];
+	double rhoinv_m = 1./pfR.uCon[q_rho];
 
 	// Flow velocity
-	REAL u_p = pfL.uPri[dir+q_sx];
-	REAL u_m = pfR.uPri[dir+q_sx];
+	double u_p = pfL.uPri[dir+q_sx];
+	double u_m = pfR.uPri[dir+q_sx];
 
-	REAL pres_p = pfL.ptherm;
-	REAL pres_m = pfR.ptherm;
+	double pres_p = pfL.ptherm;
+	double pres_m = pfR.ptherm;
 
 	// Sound speed
-	REAL cs_p   = sqrt(Problem.gamma*pres_p*rhoinv_p);
-	REAL cs_m   = sqrt(Problem.gamma*pres_m*rhoinv_m);
+	double cs_p   = sqrt(Problem.gamma*pres_p*rhoinv_p);
+	double cs_m   = sqrt(Problem.gamma*pres_m*rhoinv_m);
 
-	REAL v_ch_p = std::max(std::max(cs_p+u_p,cs_m+u_m),0.);
-	REAL v_ch_m = std::max(std::max(cs_p-u_p,cs_m-u_m),0.);
+	double v_ch_p = std::max(std::max(cs_p+u_p,cs_m+u_m),0.);
+	double v_ch_m = std::max(std::max(cs_p-u_p,cs_m-u_m),0.);
 
 	f_num.v_ch_p = v_ch_p;
 	f_num.v_ch_m = v_ch_m;
 
-	REAL vmax = std::max(v_ch_p, v_ch_m);
+	double vmax = std::max(v_ch_p, v_ch_m);
 
 	//		fields.v_ch_p(i) = std::max(std::max(cs_p+u_p,cs_m+u_m),0.);
 	//		fields.v_ch_m(i) = std::max(std::max(cs_p-u_p,cs_m-u_m),0.);
 	//
-	//		REAL vmax = std::max(fields.v_ch_p(i),fields.v_ch_m(i));
+	//		double vmax = std::max(fields.v_ch_p(i),fields.v_ch_m(i));
 
 	// Local computation of cfl number
 #if  (NON_LINEAR_GRID == CRONOS_OFF)
-	REAL cfl_loc = vmax*gdata.idx[dir];
+	double cfl_loc = vmax*gdata.idx[dir];
 #else
-	REAL cfl_loc = vmax*gdata.getCen_idx(dir, iPos[dir]);
+	double cfl_loc = vmax*gdata.getCen_idx(dir, iPos[dir]);
 #endif
 
 #ifdef GEOM

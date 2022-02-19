@@ -9,7 +9,7 @@
 
 using namespace std;
 
-REAL HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
+double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
                                   ProblemType &Problem, int n, Queue&)
 {
     //do nothing

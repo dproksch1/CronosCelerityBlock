@@ -50,7 +50,7 @@ public:
 	//vector< unique_ptr<eulersolver> > EulerSolvers;
 	//	eulersolver *EulerSolver;
 	int outputflag;
-	REAL restart_time;
+	double restart_time;
 	std::unique_ptr<ProblemType> Problem;
 	std::unique_ptr<gridFunc> gfunc;
 private:
@@ -80,9 +80,9 @@ private:
 	int restart_step;
 	int nummov_done;
 	int N_MOV;
-	REAL dt_dbl, dt_flt, dt_ascii, dt_info, dt_mov;
-	REAL t_last_dbl, t_last_flt;
-	REAL cfl_set, cfl_min, cfl_max;
+	double dt_dbl, dt_flt, dt_ascii, dt_info, dt_mov;
+	double t_last_dbl, t_last_flt;
+	double cfl_set, cfl_min, cfl_max;
 	string OldName;
 };
 

@@ -96,47 +96,47 @@ public:
 
 	inline Quantity get_phys(
 			const Type & i,
-			const REAL & num
+			const double & num
 			) const ;
 
-//	inline REAL get_num(
+//	inline double get_num(
 //			const Type & i,
-//			const REAL & phys
+//			const double & phys
 //			) const ;
 
-	inline REAL get_num(
+	inline double get_num(
 			const Quantity & quantity
 			) const ;
 
-	inline REAL get_num(
+	inline double get_num(
 			const Type & i,
 			const Quantity & quantity
 			) const ;
 
-	inline REAL renormalise(
+	inline double renormalise(
 			const Type & type,
 			const normalisation * norm,
-			const REAL & num
+			const double & num
 			) const ;
 
-	inline REAL renormalise(
+	inline double renormalise(
 			const Type & old_type,
 			const normalisation * norm,
 			const Type & new_type,
-			const REAL & num
+			const double & num
 			) const ;
 
-	inline REAL renormalise(
+	inline double renormalise(
 			const Type & type,
 			const normalisation & norm,
-			const REAL & num
+			const double & num
 			) const ;
 
-	inline REAL renormalise(
+	inline double renormalise(
 			const Type & old_type,
 			const normalisation & norm,
 			const Type & new_type,
-			const REAL & num
+			const double & num
 			) const ;
 
 
@@ -146,7 +146,7 @@ public:
 			);
 
 	// For HDF5
-	REAL get_normConst(			// return normalisation constant to transform back to phys units
+	double get_normConst(			// return normalisation constant to transform back to phys units
 			std::string type
 			);
 
@@ -181,7 +181,7 @@ protected:
 private:
 	void _set_unitDims(
 			const Type i,
-			const std::initializer_list<REAL> unitDimension
+			const std::initializer_list<double> unitDimension
 			);
 
 	void _get_derivedUnits(
@@ -196,7 +196,7 @@ private:
 
 
 	Quantity _unitQuantity[N_TYPES];
-	REAL _unitDims[N_TYPES][N_BASE];
+	double _unitDims[N_TYPES][N_BASE];
 
 	bool _norm_is_defined(
 			const Type type
@@ -251,25 +251,25 @@ inline const Quantity & normalisation::normQuantity(
 
 inline Quantity normalisation::get_phys(
 		const Type & i,
-		const REAL & num
+		const double & num
 		) const
 {
 	return num * _normQuantity[i];
 }
 
-//inline REAL normalisation::get_num(
+//inline double normalisation::get_num(
 //		const Type & i,
-//		const REAL & phys
+//		const double & phys
 //		) const
 //{
 //	return phys / _normQuantity[i].get_value();
 //}
 
-inline REAL normalisation::get_num(
+inline double normalisation::get_num(
 		const Quantity & quantity
 		) const
 {
-	REAL value = quantity.get_value();
+	double value = quantity.get_value();
 	for( int iDim=0; iDim < Quantity::N_PHYSICAL_DIMENSIONS; ++iDim) {
 		value *= pow(
 					_normQuantity[_physicalTypesMap[iDim]].get_value(),
@@ -279,7 +279,7 @@ inline REAL normalisation::get_num(
 	return value;
 }
 
-inline REAL normalisation::get_num(
+inline double normalisation::get_num(
 		const Type & i,
 		const Quantity & quantity
 		) const
@@ -287,39 +287,39 @@ inline REAL normalisation::get_num(
 	return quantity.normalizeTo(_normQuantity[i]);
 }
 
-inline REAL normalisation::renormalise(
+inline double normalisation::renormalise(
 		const Type & type,
 		const normalisation * norm,
-		const REAL & num
+		const double & num
 		) const
 {
 	return renormalise(type, *norm, type, num);
 }
 
-inline REAL normalisation::renormalise(
+inline double normalisation::renormalise(
 		const Type & old_type,
 		const normalisation * norm,
 		const Type & new_type,
-		const REAL & num
+		const double & num
 		) const
 {
 	return renormalise(old_type, *norm, new_type, num);
 }
 
-inline REAL normalisation::renormalise(
+inline double normalisation::renormalise(
 		const Type & type,
 		const normalisation & norm,
-		const REAL & num
+		const double & num
 		) const
 {
 	return renormalise(type, norm, type, num);
 }
 
-inline REAL normalisation::renormalise(
+inline double normalisation::renormalise(
 		const Type & old_type,
 		const normalisation & norm,
 		const Type & new_type,
-		const REAL & num
+		const double & num
 		) const
 {
 	return get_num(new_type, norm.get_phys(old_type, num));

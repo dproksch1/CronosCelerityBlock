@@ -10,7 +10,7 @@
 
 class rksolver {
 public:
-	virtual REAL singlestep(Data &, gridFunc &, ProblemType &, int, Queue&) {return 0.;}
+	virtual double singlestep(Data &, gridFunc &, ProblemType &, int, Queue&) {return 0.;}
 	virtual void phystest(Data &, gridFunc &, ProblemType &, int){}
 	virtual void init_constants(Data &) {}
 	virtual void addConstants_toH5(Data &, Hdf5Stream &h5out) {}
@@ -19,7 +19,7 @@ public:
 	virtual void restart(Data &, gridFunc &, ProblemType &) {}
 	virtual void Abort(CException) {}
 	virtual ~rksolver(){}
-	REAL dt_idl, dt_mov;
+	double dt_idl, dt_mov;
 };
 
 #endif

@@ -239,7 +239,7 @@ void Transformations::TransE2Eth(Data &gdata, gridFunc &gfunc,
 		 	for(int j = -B+1; j<=gdata.mx[1]+B; ++j){
 		 		for(int i = -B+1; i<=gdata.mx[0]+B; ++i){
 
-					REAL E_kin = 0.5*(sqr(gdata.om[q_sx](i,j,k)) +
+					double E_kin = 0.5*(sqr(gdata.om[q_sx](i,j,k)) +
 					                  sqr(gdata.om[q_sy](i,j,k)) +
 					                  sqr(gdata.om[q_sz](i,j,k)))*gdata.om[q_rho](i,j,k);
 
@@ -386,11 +386,11 @@ void Transformations::TransT2Eth(const Data &gdata, gridFunc &gfunc,
 	if(Problem.gamma < 1.0000000001) {
 		throw CException(" Must not be isothermal ");
 	}
-//	 REAL fac = 1./((Problem.gamma - 1.)*TNorm);
+//	 double fac = 1./((Problem.gamma - 1.)*TNorm);
 //	 cout << " factor " << fac << " " << gdata.om[q_Eges](12,12,12) << endl;
-//	REAL fac = kBoverMu_num / (Problem.gamma - 1);
+//	double fac = kBoverMu_num / (Problem.gamma - 1);
 
-	REAL fac = kBoverMeanMolWeight_num / (Problem.gamma - 1.);
+	double fac = kBoverMeanMolWeight_num / (Problem.gamma - 1.);
 	fac /= TNorm;
 
 	for(int k = -B; k<=gdata.mx[2]+B; ++k){
@@ -418,7 +418,7 @@ void Transformations::TransT2E(const Data &gdata, gridFunc &gfunc,
 
 }
 
-REAL Transformations::TransEth2T(Data &gdata, gridFunc &gfunc,
+double Transformations::TransEth2T(Data &gdata, gridFunc &gfunc,
                                  ProblemType &Problem) 
 {
 	if(gdata.om[q_Eges].getName() != "Etherm") {
@@ -429,7 +429,7 @@ REAL Transformations::TransEth2T(Data &gdata, gridFunc &gfunc,
 		throw CException(" Must not be isothermal ");
 	}
 
-	REAL fac = TNorm*(Problem.gamma-1.)/kBoverMeanMolWeight_num;
+	double fac = TNorm*(Problem.gamma-1.)/kBoverMeanMolWeight_num;
 
 	for(int k = -B; k<=gdata.mx[2]+B; ++k){
 		for(int j = -B; j<=gdata.mx[1]+B; ++j){
@@ -449,7 +449,7 @@ REAL Transformations::TransEth2T(Data &gdata, gridFunc &gfunc,
 	gdata.om[q_Eges].rename("Temp");
 	gfunc.boundary(gdata, Problem, gdata.om[q_Eges],B,q_Eges, iFluid);
 
-	REAL TAve(1.);
+	double TAve(1.);
 	if(TPhys) {
 		TAve = gdata.computeRMS(q_Eges);
 	}
@@ -457,7 +457,7 @@ REAL Transformations::TransEth2T(Data &gdata, gridFunc &gfunc,
 }
 
 
-REAL Transformations::TransE2T(Data &gdata, gridFunc &gfunc,
+double Transformations::TransE2T(Data &gdata, gridFunc &gfunc,
                                ProblemType &Problem)
 {
 
@@ -473,7 +473,7 @@ REAL Transformations::TransE2T(Data &gdata, gridFunc &gfunc,
 void Transformations::get_Cons(const Data &gdata, const ProblemType &Problem,
 	const EquationOfState &eos, phys_fields_0D &fields, int ix, int iy, int iz, int face)
 {
-	NumArray<REAL> Pos(3); //stays uninitialized
+	NumArray<double> Pos(3); //stays uninitialized
 
 	int dir = face / 2;
 
@@ -511,12 +511,12 @@ void Transformations::get_Cons(const Data &gdata, const ProblemType &Problem,
 
 #endif
 
-	REAL Bsq(0.);
+	double Bsq(0.);
 	// Thermal energy / temperature / overall energy
 	if(ENERGETICS == FULL) {
-		REAL rhoinv = 1./fields.uPri[q_rho_loc];
+		double rhoinv = 1./fields.uPri[q_rho_loc];
 
-		REAL psq = (sqr(fields.uPri[q_sx_loc]) + sqr(fields.uPri[q_sy_loc]) +
+		double psq = (sqr(fields.uPri[q_sx_loc]) + sqr(fields.uPri[q_sy_loc]) +
 				sqr(fields.uPri[q_sz_loc]))*sqr(fields.uPri[q_rho_loc]);
 
 		if(thermal) {
@@ -576,24 +576,24 @@ void Transformations::TransCorotToInert(Data &gdata, gridFunc &gfunc, ProblemTyp
 	// Loop over entire grid:
 	for(int iz = -B; iz<=gdata.mx[2]+B; ++iz){
 		for(int iy = -B; iy<=gdata.mx[1]+B; ++iy){
-			REAL yPos = gdata.getCen_y(iy);
+			double yPos = gdata.getCen_y(iy);
 			for(int ix = -B; ix<=gdata.mx[0]+B; ++ix){
 				// Need different equations for the different grid types.
 #if(GEOM == CARTESIAN)
-				REAL xPos = gdata.getCen_x(ix);
+				double xPos = gdata.getCen_x(ix);
 
 				ux(ix, iy, iz) -= yPos*omegaZ;
 				uy(ix, iy, iz) += xPos*omegaZ;
 
 #elif(GEOM == CYLINDRICAL)
 
-				REAL rhoPos = gdata.getCen_x(ix);
+				double rhoPos = gdata.getCen_x(ix);
 
 				uPhi(ix, iy, iz) += rhoPos*omegaZ;
 
 #else
 
-				REAL rad = gdata.getCen_x(ix);
+				double rad = gdata.getCen_x(ix);
 
 				uPhi(ix, iy, iz) += rad*sin(yPos)*omegaZ;
 
@@ -634,24 +634,24 @@ void Transformations::TransInertToCorot(Data &gdata, gridFunc &gfunc, ProblemTyp
 	// Loop over entire grid:
 	for(int iz = -B; iz<=gdata.mx[2]+B; ++iz){
 		for(int iy = -B; iy<=gdata.mx[1]+B; ++iy){
-			REAL yPos = gdata.getCen_y(iy);
+			double yPos = gdata.getCen_y(iy);
 			for(int ix = -B; ix<=gdata.mx[0]+B; ++ix){
 				// Need different equations for the different grid types.
 #if(GEOM == CARTESIAN)
-				REAL xPos = gdata.getCen_x(ix);
+				double xPos = gdata.getCen_x(ix);
 
 				ux(ix, iy, iz) += yPos*omegaZ;
 				uy(ix, iy, iz) -= xPos*omegaZ;
 
 #elif(GEOM == CYLINDRICAL)
 
-				REAL rhoPos = gdata.getCen_x(ix);
+				double rhoPos = gdata.getCen_x(ix);
 
 				uPhi(ix, iy, iz) -= rhoPos*omegaZ;
 
 #else
 
-				REAL rad = gdata.getCen_x(ix);
+				double rad = gdata.getCen_x(ix);
 
 				uPhi(ix, iy, iz) -= rad*sin(yPos)*omegaZ;
 
@@ -666,13 +666,13 @@ void Transformations::TransInertToCorot(Data &gdata, gridFunc &gfunc, ProblemTyp
 
 }
 
-REAL Transformations::TransCorotToInert_x(Data &gdata, REAL vCorot, int ix, int iy, int iz) {
+double Transformations::TransCorotToInert_x(Data &gdata, double vCorot, int ix, int iy, int iz) {
 	//! Local transform from corotating to inertial frame
 	/*!
 	 * transformation of x-component
 	 * */
 #if(GEOM == CARTESIAN)
-	REAL yPos = gdata.getCen_y(iy);
+	double yPos = gdata.getCen_y(iy);
 	return vCorot - yPos*omegaZ;
 #else
 	return vCorot;
@@ -680,16 +680,16 @@ REAL Transformations::TransCorotToInert_x(Data &gdata, REAL vCorot, int ix, int 
 
 }
 
-REAL Transformations::TransCorotToInert_y(Data &gdata, REAL vCorot, int ix, int iy, int iz) {
+double Transformations::TransCorotToInert_y(Data &gdata, double vCorot, int ix, int iy, int iz) {
 	//! Local transform from corotating to inertial frame
 	/*!
 	 * transformation of y-component
 	 * */
 #if(GEOM == CARTESIAN)
-	REAL xPos = gdata.getCen_x(ix);
+	double xPos = gdata.getCen_x(ix);
 	return vCorot + xPos*omegaZ;
 #elif(GEOM == CYLINDRICAL)
-	REAL r_cyl = gdata.getCen_x(ix);
+	double r_cyl = gdata.getCen_x(ix);
 	return vCorot + r_cyl*omegaZ;
 #else
 	return vCorot;
@@ -697,7 +697,7 @@ REAL Transformations::TransCorotToInert_y(Data &gdata, REAL vCorot, int ix, int 
 
 }
 
-REAL Transformations::TransCorotToInert_z(Data &gdata, REAL vCorot, int ix, int iy, int iz) {
+double Transformations::TransCorotToInert_z(Data &gdata, double vCorot, int ix, int iy, int iz) {
 	//! Local transform from corotating to inertial frame
 	/*!
 	 * transformation of z-component
@@ -707,8 +707,8 @@ REAL Transformations::TransCorotToInert_z(Data &gdata, REAL vCorot, int ix, int 
 #elif(GEOM == CYLINDRICAL)
 	return vCorot;
 #else
-	REAL rad = gdata.getCen_x(ix);
-	REAL theta = gdata.getCen_y(iy);
+	double rad = gdata.getCen_x(ix);
+	double theta = gdata.getCen_y(iy);
 	return vCorot + rad*sin(theta)*omegaZ;
 #endif
 
@@ -716,13 +716,13 @@ REAL Transformations::TransCorotToInert_z(Data &gdata, REAL vCorot, int ix, int 
 
 
 
-REAL Transformations::TransInertToCorot_x(Data &gdata, REAL vInert, int ix, int iy, int iz) {
+double Transformations::TransInertToCorot_x(Data &gdata, double vInert, int ix, int iy, int iz) {
 	//! Local transform from inertial to corotating frame
 	/*!
 	 * transformation of x-component
 	 * */
 #if(GEOM == CARTESIAN)
-	REAL yPos = gdata.getCen_y(iy);
+	double yPos = gdata.getCen_y(iy);
 	return vInert + yPos*omegaZ;
 #else
 	return vInert;
@@ -731,16 +731,16 @@ REAL Transformations::TransInertToCorot_x(Data &gdata, REAL vInert, int ix, int 
 }
 
 
-REAL Transformations::TransInertToCorot_y(Data &gdata, REAL vInert, int ix, int iy, int iz) {
+double Transformations::TransInertToCorot_y(Data &gdata, double vInert, int ix, int iy, int iz) {
 	//! Local transform from inertial to corotating frame
 	/*!
 	 * transformation of y-component
 	 * */
 #if(GEOM == CARTESIAN)
-	REAL xPos = gdata.getCen_x(ix);
+	double xPos = gdata.getCen_x(ix);
 	return vInert- xPos*omegaZ;
 #elif(GEOM == CYLINDRICAL)
-	REAL r_cyl = gdata.getCen_x(ix);
+	double r_cyl = gdata.getCen_x(ix);
 	return vInert - r_cyl*omegaZ;
 #else
 	return vInert;
@@ -748,7 +748,7 @@ REAL Transformations::TransInertToCorot_y(Data &gdata, REAL vInert, int ix, int 
 
 }
 
-REAL Transformations::TransInertToCorot_z(Data &gdata, REAL vInert, int ix, int iy, int iz) {
+double Transformations::TransInertToCorot_z(Data &gdata, double vInert, int ix, int iy, int iz) {
 	//! Local transform from inertial to corotating frame
 	/*!
 	 * transformation of z-component
@@ -758,8 +758,8 @@ REAL Transformations::TransInertToCorot_z(Data &gdata, REAL vInert, int ix, int 
 #elif(GEOM == CYLINDRICAL)
 	return vInert;
 #else
-	REAL rad = gdata.getCen_x(ix);
-	REAL theta = gdata.getCen_y(iy);
+	double rad = gdata.getCen_x(ix);
+	double theta = gdata.getCen_y(iy);
 	return vInert - rad*sin(theta)*omegaZ;
 #endif
 
@@ -769,7 +769,7 @@ REAL Transformations::TransInertToCorot_z(Data &gdata, REAL vInert, int ix, int 
 
 
 
-void Transformations::src_Corotating(Data &gdata, ProblemType &problem, NumMatrix<REAL, 3> nom[]) {
+void Transformations::src_Corotating(Data &gdata, ProblemType &problem, NumMatrix<double, 3> nom[]) {
 	//! Add corotation source term -\rho (\vec{\Omega} \times \vec{u})
 	/*!
 	 * Beware: u_1 -> u_x and u_2 -> u_y for Cartesian coordinates, while
@@ -789,7 +789,7 @@ void Transformations::src_Corotating(Data &gdata, ProblemType &problem, NumMatri
 	for(int iz = 0; iz<=gdata.mx[2]; ++iz){
 		for(int iy = 0; iy<=gdata.mx[1]; ++iy){
 #if(GEOM==SPHERICAL)
-			REAL theta = gdata.getCen_y(iy);
+			double theta = gdata.getCen_y(iy);
 #endif
 			for(int ix = 0; ix<=gdata.mx[0]; ++ix){
 #if(GEOM!=SPHERICAL)
@@ -824,7 +824,7 @@ void Transformations::store_uInert(Data &gdata, phys_fields_0D &fields, int ix, 
 #endif //USE_COROTATION
 
 
-REAL Transformations::TransEth2E(REAL rhoinv, REAL psq, REAL Bsq, REAL ETherm) const {
+double Transformations::TransEth2E(double rhoinv, double psq, double Bsq, double ETherm) const {
 #if (FLUID_TYPE == CRONOS_MHD)
 	return TransEth2E_MHD(rhoinv, psq, Bsq, ETherm);
 #elif (FLUID_TYPE == CRONOS_HYDRO)
@@ -838,7 +838,7 @@ REAL Transformations::TransEth2E(REAL rhoinv, REAL psq, REAL Bsq, REAL ETherm) c
 #endif
 }
 
-REAL Transformations::TransT2E(const ProblemType &Problem, REAL rhoinv, REAL psq, REAL Bsq, REAL ETherm) const {
+double Transformations::TransT2E(const ProblemType &Problem, double rhoinv, double psq, double Bsq, double ETherm) const {
 #if (FLUID_TYPE == CRONOS_MHD)
 	return TransT2E_MHD(Problem, rhoinv, psq, Bsq, ETherm);
 #elif (FLUID_TYPE == CRONOS_HYDRO)
@@ -852,28 +852,28 @@ REAL Transformations::TransT2E(const ProblemType &Problem, REAL rhoinv, REAL psq
 #endif
 }
 
-REAL Transformations::TransEth2E_HD(REAL rhoinv, REAL psq, REAL Bsq, REAL ETherm)
+double Transformations::TransEth2E_HD(double rhoinv, double psq, double Bsq, double ETherm)
 {
-	REAL Energy(ETherm + 0.5*psq*rhoinv);
+	double Energy(ETherm + 0.5*psq*rhoinv);
 	return Energy;
 }
 
-REAL Transformations::TransT2E_HD(ProblemType &Problem,
-		REAL rhoinv, REAL psq, REAL Bsq, REAL Temp)
+double Transformations::TransT2E_HD(ProblemType &Problem,
+		double rhoinv, double psq, double Bsq, double Temp)
 {
-	REAL Energy(1./(rhoinv*(Problem.gamma-1.))*Temp);
+	double Energy(1./(rhoinv*(Problem.gamma-1.))*Temp);
 	return TransEth2E(rhoinv, psq, Bsq, Energy);
 }
 
-REAL Transformations::TransEth2E_MHD(REAL rhoinv, REAL psq, REAL Bsq, REAL ETherm) const
+double Transformations::TransEth2E_MHD(double rhoinv, double psq, double Bsq, double ETherm) const
 {
-	REAL Energy(ETherm + 0.5*psq*rhoinv + 0.5*Bsq);
+	double Energy(ETherm + 0.5*psq*rhoinv + 0.5*Bsq);
 	return Energy;
 }
 
-REAL Transformations::TransT2E_MHD(const ProblemType &Problem,
-		REAL rhoinv, REAL psq, REAL Bsq, REAL Temp) const
+double Transformations::TransT2E_MHD(const ProblemType &Problem,
+		double rhoinv, double psq, double Bsq, double Temp) const
 {
-	REAL Energy(1./(rhoinv*(Problem.gamma-1.))*Temp);
+	double Energy(1./(rhoinv*(Problem.gamma-1.))*Temp);
 	return TransEth2E(rhoinv, psq, Bsq, Energy);
 }

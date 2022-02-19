@@ -14,12 +14,12 @@ public:
 
 	minmod(const minmod&) = default;
 
-	REAL compute(REAL&, REAL&, REAL&) const;
+	double compute(double&, double&, double&) const;
 private:
-	REAL Theta;
+	double Theta;
 };
 
-inline REAL minmod::compute(REAL& up, REAL& uc, REAL& um) const
+inline double minmod::compute(double& up, double& uc, double& um) const
 {
 	up *= Theta;
 	um *= Theta;

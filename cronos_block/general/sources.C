@@ -38,33 +38,33 @@ SourceTerms::~SourceTerms() {
 // Nothing to be done for Cartesian geometry
 #if (GEOM == CARTESIAN) 
 void SourceTerms::src_Geom_Hydro(Data &gdata, ProblemType &Problem,
-                                 NumMatrix<REAL,3> nom[], const CronosFluid &) {
+                                 NumMatrix<double,3> nom[], const CronosFluid &) {
 	return;
 }
 
 #ifdef PHYSDISS
 void SourceTerms::src_Geom_Viscosity(Data &gdata, ProblemType &Problem,
-                                     NumMatrix<REAL,3> nom[], const CronosFluid &) {
+                                     NumMatrix<double,3> nom[], const CronosFluid &) {
 	return;
 }
 
 void SourceTerms::mod_Geom_Visc_WE(Data &gdata, const ProblemType &Problem,
-                                   REAL omWE[], REAL tau[],
-                                   const REAL &i, const REAL &j, const REAL &k,
+                                   double omWE[], double tau[],
+                                   const double &i, const double &j, const double &k,
                                    const int &dir) {
 	return;
 }
 
 void SourceTerms::mod_Geom_Visc_SN(Data &gdata, const ProblemType &Problem,
-                                   REAL omWE[], REAL tau[],
-                                   const REAL &i, const REAL &j, const REAL &k,
+                                   double omWE[], double tau[],
+                                   const double &i, const double &j, const double &k,
                                    const int &dir) {
 	return;
 }
 
 void SourceTerms::mod_Geom_Visc_BT(Data &gdata, const ProblemType &Problem,
-                                   REAL omWE[], REAL tau[],
-                                   const REAL &i, const REAL &j, const REAL &k,
+                                   double omWE[], double tau[],
+                                   const double &i, const double &j, const double &k,
                                    const int &dir) {
 	return;
 }
@@ -78,7 +78,7 @@ void SourceTerms::mod_Geom_Visc_BT(Data &gdata, const ProblemType &Problem,
 #if (GEOM == CYLINDRICAL)
 
 // Shift of collocation point for reconstruction polynomial
-REAL SourceTerms::shift_Geom_WE(Data &gdata, 
+double SourceTerms::shift_Geom_WE(Data &gdata, 
                                 int ii, int jj, int kk) {
 #if (NON_LINEAR_GRID == CRONOS_ON)
 	facShift = gdata.getCen_dx(0,ii)/12.;
@@ -86,12 +86,12 @@ REAL SourceTerms::shift_Geom_WE(Data &gdata,
 	return facShift/gdata.getCen_x(ii);
 }
 
-REAL SourceTerms::shift_Geom_SN(Data &gdata, 
+double SourceTerms::shift_Geom_SN(Data &gdata, 
                                 int ii, int jj, int kk) {
 	return 0.;
 }
 
-REAL SourceTerms::shift_Geom_BT(Data &gdata, 
+double SourceTerms::shift_Geom_BT(Data &gdata, 
                                 int ii, int jj, int kk) {
 	return 0.;
 }
@@ -100,7 +100,7 @@ REAL SourceTerms::shift_Geom_BT(Data &gdata,
 
 
 void SourceTerms::src_Geom_Hydro(Data &gdata, ProblemType &pr,
-                                 NumMatrix<REAL,3> nom[], const CronosFluid &fluid) {
+                                 NumMatrix<double,3> nom[], const CronosFluid &fluid) {
 
 	// Set indices:
 	int q_rho = fluid.get_q_rho();
@@ -122,17 +122,17 @@ void SourceTerms::src_Geom_Hydro(Data &gdata, ProblemType &pr,
 	}
 
 #ifdef GEOM_SOURCE_CORRECTION
-	REAL fac = 1./12.;
+	double fac = 1./12.;
 #endif
 
-	REAL B_r(0.), B_phi(0.), B_z(0.);
+	double B_r(0.), B_phi(0.), B_z(0.);
 	for (int k = 0; k <= gdata.mx[2]; ++k){
 		for (int j = 0; j <= gdata.mx[1]; ++j){
 			for (int i = 0; i <= gdata.mx[0]; ++i){
 
-				REAL r_cyl_inv = 1./(gdata.getCen_x(i));
-				REAL rho(gdata.om[q_rho](i,j,k));
-				REAL pres(0.);
+				double r_cyl_inv = 1./(gdata.getCen_x(i));
+				double rho(gdata.om[q_rho](i,j,k));
+				double pres(0.);
 
 				if(ENERGETICS == FULL) {
 					if(thermal) {
@@ -146,11 +146,11 @@ void SourceTerms::src_Geom_Hydro(Data &gdata, ProblemType &pr,
 				}
 
 
-				REAL v_phi(gdata.om[q_sy](i,j,k));
+				double v_phi(gdata.om[q_sy](i,j,k));
 
 #if (USE_COROTATION == CRONOS_ON)
-				REAL r_cyl = gdata.getCen_x(i);
-				REAL v_phiCorot = v_phi - r_cyl*omegaZ;
+				double r_cyl = gdata.getCen_x(i);
+				double v_phiCorot = v_phi - r_cyl*omegaZ;
 #endif
 
 				//#if (FLUID_TYPE == CRONOS_MHD)
@@ -166,12 +166,12 @@ void SourceTerms::src_Geom_Hydro(Data &gdata, ProblemType &pr,
 				//   B_phi = 0.;
 				//   B_z = 0.;
 //					//#else
-//						REAL B_r(0.), B_phi(0.), B_z(0.);
+//						double B_r(0.), B_phi(0.), B_z(0.);
 						//#endif
 				}
 
 				// if(i==gdata.mx[0]-10 && j==gdata.mx[1]/8 && k==0) {
-				// 	REAL phi = gdata.getCen_y(j);
+				// 	double phi = gdata.getCen_y(j);
 				// 	cout << " Sources: " << endl << "      ";
 				// 	cout << B_r << " " << B_phi << " " << B_z << " ";
 				// 	cout << sqrt(sqr(B_r) + sqr(B_phi)) << endl;
@@ -182,9 +182,9 @@ void SourceTerms::src_Geom_Hydro(Data &gdata, ProblemType &pr,
 				// 	cout << gdata.om[q_Bx](i,j,k) << " ";
 				// 	cout << gdata.om[q_Bx](i-1,j,k) << endl;
 				// 	cout << " alternative " << endl;
-				// 	REAL phiL = gdata.getEdgL_y(j);
-				// 	REAL phiR = gdata.getEdgR_y(j);
-				// 	REAL fus = cos(phi)*0.5*(gdata.om[q_By](i,j,k)/cos(phiL) +
+				// 	double phiL = gdata.getEdgL_y(j);
+				// 	double phiR = gdata.getEdgR_y(j);
+				// 	double fus = cos(phi)*0.5*(gdata.om[q_By](i,j,k)/cos(phiL) +
 				// 	                         gdata.om[q_By](i,j-1,k)/cos(phiR));
 				// 	cout << fus << endl;
 				// 	B_phi = fus;
@@ -217,25 +217,25 @@ void SourceTerms::src_Geom_Hydro(Data &gdata, ProblemType &pr,
 #endif
 
 				// Compute local gradients
-				REAL drhodrp  =  gdata.om[q_rho](i+1,j  ,k  ) - gdata.om[q_rho](i  ,j  ,k  );
-				REAL drhodr0  = (gdata.om[q_rho](i+1,j  ,k  ) -
+				double drhodrp  =  gdata.om[q_rho](i+1,j  ,k  ) - gdata.om[q_rho](i  ,j  ,k  );
+				double drhodr0  = (gdata.om[q_rho](i+1,j  ,k  ) -
 				                 gdata.om[q_rho](i-1,j  ,k  ))*0.5;
-				REAL drhodrm  =  gdata.om[q_rho](i  ,j  ,k  ) - gdata.om[q_rho](i-1,j  ,k  );
+				double drhodrm  =  gdata.om[q_rho](i  ,j  ,k  ) - gdata.om[q_rho](i-1,j  ,k  );
         
-				REAL dvrdrp   =  gdata.om[q_sx](i+1,j  ,k  ) - gdata.om[q_sx](i  ,j  ,k  );
-				REAL dvrdr0   = (gdata.om[q_sx](i+1,j  ,k  ) -
+				double dvrdrp   =  gdata.om[q_sx](i+1,j  ,k  ) - gdata.om[q_sx](i  ,j  ,k  );
+				double dvrdr0   = (gdata.om[q_sx](i+1,j  ,k  ) -
 				                 gdata.om[q_sx](i-1,j  ,k  ))*0.5;
-				REAL dvrdrm   =  gdata.om[q_sx](i  ,j  ,k  ) - gdata.om[q_sx](i-1,j  ,k  );
+				double dvrdrm   =  gdata.om[q_sx](i  ,j  ,k  ) - gdata.om[q_sx](i-1,j  ,k  );
         
-				REAL dvphidrp =  gdata.om[q_sy](i+1,j  ,k  ) - gdata.om[q_sy](i  ,j  ,k  );
-				REAL dvphidr0 = (gdata.om[q_sy](i+1,j  ,k  ) -
+				double dvphidrp =  gdata.om[q_sy](i+1,j  ,k  ) - gdata.om[q_sy](i  ,j  ,k  );
+				double dvphidr0 = (gdata.om[q_sy](i+1,j  ,k  ) -
 				                 gdata.om[q_sy](i-1,j  ,k  ))*0.5;
-				REAL dvphidrm =  gdata.om[q_sy](i  ,j  ,k  ) - gdata.om[q_sy](i-1,j  ,k  );
+				double dvphidrm =  gdata.om[q_sy](i  ,j  ,k  ) - gdata.om[q_sy](i-1,j  ,k  );
         
 				// Get gradient using the limiter:
-				REAL drhodr  = Limiter->compute(drhodrp,  drhodr0,  drhodrm);
-				REAL dvrdr   = Limiter->compute(dvrdrp,   dvrdr0,   dvrdrm);
-				REAL dvphidr = Limiter->compute(dvphidrp, dvphidr0, dvphidrm);
+				double drhodr  = Limiter->compute(drhodrp,  drhodr0,  drhodrm);
+				double dvrdr   = Limiter->compute(dvrdrp,   dvrdr0,   dvrdrm);
+				double dvphidr = Limiter->compute(dvphidrp, dvphidr0, dvphidrm);
 
 				nom[q_sx](i,j,k) -= -(rho*sqr(dvphidr) +
 				                         2.*drhodr*v_phi*dvphidr)*fac*r_cyl_inv;
@@ -243,7 +243,7 @@ void SourceTerms::src_Geom_Hydro(Data &gdata, ProblemType &pr,
 #endif
 
 #if (USE_ANGULAR_MOMENTUM == FALSE)
-				REAL v_r(gdata.om[q_sx](i,j,k));
+				double v_r(gdata.om[q_sx](i,j,k));
 				//				nom[q_sy](i,j,k) -= (-rho*v_r*v_phi + 0.5*(B_r*B_phi))*r_cyl_inv;
 #if (USE_COROTATION == CRONOS_ON)
 				nom[q_sy](i,j,k) -= (-rho*v_r*v_phiCorot + (B_r*B_phi))*r_cyl_inv;
@@ -267,7 +267,7 @@ void SourceTerms::src_Geom_Hydro(Data &gdata, ProblemType &pr,
 
 #ifdef PHYSDISS
 void SourceTerms::src_Geom_Viscosity(Data &gdata, ProblemType &pr,
-                                     NumMatrix<REAL,3> nom[N_OMINT], const CronosFluid &fluid) {
+                                     NumMatrix<double,3> nom[N_OMINT], const CronosFluid &fluid) {
 
 	// Set indices:
 	int q_rho = fluid.get_q_rho();
@@ -291,11 +291,11 @@ void SourceTerms::src_Geom_Viscosity(Data &gdata, ProblemType &pr,
 	for (int k = 0; k <= gdata.mx[2]; ++k){
 		for (int j = 0; j <= gdata.mx[1]; ++j){
 			for (int i = 0; i <= gdata.mx[0]; ++i){
-				REAL r_cyl_inv = 1./(gdata.getCen_x(i));
+				double r_cyl_inv = 1./(gdata.getCen_x(i));
 
 				double mu = pr.nu(gdata,i,j,k)*rho(i,j,k);
 
-				//	REAL T_phiphi = 2*dv_phidphi - 2/3*div_v
+				//	double T_phiphi = 2*dv_phidphi - 2/3*div_v
 
 				nom[q_sx](i,j,k) -= -mu*(2.*(v_phi(i,j+1,k) -
 				                                v_phi(i,j-1,k))*gdata.getCen_hx(1,j)/gdata.getCen_h1(i,j,k) -
@@ -319,12 +319,12 @@ void SourceTerms::src_Geom_Viscosity(Data &gdata, ProblemType &pr,
 
 
 void SourceTerms::mod_Geom_Visc_WE(Data &gdata, const ProblemType &Problem,
-                                   REAL omWE[N2OMINT], REAL tau[N_OMINT],
-                                   const REAL &i, const REAL &j, const REAL &k,
+                                   double omWE[N2OMINT], double tau[N_OMINT],
+                                   const double &i, const double &j, const double &k,
                                    const int &dir) {
 	cerr << " sources::mod_Geom_Visc_WE - not adapted for multifluid yet " << endl;
 	exit(3);
-	REAL r_cyl_inv = 1./gdata.getCen_h1(i,j,k);
+	double r_cyl_inv = 1./gdata.getCen_h1(i,j,k);
 
 	// tau_rr
 	tau[1] += -omWE[Problem.q_sx+dir]*r_cyl_inv*twothirds;
@@ -336,12 +336,12 @@ void SourceTerms::mod_Geom_Visc_WE(Data &gdata, const ProblemType &Problem,
 
 
 void SourceTerms::mod_Geom_Visc_SN(Data &gdata, const ProblemType &Problem,
-                                   REAL omWE[N2OMINT], REAL tau[N_OMINT],
-                                   const REAL &i, const REAL &j, const REAL &k,
+                                   double omWE[N2OMINT], double tau[N_OMINT],
+                                   const double &i, const double &j, const double &k,
                                    const int &dir) {
 	cerr << " sources::mod_Geom_Visc_SN - not adapted for multifluid yet " << endl;
 	exit(3);
-	REAL r_cyl_inv = 1./gdata.getCen_h1(i,j,k);
+	double r_cyl_inv = 1./gdata.getCen_h1(i,j,k);
 
 	// tau_phir
 	tau[1] += -omWE[Problem.q_sy+dir]*r_cyl_inv;
@@ -353,12 +353,12 @@ void SourceTerms::mod_Geom_Visc_SN(Data &gdata, const ProblemType &Problem,
 
 
 void SourceTerms::mod_Geom_Visc_BT(Data &gdata, const ProblemType &Problem,
-                                   REAL omWE[N2OMINT], REAL tau[N_OMINT],
-                                   const REAL &i, const REAL &j, const REAL &k,
+                                   double omWE[N2OMINT], double tau[N_OMINT],
+                                   const double &i, const double &j, const double &k,
                                    const int &dir) {
 	cerr << " sources::mod_Geom_Visc_BT - not adapted for multifluid yet " << endl;
 	exit(3);
-	REAL r_cyl_inv = 1./gdata.getCen_h1(i,j,k);
+	double r_cyl_inv = 1./gdata.getCen_h1(i,j,k);
 
 	// tau_zz
 	tau[3] += -omWE[Problem.q_sx+dir]*r_cyl_inv*twothirds;
@@ -371,24 +371,24 @@ void SourceTerms::mod_Geom_Visc_BT(Data &gdata, const ProblemType &Problem,
 #if(GEOM == SPHERICAL)
 
 // Shift of collocation point for reconstruction polynomial
-REAL SourceTerms::shift_Geom_WE(Data &gdata, int ii) {
+double SourceTerms::shift_Geom_WE(Data &gdata, int ii) {
 #if (NON_LINEAR_GRID == CRONOS_ON)
 	facShift = 6./sqr(gdata.getCen_dx(0,ii));
 #endif
 	return gdata.getCen_x(ii)/(0.5 + facShift*sqr(gdata.getCen_x(ii)));
 }
 
-REAL SourceTerms::shift_Geom_SN(Data &gdata, int jj) {
+double SourceTerms::shift_Geom_SN(Data &gdata, int jj) {
 	return 0.;
 }
 
-REAL SourceTerms::shift_Geom_BT(Data &gdata, int kk) {
+double SourceTerms::shift_Geom_BT(Data &gdata, int kk) {
 	return 0.;
 }
 
 
 void SourceTerms::src_Geom_Hydro(Data &gdata, ProblemType &pr,
-                                 NumMatrix<REAL,3> nom[N_OMINT], const CronosFluid &fluid) {
+                                 NumMatrix<double,3> nom[N_OMINT], const CronosFluid &fluid) {
 
 
 	// Set indices:
@@ -410,21 +410,21 @@ void SourceTerms::src_Geom_Hydro(Data &gdata, ProblemType &pr,
 		throw CException(" Need characteristic variables for geom sources ");
 	}
 
-	REAL B_r(0.), B_theta(0.), B_phi(0.);
+	double B_r(0.), B_theta(0.), B_phi(0.);
 	for (int k = 0; k <= gdata.mx[2]; ++k){
 		for (int j = 0; j <= gdata.mx[1]; ++j){
-			REAL theta  = gdata.getCen_y(j);
-			REAL thetap = gdata.getEdgR_y(j);
-			REAL thetam = gdata.getEdgL_y(j);
+			double theta  = gdata.getCen_y(j);
+			double thetap = gdata.getEdgR_y(j);
+			double thetam = gdata.getEdgL_y(j);
 
 			//      cot = cos(yy)/sin(yy);
 			// Numerical approximation for cotanges of theta:
-			REAL cot = 2.*(sin(thetap)-sin(thetam))/sin(theta)*gdata.getCen_hx(1,j);
+			double cot = 2.*(sin(thetap)-sin(thetam))/sin(theta)*gdata.getCen_hx(1,j);
 
 			for (int i = 0; i <= gdata.mx[0]; ++i){
-				REAL r_inv = 1./(gdata.getCen_x(i));
-				REAL rho(gdata.om[q_rho](i,j,k));
-				REAL pres(0.);
+				double r_inv = 1./(gdata.getCen_x(i));
+				double rho(gdata.om[q_rho](i,j,k));
+				double pres(0.);
 
 				if(ENERGETICS == FULL) {
 					if(thermal) {
@@ -439,9 +439,9 @@ void SourceTerms::src_Geom_Hydro(Data &gdata, ProblemType &pr,
 				}
 
 
-				REAL v_r(gdata.om[q_sx](i,j,k));
-				REAL v_theta(gdata.om[q_sy](i,j,k));
-				REAL v_phi(gdata.om[q_sz](i,j,k));
+				double v_r(gdata.om[q_sx](i,j,k));
+				double v_theta(gdata.om[q_sy](i,j,k));
+				double v_phi(gdata.om[q_sz](i,j,k));
 
 //#if (FLUID_TYPE == CRONOS_MHD)
 				if(fluid_type == CRONOS_MHD) {
@@ -457,12 +457,12 @@ void SourceTerms::src_Geom_Hydro(Data &gdata, ProblemType &pr,
 				//   B_phi = 0.;
 				}
 //#else
-//				REAL B_r(0.), B_theta(0.), B_phi(0.);
+//				double B_r(0.), B_theta(0.), B_phi(0.);
 //#endif
 
 #if (USE_COROTATION == CRONOS_ON)
-				REAL rad = gdata.getCen_x(i);
-				REAL v_phiCorot = v_phi - rad*omegaZ*sin(theta);
+				double rad = gdata.getCen_x(i);
+				double v_phiCorot = v_phi - rad*omegaZ*sin(theta);
 
 				// Source for v_r
 				nom[q_sx](i,j,k) -=  (rho*(v_phiCorot*v_phi + sqr(v_theta)) +
@@ -498,7 +498,7 @@ void SourceTerms::src_Geom_Hydro(Data &gdata, ProblemType &pr,
 
 #ifdef PHYSDISS
 void SourceTerms::src_Geom_Viscosity(Data &gdata, ProblemType &pr,
-                                     NumMatrix<REAL,3> nom[N_OMINT], const CronosFluid &fluid) {
+                                     NumMatrix<double,3> nom[N_OMINT], const CronosFluid &fluid) {
 
 	// Set indices:
 	int q_rho = fluid.get_q_rho();
@@ -519,48 +519,48 @@ void SourceTerms::src_Geom_Viscosity(Data &gdata, ProblemType &pr,
 
 	for (int k = 0; k <= gdata.mx[2]; ++k){
 		for (int j = 0; j <= gdata.mx[1]; ++j){
-			REAL theta = gdata.getCen_y(j);
-			REAL sin_theta = sin(theta);
-			REAL sin_theta_inv = 1./sin_theta;
-			REAL cot_theta = 1./tan(theta);
-			//    REAL cot_theta_inv = 1./cot_theta;
+			double theta = gdata.getCen_y(j);
+			double sin_theta = sin(theta);
+			double sin_theta_inv = 1./sin_theta;
+			double cot_theta = 1./tan(theta);
+			//    double cot_theta_inv = 1./cot_theta;
 			for (int i = 0; i <= gdata.mx[0]; ++i){
 
-				REAL r_sph     = gdata.getCen_x(i);
-				REAL r_sph_inv = 1./r_sph;
+				double r_sph     = gdata.getCen_x(i);
+				double r_sph_inv = 1./r_sph;
 
-				REAL mu = pr.nu(gdata,i,j,k)*rho(i,j,k);
+				double mu = pr.nu(gdata,i,j,k)*rho(i,j,k);
 
-				REAL h0_inv = 1./gdata.h0(i,j,k);
-				REAL h1_inv = 1./gdata.h1(i,j,k);
-				REAL h2_inv = 1./gdata.h2(i,j,k);
+				double h0_inv = 1./gdata.h0(i,j,k);
+				double h1_inv = 1./gdata.h1(i,j,k);
+				double h2_inv = 1./gdata.h2(i,j,k);
 	
 
-				REAL div_v = ((v_rad(i+1,j,k) - v_rad(i-1,j,k))*gdata.hx[0] +
+				double div_v = ((v_rad(i+1,j,k) - v_rad(i-1,j,k))*gdata.hx[0] +
 				              2.*v_rad(i,j,k)*r_sph_inv +
 				              (v_tht(i,j+1,k) - v_tht(i,j-1,k))*gdata.hx[1]*h1_inv +
 				              (v_phi(i,j,k+1) - v_phi(i,j,k-1))*gdata.hx[2]*h2_inv +
 				              v_tht(i,j,k)*r_sph_inv*cot_theta);
 
-				REAL tau_pp = (2.*((v_phi(i,j,k+1) - v_phi(i,j,k-1))*gdata.hx[2]*h2_inv+
+				double tau_pp = (2.*((v_phi(i,j,k+1) - v_phi(i,j,k-1))*gdata.hx[2]*h2_inv+
 				                   v_rad(i,j,k)*r_sph_inv +
 				                   v_tht(i,j,k)*r_sph_inv*sin_theta_inv) -
 				               twothirds*div_v);
 
-				REAL tau_tt = (2.*((v_tht(i,j+1,k) - 
+				double tau_tt = (2.*((v_tht(i,j+1,k) - 
 				                    v_tht(i,j-1,k))*gdata.hx[1]*h1_inv +
 				                   v_rad(i,j,k)*r_sph_inv) -
 				               twothirds*div_v);
 
-				REAL tau_pr = ((v_rad(i,j,k+1) - v_rad(i,j,k-1))*gdata.hx[2]*h2_inv +
+				double tau_pr = ((v_rad(i,j,k+1) - v_rad(i,j,k-1))*gdata.hx[2]*h2_inv +
 				               (v_phi(i+1,j,k) - v_phi(i-1,j,k))*gdata.hx[0] -
 				               v_phi(i,j,k)*r_sph_inv);
 
-				REAL tau_pt = ((v_phi(i,j+1,k) - v_phi(i,j-1,k))*gdata.hx[1]*h1_inv +
+				double tau_pt = ((v_phi(i,j+1,k) - v_phi(i,j-1,k))*gdata.hx[1]*h1_inv +
 				               - v_phi(i,j,k)*r_sph_inv*cot_theta +
 				               (v_tht(i,j,k+1) - v_tht(i,j,k-1))*gdata.hx[2]*h2_inv);
 		       
-				REAL tau_tr = ((v_rad(i,j+1,k) - v_rad(i,j-1,k))*gdata.hx[1]*h1_inv +
+				double tau_tr = ((v_rad(i,j+1,k) - v_rad(i,j-1,k))*gdata.hx[1]*h1_inv +
 				               (v_tht(i+1,j,k) - v_tht(i-1,j,k))*gdata.hx[0]*h0_inv -
 				               v_tht(i,j,k)*r_sph_inv);
 
@@ -579,14 +579,14 @@ void SourceTerms::src_Geom_Viscosity(Data &gdata, ProblemType &pr,
 
 
 void SourceTerms::mod_Geom_Visc_WE(Data &gdata, const ProblemType &Problem,
-                                   REAL omWE[N2OMINT], REAL tau[N_OMINT],
-                                   const REAL &i, const REAL &j, const REAL &k,
+                                   double omWE[N2OMINT], double tau[N_OMINT],
+                                   const double &i, const double &j, const double &k,
                                    const int &dir) {
 	cerr << " sources::mod_Geom_Visc_WE - not adapted for multifluid yet " << endl;
 	exit(3);
 
-	REAL r_sph_inv = 1./(gdata.getCen_x(i));
-	REAL cot_theta = 1./tan(gdata.getCen_y(j));
+	double r_sph_inv = 1./(gdata.getCen_x(i));
+	double cot_theta = 1./tan(gdata.getCen_y(j));
 
 	// tau_rr
 	tau[1] += -(omWE[Problem.q_sx+dir]*2. + 
@@ -603,14 +603,14 @@ void SourceTerms::mod_Geom_Visc_WE(Data &gdata, const ProblemType &Problem,
 
 
 void SourceTerms::mod_Geom_Visc_SN(Data &gdata, const ProblemType &Problem,
-                                   REAL omWE[N2OMINT], REAL tau[N_OMINT],
-                                   const REAL &i, const REAL &j, const REAL &k,
+                                   double omWE[N2OMINT], double tau[N_OMINT],
+                                   const double &i, const double &j, const double &k,
                                    const int &dir) {
 	cerr << " sources::mod_Geom_Visc_SN - not adapted for multifluid yet " << endl;
 	exit(3);
 
-	REAL r_sph_inv = 1./(gdata.getCen_x(i));
-	REAL cot_theta = 1./tan(gdata.getCen_y(j));
+	double r_sph_inv = 1./(gdata.getCen_x(i));
+	double cot_theta = 1./tan(gdata.getCen_y(j));
 
 	// tau_phir
 	tau[1] += -omWE[Problem.q_sz+dir]*r_sph_inv;
@@ -626,14 +626,14 @@ void SourceTerms::mod_Geom_Visc_SN(Data &gdata, const ProblemType &Problem,
 
 
 void SourceTerms::mod_Geom_Visc_BT(Data &gdata, const ProblemType &Problem,
-                                   REAL omWE[N2OMINT], REAL tau[N_OMINT],
-                                   const REAL &i, const REAL &j, const REAL &k,
+                                   double omWE[N2OMINT], double tau[N_OMINT],
+                                   const double &i, const double &j, const double &k,
                                    const int &dir) {
 	cerr << " sources::mod_Geom_Visc_BT - not adapted for multifluid yet " << endl;
 	exit(3);
 
-	REAL r_sph_inv = 1./(gdata.getCen_x(i));
-	REAL cot_theta = 1./tan(gdata.getCen_y(j));
+	double r_sph_inv = 1./(gdata.getCen_x(i));
+	double cot_theta = 1./tan(gdata.getCen_y(j));
 
 	// tau_thetar
 	tau[1] += -omWE[Problem.q_sy+dir]*r_sph_inv;
@@ -652,7 +652,7 @@ void SourceTerms::mod_Geom_Visc_BT(Data &gdata, const ProblemType &Problem,
 
 
 void SourceTerms::src_Geom(Data &gdata, ProblemType &Problem,
-                           NumMatrix<REAL,3> nom[N_OMINT]) {
+                           NumMatrix<double,3> nom[N_OMINT]) {
 	//! Appy geometrical source terms for non-Cartesian grids
 
 	// In case of multifluid simulation: loop over all fluids:
@@ -683,7 +683,7 @@ void SourceTerms::src_Geom(Data &gdata, ProblemType &Problem,
 }
 
 
-void SourceTerms::src_Axis(Data &gdata, NumMatrix<REAL,3> nom[N_OMINT], const CronosFluid &fluid) {
+void SourceTerms::src_Axis(Data &gdata, NumMatrix<double,3> nom[N_OMINT], const CronosFluid &fluid) {
 
 	int q_Bx = fluid.get_q_Bx();
 	int q_By = fluid.get_q_By();
@@ -713,7 +713,7 @@ void SourceTerms::src_Axis(Data &gdata, NumMatrix<REAL,3> nom[N_OMINT], const Cr
 
 
 void SourceTerms::src_rhs(Data &gdata, ProblemType &Problem,
-                          NumMatrix<REAL,3> nom[N_OMINT]) {
+                          NumMatrix<double,3> nom[N_OMINT]) {
 #if (FLUID_TYPE == CRONOS_MULTIFLUID)
 	int numFluids = gdata.fluids->get_numFluids();
 	for (int iFluid=0; iFluid<numFluids; ++iFluid) {
@@ -734,7 +734,7 @@ void SourceTerms::src_rhs(Data &gdata, ProblemType &Problem,
 
 
 void SourceTerms::src_rhs_Ideal(Data &gdata, ProblemType &pr,
-                                NumMatrix<REAL,3> nom[N_OMINT], const CronosFluid &fluid) {
+                                NumMatrix<double,3> nom[N_OMINT], const CronosFluid &fluid) {
 
 	// Source terms as, e.g., for RHS of thermal energy equations
 
@@ -756,7 +756,7 @@ void SourceTerms::src_rhs_Ideal(Data &gdata, ProblemType &pr,
 			for (int j = 0; j <= gdata.mx[1]; ++j) {
 				for (int i = 0; i <= gdata.mx[0]; ++i) {
 	  
-					REAL divV = ((gdata.om[q_sx](i+1,j,k) -
+					double divV = ((gdata.om[q_sx](i+1,j,k) -
 					              gdata.om[q_sx](i-1,j,k))*gdata.hx[0] +
 					             (gdata.om[q_sy](i,j+1,k) -
 					              gdata.om[q_sy](i,j-1,k))*gdata.hx[1] +
@@ -775,7 +775,7 @@ void SourceTerms::src_rhs_Ideal(Data &gdata, ProblemType &pr,
 
 #ifdef PHYSDISS
 void SourceTerms::src_rhs_Viscosity(Data &gdata, ProblemType &pr,
-                                    NumMatrix<REAL,3> nom[N_OMINT], const CronosFluid &fluid) {
+                                    NumMatrix<double,3> nom[N_OMINT], const CronosFluid &fluid) {
 
 	// Set indices:
 	int q_rho = fluid.get_q_rho();
@@ -800,39 +800,39 @@ void SourceTerms::src_rhs_Viscosity(Data &gdata, ProblemType &pr,
 		for (int j = 0; j <= gdata.mx[1]; ++j) {
 			for (int i = 0; i <= gdata.mx[0]; ++i) {
 
-				REAL dxux = (gdata.om[q_sx](i+1,j,k) -
+				double dxux = (gdata.om[q_sx](i+1,j,k) -
 				             gdata.om[q_sx](i-1,j,k))*gdata.hx[0];
-				REAL dyux = (gdata.om[q_sx](i,j+1,k) -
+				double dyux = (gdata.om[q_sx](i,j+1,k) -
 				             gdata.om[q_sx](i,j-1,k))*gdata.hx[1];
-				REAL dzux = (gdata.om[q_sx](i,j,k+1) -
+				double dzux = (gdata.om[q_sx](i,j,k+1) -
 				             gdata.om[q_sx](i,j,k-1))*gdata.hx[2];
-				REAL dxuy = (gdata.om[q_sy](i+1,j,k) -
+				double dxuy = (gdata.om[q_sy](i+1,j,k) -
 				             gdata.om[q_sy](i-1,j,k))*gdata.hx[0];
-				REAL dyuy = (gdata.om[q_sy](i,j+1,k) -
+				double dyuy = (gdata.om[q_sy](i,j+1,k) -
 				             gdata.om[q_sy](i,j-1,k))*gdata.hx[1];
-				REAL dzuy = (gdata.om[q_sy](i,j,k+1) -
+				double dzuy = (gdata.om[q_sy](i,j,k+1) -
 				             gdata.om[q_sy](i,j,k-1))*gdata.hx[2];
-				REAL dxuz = (gdata.om[q_sz](i+1,j,k) -
+				double dxuz = (gdata.om[q_sz](i+1,j,k) -
 				             gdata.om[q_sz](i-1,j,k))*gdata.hx[0];
-				REAL dyuz = (gdata.om[q_sz](i,j+1,k) -
+				double dyuz = (gdata.om[q_sz](i,j+1,k) -
 				             gdata.om[q_sz](i,j-1,k))*gdata.hx[1];
-				REAL dzuz = (gdata.om[q_sz](i,j,k+1) -
+				double dzuz = (gdata.om[q_sz](i,j,k+1) -
 				             gdata.om[q_sz](i,j,k-1))*gdata.hx[2];
-				REAL divv = dxux + dyuy + dzuz;
+				double divv = dxux + dyuy + dzuz;
 
-				REAL tau11 = 2.*dxux - divv*twothirds;
-				REAL tau12 = dxuy + dyux;
-				REAL tau13 = dxuz + dzux;
-				REAL tau22 = 2.*dyuy - divv*twothirds;
-				REAL tau23 = dyuz + dzuy;
-				REAL tau33 = 2.*dzuz - divv*twothirds;
+				double tau11 = 2.*dxux - divv*twothirds;
+				double tau12 = dxuy + dyux;
+				double tau13 = dxuz + dzux;
+				double tau22 = 2.*dyuy - divv*twothirds;
+				double tau23 = dyuz + dzuy;
+				double tau33 = 2.*dzuz - divv*twothirds;
         
-				REAL rho = gdata.om[q_rho](i,j,k);
+				double rho = gdata.om[q_rho](i,j,k);
 
 #ifdef ENTROPY
-				REAL fac = (pr.gamma - 1.)*pow(rho,2.-pr.gamma)*pr.nu(gdata,i,j,k);
+				double fac = (pr.gamma - 1.)*pow(rho,2.-pr.gamma)*pr.nu(gdata,i,j,k);
 #else
-				REAL fac = pr.nu(gdata,i,j,k)*rho;
+				double fac = pr.nu(gdata,i,j,k)*rho;
 #endif
 	
 				nom[q_Eadd](i,j,k) -= fac*(tau11*dxux + tau12*dyux +
@@ -851,7 +851,7 @@ void SourceTerms::src_rhs_Viscosity(Data &gdata, ProblemType &pr,
 		for (int j = 0; j <= gdata.mx[1]; ++j) {
 			for (int i = 0; i <= gdata.mx[0]; ++i) {
 
-				REAL eta = pr.eta(gdata, i,j,k);
+				double eta = pr.eta(gdata, i,j,k);
         
 				double dyBxM = (gdata.om[q_Bx](i-1,j+1,k) -
 				                gdata.om[q_Bx](i-1,j-1,k))*gdata.hx[1];

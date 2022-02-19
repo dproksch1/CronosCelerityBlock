@@ -103,11 +103,11 @@ void Pot::set_max(const double &val)
 }
 
 
-REAL Pot::get_max()
+double Pot::get_max()
 {
-	REAL maximum = static_cast<REAL>(this->matr[0]);
+	double maximum = static_cast<double>(this->matr[0]);
 	for(int i=0; i<this->size; i++) {
-		maximum = std::max(maximum, static_cast<REAL>(this->matr[i]));
+		maximum = std::max(maximum, static_cast<double>(this->matr[i]));
 	}
 	return maximum;
 }
@@ -131,11 +131,11 @@ void Pot::set_min(const double &val)
 }
 
 
-REAL Pot::get_min()
+double Pot::get_min()
 {
-	REAL minimum = static_cast<REAL>(this->matr[0]);
+	double minimum = static_cast<double>(this->matr[0]);
 	for(int i=0; i<this->size; i++) {
-		minimum = std::min(minimum, static_cast<REAL>(this->matr[i]));
+		minimum = std::min(minimum, static_cast<double>(this->matr[i]));
 	}
 	return minimum;
 }
@@ -163,10 +163,10 @@ Data::Data()
 
 	/*for (int i = 0; i < numElements; i++) {
 		std::cout << "creating omSYCL buffer size " << mx[0] + 6 << ", " << mx[1] + 6 << ", " << mx[2] + 6 << std::endl << std::flush;
-		omSYCL.push_back(Buffer<REAL, 3>(Range<3>(mx[0]+6, mx[1]+6, mx[2]+6)));
+		omSYCL.push_back(CelerityBuffer<double, 3>(Range<3>(mx[0]+6, mx[1]+6, mx[2]+6)));
 	}*/
 
-	nom = new NumMatrix<REAL,3> [n_omInt];
+	nom = new NumMatrix<double,3> [n_omInt];
 
 	for (int q = 0; q < n_omInt; ++q) {
 		nom[q].resize(Index::set(0,0,0), Index::set(mx[0],mx[1],mx[2]));
@@ -188,8 +188,8 @@ Data::Data()
 	int n_omIntUser = fluid.get_N_OMINT_USER();
 
 	om_user = new Pot[n_omUser];
-//	nom_user = new NumMatrix<REAL,3> [n_omUser];
-	nom_user = new NumMatrix<REAL,3> [n_omIntUser];
+//	nom_user = new NumMatrix<double,3> [n_omUser];
+	nom_user = new NumMatrix<double,3> [n_omIntUser];
 
 //	for (int q = 0; q < n_omUser; ++q) {
 	for (int q = 0; q < n_omIntUser; ++q) {
@@ -242,9 +242,9 @@ Data::Data()
     for(int iPhi=0; iPhi<=mx[2]; ++iPhi) {
     	for(int iTheta=0; iTheta<=mx[1]; ++iTheta) {
 #if (NON_LINEAR_GRID == CRONOS_OFF)
-    		REAL f_geom_x = h2(0.5,iTheta,iPhi)/h1(0.5,iTheta,iPhi);
+    		double f_geom_x = h2(0.5,iTheta,iPhi)/h1(0.5,iTheta,iPhi);
 #else
-    		REAL f_geom_x = h2(0,iTheta,iPhi,1,0,0)/h1(0,iTheta,iPhi,1,0,0);
+    		double f_geom_x = h2(0,iTheta,iPhi,1,0,0)/h1(0,iTheta,iPhi,1,0,0);
 #endif
     		radialArea += f_geom_x*getCen_dx(1,iTheta)*getCen_dx(2,iPhi);
     	}
@@ -329,7 +329,7 @@ std::string Data::git_humanReadable(double t_sec) {
 double Data::computeInt(int q)
 {
 	double sum = 0.;
-	REAL dV(0.);
+	double dV(0.);
 #if (NON_LINEAR_GRID == CRONOS_OFF)
 	dV = get_CellVolume(0,0,0);
 #endif
@@ -600,7 +600,7 @@ void Data::CheckNan(int pos)
 
 
 void Data::set_fieldIds() {
-	// std::map<NumMatrix<REAL,3> *,int> id_numbers;
+	// std::map<NumMatrix<double,3> *,int> id_numbers;
 
 	for(int q=0; q<N_OM+N_P; ++q) {
 		string name = om[q].getName();
@@ -626,7 +626,7 @@ void Data::set_fieldIds() {
 
 }
 
-bool Data::is_userField(NumMatrix<REAL,3> &omField) {
+bool Data::is_userField(NumMatrix<double,3> &omField) {
 	
 	if(om_ids.get_fieldId(omField) >= om_ids.max_generic && 
 	   om_ids.get_fieldId(omField) < om_ids.fieldIds.size()) {
@@ -671,7 +671,7 @@ void id_handler::enter_fieldId(string FieldName) {
 
 
 
-bool id_handler::is_generic(NumMatrix<REAL,3> &omField) {
+bool id_handler::is_generic(NumMatrix<double,3> &omField) {
 	
 	if(get_fieldId(omField) < max_generic) {
 		return true;
@@ -683,11 +683,11 @@ bool id_handler::is_generic(NumMatrix<REAL,3> &omField) {
 
 
 
-unsigned int id_handler::get_userFieldId(NumMatrix<REAL,3> &omField) {
+unsigned int id_handler::get_userFieldId(NumMatrix<double,3> &omField) {
 	return get_fieldId(omField)-(max_generic);
 }
 
-unsigned int id_handler::get_fieldId(NumMatrix<REAL,3> &omField) {
+unsigned int id_handler::get_fieldId(NumMatrix<double,3> &omField) {
 
 	// get unique id number for field
 	typedef map<std::string, unsigned int> id_map;

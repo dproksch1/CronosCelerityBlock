@@ -35,7 +35,7 @@ namespace insieme {
 	} // end namespace utils
 } // end namespace insieme
 
-#define assert_fail()                                                                                                                                          \
+#define assert_fail_lazy()                                                                                                                                          \
 	if(__insieme_unused auto __x = insieme::utils::detail::LazyAssertion(false)) std::cerr << "\nAssertion failed in " __FILE__ ":" __xstr(__LINE__) " - "
 
 
