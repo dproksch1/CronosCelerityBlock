@@ -38,8 +38,8 @@ endif()
 ############################
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
-find_package(GSL REQUIRED)
 find_package(MPI REQUIRED)
+find_package(GSL REQUIRED)
 find_package(HDF5 REQUIRED COMPONENTS C) # CXX HL
 find_package(CronosNumLib REQUIRED)
 
