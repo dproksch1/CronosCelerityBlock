@@ -1,22 +1,15 @@
 name: CI Branch Test
 
 on:
-  # Run workflow on any push to any branch.
+  # Set your workflow to run on push events to the develop and all feature branches
   push:
-  # Also run on internal PRs. The difference to the "push" trigger
-  # being, that the workflow will run on the result of merging the PR's
-  # commits into the target branch.
-  pull_request:
-    branches-ignore:
-      # Ignore branches from forks (which contain a colon).
-      - '**:**'
-  # Finally, also run on external PRs. By using the "_target" trigger,
-  # we can ensure that the workflow definition itself will always come
-  # from the main repository, not the fork (for security reasons).
-  pull_request_target:
     branches:
-      # Only consider branches from forks (which contain a colon).
-      - '**:**'
+      - main
+      - CI-impl
+  # Set your workflow to run on pull request events that target the main branch
+  pull_request:
+    branches: 
+      - main
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
