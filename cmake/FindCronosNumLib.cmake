@@ -32,6 +32,7 @@ list(APPEND CRONOSNUMLIB_CHECK_INCLUDE_DIRS
   /opt/local/include
   /usr/include
   ${CMAKE_CURRENT_SOURCE_DIR}/../external/CronosNumLib/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/include
   )
 
 list(APPEND CRONOSNUMLIB_CHECK_LIBRARY_DIRS
@@ -41,6 +42,7 @@ list(APPEND CRONOSNUMLIB_CHECK_LIBRARY_DIRS
   /usr/lib
   /usr/lib/x86_64-linux-gnu
   ${CMAKE_CURRENT_SOURCE_DIR}/../external/CronosNumLib/lib
+  ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib
   )
 
 find_path(CRONOSNUMLIB_INCLUDE_DIR
