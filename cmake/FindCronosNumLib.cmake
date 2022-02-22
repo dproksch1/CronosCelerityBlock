@@ -21,7 +21,7 @@ macro(CRONOSNUMLIB_REPORT_NOT_FOUND REASON_MSG)
     elseif(CRONOSNUMLIB_FIND_REQUIRED)
         message(FATAL_ERROR "Failed to find CronosNumLib - " ${REASON_MSG} ${ARGN})
     else()
-        message("-- Failed to find CronosNumLib - " ${REASON_MSG} ${ARGN})
+        message("-- Failed to find CronosNumLib - " ${REASON_MSG} ${ARGN} ${CMAKE_CURRENT_SOURCE_DIR})
     endif()
 endmacro(CRONOSNUMLIB_REPORT_NOT_FOUND)
 
