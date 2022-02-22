@@ -7,7 +7,7 @@
 # CRONOSNUMLIB_MATRIX - Directory containing the matrix library for CronosNumLib.
 # CRONOSNUMLIB_UTIL - Directory containing the util library for CronosNumLib.
 
-cmake_minimum_required (VERSION 3.17)
+cmake_minimum_required (VERSION 3.16.3)
 include(FindPackageHandleStandardArgs)
 
 macro(CRONOSNUMLIB_REPORT_NOT_FOUND REASON_MSG)
