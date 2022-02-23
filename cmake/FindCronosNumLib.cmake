@@ -52,6 +52,7 @@ list(APPEND CRONOSNUMLIB_CHECK_LIBRARY_DIRS
   ${CMAKE_CURRENT_SOURCE_DIR}/../external/CronosNumLib/lib
   ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib
   ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib/CronosNumLib/Linux-amd64
+  
   )
 
 find_path(CRONOSNUMLIB_INCLUDE_DIR
