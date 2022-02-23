@@ -50,7 +50,7 @@ list(APPEND CRONOSNUMLIB_CHECK_LIBRARY_DIRS
   /usr/lib/x86_64-linux-gnu
   /usr/lib/x86_64-linux-gnu/CronosNumLib/Linux-amd64
   ${CMAKE_CURRENT_SOURCE_DIR}/../external/CronosNumLib/lib
-  ${CMAKE_SOURCE_DIR}/dependencies/lib
+  ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib
   ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib/CronosNumLib/Linux-amd64
   )
 
