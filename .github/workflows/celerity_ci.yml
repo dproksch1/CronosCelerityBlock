@@ -38,7 +38,7 @@ jobs:
       run: |
         cd dependencies
         cd lib
-        stat --format '%a' libmatrix_mt.a
+        ls
         cd ..
         cd ..
         cmake -B ./build_block -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="./dependencies/bin;./dependencies/include;./dependencies/lib/;./dependencies/lib/cmake;./dependencies/lib/CronosNumLib;./dependencies/include/CronosNumLib;/usr/include/openmpi-x86_64"
