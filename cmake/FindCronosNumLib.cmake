@@ -49,7 +49,6 @@ list(APPEND CRONOSNUMLIB_CHECK_LIBRARY_DIRS
   ${CMAKE_CURRENT_SOURCE_DIR}/../external/CronosNumLib/lib
   ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib
   ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib/CronosNumLib/Linux-amd64
-  /home/cirunner/actions-runner/_work/CronosCelerityBlock/CronosCelerityBlock/dependencies/lib/CronosNumLib/Linux-amd64
   )
 
 find_path(CRONOSNUMLIB_INCLUDE_DIR
@@ -58,7 +57,7 @@ find_path(CRONOSNUMLIB_INCLUDE_DIR
   NO_DEFAULT_PATH
 )
 
-find_library(CRONOSNUMLIB_MATRIX
+find_path(CRONOSNUMLIB_MATRIX
   "libmatrix_mt.a"
   HINTS ${CRONOSNUMLIB_CHECK_LIBRARY_DIRS}
   NO_DEFAULT_PATH
