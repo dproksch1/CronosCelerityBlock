@@ -53,8 +53,9 @@ public:
   platform(rt::backend_id backend)
       : _platform{backend, 0} {}
 
-  explicit platform(const device_selector &deviceSelector) {
-    auto dev = deviceSelector.select_device();
+  template<class DeviceSelector>
+  explicit platform(const DeviceSelector &deviceSelector) {
+    auto dev = detail::select_devices(deviceSelector)[0];
     this->_platform = rt::platform_id{dev._device_id};
   }
 
@@ -102,6 +103,16 @@ public:
                .hw_platform == rt::hardware_platform::cpu;
   }
 
+  /// Returns true if all devices in this platform have the
+  /// specified aspect
+  bool has(aspect asp) const {
+    auto devs = get_devices();
+    for(const device& d : devs) {
+      if(!d.has(asp))
+        return false;
+    }
+    return true;
+  }
 
   static std::vector<platform> get_platforms() {
     std::vector<platform> result;
@@ -118,6 +129,10 @@ public:
 
   friend bool operator!=(const platform &lhs, const platform &rhs) {
     return !(lhs == rhs);
+  }
+
+  std::size_t hipSYCL_hash_code() const {
+    return std::hash<rt::platform_id>{}(_platform);
   }
 
 private:
@@ -158,5 +173,18 @@ inline platform device::get_platform() const  {
 
 }// namespace sycl
 }// namespace hipsycl
+
+namespace std {
+
+template <>
+struct hash<hipsycl::sycl::platform>
+{
+  std::size_t operator()(const hipsycl::sycl::platform& p) const
+  {
+    return p.hipSYCL_hash_code();
+  }
+};
+
+}
 
 #endif

@@ -36,8 +36,16 @@
 
 #define SYCL_IMPLEMENTATION_HIPSYCL
 
-#define CL_SYCL_LANGUAGE_VERSION 121
-#define __SYCL_SINGLE_SOURCE__
+#ifdef CL_SYCL_LANGUAGE_VERSION
+ #undef CL_SYCL_LANGUAGE_VERSION
+#endif
+#ifdef SYCL_LANGUAGE_VERSION
+ #undef SYCL_LANGUAGE_VERSION
+#endif
+
+#define CL_SYCL_LANGUAGE_VERSION 202003
+#define SYCL_LANGUAGE_VERSION 202003
+#define SYCL_FEATURE_SET_FULL
 
 #include "extensions.hpp"
 
@@ -50,20 +58,23 @@
 #include "libkernel/group.hpp"
 #include "libkernel/h_item.hpp"
 #include "libkernel/sp_item.hpp"
+#include "libkernel/sp_group.hpp"
+#include "libkernel/sp_private_memory.hpp"
+#include "libkernel/memory_environment.hpp"
 #include "libkernel/private_memory.hpp"
 #include "libkernel/local_memory.hpp"
 #include "libkernel/vec.hpp"
-#include "libkernel/builtin.hpp"
-#include "libkernel/math.hpp"
-#include "libkernel/common_functions.hpp"
-#include "libkernel/geometric_functions.hpp"
+#include "libkernel/builtins.hpp"
 #include "libkernel/atomic.hpp"
+#include "libkernel/atomic_ref.hpp"
 #include "libkernel/stream.hpp"
 #include "libkernel/sub_group.hpp"
+#include "libkernel/group_traits.hpp"
 #include "libkernel/memory.hpp"
 #if !HIPSYCL_LIBKERNEL_IS_DEVICE_PASS_SPIRV
  // Not yet supported for SPIR-V
  #include "libkernel/group_functions.hpp"
+ #include "libkernel/group_functions_alias.hpp"
 #endif
 #include "libkernel/functional.hpp"
 #include "libkernel/reduction.hpp"

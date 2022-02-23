@@ -37,6 +37,7 @@
 #include <mutex>
 #include <type_traits>
 #include <algorithm>
+#include <utility>
 
 #include "hipSYCL/common/debug.hpp"
 #include "hipSYCL/runtime/allocator.hpp"
@@ -49,6 +50,7 @@
 #include "hipSYCL/sycl/access.hpp"
 #include "hipSYCL/sycl/device.hpp"
 #include "hipSYCL/sycl/exception.hpp"
+#include "hipSYCL/sycl/extensions.hpp"
 #include "property.hpp"
 #include "types.hpp"
 #include "context.hpp"
@@ -168,6 +170,10 @@ using hipSYCL_buffer_destructor_blocks =
 
 
 namespace detail {
+
+template <class BufferT>
+std::shared_ptr<rt::buffer_data_region>
+extract_buffer_data_region(const BufferT &buff);
 
 struct buffer_impl
 {
@@ -359,20 +365,19 @@ tracked_descriptor<T> view(T *ptr, device dev,
 }
 }
 
-// Default template arguments for the buffer class
-// are defined when forward-declaring the buffer in accessor.hpp
-template <typename T, int dimensions, typename AllocatorT>
+
+template <typename T, int dimensions = 1,
+          typename AllocatorT = buffer_allocator<std::remove_const_t<T>>>
 class buffer : public detail::property_carrying_object
 {
 public:
   template <class OtherT, int OtherDim, typename OtherAllocator>
   friend class buffer;
 
-  template<class AccessorType, class BufferType, int Dim>
-  friend void detail::accessor::bind_to_buffer(
-    AccessorType& acc, BufferType& buff, 
-    sycl::id<Dim> accessOffset, sycl::range<Dim> accessRange);
-  
+  template <class BufferT>
+  friend std::shared_ptr<rt::buffer_data_region>
+  detail::extract_buffer_data_region(const BufferT &buff);
+
   using value_type = T;
   using reference = value_type &;
   using const_reference = const value_type &;
@@ -608,14 +613,24 @@ public:
     return _range;
   }
 
-  std::size_t get_count() const
+  std::size_t size() const noexcept
   {
     return _range.size();
   }
 
+  std::size_t byte_size() const noexcept
+  {
+    return size() * sizeof(T);
+  }
+
   std::size_t get_size() const
   {
-    return get_count() * sizeof(T);
+    return byte_size();
+  }
+
+  std::size_t get_count() const
+  {
+    return size();
   }
 
   AllocatorT get_allocator() const
@@ -625,46 +640,58 @@ public:
 
   template <access_mode mode = access_mode::read_write,
             access::target target = access::target::device>
-  accessor<T, dimensions, mode, target>
-  get_access(handler &commandGroupHandler) {
-    return accessor<T, dimensions, mode, target>{*this, commandGroupHandler};
+  auto get_access(handler &commandGroupHandler) {
+#ifdef HIPSYCL_EXT_ACCESSOR_VARIANT_DEDUCTION
+    constexpr accessor_variant variant = accessor_variant::unranged;
+#else
+    constexpr accessor_variant variant = accessor_variant::false_t;
+#endif
+    return accessor<T, dimensions, mode, target, variant>{
+        *this, commandGroupHandler};
   }
 
   // Deprecated
   template <access::mode mode>
-  accessor<T, dimensions, mode, access::target::host_buffer> get_access()
+  auto get_access()
   {
-    return accessor<T, dimensions, mode, access::target::host_buffer>{*this};
+    return accessor<T, dimensions, mode, access::target::host_buffer,
+                    accessor_variant::false_t>{*this};
   }
 
   template <access_mode mode = access_mode::read_write,
             access::target target = access::target::device>
-  accessor<T, dimensions, mode, target>
-  get_access(handler &commandGroupHandler, range<dimensions> accessRange,
+  auto get_access(handler &commandGroupHandler, range<dimensions> accessRange,
              id<dimensions> accessOffset = {}) {
-    return accessor<T, dimensions, mode, target>{
+
+#ifdef HIPSYCL_EXT_ACCESSOR_VARIANT_DEDUCTION
+    constexpr accessor_variant variant = accessor_variant::ranged;
+#else
+    constexpr accessor_variant variant = accessor_variant::false_t;
+#endif
+
+    return accessor<T, dimensions, mode, target, variant>{
       *this, commandGroupHandler, accessRange, accessOffset
     };
   }
 
   // Deprecated
   template <access::mode mode>
-  accessor<T, dimensions, mode, access::target::host_buffer> get_access(
+  auto get_access(
       range<dimensions> accessRange, id<dimensions> accessOffset = {})
   {
-    return accessor<T, dimensions, mode, access::target::host_buffer>{
-      *this, accessRange, accessOffset
-    };
+    return accessor<T, dimensions, mode, access::target::host_buffer,
+                    accessor_variant::false_t>{*this, accessRange,
+                                               accessOffset};
   }
 
   template<typename... Args>
-  auto get_access(Args... args) {
-    return accessor{*this, args...};
+  auto get_access(Args&&... args) {
+    return accessor{*this, std::forward<Args>(args)...};
   }
 
   template<typename... Args>
-  auto get_host_access(Args... args) {
-    return host_accessor{*this, args...};
+  auto get_host_access(Args&&... args) {
+    return host_accessor{*this, std::forward<Args>(args)...};
   }
 
   void set_final_data(std::shared_ptr<T> finalData)
@@ -694,14 +721,37 @@ public:
   { return false; }
 
   template <typename ReinterpretT, int ReinterpretDim>
-  buffer<ReinterpretT, ReinterpretDim>
+  buffer<ReinterpretT, ReinterpretDim,
+        typename std::allocator_traits<AllocatorT>
+                 ::template rebind_alloc<ReinterpretT>>
   reinterpret(range<ReinterpretDim> reinterpretRange) const {
+    if(_range.size() * sizeof(T) != reinterpretRange.size() * sizeof(ReinterpretT))
+      throw invalid_parameter_error{"reinterpret must preserve the byte count of the buffer"};
 
-    buffer<ReinterpretT, ReinterpretDim> new_buffer;
-    new_buffer.init_from(*this);
+    buffer<ReinterpretT, ReinterpretDim,
+            typename std::allocator_traits<AllocatorT>::template rebind_alloc<
+            ReinterpretT>> new_buffer;
+    static_cast<detail::property_carrying_object&>(new_buffer) = *this;
+    new_buffer._alloc = _alloc;
+    new_buffer._impl = _impl;
     new_buffer._range = reinterpretRange;
     
     return new_buffer;
+  }
+
+  template <typename ReinterpretT, int ReinterpretDim = dimensions,
+    std::enable_if_t<ReinterpretDim == 1 ||
+      (ReinterpretDim == dimensions && sizeof(ReinterpretT) == sizeof(T)), int> = 0>
+  buffer<ReinterpretT, ReinterpretDim,
+        typename std::allocator_traits<AllocatorT>
+                 ::template rebind_alloc<ReinterpretT>>
+  reinterpret() const {
+    if constexpr (ReinterpretDim == 1) {
+      return reinterpret<ReinterpretT, 1>(range<1>{
+        (_range.size() * sizeof(T)) / sizeof(ReinterpretT)});
+    } else {
+      return reinterpret<ReinterpretT, ReinterpretDim>(_range);
+    }
   }
 
   friend bool operator==(const buffer& lhs, const buffer& rhs)
@@ -712,6 +762,10 @@ public:
   friend bool operator!=(const buffer& lhs, const buffer& rhs)
   {
     return !(lhs == rhs);
+  }
+
+  std::size_t hipSYCL_hash_code() const {
+    return std::hash<void*>{}(_impl.get());
   }
 
   // --- The following methods are part the hipSYCL buffer introspection API
@@ -973,14 +1027,6 @@ private:
   buffer()
   : detail::property_carrying_object {property_list {}}
   {}
-
-  template <class OtherT, int OtherDim>
-  void init_from(const buffer<OtherT, OtherDim, AllocatorT> &other) {
-    detail::property_carrying_object::operator=(other);
-    this->_alloc = other._alloc;
-    this->_range = other._range;
-    this->_impl = other._impl;
-  }
   
   void init_data_backend(const range<dimensions>& range)
   {
@@ -1130,32 +1176,38 @@ buffer(const range<dimensions> &r,
        AllocatorT allocator, const property_list &propList = {})
     -> buffer<T, dimensions, AllocatorT>;
 
-namespace detail::accessor {
+namespace detail {
 
-template<class AccessorType, class BufferType, int Dim>
-void bind_to_buffer(AccessorType& acc, BufferType& buff, 
-    sycl::id<Dim> accessOffset, sycl::range<Dim> accessRange) {
-  
-  acc._offset = accessOffset;
-  acc._range = accessRange;
-  acc._buffer_range = buff.get_range();
-  acc.set_data_region(buff._impl->data);
+template <class BufferT>
+std::shared_ptr<rt::buffer_data_region>
+extract_buffer_data_region(const BufferT &buff) {
+  return buff._impl->data;
 }
 
-template<class AccessorType, class T, int Dim, class AllocatorT>
-void bind_to_buffer_with_defaults(AccessorType& acc, buffer<T,Dim,AllocatorT>& buff)
-{
-  bind_to_buffer(acc, buff, sycl::id<Dim>{}, buff.get_range());
-}
-
-template<class AccessorType, class BufferType>
-void bind_to_buffer(AccessorType& acc, BufferType& buff) {
-  bind_to_buffer_with_defaults(acc, buff);
+template <class T, int dimensions, class AllocatorT>
+sycl::range<dimensions>
+extract_buffer_range(const buffer<T, dimensions, AllocatorT> &buff) {
+  return buff.get_range();
 }
 
 }
+
 
 } // sycl
 } // hipsycl
+
+namespace std {
+
+template <typename T, int dimensions,
+          typename AllocatorT>
+struct hash<hipsycl::sycl::buffer<T, dimensions, AllocatorT>>
+{
+  std::size_t
+  operator()(const hipsycl::sycl::buffer<T, dimensions, AllocatorT> &b) const {
+    return b.hipSYCL_hash_code();
+  }
+};
+
+}
 
 #endif

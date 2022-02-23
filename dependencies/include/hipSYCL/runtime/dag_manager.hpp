@@ -31,6 +31,7 @@
 #include "dag.hpp"
 #include "dag_builder.hpp"
 #include "dag_direct_scheduler.hpp"
+#include "dag_unbound_scheduler.hpp"
 #include "dag_submitted_ops.hpp"
 #include "generic/async_worker.hpp"
 
@@ -55,7 +56,9 @@ public:
   // Wait for completion of all submitted operations
   void wait();
   void wait(std::size_t node_group_id);
-  
+
+  std::vector<dag_node_ptr> get_group(std::size_t node_group_id);
+
   void register_submitted_ops(dag_node_ptr);
 private:
   void trigger_flush_opportunity();
@@ -66,6 +69,7 @@ private:
   worker_thread _worker;
   
   dag_direct_scheduler _direct_scheduler;
+  dag_unbound_scheduler _unbound_scheduler;
   dag_submitted_ops _submitted_ops;
 };
 

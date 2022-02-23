@@ -34,8 +34,9 @@
 #include <type_traits>
 
 #include "types.hpp"
+#include "aspect.hpp"
 #include "info/info.hpp"
-#include "libkernel/backend.hpp"
+#include "backend.hpp"
 #include "exception.hpp"
 #include "version.hpp"
 #include "hipSYCL/sycl/libkernel/id.hpp"
@@ -78,7 +79,8 @@ public:
       : _device_id(detail::get_host_device()) {}
 
   // Implemented in device_selector.hpp
-  explicit device(const device_selector &deviceSelector);
+  template <class DeviceSelector>
+  explicit device(const DeviceSelector &deviceSelector);
 
   bool is_host() const 
   {
@@ -87,19 +89,65 @@ public:
 
   bool is_cpu() const
   {
-    return _device_id.get_full_backend_descriptor().hw_platform ==
-           rt::hardware_platform::cpu;
+    return get_rt_device()->is_cpu();
   }
 
   bool is_gpu() const
   {
-    return rt::application::get_backend(_device_id.get_backend())
-        .get_hardware_manager()
-        ->get_device(_device_id.get_id())
-        ->is_gpu();
+    return get_rt_device()->is_gpu();
   }
 
   bool is_accelerator() const { return !is_cpu(); }
+
+  bool has(aspect asp) const {
+    if(asp == aspect::cpu) {
+      return is_cpu();
+    } else if(asp == aspect::gpu) {
+      return is_gpu();
+    } else if(asp == aspect::accelerator) {
+      return is_accelerator();
+    } else if(asp == aspect::custom) {
+      return false;
+    } else if(asp == aspect::emulated) {
+      return false;
+    } else if(asp == aspect::host_debuggable) {
+      return _device_id.get_full_backend_descriptor().hw_platform ==
+           rt::hardware_platform::cpu;
+    } else if(asp == aspect::fp16) {
+      // fp16 is only partially supported in hipSYCL
+      return false;
+    } else if(asp == aspect::fp64) {
+      return true;
+    } else if(asp == aspect::atomic64) {
+      return true;
+    } else if(asp == aspect::image) {
+      return false;
+    } else if(asp == aspect::online_compiler) {
+      return false;
+    } else if(asp == aspect::online_linker) {
+      return false;
+    } else if(asp == aspect::queue_profiling) {
+      return get_rt_device()->has(
+          rt::device_support_aspect::execution_timestamps);
+    } else if(asp == aspect::usm_device_allocations) {
+      return get_rt_device()->has(
+          rt::device_support_aspect::usm_device_allocations);
+    } else if(asp == aspect::usm_host_allocations) {
+      return get_rt_device()->has(
+          rt::device_support_aspect::usm_host_allocations);
+    } else if(asp == aspect::usm_atomic_host_allocations) {
+      return get_rt_device()->has(
+          rt::device_support_aspect::usm_atomic_host_allocations);
+    } else if(asp == aspect::usm_shared_allocations) {
+      return get_rt_device()->has(
+          rt::device_support_aspect::usm_shared_allocations);
+    } else if(asp == aspect::usm_system_allocations) {
+      return get_rt_device()->has(
+          rt::device_support_aspect::usm_system_allocations);
+    }
+
+    return false;
+  }
 
   bool hipSYCL_has_compiled_kernels() const {
 #if defined(__HIPSYCL_ENABLE_OMPHOST_TARGET__)
@@ -209,6 +257,13 @@ public:
   friend bool operator!=(const device& lhs, const device &rhs)
   { return !(lhs == rhs); }
   
+  backend get_backend() const noexcept {
+    return _device_id.get_backend();
+  }
+
+  std::size_t hipSYCL_hash_code() const {
+    return std::hash<hipsycl::rt::device_id>{}(_device_id);
+  }
 private:
   rt::device_id _device_id;
 
@@ -557,8 +612,9 @@ HIPSYCL_SPECIALIZE_GET_INFO(device, execution_capabilities)
   };
 }
 
-HIPSYCL_SPECIALIZE_GET_INFO(device, queue_profiling)
-{ return false; }
+HIPSYCL_SPECIALIZE_GET_INFO(device, queue_profiling) {
+  return get_rt_device()->has(rt::device_support_aspect::execution_timestamps);
+}
 
 HIPSYCL_SPECIALIZE_GET_INFO(device, built_in_kernels)
 { return std::vector<string_class>{}; }
@@ -582,6 +638,39 @@ HIPSYCL_SPECIALIZE_GET_INFO(device, version) {
 
 HIPSYCL_SPECIALIZE_GET_INFO(device, opencl_c_version)
 { return "1.2 HIPSYCL"; }
+
+HIPSYCL_SPECIALIZE_GET_INFO(device, aspects)
+{
+  std::array aspects = {aspect::cpu,
+                        aspect::gpu,
+                        aspect::accelerator,
+                        aspect::custom,
+                        aspect::emulated,
+                        aspect::host_debuggable,
+                        aspect::fp16,
+                        aspect::fp64,
+                        aspect::atomic64,
+                        aspect::image,
+                        aspect::online_compiler,
+                        aspect::online_linker,
+                        aspect::queue_profiling,
+                        aspect::usm_device_allocations,
+                        aspect::usm_host_allocations,
+                        aspect::usm_atomic_host_allocations,
+                        aspect::usm_shared_allocations,
+                        aspect::usm_atomic_shared_allocations,
+                        aspect::usm_system_allocations};
+
+  std::vector<aspect> result;
+  
+  for(auto asp : aspects) {
+    if(this->has(asp)){
+      result.push_back(asp);
+    }
+  }
+
+  return result;
+}
 
 HIPSYCL_SPECIALIZE_GET_INFO(device, extensions)
 {
@@ -639,6 +728,17 @@ inline rt::device_id extract_rt_device(const device &d) {
 } // namespace sycl
 } // namespace hipsycl
 
+namespace std {
 
+template <>
+struct hash<hipsycl::sycl::device>
+{
+  std::size_t operator()(const hipsycl::sycl::device& d) const
+  {
+    return d.hipSYCL_hash_code();
+  }
+};
+
+}
 
 #endif

@@ -26,7 +26,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifdef SYCL_DEVICE_ONLY
 
 #ifndef HIPSYCL_DETAIL_WARP_SHUFFLE
 #define HIPSYCL_DETAIL_WARP_SHUFFLE
@@ -34,9 +33,9 @@
 namespace hipsycl {
 namespace sycl {
 
-namespace detail {
+namespace detail::hiplike_builtins::detail {
 
-#ifdef HIPSYCL_PLATFORM_HIP
+#if HIPSYCL_LIBKERNEL_IS_DEVICE_PASS_HIP
 template<typename T, typename Operation>
 __device__
 T apply_on_data(T x, Operation op) {
@@ -58,18 +57,23 @@ T apply_on_data(T x, Operation op) {
 // implemented based on warp_shuffle_op in rocPRIM
 template<typename T>
 __device__
-T shuffle_impl(T x, int id) {
+T __hipsycl_shuffle_impl(T x, int id) {
   return apply_on_data(x, [id](int data) { return __shfl(data, id); });
 }
 template<typename T>
 __device__
-T shuffle_up_impl(T x, int offset) {
+T __hipsycl_shuffle_up_impl(T x, int offset) {
   return apply_on_data(x, [offset](int data) { return __shfl_up(data, offset); });
 }
 template<typename T>
 __device__
-T shuffle_down_impl(T x, int offset) {
+T __hipsycl_shuffle_down_impl(T x, int offset) {
   return apply_on_data(x, [offset](int data) { return __shfl_down(data, offset); });
+}
+template<typename T>
+__device__
+T __hipsycl_shuffle_xor_impl(T x, int lane_mask) {
+  return apply_on_data(x, [lane_mask](int data) { return __shfl_xor(data, lane_mask); });
 }
 
 // dpp sharing instruction abstraction based on rocPRIM
@@ -80,9 +84,9 @@ T warp_move_dpp(T x) {
   return apply_on_data(
       x, [=](int data) { return __builtin_amdgcn_update_dpp(0, data, dpp_ctrl, row_mask, bank_mask, bound_ctrl); });
 }
-#endif // HIPSYCL_PLATFORM_HIP
+#endif // HIP
 
-#ifdef HIPSYCL_PLATFORM_CUDA
+#if HIPSYCL_LIBKERNEL_IS_DEVICE_PASS_CUDA
 constexpr unsigned int AllMask = 0xFFFFFFFF;
 
 // shuffle_impl implemented based on ShuffleIndex in cub
@@ -136,21 +140,28 @@ T apply_on_data(T x, Operation op) {
 
 template<typename T>
 __device__
-T shuffle_impl(T x, int id) {
-  return apply_on_data(x, [id](int data) { return __shfl_sync(AllMask, data, id); });
+T __hipsycl_shuffle_impl(T x, int id) {
+  // nvc++ fails to correctly determine that the lambda needs to be compiled
+  // for device exclusively, so mark as __device__.
+  return apply_on_data(x, [id] __device__ (int data) { return __shfl_sync(AllMask, data, id); });
 }
 template<typename T>
 __device__
-T shuffle_up_impl(T x, int offset) {
-  return apply_on_data(x, [offset](int data) { return __shfl_up_sync(AllMask, data, offset); });
+T __hipsycl_shuffle_up_impl(T x, int offset) {
+  return apply_on_data(x, [offset] __device__ (int data) { return __shfl_up_sync(AllMask, data, offset); });
 }
 template<typename T>
 __device__
-T shuffle_down_impl(T x, int offset) {
-  return apply_on_data(x, [offset](int data) { return __shfl_down_sync(AllMask, data, offset); });
+T __hipsycl_shuffle_down_impl(T x, int offset) {
+  return apply_on_data(x, [offset] __device__ (int data) { return __shfl_down_sync(AllMask, data, offset); });
+}
+template<typename T>
+__device__
+T __hipsycl_shuffle_xor_impl(T x, int lane_mask) {
+  return apply_on_data(x, [lane_mask] __device__ (int data) { return __shfl_xor_sync(AllMask, data, lane_mask); });
 }
 
-#endif // HIPSYCL_PLATFORM_CUDA
+#endif // CUDA
 
 } // namespace detail
 
@@ -159,4 +170,3 @@ T shuffle_down_impl(T x, int offset) {
 
 #endif // HIPSYCL_DETAIL_WARP_SHUFFLE
 
-#endif // SYCL_DEVICE_ONLY

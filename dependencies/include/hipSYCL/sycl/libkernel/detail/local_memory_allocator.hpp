@@ -32,6 +32,7 @@
 #include "hipSYCL/sycl/exception.hpp"
 
 #include <cassert>
+#include <cstddef>
 #include <cstdlib>
 #include <array>
 
@@ -131,7 +132,7 @@ public:
 private:
 
   static void release_memory() {
-    if (_local_mem != nullptr && _local_mem != _static_local_mem.data() &&
+    if (_local_mem != nullptr && _local_mem != &(_static_local_mem[0]) &&
         _origin != host_local_memory_origin::hipcpu)
       delete[] _local_mem;
 
@@ -144,7 +145,7 @@ private:
     _origin = host_local_memory_origin::custom_threadprivate;
     
     if(num_bytes <= _max_static_local_mem_size)
-      _local_mem = _static_local_mem.data();
+      _local_mem = &(_static_local_mem[0]);
     else
     {
       if(num_bytes > 0)
@@ -157,7 +158,10 @@ private:
   // for more local memory we go to the heap.
   static constexpr size_t _max_static_local_mem_size = 1024*32;
   inline static char* _local_mem;
-  inline static std::array<char, _max_static_local_mem_size> _static_local_mem;
+  
+  alignas(sizeof(double) * 16) inline static char _static_local_mem
+      [_max_static_local_mem_size];
+  
   inline static host_local_memory_origin _origin;
 #pragma omp threadprivate(_local_mem)
 #pragma omp threadprivate(_static_local_mem)
@@ -166,18 +170,17 @@ private:
 
 HIPSYCL_KERNEL_TARGET
 inline void* hiplike_dynamic_local_memory() {
-#ifdef SYCL_DEVICE_ONLY
-  #ifdef HIPSYCL_PLATFORM_CUDA
+  __hipsycl_if_target_cuda(
     extern __shared__ int local_mem [];
     return static_cast<void*>(local_mem);
-  #endif
-  #ifdef HIPSYCL_PLATFORM_ROCM
+  );
+  __hipsycl_if_target_hip(
     return __amdgcn_get_dynamicgroupbaseptr();
-  #endif
-#else
-  assert(false && "this function should only be called on device");
-  return nullptr;
-#endif
+  );
+  __hipsycl_if_target_host(
+    assert(false && "this function should only be called on device");
+    return nullptr;
+  );
 }
 
 class local_memory
@@ -189,15 +192,13 @@ public:
   HIPSYCL_KERNEL_TARGET
   static T* get_ptr(const address addr)
   {
-#ifdef SYCL_DEVICE_ONLY
-    return reinterpret_cast<T *>(
+    __hipsycl_if_target_device(
+      return reinterpret_cast<T *>(
         reinterpret_cast<char *>(hiplike_dynamic_local_memory()) + addr);
-#elif defined(HIPSYCL_PLATFORM_CPU) 
-    return reinterpret_cast<T*>(host_local_memory::get_ptr() + addr);
-#else
-    // The __host__ case without hipCPU is not yet supported
-    return nullptr;
-#endif
+    );
+    __hipsycl_if_target_host(
+      return reinterpret_cast<T*>(host_local_memory::get_ptr() + addr);
+    );
   }
 };
 

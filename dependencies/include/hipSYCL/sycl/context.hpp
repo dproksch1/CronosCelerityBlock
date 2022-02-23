@@ -61,10 +61,7 @@ public:
 
   explicit context(async_handler handler = [](exception_list e) {
     glue::default_async_handler(e);
-  }) {
-    default_selector selector;
-    this->init(handler, selector.select_device());
-  }
+  }) : context{detail::select_devices(default_selector_v), handler} {}
 
   explicit context(
       const device &dev, async_handler handler = [](exception_list e) {
@@ -82,6 +79,8 @@ public:
     for (const auto &dev : devices) {
       _impl->devices.add(dev._device_id);
     }
+    // Always need to add the host device
+    _impl->devices.add(detail::get_host_device());
   }
 
   explicit context(
@@ -97,6 +96,8 @@ public:
     for(const device& dev : deviceList) {
       _impl->devices.add(dev._device_id);
     }
+    // Always need to add the host device
+    _impl->devices.add(detail::get_host_device());
   }
 
   bool is_host() const {
@@ -109,18 +110,26 @@ public:
   }
 
   platform get_platform() const {
-    std::size_t num_backends = 0;
+    bool found_device_backend = false;
     rt::backend_id last_backend;
+
     this->_impl->devices.for_each_backend([&](rt::backend_id b) {
-      ++num_backends;
-      last_backend = b;
+      if (b != detail::get_host_device().get_backend()) {
+        if (found_device_backend) {
+          // We already have a device backend
+          HIPSYCL_DEBUG_WARNING
+              << "context: get_platform() was called but this context spans "
+                 "multiple backends/platforms. Only returning last platform"
+              << std::endl;
+        }
+        
+        last_backend = b;
+        found_device_backend = true;
+      }
     });
 
-    if (num_backends > 1) {
-      HIPSYCL_DEBUG_WARNING
-          << "context: get_platform() was called but this context spans "
-             "multiple backends/platforms. Only returning last platform"
-          << std::endl;
+    if (!found_device_backend) {
+      last_backend = detail::get_host_device().get_backend(); 
     }
 
     return platform{last_backend};
@@ -139,6 +148,15 @@ public:
     throw unimplemented{"context::get_info() is unimplemented"};
   }
 
+  std::size_t hipSYCL_hash_code() const {
+    return std::hash<void*>{}(_impl.get());
+  }
+
+  friend bool operator ==(const context& lhs, const context& rhs)
+  { return lhs._impl == rhs._impl; }
+
+  friend bool operator!=(const context& lhs, const context &rhs)
+  { return !(lhs == rhs); }
 private:
   void init(async_handler handler) {
     _impl = std::make_shared<context_impl>();
@@ -189,6 +207,17 @@ inline const rt::unique_device_list &extract_context_devices(const context &ctx)
 } // namespace sycl
 } // namespace hipsycl
 
+namespace std {
 
+template <>
+struct hash<hipsycl::sycl::context>
+{
+  std::size_t operator()(const hipsycl::sycl::context& c) const
+  {
+    return c.hipSYCL_hash_code();
+  }
+};
+
+}
 
 #endif

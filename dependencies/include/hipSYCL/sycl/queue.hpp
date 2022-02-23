@@ -1,7 +1,7 @@
 /*
  * This file is part of hipSYCL, a SYCL implementation based on CUDA/HIP
  *
- * Copyright (c) 2018,2019 Aksel Alpay
+ * Copyright (c) 2018-2020 Aksel Alpay and contributors
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,6 +48,7 @@
 #include "info/info.hpp"
 #include "detail/function_set.hpp"
 
+#include <cstddef>
 #include <exception>
 #include <memory>
 #include <mutex>
@@ -100,6 +101,9 @@ namespace property::queue {
 class in_order : public detail::queue_property
 {};
 
+class enable_profiling : public detail::property
+{};
+
 }
 
 
@@ -111,7 +115,7 @@ class queue : public detail::property_carrying_object
 
 public:
   explicit queue(const property_list &propList = {})
-      : queue{default_selector{},
+      : queue{default_selector_v,
               [](exception_list e) { glue::default_async_handler(e); },
               propList} {
     assert(_default_hints.has_hint<rt::hints::bind_to_device>());
@@ -119,99 +123,106 @@ public:
 
   explicit queue(const async_handler &asyncHandler,
                  const property_list &propList = {})
-      : queue{default_selector{}, asyncHandler, propList} {
+      : queue{default_selector_v, asyncHandler, propList} {
     assert(_default_hints.has_hint<rt::hints::bind_to_device>());
   }
 
-  explicit queue(const device_selector &deviceSelector,
+  template <
+      class DeviceSelector,
+      std::enable_if_t<detail::is_device_selector_v<DeviceSelector>, int> = 0>
+  explicit queue(const DeviceSelector &deviceSelector,
                  const property_list &propList = {})
-      : detail::property_carrying_object{propList},
-        _ctx{deviceSelector.select_device()} {
+      : queue{detail::select_devices(deviceSelector), propList} {}
 
-    _handler = _ctx._impl->handler;
-    
-    _default_hints.add_hint(rt::make_execution_hint<rt::hints::bind_to_device>(
-        deviceSelector.select_device()._device_id));
-
-    this->init();
-  }
-
-  explicit queue(const device_selector &deviceSelector,
+  template <
+      class DeviceSelector,
+      std::enable_if_t<detail::is_device_selector_v<DeviceSelector>, int> = 0>
+  explicit queue(const DeviceSelector &deviceSelector,
                  const async_handler &asyncHandler,
                  const property_list &propList = {})
-      : detail::property_carrying_object{propList},
-        _ctx{deviceSelector.select_device(), asyncHandler}, _handler{
-                                                                asyncHandler} {
-
-    _default_hints.add_hint(rt::make_execution_hint<rt::hints::bind_to_device>(
-        deviceSelector.select_device()._device_id));
-
-    this->init();
-  }
+      : queue{detail::select_devices(deviceSelector), asyncHandler, propList} {}
 
   explicit queue(const device &syclDevice, const property_list &propList = {})
-      : detail::property_carrying_object{propList}, _ctx{syclDevice} {
-
-    _handler = _ctx._impl->handler;
-    
-    _default_hints.add_hint(rt::make_execution_hint<rt::hints::bind_to_device>(
-        syclDevice._device_id));
-
-    this->init();
-  }
+      : queue{context{syclDevice}, std::vector<device>{syclDevice}, propList} {}
 
   explicit queue(const device &syclDevice, const async_handler &asyncHandler,
                  const property_list &propList = {})
-      : detail::property_carrying_object{propList},
-        _ctx{syclDevice, asyncHandler}, _handler{asyncHandler} {
+      : queue{context{syclDevice, asyncHandler}, std::vector<device>{syclDevice},
+              asyncHandler, propList} {}
 
-    _default_hints.add_hint(rt::make_execution_hint<rt::hints::bind_to_device>(
-        syclDevice._device_id));
-
-    this->init();
-  }
-
+  template <
+      class DeviceSelector,
+      std::enable_if_t<detail::is_device_selector_v<DeviceSelector>, int> = 0>
   explicit queue(const context &syclContext,
-                 const device_selector &deviceSelector,
+                 const DeviceSelector &deviceSelector,
                  const property_list &propList = {})
-      : queue(syclContext, deviceSelector.select_device(), propList) {
-  }
+      : queue(syclContext, detail::select_devices(deviceSelector), propList) {}
 
+  template <
+      class DeviceSelector,
+      std::enable_if_t<detail::is_device_selector_v<DeviceSelector>, int> = 0>
   explicit queue(const context &syclContext,
-                 const device_selector &deviceSelector,
+                 const DeviceSelector &deviceSelector,
                  const async_handler &asyncHandler,
                  const property_list &propList = {})
-      : queue(syclContext, deviceSelector.select_device(), asyncHandler, propList) {
-  }
+      : queue(syclContext, detail::select_devices(deviceSelector), asyncHandler,
+              propList) {}
 
   explicit queue(const context &syclContext,
                  const device &syclDevice,
                  const property_list &propList = {})
-      : detail::property_carrying_object{propList}, _ctx{syclContext} {
+      : queue{syclContext, std::vector<device>{syclDevice}, propList} {}
 
-    _handler = _ctx._impl->handler;
+  explicit queue(const context &syclContext, const device &syclDevice,
+                 const async_handler &asyncHandler,
+                 const property_list &propList = {})
+      : queue{syclContext, std::vector<device>{syclDevice}, asyncHandler,
+              propList} {}
 
-    if (!is_device_in_context(syclDevice, syclContext))
-      throw invalid_object_error{"queue: Device is not in context"};
+  // hipSYCL-specific constructors for multiple devices
 
-    _default_hints.add_hint(rt::make_execution_hint<rt::hints::bind_to_device>(
-        syclDevice._device_id));
+  explicit queue(const std::vector<device> &devices,
+                 const async_handler &handler,
+                 const property_list &propList = {})
+      : queue{context{devices, handler}, devices, handler, propList} {}
 
-    this->init();
-  }
+  explicit queue(const std::vector<device>& devices, const property_list& propList = {})
+    : queue{context{devices}, devices, propList} {}
+
+  explicit queue(const context &syclContext, const std::vector<device> &devices,
+                 const property_list &propList = {})
+      : queue{syclContext, devices, async_handler{syclContext._impl->handler},
+              propList} {}
 
   explicit queue(const context &syclContext,
-                 const device &syclDevice,
+                 const std::vector<device> &devices,
                  const async_handler &asyncHandler,
                  const property_list &propList = {})
       : detail::property_carrying_object{propList}, _ctx{syclContext},
         _handler{asyncHandler} {
 
-    if (!is_device_in_context(syclDevice, syclContext))
-      throw invalid_object_error{"queue: Device is not in context"};
+    if(devices.empty()) {
+      throw invalid_parameter_error{"queue: No devices in device list"};
+    }
 
-    _default_hints.add_hint(rt::make_execution_hint<rt::hints::bind_to_device>(
-        syclDevice._device_id));
+    for(const auto& dev : devices)
+      if (!is_device_in_context(dev, syclContext))
+        throw invalid_object_error{"queue: Device is not in context"};
+
+    if(devices.size() == 1){
+      _default_hints.add_hint(rt::make_execution_hint<rt::hints::bind_to_device>(
+          detail::extract_rt_device(devices[0])));
+    }
+    else if(devices.size() > 1) {
+      std::vector<rt::device_id> rt_devs;
+      for(const auto& d : devices) {
+        rt_devs.push_back(detail::extract_rt_device(d));
+      }
+      _default_hints.add_hint(
+          rt::make_execution_hint<rt::hints::bind_to_device_group>(rt_devs));
+    }
+    // Otherwise we are in completely unrestricted scheduling land - don't
+    // add any hints
 
     this->init();
   }
@@ -230,11 +241,45 @@ public:
       rt::device_id id =
           _default_hints.get_hint<rt::hints::bind_to_device>()->get_device_id();
       return device{id};
+    } else {
+      throw feature_not_supported{
+          "queue::get_device() is unsupported for multi-device queues"};
     }
-    return device{};
   }
 
-  bool is_host() const { return get_device().is_host(); }
+  std::vector<device> get_devices() const {
+    if(_default_hints.has_hint<rt::hints::bind_to_device>()) {
+
+      rt::device_id id =
+          _default_hints.get_hint<rt::hints::bind_to_device>()->get_device_id();
+      return std::vector<device>{device{id}};
+
+    } else if(_default_hints.has_hint<rt::hints::bind_to_device_group>()) {
+
+      std::vector<device> devs;
+      for (const auto &d :
+           _default_hints.get_hint<rt::hints::bind_to_device_group>()
+               ->get_devices()) {
+        devs.push_back(device{d});
+      }
+
+      return devs;
+    }
+    return std::vector<device>{};
+  }
+
+  bool is_host() const {
+    auto devs = get_devices();
+    if(devs.empty())
+      return false;
+    
+    for(const auto& d : devs) {
+      if(!d.is_host())
+        return false;
+    }
+    return true;
+  }
+
   bool is_in_order() const {
     return _is_in_order;
   }
@@ -362,6 +407,34 @@ public:
 
   friend bool operator!=(const queue& lhs, const queue& rhs)
   { return !(lhs == rhs); }
+
+  std::vector<event> get_wait_list() const {
+    if(is_in_order()) {
+      std::lock_guard<std::mutex> lock{*_lock};
+
+      if(auto prev = this->_previous_submission->lock()){
+        if(!prev->is_complete()) {
+          return std::vector<event>{event{prev, _handler}};
+        }
+      }
+      // If we don't have a previous event or it's complete,
+      // just return empty vector
+      return std::vector<event>{};
+      
+    } else {
+      // for non-in-order queues we need to ask the runtime for
+      // all nodes of this node group
+      rt::application::dag().flush_sync();
+      auto nodes = rt::application::dag().get_group(_node_group_id);
+      std::vector<event> evts;
+      for(auto node : nodes){
+        if(!node->is_complete())
+          evts.push_back(event{node, _handler});
+      }
+
+      return evts;
+    }
+  }
 
   // ---- Queue shortcuts ------
 
@@ -537,6 +610,26 @@ public:
       cgh.memcpy(dest, src, num_bytes);
     });
   }
+  
+  template <typename T>
+  event copy(const T* src, T* dest, std::size_t count) {
+    return this->memcpy(static_cast<void*>(dest), 
+      static_cast<const void*>(src), count * sizeof(T));
+  }
+  
+  template <typename T>
+  event copy(const T* src, T* dest, std::size_t count, 
+             event dependency) {
+    return this->memcpy(static_cast<void*>(dest), 
+      static_cast<const void*>(src), count * sizeof(T), dependency);
+  }
+  
+  template <typename T>
+  event copy(const T* src, T* dest, std::size_t count, 
+             const std::vector<event>& dependencies) {
+    return this->memcpy(static_cast<void*>(dest), 
+      static_cast<const void*>(src), count * sizeof(T), dependencies);
+  }
 
   event memset(void *ptr, int value, std::size_t num_bytes) {
     return this->submit([&](sycl::handler &cgh) {
@@ -672,7 +765,92 @@ public:
     });
   }
 
+  /// Placeholder accessor shortcuts
+  
+  // Explicit copy functions
+  
+  template <typename T, int dim, access_mode mode, target tgt,
+            accessor_variant isPlaceholder>
+  event copy(accessor<T, dim, mode, tgt, isPlaceholder> src,
+             shared_ptr_class<T> dest) {
+    return this->submit([&](sycl::handler &cgh) {
+      cgh.require(src);
+      cgh.copy(src, dest);
+    });           
+  }
+  
+  template <typename T, int dim, access_mode mode, target tgt,
+            accessor_variant isPlaceholder>
+  event copy(shared_ptr_class<T> src,
+             accessor<T, dim, mode, tgt, isPlaceholder> dest) {
+    return this->submit([&](sycl::handler &cgh) {
+      cgh.require(dest);
+      cgh.copy(src, dest);
+    });           
+  }
 
+  template <typename T, int dim, access_mode mode, target tgt,
+            accessor_variant isPlaceholder>
+  event copy(accessor<T, dim, mode, tgt, isPlaceholder> src,
+             T *dest) {
+    return this->submit([&](sycl::handler &cgh) {
+      cgh.require(src);
+      cgh.copy(src, dest);
+    });     
+  }
+
+  template <typename T, int dim, access_mode mode, target tgt,
+            accessor_variant isPlaceholder>
+  event copy(const T *src,
+             accessor<T, dim, mode, tgt, isPlaceholder> dest) {
+    return this->submit([&](sycl::handler &cgh) {
+      cgh.require(dest);
+      cgh.copy(src, dest);
+    });             
+  }
+
+  template <typename T, int dim, access_mode srcMode, access_mode dstMode,
+            target srcTgt, target destTgt,
+            accessor_variant isPlaceholderSrc, accessor_variant isPlaceholderDst>
+  event copy(accessor<T, dim, srcMode, srcTgt, isPlaceholderSrc> src,
+             accessor<T, dim, dstMode, destTgt, isPlaceholderDst> dest) {
+    return this->submit([&](sycl::handler &cgh) {
+      cgh.require(src);
+      cgh.require(dest);
+      cgh.copy(src, dest);
+    });  
+  }
+
+  template <typename T, int dim, access_mode mode, target tgt,
+            accessor_variant isPlaceholder>
+  event update_host(accessor<T, dim, mode, tgt, isPlaceholder> acc) {
+    return this->submit([&](sycl::handler &cgh) {
+      cgh.require(acc);
+      cgh.update_host(acc);
+    });  
+  }
+  
+  template <typename T, int dim, access_mode mode, target tgt,
+            accessor_variant isPlaceholder>
+  event update(accessor<T, dim, mode, tgt, isPlaceholder> acc) {
+    return this->submit([&](sycl::handler &cgh) {
+      cgh.require(acc);
+      cgh.update(acc);
+    });  
+  }
+
+  template <typename T, int dim, access_mode mode, target tgt,
+            accessor_variant isPlaceholder>
+  event fill(accessor<T, dim, mode, tgt, isPlaceholder> dest, const T &src) {
+    return this->submit([&](sycl::handler &cgh) {
+      cgh.require(dest);
+      cgh.fill(dest, src);
+    });  
+  }
+
+  std::size_t hipSYCL_hash_code() const {
+    return _node_group_id;
+  }
 private:
   template<int Dim>
   void apply_preferred_group_size(const property_list& prop_list, handler& cgh) {
@@ -689,7 +867,7 @@ private:
   template <class Cgf>
   rt::dag_node_ptr execute_submission(Cgf cgf, handler &cgh) {
     if (is_in_order()) {
-      auto previous = _previous_submission.lock();
+      auto previous = _previous_submission->lock();
       if(previous)
         cgh.depends_on(event{previous, _handler});
     }
@@ -698,7 +876,7 @@ private:
 
     rt::dag_node_ptr node = this->extract_dag_node(cgh);
     if (is_in_order()) {
-      _previous_submission = node;
+      *_previous_submission = node;
     }
     return node;
   }
@@ -745,8 +923,21 @@ private:
     _default_hints.add_hint(
         rt::make_execution_hint<rt::hints::node_group>(_node_group_id));
 
+    if (this->has_property<property::queue::enable_profiling>()) {
+      _default_hints.add_hint(
+          rt::make_execution_hint<
+              rt::hints::request_instrumentation_submission_timestamp>());
+      _default_hints.add_hint(
+          rt::make_execution_hint<
+              rt::hints::request_instrumentation_start_timestamp>());
+      _default_hints.add_hint(
+          rt::make_execution_hint<
+              rt::hints::request_instrumentation_finish_timestamp>());
+    }
+
     _is_in_order = this->has_property<property::queue::in_order>();
     _lock = std::make_shared<std::mutex>();
+    _previous_submission = std::make_shared<std::weak_ptr<rt::dag_node>>();
 
     this->_hooks = detail::queue_submission_hooks_ptr{
           new detail::queue_submission_hooks{}};
@@ -765,7 +956,7 @@ private:
   async_handler _handler;
   bool _is_in_order;
 
-  std::weak_ptr<rt::dag_node> _previous_submission;
+  std::shared_ptr<std::weak_ptr<rt::dag_node>> _previous_submission;
   std::shared_ptr<std::mutex> _lock;
   std::size_t _node_group_id;
 };
@@ -911,6 +1102,16 @@ inline auto automatic_require(queue &q,
 }// namespace sycl
 }// namespace hipsycl
 
+namespace std {
+template <>
+struct hash<hipsycl::sycl::queue>
+{
+  std::size_t operator()(const hipsycl::sycl::queue& q) const
+  {
+    return q.hipSYCL_hash_code();
+  }
+};
 
+}
 
 #endif

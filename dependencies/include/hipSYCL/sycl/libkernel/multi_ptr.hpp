@@ -30,42 +30,18 @@
 
 #include "hipSYCL/sycl/libkernel/backend.hpp"
 #include "hipSYCL/sycl/access.hpp"
+#include "hipSYCL/sycl/libkernel/memory.hpp"
 
 #include <type_traits>
 
 namespace hipsycl {
 namespace sycl {
-namespace access {
-
-enum class address_space : int
-{
-  global_space,
-  local_space,
-  constant_space,
-  private_space
-};
-
-} // namespace access
 
 template<typename dataT, int dimensions,
          access::mode accessmode,
          access::target accessTarget,
          access::placeholder isPlaceholder>
 class accessor;
-
-namespace detail {
-namespace accessor {
-
-template<typename dataT, int dimensions,
-         access::mode accessmode,
-         access::target accessTarget,
-         access::placeholder isPlaceholder>
-HIPSYCL_UNIVERSAL_TARGET
-static
-dataT* get_accessor_ptr(const sycl::accessor<dataT,dimensions,accessmode,accessTarget,isPlaceholder>&);
-
-}
-}
 
 template <typename ElementType, access::address_space Space>
 class multi_ptr
@@ -105,19 +81,31 @@ public:
   // Assignment and access operators
   HIPSYCL_UNIVERSAL_TARGET
   multi_ptr &operator=(const multi_ptr& other)
-  { _ptr = other._ptr; }
+  {
+    _ptr = other._ptr; 
+    return *this;
+  }
 
   HIPSYCL_UNIVERSAL_TARGET
   multi_ptr &operator=(multi_ptr&& other)
-  { _ptr = other._ptr; }
+  {
+    _ptr = other._ptr;
+    return *this;
+  }
 
   HIPSYCL_UNIVERSAL_TARGET
   multi_ptr &operator=(ElementType* ptr)
-  { _ptr = ptr; }
+  {
+    _ptr = ptr;
+    return *this;
+  }
 
   HIPSYCL_UNIVERSAL_TARGET
   multi_ptr &operator=(std::nullptr_t)
-  { _ptr = nullptr; }
+  {
+    _ptr = nullptr;
+    return *this;
+  }
 
   HIPSYCL_UNIVERSAL_TARGET
   ElementType& operator*() const
@@ -139,7 +127,7 @@ public:
             typename std::enable_if_t<S==access::address_space::global_space>* = nullptr>
   HIPSYCL_KERNEL_TARGET
   multi_ptr(accessor<ElementType, dimensions, Mode, access::target::global_buffer, isPlaceholder> a)
-    : _ptr{detail::accessor::get_accessor_ptr(a)}
+    : _ptr{a.get_pointer()}
   {}
 
   // Only if Space == local_space
@@ -150,7 +138,7 @@ public:
             typename std::enable_if_t<S==access::address_space::local_space>* = nullptr>
   HIPSYCL_KERNEL_TARGET
   multi_ptr(accessor<ElementType, dimensions, Mode, access::target::local, isPlaceholder> a)
-    : _ptr{detail::accessor::get_accessor_ptr(a)}
+    : _ptr{a.get_pointer()}
   {}
 
   // Only if Space == constant_space
@@ -161,7 +149,7 @@ public:
             typename std::enable_if_t<S==access::address_space::constant_space>* = nullptr>
   HIPSYCL_KERNEL_TARGET
   multi_ptr(accessor<ElementType, dimensions, Mode, access::target::constant_buffer, isPlaceholder> a)
-    : _ptr{detail::accessor::get_accessor_ptr(a)}
+    : _ptr{a.get_pointer()}
   {}
 
   // Returns the underlying OpenCL C pointer
@@ -183,6 +171,13 @@ public:
   explicit operator multi_ptr<void, Space>() const
   {
     return multi_ptr<void, Space>{reinterpret_cast<void*>(_ptr)};
+  }
+
+  // Implicit conversion to multi_ptr<const value_type, Space>.
+  HIPSYCL_UNIVERSAL_TARGET
+  operator multi_ptr<const ElementType, Space>() const
+  {
+    return multi_ptr<const ElementType, Space>{_ptr};
   }
 
   // Arithmetic operators
@@ -421,7 +416,7 @@ public:
                      Mode,
                      access::target::global_buffer,
                      access::placeholder::false_t> a)
-    : _ptr{reinterpret_cast<void*>(detail::accessor::get_accessor_ptr(a))}
+    : _ptr{reinterpret_cast<void*>(a.get_pointer())}
   {}
 
   // Only if Space == local_space
@@ -436,7 +431,7 @@ public:
                      Mode,
                      access::target::local,
                      access::placeholder::false_t> a)
-    : _ptr{reinterpret_cast<void*>(detail::accessor::get_accessor_ptr(a))}
+    : _ptr{reinterpret_cast<void*>(a.get_pointer())}
   {}
 
   // Only if Space == constant_space
@@ -451,7 +446,7 @@ public:
                      Mode,
                      access::target::constant_buffer,
                      access::placeholder::false_t> a)
-    : _ptr{reinterpret_cast<void*>(detail::accessor::get_accessor_ptr(a))}
+    : _ptr{reinterpret_cast<void*>(a.get_pointer())}
   {}
 
   // Returns the underlying OpenCL C pointer

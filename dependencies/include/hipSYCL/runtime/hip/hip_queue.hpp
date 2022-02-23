@@ -1,7 +1,7 @@
 /*
  * This file is part of hipSYCL, a SYCL implementation based on CUDA/HIP
  *
- * Copyright (c) 2019 Aksel Alpay
+ * Copyright (c) 2019-2020 Aksel Alpay and contributors
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,28 +30,32 @@
 
 #include "../executor.hpp"
 #include "../inorder_queue.hpp"
-#include "hip_target.hpp"
+#include "../generic/host_timestamped_event.hpp"
+
+#include "hip_instrumentation.hpp"
+
+// Avoid including HIP headers to prevent conflicts with CUDA
+struct ihipStream_t;
 
 namespace hipsycl {
 namespace rt {
-
 
 class hip_queue : public inorder_queue
 {
 public:
   hip_queue(device_id dev);
 
-  hipStream_t get_stream() const;
+  ihipStream_t* get_stream() const;
 
   virtual ~hip_queue();
 
   /// Inserts an event into the stream
   virtual std::shared_ptr<dag_node_event> insert_event() override;
 
-  virtual result submit_memcpy(const memcpy_operation&, dag_node_ptr) override;
-  virtual result submit_kernel(const kernel_operation&, dag_node_ptr) override;
-  virtual result submit_prefetch(const prefetch_operation &, dag_node_ptr) override;
-  virtual result submit_memset(const memset_operation&, dag_node_ptr) override;
+  virtual result submit_memcpy(memcpy_operation&, dag_node_ptr) override;
+  virtual result submit_kernel(kernel_operation&, dag_node_ptr) override;
+  virtual result submit_prefetch(prefetch_operation &, dag_node_ptr) override;
+  virtual result submit_memset(memset_operation&, dag_node_ptr) override;
   
   /// Causes the queue to wait until an event on another queue has occured.
   /// the other queue must be from the same backend
@@ -62,11 +66,16 @@ public:
   virtual void* get_native_type() const override;
 
   virtual module_invoker* get_module_invoker() override;
+
+  const host_timestamped_event& get_timing_reference() const {
+    return _reference_event;
+  }
 private:
   void activate_device() const;
-  
+
   device_id _dev;
-  hipStream_t _stream;
+  ihipStream_t* _stream;
+  host_timestamped_event _reference_event;
 };
 
 }

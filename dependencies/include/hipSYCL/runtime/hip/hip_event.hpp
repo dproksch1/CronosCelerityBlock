@@ -1,7 +1,7 @@
 /*
  * This file is part of hipSYCL, a SYCL implementation based on CUDA/HIP
  *
- * Copyright (c) 2019 Aksel Alpay
+ * Copyright (c) 2019-2020 Aksel Alpay and contributors
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,28 +29,28 @@
 #define HIPSYCL_HIP_EVENT_HPP
 
 #include "../event.hpp"
-#include "hip_target.hpp"
+
+struct ihipEvent_t;
 
 namespace hipsycl {
 namespace rt {
 
-/// Manages a hipEvent_t.
+
 class hip_node_event : public dag_node_event
 {
 public:
-  /// Takes ownership of supplied hipEvent_t. \c evt Must
-  /// have been properly initialized and recorded.
-  hip_node_event(device_id dev, hipEvent_t evt);
+  /// \c evt Must have been properly initialized and recorded.
+  hip_node_event(device_id dev, ihipEvent_t* evt);
   ~hip_node_event();
 
   virtual bool is_complete() const override;
   virtual void wait() override;
 
-  hipEvent_t get_event() const;
+  ihipEvent_t* get_event() const;
   device_id get_device() const;
 private:
   device_id _dev;
-  hipEvent_t _evt;
+  ihipEvent_t* _evt;
 };
 
 }
