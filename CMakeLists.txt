@@ -138,7 +138,7 @@ set(SOURCES
 
     #cronos_block/utils/celerity_test.C
 )
-
+message("p1\n")
 FILE(GLOB_RECURSE HEADERS "*.h")
 
 add_executable(proj ${SOURCES} cronos_block/general/proj.C ${HEADERS})
@@ -147,7 +147,7 @@ add_executable(proj ${SOURCES} cronos_block/general/proj.C ${HEADERS})
 set_property(TARGET proj PROPERTY CXX_STANDARD 17)
 
 # properly set up SYCL compiler in case of hipSYCL
-
+message("p2\n")
 set(DEVICE_SOURCES "")
 if(CELERITY_SYCL_IMPL STREQUAL "hipSYCL")
   # For hipSYCL we have to pass all source files into add_sycl_to_target
@@ -161,12 +161,13 @@ add_sycl_to_target(TARGET proj SOURCES ${DEVICE_SOURCES})
 if(NOT MSVC)
 	target_link_libraries(proj PRIVATE stdc++fs)
 endif()
-
+message("p3\n")
 target_link_libraries(proj PUBLIC ${CRONOSNUMLIB_MATRIX} ${CRONOSNUMLIB_UTIL})
 target_link_libraries(proj PRIVATE ${MPI_C_LIBRARIES})
+message("p4\n")
 target_link_libraries(proj PRIVATE GSL::gsl GSL::gslcblas)
 target_link_libraries(proj PRIVATE ${HDF5_LIBRARIES})
-
+message("p5\n")
 #########
 # TESTS #
 #########
