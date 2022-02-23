@@ -10,6 +10,9 @@
 cmake_minimum_required (VERSION 3.16.3)
 include(FindPackageHandleStandardArgs)
 
+SET(CMAKE_FIND_LIBRARY_PREFIXES "lib")
+SET(CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".a")
+
 macro(CRONOSNUMLIB_REPORT_NOT_FOUND REASON_MSG)
     unset(CRONOSNUMLIB_FOUND)
     unset(CRONOSNUMLIB_INCLUDE_DIR)
@@ -57,14 +60,14 @@ find_path(CRONOSNUMLIB_INCLUDE_DIR
   NO_DEFAULT_PATH
 )
 
-find_path(CRONOSNUMLIB_MATRIX
-  "libmatrix_mt.a"
+find_library(CRONOSNUMLIB_MATRIX
+  matrix_mt
   HINTS ${CRONOSNUMLIB_CHECK_LIBRARY_DIRS}
   NO_DEFAULT_PATH
 )
 
 find_library(CRONOSNUMLIB_UTIL
-  "libutil_mt.a"
+  util_mt
   HINTS ${CRONOSNUMLIB_CHECK_LIBRARY_DIRS}
   NO_DEFAULT_PATH
 )
