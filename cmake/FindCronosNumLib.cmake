@@ -33,6 +33,7 @@ list(APPEND CRONOSNUMLIB_CHECK_INCLUDE_DIRS
   /opt/local/include
   /usr/include
   ${CMAKE_CURRENT_SOURCE_DIR}/../external/CronosNumLib/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/include
   )
 
 list(APPEND CRONOSNUMLIB_CHECK_LIBRARY_DIRS
@@ -52,13 +53,13 @@ find_path(CRONOSNUMLIB_INCLUDE_DIR
 )
 
 find_library(CRONOSNUMLIB_MATRIX
-  "CronosNumLib/Linux-amd64/libmatrix_mt.a"
+  "libmatrix_mt.a"
   PATHS ${CRONOSNUMLIB_CHECK_LIBRARY_DIRS}
   NO_DEFAULT_PATH
 )
 
 find_library(CRONOSNUMLIB_UTIL
-  "CronosNumLib/Linux-amd64/libutil_mt.a"
+  "libutil_mt.a"
   PATHS ${CRONOSNUMLIB_CHECK_LIBRARY_DIRS}
   NO_DEFAULT_PATH
 )
