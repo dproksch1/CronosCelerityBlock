@@ -22,7 +22,7 @@ macro(CRONOSNUMLIB_REPORT_NOT_FOUND REASON_MSG)
         message(FATAL_ERROR "Failed to find CronosNumLib - " ${REASON_MSG} ${ARGN})
     else()
         message("-- Failed to find CronosNumLib - " ${REASON_MSG} ${ARGN})
-        message(${CMAKE_CURRENT_SOURCE_DIR} "/dependencies/include/CronosNumLib/Linux-amd64/libmatrix_mt.a")
+        message(${CMAKE_CURRENT_SOURCE_DIR} "/dependencies/lib/CronosNumLib/Linux-amd64/libmatrix_mt.a")
     endif()
 endmacro(CRONOSNUMLIB_REPORT_NOT_FOUND)
 
@@ -38,12 +38,18 @@ list(APPEND CRONOSNUMLIB_CHECK_INCLUDE_DIRS
 
 list(APPEND CRONOSNUMLIB_CHECK_LIBRARY_DIRS
   /usr/local/lib
+  /usr/local/lib/CronosNumLib/Linux-amd64
   /usr/local/homebrew/lib
+  /usr/local/homebrew/lib/CronosNumLib/Linux-amd64
   /opt/local/lib
+  /opt/local/lib/CronosNumLib/Linux-amd64
   /usr/lib
+  /usr/lib/CronosNumLib/Linux-amd64
   /usr/lib/x86_64-linux-gnu
+  /usr/lib/x86_64-linux-gnu/CronosNumLib/Linux-amd64
   ${CMAKE_CURRENT_SOURCE_DIR}/../external/CronosNumLib/lib
   ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib
+  ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib/CronosNumLib/Linux-amd64
   )
 
 find_path(CRONOSNUMLIB_INCLUDE_DIR
@@ -54,13 +60,13 @@ find_path(CRONOSNUMLIB_INCLUDE_DIR
 
 find_library(CRONOSNUMLIB_MATRIX
   "libmatrix_mt.a"
-  PATHS ${CRONOSNUMLIB_CHECK_LIBRARY_DIRS}
+  HINTS ${CRONOSNUMLIB_CHECK_LIBRARY_DIRS}
   NO_DEFAULT_PATH
 )
 
 find_library(CRONOSNUMLIB_UTIL
   "libutil_mt.a"
-  PATHS ${CRONOSNUMLIB_CHECK_LIBRARY_DIRS}
+  HINTS ${CRONOSNUMLIB_CHECK_LIBRARY_DIRS}
   NO_DEFAULT_PATH
 )
 
