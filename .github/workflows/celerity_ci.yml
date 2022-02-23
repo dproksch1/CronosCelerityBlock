@@ -37,6 +37,7 @@ jobs:
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: |
         find /usr -name celerity-config.cmake
+        echo 'break'
         cmake -B ./build_block -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="./dependencies/bin;./dependencies/include;./dependencies/lib/;./dependencies/lib/cmake;./dependencies/lib/CronosNumLib;./dependencies/include/CronosNumLib;/usr/include/openmpi-x86_64;/usr/lib/cmake"
 
     - name: Build
