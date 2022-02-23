@@ -22,7 +22,6 @@ macro(CRONOSNUMLIB_REPORT_NOT_FOUND REASON_MSG)
         message(FATAL_ERROR "Failed to find CronosNumLib - " ${REASON_MSG} ${ARGN})
     else()
         message("-- Failed to find CronosNumLib - " ${REASON_MSG} ${ARGN})
-        message(${CMAKE_CURRENT_SOURCE_DIR} "/dependencies/lib/CronosNumLib/Linux-amd64/libmatrix_mt.a")
     endif()
 endmacro(CRONOSNUMLIB_REPORT_NOT_FOUND)
 
@@ -50,6 +49,7 @@ list(APPEND CRONOSNUMLIB_CHECK_LIBRARY_DIRS
   ${CMAKE_CURRENT_SOURCE_DIR}/../external/CronosNumLib/lib
   ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib
   ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib/CronosNumLib/Linux-amd64
+  /home/cirunner/actions-runner/_work/CronosCelerityBlock/CronosCelerityBlock/dependencies/lib/CronosNumLib/Linux-amd64
   )
 
 find_path(CRONOSNUMLIB_INCLUDE_DIR
