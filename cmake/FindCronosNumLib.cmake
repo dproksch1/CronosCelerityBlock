@@ -33,7 +33,6 @@ list(APPEND CRONOSNUMLIB_CHECK_INCLUDE_DIRS
   /opt/local/include
   /usr/include
   ${CMAKE_CURRENT_SOURCE_DIR}/../external/CronosNumLib/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/include
   )
 
 list(APPEND CRONOSNUMLIB_CHECK_LIBRARY_DIRS
