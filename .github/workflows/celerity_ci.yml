@@ -42,7 +42,9 @@ jobs:
 
     - name: Build
       # Build your program with the given configuration
-      run: cmake --build ./build_block --config Release
+      run: |
+        LD_LIBRARY_PATH="./dependencies/lib" cmake
+        cmake --build ./build_block --config Release
 
     - name: Test
       working-directory: ${{github.workspace}}/build
