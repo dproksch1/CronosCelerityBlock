@@ -146,7 +146,7 @@ add_executable(proj ${SOURCES} cronos_block/general/proj.C ${HEADERS})
 #add_executable(proj ${SOURCES} test/proj.C ${HEADERS})
 
 set_property(TARGET proj PROPERTY CXX_STANDARD 17)
-set_property(TARGET proj PROPERTY POSITION_INDEPENDENT_CODE FALSE)
+set_property(TARGET proj PROPERTY POSITION_INDEPENDENT_CODE TRUE)
 
 # properly set up SYCL compiler in case of hipSYCL
 
