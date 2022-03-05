@@ -50,9 +50,9 @@ jobs:
       run: |
         ctest .
     
-    - name: Print Output File
+    - name: Print Error File
       if: failure()
       working-directory: ${{github.workspace}}/build_block
       run: |
-        cat ./CMakeFiles/CMakeOutput.log
+        cat ./CMakeFiles/CMakeError.log
       
