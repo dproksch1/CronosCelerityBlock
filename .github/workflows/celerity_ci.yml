@@ -54,6 +54,8 @@ jobs:
       if: failure()
       working-directory: ${{github.workspace}}/build_block
       run: |
+        cd CMakeFiles
         ls
+        cd ..
         cat ./CMakeFiles/CMakeError.log
       
