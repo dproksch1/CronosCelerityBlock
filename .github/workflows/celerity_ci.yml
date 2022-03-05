@@ -44,11 +44,9 @@ jobs:
         cmake --build ./build_block --config Release
 
     - name: Test
-      working-directory: ${{github.workspace}}/build
+      working-directory: ${{github.workspace}}/build_block
       # Execute tests defined by the CMake configuration.  
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: |
-        cd build_block
         ctest .
-        cd ..
       
