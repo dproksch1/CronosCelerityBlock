@@ -3,7 +3,7 @@ project (CronosCodeBlock C CXX)
 enable_language(Fortran)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_VERBOSE_MAKEFILE ON)
+#set(CMAKE_VERBOSE_MAKEFILE ON)
 
 ##################
 # Compiler Setup #
@@ -39,10 +39,14 @@ endif()
 ############################
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+include(ExternalProject)
 find_package(GSL REQUIRED)
 find_package(MPI REQUIRED)
 find_package(HDF5 REQUIRED COMPONENTS C) # CXX HL
-find_package(CronosNumLib REQUIRED)
+
+if(NOT directCNLincl)
+  find_package(CronosNumLib REQUIRED)
+endif()
 
 # SYCL-specific dependency setup
 
@@ -90,7 +94,13 @@ endif()
 
 include_directories(${HDF5_INCLUDE_DIRS})
 include_directories(${GSL_INCLUDE_DIRS})
-include_directories(${CRONOSNUMLIB_INCLUDE_DIR}/CronosNumLib)
+
+
+if(directCNLincl)
+  add_subdirectory(external/CronosNumLib)
+else()
+  include_directories(${CRONOSNUMLIB_INCLUDE_DIR}/CronosNumLib)
+endif()
 
 include_directories(cronos_block/test)
 include_directories(cronos_block/general)
@@ -101,6 +111,11 @@ include_directories(cronos_block/reconstruction)
 include_directories(cronos_block/utils)
 include_directories(cronos_block/configuration/ShockTubeSod)
 include_directories(cronos_block/configuration/standalone/cronos_block)
+
+if(directCNLincl)
+  include_directories(external/CronosNumLib/Matrix)
+  include_directories(external/CronosNumLib/util)
+endif()
 
 set(SOURCES
     cronos_block/general/buildinfo.C
@@ -146,7 +161,7 @@ add_executable(proj ${SOURCES} cronos_block/general/proj.C ${HEADERS})
 #add_executable(proj ${SOURCES} test/proj.C ${HEADERS})
 
 set_property(TARGET proj PROPERTY CXX_STANDARD 17)
-set_property(TARGET proj PROPERTY POSITION_INDEPENDENT_CODE TRUE)
+set_property(TARGET proj PROPERTY POSITION_INDEPENDENT_CODE FALSE)
 
 # properly set up SYCL compiler in case of hipSYCL
 
@@ -164,7 +179,11 @@ if(NOT MSVC)
 	target_link_libraries(proj PRIVATE stdc++fs)
 endif()
 
-target_link_libraries(proj PUBLIC ${CRONOSNUMLIB_MATRIX} ${CRONOSNUMLIB_UTIL})
+if(directCNLincl)
+  target_link_libraries(proj PRIVATE matrix util)
+else()
+  target_link_libraries(proj PUBLIC ${CRONOSNUMLIB_MATRIX} ${CRONOSNUMLIB_UTIL})
+endif()
 target_link_libraries(proj PRIVATE ${MPI_C_LIBRARIES})
 target_link_libraries(proj PRIVATE GSL::gsl GSL::gslcblas)
 target_link_libraries(proj PRIVATE ${HDF5_LIBRARIES})

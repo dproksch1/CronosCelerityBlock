@@ -2,7 +2,7 @@
 #define CRONOS_DATA_H = 1
 
 #include <map>
-#include <matrix.H>
+#include "matrix.H"
 #ifdef _MSC_VER
 #include "timewrapper.H"
 #else
