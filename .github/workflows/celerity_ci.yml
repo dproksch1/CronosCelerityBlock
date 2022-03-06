@@ -34,8 +34,6 @@ jobs:
 
     - name: Find hipSYCL & Celerity
       run: |
-        echo 'hipSYCL'
-        find / -name sycl.hpp
         echo 'celerity'
         find / -name celerity-config.cmake
 
