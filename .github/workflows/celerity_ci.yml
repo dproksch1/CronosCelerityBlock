@@ -35,9 +35,9 @@ jobs:
     - name: Find hipSYCL & Celerity
       run: |
         echo 'hipSYCL'
-        find /usr -name sycl.hpp
+        find / -name sycl.hpp
         echo 'celerity'
-        find /usr -name celerity-config.cmake
+        find / -name celerity-config.cmake
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
