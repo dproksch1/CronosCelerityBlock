@@ -10,15 +10,15 @@ class ShockTubeTestHydro: public ProblemType {
 public:
 	ShockTubeTestHydro(const Data &);
 	virtual void init_fields(Data &, int [], int []);
-	void bc_User(Data &, NumMatrix<REAL,3> &, int, int, int, int);
+	void bc_User(Data &, NumMatrix<double,3> &, int, int, int, int);
 	void WriteToH5(Hdf5Stream &);
 private:
-	REAL rhoLInit, rhoRInit;
-	REAL v0LInit, v0RInit;
-	REAL VLXInit, VLYInit, VLZInit;
-	REAL VRXInit, VRYInit, VRZInit;
-	REAL PLInit, PRInit;
-	REAL shockpos;
+	double rhoLInit, rhoRInit;
+	double v0LInit, v0RInit;
+	double VLXInit, VLYInit, VLZInit;
+	double VRXInit, VRYInit, VRZInit;
+	double PLInit, PRInit;
+	double shockpos;
 	int shockdir;
 	bool isothermal;
 };
@@ -88,15 +88,15 @@ ShockTubeTestHydro::ShockTubeTestHydro(const Data &gdata) : ProblemType(gdata) {
 
 void ShockTubeTestHydro::init_fields(Data &gdata, int ibeg[3], int iend[3])
 {
-	REAL xPar;
+	double xPar;
 	// gdata.om[q_Eges].rename("Temp");
 
 	for (int k = ibeg[2]; k <= iend[2]; k++){
-		REAL zz = gdata.getCen_z(k);
+		double zz = gdata.getCen_z(k);
 		for (int j = ibeg[1]; j <= iend[1]; j++){
-			REAL yy = gdata.getCen_y(j);
+			double yy = gdata.getCen_y(j);
 			for (int i = ibeg[0]; i <= iend[0]; i++){
-				REAL xx = gdata.getCen_x(i);
+				double xx = gdata.getCen_x(i);
 
 				if(shockdir == 0){
 					xPar = xx;
@@ -145,7 +145,7 @@ void ShockTubeTestHydro::init_fields(Data &gdata, int ibeg[3], int iend[3])
 
 
 
-void ShockTubeTestHydro::bc_User(Data &gdata, NumMatrix<REAL,3> &omb,
+void ShockTubeTestHydro::bc_User(Data &gdata, NumMatrix<double,3> &omb,
 		int dir, int top, int q, int rim) {
 	if(dir == 0) {
 		if(top == 1) {

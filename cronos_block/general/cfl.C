@@ -2,14 +2,14 @@
 
 using namespace std;
 
-REAL HyperbolicSolver::compute_cfl(Data &gdata, ProblemType &Problem,
-                                   REAL cfl_eta, REAL cfl_lin, int n) {
+double HyperbolicSolver::compute_cfl(Data &gdata, ProblemType &Problem,
+                                   double cfl_eta, double cfl_lin, int n) {
 
 	if(cfl_eta > cfl_lin && n == TIME_SUBSTEPS-1 &&
 	   Problem.get_Info() && gdata.rank == 0) {
 		cout << " Timestep given by dissipation " << endl;
 	}
-	REAL cfl = std::max(cfl_eta,cfl_lin);
+	double cfl = std::max(cfl_eta,cfl_lin);
 
 #ifdef DTCOMP_OLD
 	cfl *= gdata.dt;

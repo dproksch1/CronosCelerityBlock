@@ -37,29 +37,29 @@ public:
 	virtual void getConstants_fromH5(Data &, Hdf5iStream &h5in);//not_used (keep)
 	virtual void init(Data &, gridFunc &, ProblemType &);//used
 	virtual void restart(Data &, gridFunc &, ProblemType &);//not used (could be eliminated, maybe keep)
-	virtual REAL singlestep(Data &, gridFunc &, ProblemType &, int, Queue&);
+	virtual double singlestep(Data &, gridFunc &, ProblemType &, int, Queue&);
 	virtual void phystest(Data &, gridFunc &, ProblemType &, int, int iFluid=0);//used
 
 private:
 	void init_general(Data &, gridFunc &, ProblemType &);//used
-	REAL compute_cfl(Data &, ProblemType &, REAL, REAL, int);
+	double compute_cfl(Data &, ProblemType &, double, double, int);
 	void gen_MagBoundValues(Data &, gridFunc &, ProblemType &);//not used (keep if you keep restart)
 	/**Compute magnetic field from vector potential
 	 * @PARAM initial_setup indicated if computation is done for the first time ->
 	 * to be used e.g. by TransPot2Mag
 	 * */
 	void compute_B(Data &, gridFunc &, ProblemType &, bool initial_setup=false);//not used
-	REAL compute_divB(Data &, gridFunc &, ProblemType &);//not used
-	REAL compute_divB(Data &, gridFunc &, ProblemType &, NumMatrix<double,3> &);//not used
+	double compute_divB(Data &, gridFunc &, ProblemType &);//not used
+	double compute_divB(Data &, gridFunc &, ProblemType &, NumMatrix<double,3> &);//not used
 	void CheckNan(NumMatrix<double,3> &, int, int, int, string);//used
 	void TransPot2Mag(Data &, gridFunc &, ProblemType &); //not used
 	void TransMag2Pot(Data &, gridFunc &, ProblemType &); //not used
-	void ComputeChecksumA(Data &, REAL []); //not used
-	REAL power(double, int); //not used
-	inline REAL pressure(const REAL &);
-	inline REAL pressure(REAL, REAL, REAL, REAL, REAL);
-	inline REAL pressure(Data &, ProblemType &, const REAL &,
-	                     const REAL &, const REAL &, const REAL &);
+	void ComputeChecksumA(Data &, double []); //not used
+	double power(double, int); //not used
+	inline double pressure(const double &);
+	inline double pressure(double, double, double, double, double);
+	inline double pressure(Data &, ProblemType &, const double &,
+	                     const double &, const double &, const double &);
 	void UserEquations(const Data &);
 	void set_UserPde(const Data &);
 	void set_TimeIntegrator(const Data &, gridFunc &); //used
@@ -69,16 +69,16 @@ private:
 
 	//	int Fluid_Type;
 
-	REAL yama;
-	REAL rho0;
-	REAL c2_iso, denomPres;
-	REAL Mass0, Eges0, mv0[3], BAve0[3];
-	REAL ChecksumA[3];
-	REAL rhomin, Ethmin, vmax;
-	REAL Ekin_tave, Emag_tave, Etherm_tave, Eges_tave;
-	REAL Ekfluc_tave, Ebfluc_tave, Vorticity_tave, Enstrophy_tave;
-	REAL cs_tave, v2ave_tave;
-	REAL time_ave;
+	double yama;
+	double rho0;
+	double c2_iso, denomPres;
+	double Mass0, Eges0, mv0[3], BAve0[3];
+	double ChecksumA[3];
+	double rhomin, Ethmin, vmax;
+	double Ekin_tave, Emag_tave, Etherm_tave, Eges_tave;
+	double Ekfluc_tave, Ebfluc_tave, Vorticity_tave, Enstrophy_tave;
+	double cs_tave, v2ave_tave;
+	double time_ave;
 
 	int thermal;
 	int TempNeg;
@@ -96,8 +96,8 @@ private:
 	std::unique_ptr<EquationOfState> eos;
 	std::unique_ptr<SourceTerms> sources;
 	std::unique_ptr<Transformations> Trafo;
-	NumMatrix<REAL,3> *v_max_p;
-	NumMatrix<REAL,3> *v_max_m;
+	NumMatrix<double,3> *v_max_p;
+	NumMatrix<double,3> *v_max_m;
 	// For the new solver:
 	std::vector<std::unique_ptr<RiemannSolver>> Riemann;
 	

@@ -3,10 +3,10 @@
 
 #include <matrix.H>
 
-#define REAL double
+//#define REAL double
 
 #ifndef DATA_TYPE
-#define DATA_TYPE REAL
+#define DATA_TYPE double
 #define REAL_FLAG
 #endif
 

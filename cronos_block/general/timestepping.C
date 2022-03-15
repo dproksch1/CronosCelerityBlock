@@ -3,7 +3,7 @@
 TimeIntegrator::TimeIntegrator(const int n_saves):
 	n_saves(n_saves)
 {
-	om_save = new NumMatrix<REAL, DIM>[n_saves];
+	om_save = new NumMatrix<double, DIM>[n_saves];
 }
 
 
@@ -46,7 +46,7 @@ void TimeIntegrator::save_data(const Pot om[], const int substep)
 
 
 
-REAL TimeIntegrator::get_dt(Data & gdata, const int substep)
+double TimeIntegrator::get_dt(Data & gdata, const int substep)
 {
 	if (substep == TIME_SUBSTEPS - 1)	return gdata.dt;
 	else return 0.;
@@ -64,7 +64,7 @@ RKSteps::RKSteps():
 }
 
 
-REAL RKSteps::get_dt(Data & gdata, const int substep)
+double RKSteps::get_dt(Data & gdata, const int substep)
 {
 #if (RK_STEPS == 3)
 	if 		(substep == 0) 	return gdata.dt;
@@ -78,7 +78,7 @@ REAL RKSteps::get_dt(Data & gdata, const int substep)
 
 
 void RKSteps::Substep(const Data &gdata, ProblemType &Problem,
-                      NumMatrix<REAL, 3> &nom,
+                      NumMatrix<double, 3> &nom,
                       Pot om[], const int substep) {
 
 #if  (RK_STEPS == 3)
@@ -104,8 +104,8 @@ void RKSteps::Substep(const Data &gdata, ProblemType &Problem,
 			}
 		}
 	} else {
-		REAL twth   = 2./3.;
-		REAL twthdt = twth*gdata.dt;
+		double twth   = 2./3.;
+		double twthdt = twth*gdata.dt;
 		
 		for (int k = ibeg[2]; k <= iend[2]; ++k){
 			for (int j = ibeg[1]; j <= iend[1]; ++j){
@@ -168,7 +168,7 @@ VanLeerIntegrator::VanLeerIntegrator():
 }
 
 
-REAL VanLeerIntegrator::get_dt(Data & gdata, const int substep)
+double VanLeerIntegrator::get_dt(Data & gdata, const int substep)
 {
 	if 		(substep == 0)	return 0.5 * gdata.dt;
 	else if	(substep == 1)	return 0.5 * gdata.dt;
@@ -177,7 +177,7 @@ REAL VanLeerIntegrator::get_dt(Data & gdata, const int substep)
 }
 
 void VanLeerIntegrator::Substep(const Data &gdata, ProblemType &Problem,
-                      NumMatrix<REAL, 3> &nom,
+                      NumMatrix<double, 3> &nom,
                       Pot om[], const int substep) {
 	if (substep == 0) {
 		save_data(om, 0);

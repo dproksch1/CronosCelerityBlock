@@ -11,18 +11,18 @@
 class EquationOfState {
 public:
 	EquationOfState(const ProblemType &);
-	inline REAL pressure(const REAL &, const REAL &, const REAL &,
-	                     const REAL &);
-	inline REAL pressure(const Data &, const ProblemType &, REAL, REAL, REAL, REAL) const;
+	inline double pressure(const double &, const double &, const double &,
+	                     const double &);
+	inline double pressure(const Data &, const ProblemType &, double, double, double, double) const;
 protected:
-	REAL eps, gamma, half_beta, denominator;
+	double eps, gamma, half_beta, denominator;
 };
 
 
 
 
-inline REAL EquationOfState::pressure(const Data &gdata, const ProblemType &Problem,
-                                      REAL dens, REAL i, REAL j, REAL k) const
+inline double EquationOfState::pressure(const Data &gdata, const ProblemType &Problem,
+                                      double dens, double i, double j, double k) const
 {
 #ifdef SOUND
 	if(gamma != 1.){
@@ -40,11 +40,11 @@ inline REAL EquationOfState::pressure(const Data &gdata, const ProblemType &Prob
 }
 
 
-inline REAL EquationOfState::pressure(const REAL &rhoinv, const REAL &psq,
-                                      const REAL &Bsq, const REAL &Energy)
+inline double EquationOfState::pressure(const double &rhoinv, const double &psq,
+                                      const double &Bsq, const double &Energy)
 {
 	assert(gamma != 1);
-	REAL PresVal= (gamma-1)*(Energy - 0.5*psq*rhoinv - 0.5*Bsq);
+	double PresVal= (gamma-1)*(Energy - 0.5*psq*rhoinv - 0.5*Bsq);
 
 	if (PresVal < 0.){
 		PresVal = eps;

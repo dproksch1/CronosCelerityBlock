@@ -16,7 +16,7 @@
 
 using namespace std;
 
-REAL HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
+double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
                                   ProblemType &Problem, int n, Queue& queue)
 {
   //! Block structured version of singlestep
@@ -55,7 +55,7 @@ REAL HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 // Relevant declarations
 // ----------------------------------------------------------------
 
-//	nom = new NumMatrix<REAL,3> [n_omInt];
+//	nom = new NumMatrix<double,3> [n_omInt];
 //	for (int q = 0; q < n_omInt; ++q) {
 //#if (FLUID_TYPE == CRONOS_MHD)
 //		if((gdata.om[q].getName() == "B_x" ||
@@ -78,7 +78,7 @@ REAL HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	// Prepare user fields if necessary
 	#if (OMS_USER == TRUE)
 
-//	nom_user = new NumMatrix<REAL,3> [n_omIntUser];
+//	nom_user = new NumMatrix<double,3> [n_omIntUser];
 //	for (int q = 0; q < n_omIntUser; ++q) {
 //		nom_user[q].resize(Index::set(0,0,0),
 //		                   Index::set(gdata.mx[0],gdata.mx[1],gdata.mx[2]));
@@ -153,7 +153,7 @@ REAL HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		Riemann[DirX]->compute_carbuncleFlag(gdata);
 	}
 
-	REAL cfl_lin(0.), cfl_eta(0.);
+	double cfl_lin(0.), cfl_eta(0.);
 
 	// range of ghost cells
 	int n_ghost[3];
@@ -188,51 +188,51 @@ REAL HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	// TODO PHILGS: we need to specify a direction here, not sure whether it is used...
 	Reconstruction_Block reconst(gdata, 0, gdata.fluid);
 
-	//cronos::vector<REAL> pos(0,0,0);
+	//cronos::vector<double> pos(0,0,0);
 	//cronos::vector<int> ipos(0,0,0);
 
 	int n_omInt = gdata.fluid.get_N_OMINT();
-	//NumArray<REAL> uPriOld_E(n_omInt);
-	//NumArray<REAL> flux_numOld_E(n_omInt);
+	//NumArray<double> uPriOld_E(n_omInt);
+	//NumArray<double> flux_numOld_E(n_omInt);
 	
 	// TODO PHILGS: this variable was uninitialized
 	//double ptotalOld_E = 0.0;
 
-	//NumMatrix<REAL,2> uPriOld_N(Index::set(0,-n_ghost[0]), Index::set(n_omInt,gdata.mx[0]+n_ghost[0]));
-	//NumMatrix<REAL,2> uPriCurr_N(Index::set(0,-n_ghost[0]), Index::set(n_omInt,gdata.mx[0]+n_ghost[0]));
-	//NumMatrix<REAL,2> flux_numOld_N(Index::set(0,-n_ghost[0]), Index::set(n_omInt,gdata.mx[0]+n_ghost[0]));
-	//NumMatrix<REAL,2> flux_numCurr_N(Index::set(0,-n_ghost[0]), Index::set(n_omInt,gdata.mx[0]+n_ghost[0]));
-	//NumMatrix<REAL,1> ptotalOld_N(Index::set(-n_ghost[0]), Index::set(gdata.mx[0]+n_ghost[0]));
-	//NumMatrix<REAL,1> ptotalCurr_N(Index::set(-n_ghost[0]), Index::set(gdata.mx[0]+n_ghost[0]));
+	//NumMatrix<double,2> uPriOld_N(Index::set(0,-n_ghost[0]), Index::set(n_omInt,gdata.mx[0]+n_ghost[0]));
+	//NumMatrix<double,2> uPriCurr_N(Index::set(0,-n_ghost[0]), Index::set(n_omInt,gdata.mx[0]+n_ghost[0]));
+	//NumMatrix<double,2> flux_numOld_N(Index::set(0,-n_ghost[0]), Index::set(n_omInt,gdata.mx[0]+n_ghost[0]));
+	//NumMatrix<double,2> flux_numCurr_N(Index::set(0,-n_ghost[0]), Index::set(n_omInt,gdata.mx[0]+n_ghost[0]));
+	//NumMatrix<double,1> ptotalOld_N(Index::set(-n_ghost[0]), Index::set(gdata.mx[0]+n_ghost[0]));
+	//NumMatrix<double,1> ptotalCurr_N(Index::set(-n_ghost[0]), Index::set(gdata.mx[0]+n_ghost[0]));
 
-	//NumMatrix<REAL,3> uPriOld_T(Index::set(0,-n_ghost[0],-n_ghost[1]), Index::set(n_omInt,gdata.mx[0]+n_ghost[0],gdata.mx[1]+n_ghost[1]));
-	//NumMatrix<REAL,3> uPriCurr_T(Index::set(0,-n_ghost[0],-n_ghost[1]), Index::set(n_omInt,gdata.mx[0]+n_ghost[0],gdata.mx[1]+n_ghost[1]));
-	//NumMatrix<REAL,3> flux_numOld_T(Index::set(0,-n_ghost[0],-n_ghost[1]), Index::set(n_omInt,gdata.mx[0]+n_ghost[0],gdata.mx[1]+n_ghost[1]));
-	//NumMatrix<REAL,3> flux_numCurr_T(Index::set(0,-n_ghost[0],-n_ghost[1]), Index::set(n_omInt,gdata.mx[0]+n_ghost[0],gdata.mx[1]+n_ghost[1]));
-	//NumMatrix<REAL,2> ptotalOld_T(Index::set(-n_ghost[0],-n_ghost[1]), Index::set(gdata.mx[0]+n_ghost[0],gdata.mx[1]+n_ghost[1]));
-	//NumMatrix<REAL,2> ptotalCurr_T(Index::set(-n_ghost[0],-n_ghost[1]), Index::set(gdata.mx[0]+n_ghost[0],gdata.mx[1]+n_ghost[1]));
+	//NumMatrix<double,3> uPriOld_T(Index::set(0,-n_ghost[0],-n_ghost[1]), Index::set(n_omInt,gdata.mx[0]+n_ghost[0],gdata.mx[1]+n_ghost[1]));
+	//NumMatrix<double,3> uPriCurr_T(Index::set(0,-n_ghost[0],-n_ghost[1]), Index::set(n_omInt,gdata.mx[0]+n_ghost[0],gdata.mx[1]+n_ghost[1]));
+	//NumMatrix<double,3> flux_numOld_T(Index::set(0,-n_ghost[0],-n_ghost[1]), Index::set(n_omInt,gdata.mx[0]+n_ghost[0],gdata.mx[1]+n_ghost[1]));
+	//NumMatrix<double,3> flux_numCurr_T(Index::set(0,-n_ghost[0],-n_ghost[1]), Index::set(n_omInt,gdata.mx[0]+n_ghost[0],gdata.mx[1]+n_ghost[1]));
+	//NumMatrix<double,2> ptotalOld_T(Index::set(-n_ghost[0],-n_ghost[1]), Index::set(gdata.mx[0]+n_ghost[0],gdata.mx[1]+n_ghost[1]));
+	//NumMatrix<double,2> ptotalCurr_T(Index::set(-n_ghost[0],-n_ghost[1]), Index::set(gdata.mx[0]+n_ghost[0],gdata.mx[1]+n_ghost[1]));
 
 	// TODO: make this a perfectly nested loop nest, increment dimensions of NumMatrix (4D using std::vector) to always save the full state
 	// TODO: make a second kernel that is 3D and leave the old code as-is
-	//std::vector<Buffer<REAL, 3>> uPriOld(n_omInt);
-	//std::vector<Buffer<REAL, 3>> uPriCur(n_omInt);
-	//std::vector<Buffer<REAL, 3>> flux_numOld(n_omInt);
-	//std::vector<Buffer<REAL, 3>> flux_numCur(n_omInt);
-	//std::vector<Buffer<REAL, 3>> ptotalOld(n_omInt);
-	//std::vector<Buffer<REAL, 3>> ptotalCur(n_omInt);
+	//std::vector<Buffer<double, 3>> uPriOld(n_omInt);
+	//std::vector<Buffer<double, 3>> uPriCur(n_omInt);
+	//std::vector<Buffer<double, 3>> flux_numOld(n_omInt);
+	//std::vector<Buffer<double, 3>> flux_numCur(n_omInt);
+	//std::vector<Buffer<double, 3>> ptotalOld(n_omInt);
+	//std::vector<Buffer<double, 3>> ptotalCur(n_omInt);
 	//for (int q = 0; q < n_omInt; ++q) {
 	//	const int xMax = gdata.mx[0] + n_ghost[0] * 2;
 	//	const int yMax = gdata.mx[1] + n_ghost[1] * 2;
 	//	const int zMax = gdata.mx[2] + n_ghost[2] * 2;
-	//	//uPriOld[q] = Buffer<REAL, 3>(Range<3>(zMax, yMax, xMax));
-	//	uPriCur[q] = Buffer<REAL, 3>(Range<3>(zMax, yMax, xMax));
-	//	//flux_numOld[q] = Buffer<REAL, 3>(Range<3>(zMax, yMax, xMax));
-	//	flux_numCur[q] = Buffer<REAL, 3>(Range<3>(zMax, yMax, xMax));
-	//	//ptotalOld[q] = Buffer<REAL, 3>(Range<3>(zMax, yMax, xMax));
-	//	ptotalCur[q] = Buffer<REAL, 3>(Range<3>(zMax, yMax, xMax));
+	//	//uPriOld[q] = Buffer<double, 3>(Range<3>(zMax, yMax, xMax));
+	//	uPriCur[q] = Buffer<double, 3>(Range<3>(zMax, yMax, xMax));
+	//	//flux_numOld[q] = Buffer<double, 3>(Range<3>(zMax, yMax, xMax));
+	//	flux_numCur[q] = Buffer<double, 3>(Range<3>(zMax, yMax, xMax));
+	//	//ptotalOld[q] = Buffer<double, 3>(Range<3>(zMax, yMax, xMax));
+	//	ptotalCur[q] = Buffer<double, 3>(Range<3>(zMax, yMax, xMax));
 	//}
 
-	//std::vector<Buffer<REAL, 2>> physValsSYCL(gdata.omSYCL.size(), Buffer<REAL, 2>(Range<2>(gpu::FaceMax, gpu::TypeMax)));
+	//std::vector<Buffer<double, 2>> physValsSYCL(gdata.omSYCL.size(), Buffer<double, 2>(Range<2>(gpu::FaceMax, gpu::TypeMax)));
 
 	const int izStart = -n_ghost[2] + 1;
 	const int izEnd = gdata.mx[2] + n_ghost[2] - 1;
@@ -266,7 +266,7 @@ REAL HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	//	});
 	//}
 
-	auto computeStep = [](Reconstruction_Block& reconst, const std::unique_ptr<Transformations>& Trafo, const std::unique_ptr<PhysFluxes>& PhysFlux, const std::vector<std::unique_ptr<RiemannSolver>>& Riemann, const ProblemType& Problem, const std::unique_ptr<EquationOfState>& eos, const Data& gdata, int ix, int iy, int iz, REAL& cfl_lin) {
+	auto computeStep = [](Reconstruction_Block& reconst, const std::unique_ptr<Transformations>& Trafo, const std::unique_ptr<PhysFluxes>& PhysFlux, const std::vector<std::unique_ptr<RiemannSolver>>& Riemann, const ProblemType& Problem, const std::unique_ptr<EquationOfState>& eos, const Data& gdata, int ix, int iy, int iz, double& cfl_lin) {
 
 
 		// Reconstruction at given position
@@ -366,8 +366,8 @@ REAL HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 //   Compute Courant number
 // ----------------------------------------------------------------
 
-	REAL cfl = compute_cfl(gdata, Problem, cfl_eta, cfl_lin, n);
-	//REAL cfl = 0.0;
+	double cfl = compute_cfl(gdata, Problem, cfl_eta, cfl_lin, n);
+	//double cfl = 0.0;
 // ----------------------------------------------------------------
 //   Geometrical source terms:
 // ----------------------------------------------------------------
@@ -540,13 +540,13 @@ REAL HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		gettimeofday(&tstep, 0);
 	}
 
-	REAL delt = ((tock.tv_sec + tock.tv_usec/1.e6) - 
+	double delt = ((tock.tv_sec + tock.tv_usec/1.e6) - 
 	             (tick.tv_sec + tick.tv_usec/1.e6));
 
-	REAL delt2 = ((tock2.tv_sec + tock2.tv_usec/1.e6) - 
+	double delt2 = ((tock2.tv_sec + tock2.tv_usec/1.e6) - 
 	              (tock.tv_sec + tock.tv_usec/1.e6));
 
-	REAL dtStep = ((tstep.tv_sec + tstep.tv_usec/1.e6) -
+	double dtStep = ((tstep.tv_sec + tstep.tv_usec/1.e6) -
 	               (tstepOld.tv_sec + tstepOld.tv_usec/1.e6));
 
 	if(gdata.rank == 0) {

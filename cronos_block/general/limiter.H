@@ -24,7 +24,7 @@ public:
 
 	limiter(const limiter&) = default;
 
-	REAL compute(REAL& up, REAL& uc, REAL& um) const {
+	double compute(double& up, double& uc, double& um) const {
 		return Limiter.compute(up, uc, um);
 		// ugly workaround because there is no noexcept version of std::variant...
 		//if (auto p = std::get_if<minmod>(&Limiter)) {

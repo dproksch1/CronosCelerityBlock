@@ -15,11 +15,11 @@ public:
 	bool isgeneric();
 	int get_num() const;
 
-	NumArray<REAL> uPri;
-	NumArray<REAL> uCon;
-	NumArray<REAL> flux_phys;
+	NumArray<double> uPri;
+	NumArray<double> uCon;
+	NumArray<double> flux_phys;
 #if (USE_COROTATION == CRONOS_ON)
-	NumArray<REAL> uInertial;
+	NumArray<double> uInertial;
 #endif
 
 	double ptotal, ptherm;
@@ -34,9 +34,9 @@ public:
 	num_fields_0D(const Data &, const CronosFluid &fluid);
 	num_fields_0D() {};
 	~num_fields_0D() {};
-	REAL v_ch_p;
-	REAL v_ch_m;
-	NumArray<REAL> flux_num;
+	double v_ch_p;
+	double v_ch_m;
+	NumArray<double> flux_num;
 	double ptotal_num;
 	int carbuncle_flag;
 private:

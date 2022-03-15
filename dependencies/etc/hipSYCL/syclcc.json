@@ -1,0 +1,21 @@
+{
+  "default-clang"     : "",
+  "default-platform"  : "cpu",
+  "default-cuda-path" : "",
+  "default-gpu-arch"  : "",
+  "default-cpu-cxx"   : "/usr/bin/c++",
+  "default-rocm-path" : "/opt/rocm",
+  "default-use-bootstrap-mode" : "false",
+  "default-is-dryrun" : "false",
+  "default-clang-include-path" : "",
+  "default-sequential-link-line" : "-L/lib -lboost_context -lboost_fiber -lomp -Wl,-rpath=/lib",
+  "default-sequential-cxx-flags" : "-I/usr/include",
+  "default-omp-link-line" : "-L/lib -lboost_context -lboost_fiber -Wl,-rpath=/lib -fopenmp",
+  "default-omp-cxx-flags" : "-I/usr/include -fopenmp",
+  "default-rocm-link-line" : "-Wl,-rpath=$HIPSYCL_ROCM_PATH/lib -Wl,-rpath=$HIPSYCL_ROCM_PATH/hip/lib -L/opt/rocm/lib -L/opt/rocm/hip/lib -lamdhip64",
+  "default-rocm-cxx-flags" : "-isystem  -U__FLOAT128__ -U__SIZEOF_FLOAT128__ -I$HIPSYCL_ROCM_PATH/include -I$HIPSYCL_ROCM_PATH/include --rocm-device-lib-path=$HIPSYCL_ROCM_PATH/amdgcn/bitcode --rocm-path=$HIPSYCL_ROCM_PATH -fhip-new-launch-api -D__HIP_ROCclr__",
+  "default-cuda-link-line" : "-Wl,-rpath=$HIPSYCL_CUDA_LIB_PATH -L$HIPSYCL_CUDA_LIB_PATH -lcudart",
+  "default-cuda-cxx-flags" : "-U__FLOAT128__ -U__SIZEOF_FLOAT128__",
+  "default-is-explicit-multipass" : "false",
+  "default-save-temps" : "false"
+}

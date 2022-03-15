@@ -6,43 +6,43 @@
 class Interface_GridFunction {
 public:
 	Interface_GridFunction() {}
-	virtual REAL get_gridFunc(REAL) = 0;
+	virtual double get_gridFunc(double) = 0;
 	virtual ~Interface_GridFunction() {}
 };
 
 
 class GridFunction_Exp: public Interface_GridFunction {
 public:
-	GridFunction_Exp(REAL, REAL, REAL);
-	virtual REAL get_gridFunc(REAL);
-	REAL domain_begin, domain_end, domain_len;
+	GridFunction_Exp(double, double, double);
+	virtual double get_gridFunc(double);
+	double domain_begin, domain_end, domain_len;
 };
 
 
 class GridFunction_Ratio: public Interface_GridFunction {
 public:
-	GridFunction_Ratio(REAL, REAL, REAL);
-	virtual REAL get_gridFunc(REAL);
-	REAL _ref, _min_ratio, _max_ratio;
+	GridFunction_Ratio(double, double, double);
+	virtual double get_gridFunc(double);
+	double _ref, _min_ratio, _max_ratio;
 };
 
 class GridFunction_Percent: public Interface_GridFunction {
 public:
-	GridFunction_Percent(REAL, REAL, REAL, int);
-	virtual REAL get_gridFunc(REAL);
+	GridFunction_Percent(double, double, double, int);
+	virtual double get_gridFunc(double);
 private:
-	REAL _domain_beg;
-	REAL _delta, _increase;
+	double _domain_beg;
+	double _delta, _increase;
 	int _num;
 };
 
 class GridFunction_PercentVar: public Interface_GridFunction {
 public:
-	GridFunction_PercentVar(REAL, REAL, REAL, int);
-	virtual REAL get_gridFunc(REAL);
+	GridFunction_PercentVar(double, double, double, int);
+	virtual double get_gridFunc(double);
 private:
-	REAL _domain_beg;
-	REAL _delta, _increase;
+	double _domain_beg;
+	double _delta, _increase;
 	int _num;
 };
 
@@ -50,16 +50,16 @@ private:
 
 class GridFunction_Log: public Interface_GridFunction {
 public:
-	GridFunction_Log(REAL, REAL);
-	virtual REAL get_gridFunc(REAL);
-	REAL domain_begin, domain_end;
+	GridFunction_Log(double, double);
+	virtual double get_gridFunc(double);
+	double domain_begin, domain_end;
 };
 
 
 class GridFunction_Lin: public Interface_GridFunction {
 public:
 	GridFunction_Lin() {}
-	virtual REAL get_gridFunc(REAL ratio) {return ratio;}
+	virtual double get_gridFunc(double ratio) {return ratio;}
 };
 
 

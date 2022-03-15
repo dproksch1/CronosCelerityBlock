@@ -19,10 +19,10 @@ ProblemType::ProblemType(const Data &gdata) {
 
 #ifdef PHYSDISS
 	this->nu0 = value((char*)"Viscosity");
-	REAL Pm = value((char*)"PrandtlNumber");
+	double Pm = value((char*)"PrandtlNumber");
 	this->eta0  = nu0/Pm;
-	REAL Re = sqrt(cs2)/nu0;
-	REAL ReM = sqrt(cs2)/eta0;
+	double Re = sqrt(cs2)/nu0;
+	double ReM = sqrt(cs2)/eta0;
 
 	cout << endl << " kinetic Reynolds number:   " << Re  << endl;
 	cout << " magnetic Reynolds number:  " << ReM << endl;
@@ -177,7 +177,7 @@ void ProblemType::init_fields(Data &gdata)
 }
 
 
-int ProblemType::get_q(NumMatrix<REAL,3> &omField, string fluidName)
+int ProblemType::get_q(NumMatrix<double,3> &omField, string fluidName)
 {
 	typedef map<std::string, int> stringType;
 #if (USE_COROTATION == CRONOS_ON)
@@ -280,18 +280,18 @@ bool ProblemType::force_min(const int &q) {
 	return false;
 }
 
-REAL ProblemType::max_Val(const int &q) {
+double ProblemType::max_Val(const int &q) {
 	return 1.e99;
 }
 
-REAL ProblemType::min_Val(const int &q) {
+double ProblemType::min_Val(const int &q) {
 	return -1.e99;
 }
 
 
 void ProblemType::computeFluct(Data &gdata, double &ekfluc, double &ebfluc)
 {
-	REAL dV   = gdata.get_CellVolume(0,0,0);
+	double dV   = gdata.get_CellVolume(0,0,0);
 
 	ekfluc = 0.;
 	ebfluc = 0.;
@@ -311,27 +311,27 @@ void ProblemType::computeFluct(Data &gdata, double &ekfluc, double &ebfluc)
 }
 
 
-REAL ProblemType::eta(Data &gdata,
-                      const REAL &ii, const REAL &jj, const REAL &kk)
+double ProblemType::eta(Data &gdata,
+                      const double &ii, const double &jj, const double &kk)
 {
 	return eta0;
 }
 
-REAL ProblemType::nu(Data &gdata,
-                     const REAL &ii, const REAL &jj, const REAL &kk)
+double ProblemType::nu(Data &gdata,
+                     const double &ii, const double &jj, const double &kk)
 {
 	return nu0;
 }
 
-REAL ProblemType::c2_iso(const Data &gdata,
-                         const REAL &/*ii*/, const REAL &/*jj*/, const REAL &/*kk*/) const
+double ProblemType::c2_iso(const Data &gdata,
+                         const double &/*ii*/, const double &/*jj*/, const double &/*kk*/) const
 {
 	return cs2;
 }
 
 
 
-void ProblemType::set_q(int q, NumMatrix<REAL,3> &omField) {
+void ProblemType::set_q(int q, NumMatrix<double,3> &omField) {
 
 	// Check if the Name is already in Use:
 	size_t used = fieldNames.count(omField.getName());
@@ -357,19 +357,19 @@ void ProblemType::set_q(int q, NumMatrix<REAL,3> &omField) {
 }
 
 
-REAL ProblemType::grid_user_x(REAL ratio) {
+double ProblemType::grid_user_x(double ratio) {
 	return ratio;
 }
 
-REAL ProblemType::grid_user_y(REAL ratio) {
+double ProblemType::grid_user_y(double ratio) {
 	return ratio;
 }
 
-REAL ProblemType::grid_user_z(REAL ratio) {
+double ProblemType::grid_user_z(double ratio) {
 	return ratio;
 }
 
-void ProblemType::bc_User(Data &gdata, NumMatrix<REAL,3> &omb,
+void ProblemType::bc_User(Data &gdata, NumMatrix<double,3> &omb,
                           int dir, int top, int q, int rim) {
 	cerr << " Error: User boundaries at: " << endl;
 	cerr << "  direction: " << dir << " top: " << top << endl;

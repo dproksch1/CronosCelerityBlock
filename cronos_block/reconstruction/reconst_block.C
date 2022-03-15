@@ -82,17 +82,17 @@ void SingleReconstruction_Block::getDerivs(const Data &gdata, int ix, int iy, in
 	// Start with getting the properties of the cell
 #if (NON_LINEAR_GRID == CRONOS_ON)
 
-	REAL delxm = 0.5*(gdata.getCen_dx(0, ix-1) + gdata.getCen_dx(0, ix  ));
-	REAL delxp = 0.5*(gdata.getCen_dx(0, ix  ) + gdata.getCen_dx(0, ix+1));
-	REAL delx0 = delxm + delxp;
+	double delxm = 0.5*(gdata.getCen_dx(0, ix-1) + gdata.getCen_dx(0, ix  ));
+	double delxp = 0.5*(gdata.getCen_dx(0, ix  ) + gdata.getCen_dx(0, ix+1));
+	double delx0 = delxm + delxp;
 
-	REAL delym = 0.5*(gdata.getCen_dx(1, iy-1) + gdata.getCen_dx(1, iy  ));
-	REAL delyp = 0.5*(gdata.getCen_dx(1, iy  ) + gdata.getCen_dx(1, iy+1));
-	REAL dely0 = delym + delyp;
+	double delym = 0.5*(gdata.getCen_dx(1, iy-1) + gdata.getCen_dx(1, iy  ));
+	double delyp = 0.5*(gdata.getCen_dx(1, iy  ) + gdata.getCen_dx(1, iy+1));
+	double dely0 = delym + delyp;
 
-	REAL delzm = 0.5*(gdata.getCen_dx(2, iz-1) + gdata.getCen_dx(2, iz  ));
-	REAL delzp = 0.5*(gdata.getCen_dx(2, iz  ) + gdata.getCen_dx(2, iz+1));
-	REAL delz0 = delzm + delzp;
+	double delzm = 0.5*(gdata.getCen_dx(2, iz-1) + gdata.getCen_dx(2, iz  ));
+	double delzp = 0.5*(gdata.getCen_dx(2, iz  ) + gdata.getCen_dx(2, iz+1));
+	double delz0 = delzm + delzp;
 #endif
 
 	int q = qReconst;
@@ -118,17 +118,17 @@ void SingleReconstruction_Block::getDerivs(const Data &gdata, int ix, int iy, in
 #else
 
 	dudxm_q =  gdata.om[q](ix  ,iy,iz) - gdata.om[q](ix-1,iy,iz);
-//	REAL dudx0 = (gdata.om[q](ix+1,iy,iz) - gdata.om[q](ix-1,iy,iz))*0.5;
+//	double dudx0 = (gdata.om[q](ix+1,iy,iz) - gdata.om[q](ix-1,iy,iz))*0.5;
 	dudxp_q =  gdata.om[q](ix+1,iy,iz) - gdata.om[q](ix  ,iy,iz);
 	dudx0_q = 0.5*(dudxm_q+dudxp_q);
 
 	dudym_q =  gdata.om[q](ix,iy  ,iz) - gdata.om[q](ix,iy-1,iz);
-//	REAL dudy0 = (gdata.om[q](ix,iy+1,iz) - gdata.om[q](ix,iy-1,iz))*0.5;
+//	double dudy0 = (gdata.om[q](ix,iy+1,iz) - gdata.om[q](ix,iy-1,iz))*0.5;
 	dudyp_q =  gdata.om[q](ix,iy+1,iz) - gdata.om[q](ix,iy  ,iz);
 	dudy0_q = 0.5*(dudym_q + dudyp_q);
 
 	dudzm_q =  gdata.om[q](ix,iy,iz  ) - gdata.om[q](ix,iy,iz-1);
-//	REAL dudz0 = (gdata.om[q](ix,iy,iz+1) - gdata.om[q](ix,iy,iz-1))*0.5;
+//	double dudz0 = (gdata.om[q](ix,iy,iz+1) - gdata.om[q](ix,iy,iz-1))*0.5;
 	dudzp_q =  gdata.om[q](ix,iy,iz+1) - gdata.om[q](ix,iy,iz  );
 	dudz0_q = 0.5*(dudzm_q + dudzp_q);
 #endif
@@ -157,7 +157,7 @@ void SingleReconstruction_Block::get_Vals_EW(const Data& gdata, phys_fields_0D& 
         {
 
             // Take into account shifted collocation points
-            REAL shift(0.);
+            double shift(0.);
 #if (GEOM != CARTESIAN)
 #if (SHIFTED_COLLOCATION == TRUE)
             shift = sources->shift_Geom_WE(gdata, i);
@@ -167,7 +167,7 @@ void SingleReconstruction_Block::get_Vals_EW(const Data& gdata, phys_fields_0D& 
             int q = qReconst;
 
 #if (NON_LINEAR_GRID == CRONOS_ON)
-            REAL delx = gdata.getCen_dx(0, ix);
+            double delx = gdata.getCen_dx(0, ix);
             xFieldsW.uPri(q) = gdata.om[q](ix, iy, iz) - (0.5 + shift) * deriv_x * delx;
             xFieldsE.uPri(q) = xFieldsW.uPri(q) + deriv_x * delx;
 #else
@@ -183,7 +183,7 @@ void SingleReconstruction_Block::get_Vals_SN(const Data& gdata, phys_fields_0D& 
         {
 
 #if (NON_LINEAR_GRID == CRONOS_ON)
-            REAL dely = gdata.getCen_dx(1, iy);	// iterate over all indices
+            double dely = gdata.getCen_dx(1, iy);	// iterate over all indices
 #endif
 
             int q = qReconst;
@@ -203,7 +203,7 @@ void SingleReconstruction_Block::get_Vals_BT(const Data& gdata, phys_fields_0D& 
         {
 
 #if (NON_LINEAR_GRID == CRONOS_ON)
-            REAL delz = gdata.getCen_dx(2, iz);	// iterate over all indices
+            double delz = gdata.getCen_dx(2, iz);	// iterate over all indices
 #endif
 
             int q = qReconst;

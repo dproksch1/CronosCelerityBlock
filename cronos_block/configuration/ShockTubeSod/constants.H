@@ -23,7 +23,7 @@
 
 #define NON_LINEAR_GRID CRONOS_OFF
 
-#define REAL double 
+//#define REAL double 
 #define SOUND
 #undef PHYSDISS
 //const int B = 3;

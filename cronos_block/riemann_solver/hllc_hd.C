@@ -95,7 +95,7 @@ void HLLCSolver_Hydro::get_NumFlux(const Data &gdata, const phys_fields_0D &pfM,
 			// if both cells are flagged -> use hll for all variables instead
 			if(pfM.carbuncle_flag*pfP.carbuncle_flag > 0) {
 				for(int q=0; q<pfM.get_num(); ++q) {
-					REAL fac = 1./(f_num.v_ch_p + f_num.v_ch_m+veps);
+					double fac = 1./(f_num.v_ch_p + f_num.v_ch_m+veps);
 
 					f_num.flux_num[q] = (f_num.v_ch_m*pfP.flux_phys[q] +
 							f_num.v_ch_p*pfM.flux_phys[q] -
@@ -107,16 +107,16 @@ void HLLCSolver_Hydro::get_NumFlux(const Data &gdata, const phys_fields_0D &pfM,
 
 
 
-		//REAL uConL[n_omInt], uConR[n_omInt];
-		std::vector<REAL> uConL(n_omInt);
-		std::vector<REAL> uConR(n_omInt);
-		//REAL uPriL[n_omInt], uPriR[n_omInt];
-		std::vector<REAL> uPriL(n_omInt);
-		std::vector<REAL> uPriR(n_omInt);
-		//REAL uConSL[n_omInt];
-		std::vector<REAL> uConSL(n_omInt);
-		//REAL uConSR[n_omInt];
-		std::vector<REAL> uConSR(n_omInt);
+		//double uConL[n_omInt], uConR[n_omInt];
+		std::vector<double> uConL(n_omInt);
+		std::vector<double> uConR(n_omInt);
+		//double uPriL[n_omInt], uPriR[n_omInt];
+		std::vector<double> uPriL(n_omInt);
+		std::vector<double> uPriR(n_omInt);
+		//double uConSL[n_omInt];
+		std::vector<double> uConSL(n_omInt);
+		//double uConSR[n_omInt];
+		std::vector<double> uConSR(n_omInt);
 
 		// Saving array values:
 
@@ -146,30 +146,30 @@ void HLLCSolver_Hydro::get_NumFlux(const Data &gdata, const phys_fields_0D &pfM,
 #endif
 
 
-		REAL rhoL = uConL[q_rho];
-		REAL rhoR = uConR[q_rho];
+		double rhoL = uConL[q_rho];
+		double rhoR = uConR[q_rho];
 
-		REAL pThermL(pfM.ptherm);
-		REAL pThermR(pfP.ptherm);
+		double pThermL(pfM.ptherm);
+		double pThermR(pfP.ptherm);
 
-		REAL vParL = uPriL[qvPar];
-		REAL vParR = uPriR[qvPar];
+		double vParL = uPriL[qvPar];
+		double vParR = uPriR[qvPar];
 
-		REAL sParL = uConL[qvPar];
-		REAL sParR = uConR[qvPar];
+		double sParL = uConL[qvPar];
+		double sParR = uConR[qvPar];
 
 		// Characteristic velocities like in Toro book
-		REAL vCharL = -f_num.v_ch_m;
-		REAL vCharR =  f_num.v_ch_p;
+		double vCharL = -f_num.v_ch_m;
+		double vCharR =  f_num.v_ch_p;
 
 		// Just the signal velocities relative to background flow
-		REAL vSigL = vCharL - vParL;
-		REAL vSigR = vCharR - vParR;
+		double vSigL = vCharL - vParL;
+		double vSigR = vCharR - vParR;
 
 		// Velocity of contact discontinuity S*
-		REAL idenom = 1./(rhoL*vSigL - rhoR*vSigR + veps);
+		double idenom = 1./(rhoL*vSigL - rhoR*vSigR + veps);
 		// Eq. (10.70)
-		REAL vCharS = (pThermR - pThermL +
+		double vCharS = (pThermR - pThermL +
 				sParL*vSigL - sParR*vSigR)*idenom;
 
 		// Starred quantities according to Eq. (10.73)
@@ -195,10 +195,10 @@ void HLLCSolver_Hydro::get_NumFlux(const Data &gdata, const phys_fields_0D &pfM,
 		uConSR[qvP2 ] = uConSR[q_rho]*uPriR[qvP2];
 
 		// Overall energy in middle region
-		REAL egesL = uConL[q_Eges];
+		double egesL = uConL[q_Eges];
 		uConSL[q_Eges] = uConSL[q_rho]*(egesL/rhoL + (vCharS - vParL)*
 				(vCharS + pThermL/(rhoL*vSigL)));
-		REAL egesR = uConR[q_Eges];
+		double egesR = uConR[q_Eges];
 		uConSR[q_Eges] = uConSR[q_rho]*(egesR/rhoR + (vCharS - vParR)*
 				(vCharS + pThermR/(rhoR*vSigR)));
 
@@ -208,7 +208,7 @@ void HLLCSolver_Hydro::get_NumFlux(const Data &gdata, const phys_fields_0D &pfM,
 
 		// Pressure in starred region (according to Eq. (10.36) in
 		// Toro book) - should be identical for L and R values
-		REAL pThermS = pThermL + rhoL*(vSigL - vParL)*(vCharS - vParL);
+		double pThermS = pThermL + rhoL*(vSigL - vParL)*(vCharS - vParL);
 
 		// With this compute entropy:
 		uConSL[q_Eadd] = pThermS/pow(uConSL[q_rho], gamma-1.);
@@ -311,7 +311,7 @@ void get_NumFlux2(const Data &gdata, const phys_fields_0D &pfM,
 			// if both cells are flagged -> use hll for all variables instead
 			if(pfM.carbuncle_flag*pfP.carbuncle_flag > 0) {
 				for(int q=0; q<pfM.get_num(); ++q) {
-					REAL fac = 1./(f_num.v_ch_p + f_num.v_ch_m+ HLLCSOLVER_HYDRO_VEPS);
+					double fac = 1./(f_num.v_ch_p + f_num.v_ch_m+ HLLCSOLVER_HYDRO_VEPS);
 
 					f_num.flux_num[q] = (f_num.v_ch_m*pfP.flux_phys[q] +
 							f_num.v_ch_p*pfM.flux_phys[q] -
@@ -323,16 +323,16 @@ void get_NumFlux2(const Data &gdata, const phys_fields_0D &pfM,
 
 
 
-		//REAL uConL[n_omInt], uConR[n_omInt];
-		std::vector<REAL> uConL(n_omInt);
-		std::vector<REAL> uConR(n_omInt);
-		//REAL uPriL[n_omInt], uPriR[n_omInt];
-		std::vector<REAL> uPriL(n_omInt);
-		std::vector<REAL> uPriR(n_omInt);
-		//REAL uConSL[n_omInt];
-		std::vector<REAL> uConSL(n_omInt);
-		//REAL uConSR[n_omInt];
-		std::vector<REAL> uConSR(n_omInt);
+		//double uConL[n_omInt], uConR[n_omInt];
+		std::vector<double> uConL(n_omInt);
+		std::vector<double> uConR(n_omInt);
+		//double uPriL[n_omInt], uPriR[n_omInt];
+		std::vector<double> uPriL(n_omInt);
+		std::vector<double> uPriR(n_omInt);
+		//double uConSL[n_omInt];
+		std::vector<double> uConSL(n_omInt);
+		//double uConSR[n_omInt];
+		std::vector<double> uConSR(n_omInt);
 
 		// Saving array values:
 
@@ -364,30 +364,30 @@ void get_NumFlux2(const Data &gdata, const phys_fields_0D &pfM,
 #endif
 
 
-		REAL rhoL = uConL[q_rho];
-		REAL rhoR = uConR[q_rho];
+		double rhoL = uConL[q_rho];
+		double rhoR = uConR[q_rho];
 
-		REAL pThermL(pfM.ptherm);
-		REAL pThermR(pfP.ptherm);
+		double pThermL(pfM.ptherm);
+		double pThermR(pfP.ptherm);
 
-		REAL vParL = uPriL[qvPar];
-		REAL vParR = uPriR[qvPar];
+		double vParL = uPriL[qvPar];
+		double vParR = uPriR[qvPar];
 
-		REAL sParL = uConL[qvPar];
-		REAL sParR = uConR[qvPar];
+		double sParL = uConL[qvPar];
+		double sParR = uConR[qvPar];
 
 		// Characteristic velocities like in Toro book
-		REAL vCharL = -f_num.v_ch_m;
-		REAL vCharR =  f_num.v_ch_p;
+		double vCharL = -f_num.v_ch_m;
+		double vCharR =  f_num.v_ch_p;
 
 		// Just the signal velocities relative to background flow
-		REAL vSigL = vCharL - vParL;
-		REAL vSigR = vCharR - vParR;
+		double vSigL = vCharL - vParL;
+		double vSigR = vCharR - vParR;
 
 		// Velocity of contact discontinuity S*
-		REAL idenom = 1./(rhoL*vSigL - rhoR*vSigR + HLLCSOLVER_HYDRO_VEPS);
+		double idenom = 1./(rhoL*vSigL - rhoR*vSigR + HLLCSOLVER_HYDRO_VEPS);
 		// Eq. (10.70)
-		REAL vCharS = (pThermR - pThermL +
+		double vCharS = (pThermR - pThermL +
 				sParL*vSigL - sParR*vSigR)*idenom;
 
 		// Starred quantities according to Eq. (10.73)
@@ -414,10 +414,10 @@ void get_NumFlux2(const Data &gdata, const phys_fields_0D &pfM,
 
 		// Overall energy in middle region
 		int q_Eges = gdata.fluid.get_q_Eges();
-		REAL egesL = uConL[q_Eges];
+		double egesL = uConL[q_Eges];
 		uConSL[q_Eges] = uConSL[q_rho]*(egesL/rhoL + (vCharS - vParL)*
 				(vCharS + pThermL/(rhoL*vSigL)));
-		REAL egesR = uConR[q_Eges];
+		double egesR = uConR[q_Eges];
 		uConSR[q_Eges] = uConSR[q_rho]*(egesR/rhoR + (vCharS - vParR)*
 				(vCharS + pThermR/(rhoR*vSigR)));
 
@@ -427,10 +427,10 @@ void get_NumFlux2(const Data &gdata, const phys_fields_0D &pfM,
 
 		// Pressure in starred region (according to Eq. (10.36) in
 		// Toro book) - should be identical for L and R values
-		REAL pThermS = pThermL + rhoL*(vSigL - vParL)*(vCharS - vParL);
+		double pThermS = pThermL + rhoL*(vSigL - vParL)*(vCharS - vParL);
 
 		// With this compute entropy:
-		REAL gamma = value((char*)"Adiabatic_exponent");
+		double gamma = value((char*)"Adiabatic_exponent");
 		uConSL[q_Eadd] = pThermS/pow(uConSL[q_rho], gamma-1.);
 		uConSR[q_Eadd] = pThermS/pow(uConSR[q_rho], gamma-1.);
 #endif

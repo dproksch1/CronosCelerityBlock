@@ -51,15 +51,15 @@ private:
 	void bc_ISendRecv(Data &, NumArray<double> &, NumArray<double> &,
 	                 int dir, int size_send, int size_recv, int, int, bool, bool);
 #endif
-	void bc_Periodic_old(Data &gdata, ProblemType &, NumMatrix<REAL,3> &omb,
+	void bc_Periodic_old(Data &gdata, ProblemType &, NumMatrix<double,3> &omb,
 	                 int dir, int q, int rim, bool internal_only=false);
 
-	void bc_Periodic(Data &gdata, ProblemType &, NumMatrix<REAL,3> &omb,
+	void bc_Periodic(Data &gdata, ProblemType &, NumMatrix<double,3> &omb,
 	                 int dir, int q, int rim, bool internal_only=false);
 	/*!
 	 * Periodic boundary conditions for non-mpi version of the code, only
 	 * */
-	void bc_Periodic_serial(Data &gdata, ProblemType &, NumMatrix<REAL,3> &omb,
+	void bc_Periodic_serial(Data &gdata, ProblemType &, NumMatrix<double,3> &omb,
 			int dir, int q, int rim);
 
 	/*!
@@ -76,11 +76,11 @@ private:
 			int dir, int leftToRight, int q, int rim );
 
 	void bc_AxisCyl(Data &gdata, ProblemType &Problem,
-            NumMatrix<REAL,3> &omb, int q, int rim);
+            NumMatrix<double,3> &omb, int q, int rim);
 	void bc_AxisSph(Data &gdata, ProblemType &Problem,
-			NumMatrix<REAL,3> &omb, int top, int q, int rim);
+			NumMatrix<double,3> &omb, int top, int q, int rim);
 	void bc_Axis(Data &gdata, ProblemType &Problem,
-	             NumMatrix<REAL,3> &omb, int dir, int top, int q, int rim);
+	             NumMatrix<double,3> &omb, int dir, int top, int q, int rim);
 	/*!
 	 * Compute location of related ghost cells at coordinate axes
 	 * @param top 0 for bottom and 1 for top end of perp axis
@@ -103,7 +103,7 @@ private:
 	                   int, int, int, int);
 	void bc_Fixed(Data &, ProblemType &, NumMatrix<double,3> &,
 	              int, int, int, int);
-	void bc_Fixed_general(NumMatrix<REAL,3> &, NumMatrix<REAL,3> &,
+	void bc_Fixed_general(NumMatrix<double,3> &, NumMatrix<double,3> &,
 	                      int imin[3], int imax[3]);
 	void Prolongate(Data &, NumMatrix<double,3> &, const int &, int mxloc[], int);
 	void ExchangePositions(Data &, int top=0);
@@ -115,28 +115,28 @@ private:
 			NumArray<int> &factor, NumArray<int> &staggered, int rim);
 	int bc_Type[6];
 	NumMatrix<int,1> AxisPartnersPhi[2];  // array of mapping partners
-	NumMatrix<REAL,1> PhiPos[2];
-	NumMatrix<REAL,1> cosPos[3], sinPos[3];
-	// NumMatrix<REAL,3> BoundVals[2*DIM];
-	// NumMatrix<REAL,3> BoundVals_User[2*DIM];
-	NumMatrix<REAL,3> bcVals_xb[N_OMINT], bcVals_xe[N_OMINT];
-	NumMatrix<REAL,3> bcVals_yb[N_OMINT], bcVals_ye[N_OMINT];
-	NumMatrix<REAL,3> bcVals_zb[N_OMINT], bcVals_ze[N_OMINT];
+	NumMatrix<double,1> PhiPos[2];
+	NumMatrix<double,1> cosPos[3], sinPos[3];
+	// NumMatrix<double,3> BoundVals[2*DIM];
+	// NumMatrix<double,3> BoundVals_User[2*DIM];
+	NumMatrix<double,3> bcVals_xb[N_OMINT], bcVals_xe[N_OMINT];
+	NumMatrix<double,3> bcVals_yb[N_OMINT], bcVals_ye[N_OMINT];
+	NumMatrix<double,3> bcVals_zb[N_OMINT], bcVals_ze[N_OMINT];
 
 	NumMatrix<double,3> Recv_x, Recv_y, Recv_z, Recv_empty;
 	NumMatrix<double,3> Send_x, Send_y, Send_z, Send_empty;
 
-//	NumArray<REAL> RecvArr_x, RecvArr_y, RecvArr_z, RecvArr_empty;
-//	NumArray<REAL> SendArr_x, SendArr_y, SendArr_z, SendArr_empty;
-	NumArray<REAL> SendArr_buff, RecvArr_buff;
-	NumArray<REAL> RecvArrSmall_x, RecvArrSmall_y, RecvArrSmall_z;
-	NumArray<REAL> SendArrSmall_x, SendArrSmall_y, SendArrSmall_z;
-	NumArray<REAL> RecvArr_xLR, RecvArr_yLR, RecvArr_zLR;
-	NumArray<REAL> RecvArr_xRL, RecvArr_yRL, RecvArr_zRL;
-	NumArray<REAL> SendArr_xLR, SendArr_yLR, SendArr_zLR;
-	NumArray<REAL> SendArr_xRL, SendArr_yRL, SendArr_zRL;
+//	NumArray<double> RecvArr_x, RecvArr_y, RecvArr_z, RecvArr_empty;
+//	NumArray<double> SendArr_x, SendArr_y, SendArr_z, SendArr_empty;
+	NumArray<double> SendArr_buff, RecvArr_buff;
+	NumArray<double> RecvArrSmall_x, RecvArrSmall_y, RecvArrSmall_z;
+	NumArray<double> SendArrSmall_x, SendArrSmall_y, SendArrSmall_z;
+	NumArray<double> RecvArr_xLR, RecvArr_yLR, RecvArr_zLR;
+	NumArray<double> RecvArr_xRL, RecvArr_yRL, RecvArr_zRL;
+	NumArray<double> SendArr_xLR, SendArr_yLR, SendArr_zLR;
+	NumArray<double> SendArr_xRL, SendArr_yRL, SendArr_zRL;
 
-	NumArray<REAL> SendArrRL, SendArrLR, RecvArrRL, RecvArrLR;
+	NumArray<double> SendArrRL, SendArrLR, RecvArrRL, RecvArrLR;
 
 #ifdef parallel
 	MPI_Request requests_xRL[2], requests_xLR[2];
@@ -146,9 +146,9 @@ private:
 #endif
 
 #if (OMS_USER == TRUE)
-	NumMatrix<REAL,3> bcVals_User_xb[N_OMINT], bcVals_User_xe[N_OMINT];
-	NumMatrix<REAL,3> bcVals_User_yb[N_OMINT], bcVals_User_ye[N_OMINT];
-	NumMatrix<REAL,3> bcVals_User_zb[N_OMINT], bcVals_User_ze[N_OMINT];
+	NumMatrix<double,3> bcVals_User_xb[N_OMINT], bcVals_User_xe[N_OMINT];
+	NumMatrix<double,3> bcVals_User_yb[N_OMINT], bcVals_User_ye[N_OMINT];
+	NumMatrix<double,3> bcVals_User_zb[N_OMINT], bcVals_User_ze[N_OMINT];
 #endif
 	int n_om, n_omInt, n_omIntAll;
 	int n_omUser, n_omIntUser;

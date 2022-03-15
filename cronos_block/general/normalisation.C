@@ -99,7 +99,7 @@ normalisation::normalisation()
 
 void normalisation::_set_unitDims(
 	const Type i,
-	const std::initializer_list<REAL> unitDimension
+	const std::initializer_list<double> unitDimension
 	)
 {
 	// Defines a derived unit (with type i) with respect to the base units
@@ -137,7 +137,7 @@ void normalisation::print_norms(std::ostream& os) {
 	os<<" -------------------------------"<<endl;
 }
 
-REAL normalisation::get_normConst(string type) {
+double normalisation::get_normConst(string type) {
 	// return normalisation constant according to field type
 	if(type=="rho") {
 		return _normQuantity[DENS];
@@ -266,9 +266,9 @@ void normalisation::_get_baseUnitsFromDefinition(
 	// Computes the normalisation factors for the base units
 	// from a set of given normalisations
 
-	REAL _unitDimsDef[N_BASE*N_BASE];
-	REAL b_data[N_BASE];
-	REAL x_data[N_BASE];
+	double _unitDimsDef[N_BASE*N_BASE];
+	double b_data[N_BASE];
+	double x_data[N_BASE];
 
 	for (int iQuant=0; iQuant < N_BASE; ++iQuant) {
 		Type definedtype = _definedType[iQuant];
@@ -319,16 +319,16 @@ void NormSound::setup(
 	// Set 6 linearly independent normalisations to define a global normalisation.
 	// Inside this function only normQuantity(type) of an already specified type is defined.
 
-	REAL L_phys = value("LenPhys");
-	REAL L_norm(1.);
+	double L_phys = value("LenPhys");
+	double L_norm(1.);
 	if(value_exists("LenScale")) {
 		L_norm = value("LenScale");
 	}
 
-	REAL m_phys = value("MolecularMass");
-	REAL numDens_phys = value("NumDensPhys");
-	REAL Temp_phys = value("TemperaturePhys");
-	REAL gamma = value("Adiabatic_exponent");
+	double m_phys = value("MolecularMass");
+	double numDens_phys = value("NumDensPhys");
+	double Temp_phys = value("TemperaturePhys");
+	double gamma = value("Adiabatic_exponent");
 
 	set_definition(LEN, L_phys/L_norm * Meter);
 	set_definition(MASS, m_phys * HydrogenMass);
@@ -351,16 +351,16 @@ void NormMagInd::setup(
 	// Set 6 linearly independent normalisations to define a global normalisation.
 	// Inside this function only normQuantity(type) of an already specified type is defined.
 
-	REAL L_phys = value("LenPhys");
-	REAL L_norm(1.);
+	double L_phys = value("LenPhys");
+	double L_norm(1.);
 	if(value_exists("LenScale")) {
 		L_norm = value("LenScale");
 	}
 
-	REAL m_phys = value("MolecularMass");
-	REAL numDens_phys = value("NumDensPhys");
-	REAL gamma = value("Adiabatic_exponent");
-	REAL Mag_phys = value("MagIndPhys");
+	double m_phys = value("MolecularMass");
+	double numDens_phys = value("NumDensPhys");
+	double gamma = value("Adiabatic_exponent");
+	double Mag_phys = value("MagIndPhys");
 
 	set_definition(LEN, L_phys/L_norm * Meter);
 	set_definition(MASS, m_phys * HydrogenMass);

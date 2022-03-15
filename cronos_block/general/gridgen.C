@@ -177,9 +177,9 @@ bool Environment::CheckEnd(Data &gdata)
 {
 	// Check if runtime exceeded
 	gettimeofday(&tock, 0);
-	REAL delt = ((tock.tv_sec + tock.tv_usec/1.e6) -
+	double delt = ((tock.tv_sec + tock.tv_usec/1.e6) -
 	             (tick.tv_sec + tick.tv_usec/1.e6));
-	REAL deltmax = value((char*)"runtime");
+	double deltmax = value((char*)"runtime");
 
 	bool RunTimeExit = false;
 	if(delt > deltmax) {
@@ -232,16 +232,16 @@ void Environment::compute_dt(Data &gdata, double factor)
 	// Increasing timestep-size if cfl < clf_min && doubling fits
 	// regular time-stepping
 
-	REAL dtdoub = 2.*gdata.dt;
-	REAL teps =1.e-8*gdata.dt;
+	double dtdoub = 2.*gdata.dt;
+	double teps =1.e-8*gdata.dt;
 
 #if (CRONOS_MOVIE == CRONOS_ON)
-	REAL tnext_mov = (static_cast<int>(gdata.time/dt_mov)+1)*dt_mov;
+	double tnext_mov = (static_cast<int>(gdata.time/dt_mov)+1)*dt_mov;
 
-	REAL dttest_mov = abs(fmod((tnext_mov - gdata.time)+teps,dtdoub));
+	double dttest_mov = abs(fmod((tnext_mov - gdata.time)+teps,dtdoub));
 #endif
 
-	REAL trun = abs(gdata.time - restart_time);
+	double trun = abs(gdata.time - restart_time);
 	/*
 	  Checking if:
 	  (a) cfl < cfl_min
@@ -279,8 +279,8 @@ void Environment::compute_dt(Data &gdata, double factor)
 
 	// Decrease timestep if movie-output comes too soon
 #if (CRONOS_MOVIE == CRONOS_ON)
-	REAL tnext_mov = dt_mov*(nummov_done);
-	REAL dtnext_mov = tnext_mov - gdata.time;
+	double tnext_mov = dt_mov*(nummov_done);
+	double dtnext_mov = tnext_mov - gdata.time;
 
 	if(gdata.dt > dtnext_mov) {
 		gdata.dt = dtnext_mov;
@@ -288,16 +288,16 @@ void Environment::compute_dt(Data &gdata, double factor)
 #endif
 
 	// Decrease timestep if float-output comes too soon
-	REAL tnext_flt = dt_flt*(numflt_done);
-	REAL dtnext_flt = tnext_flt - gdata.time;
+	double tnext_flt = dt_flt*(numflt_done);
+	double dtnext_flt = tnext_flt - gdata.time;
 
 	if(gdata.dt > dtnext_flt && numflt_pass < numflt_out) {
 		gdata.dt = dtnext_flt;
 	}
 
 	// Decrease timestep if ascii-output comes too soon
-	REAL tnext_ascii = dt_ascii*(numascii_done+1);
-	REAL dtnext_ascii = tnext_ascii - gdata.time;
+	double tnext_ascii = dt_ascii*(numascii_done+1);
+	double dtnext_ascii = tnext_ascii - gdata.time;
 
 	if(gdata.dt > dtnext_ascii) {
 		gdata.dt = dtnext_ascii;
@@ -319,7 +319,7 @@ void Environment::CheckOut(Data &gdata)
 
 #ifdef DTCOMP_OLD
 
-	REAL dt_eps = 1.e-4*gdata.dt;
+	double dt_eps = 1.e-4*gdata.dt;
   
 	if(gdata.rank==0){
 
@@ -333,8 +333,8 @@ void Environment::CheckOut(Data &gdata)
 		   changed in between.
 		*/
 
-		REAL tmod = abs(fmod(gdata.time+dt_eps,dt_dbl));
-		REAL trun = gdata.time - restart_time;
+		double tmod = abs(fmod(gdata.time+dt_eps,dt_dbl));
+		double trun = gdata.time - restart_time;
 		if ((trun <= 1e-6) || (dt_dbl <= 0) ||
 		    (gdata.time - t_last_dbl + dt_eps) < dt_dbl) tmod =  1.;
 
@@ -382,11 +382,11 @@ void Environment::CheckOut(Data &gdata)
 #else
 
 	// if(gdata.rank == 0) {
-		const REAL dt_eps = gdata.dt*1.e-2;
+		const double dt_eps = gdata.dt*1.e-2;
 
 		// Double output
-		const REAL tnext_dbl = dt_dbl*(numdbl_done);
-		const REAL dtnext_dbl = tnext_dbl - gdata.time;
+		const double tnext_dbl = dt_dbl*(numdbl_done);
+		const double dtnext_dbl = tnext_dbl - gdata.time;
 
 		if(dtnext_dbl < dt_eps || numdbl_pass >= numdbl_out) {
 			outputflag[0] = 1;
@@ -394,8 +394,8 @@ void Environment::CheckOut(Data &gdata)
 
     
 		// Float output
-		const REAL tnext_flt = dt_flt*(numflt_done);
-		const REAL dtnext_flt = tnext_flt - gdata.time;
+		const double tnext_flt = dt_flt*(numflt_done);
+		const double dtnext_flt = tnext_flt - gdata.time;
 
 		if(dtnext_flt < dt_eps || numflt_pass >= numflt_out) {
 			outputflag[1] = 1;
@@ -403,8 +403,8 @@ void Environment::CheckOut(Data &gdata)
 
 
 		// Ascii output
-		const REAL tnext_ascii = dt_ascii*(numascii_done);
-		const REAL dtnext_ascii = tnext_ascii - gdata.time;
+		const double tnext_ascii = dt_ascii*(numascii_done);
+		const double dtnext_ascii = tnext_ascii - gdata.time;
 
 		if(dtnext_ascii < dt_eps || numascii_pass >= numascii_out) {
 			outputflag[2] = 1;
@@ -412,8 +412,8 @@ void Environment::CheckOut(Data &gdata)
 
 
 		// Screen output
-		const REAL tnext_info = dt_info*(numinfo_done);
-		const REAL dtnext_info = tnext_info - gdata.time;
+		const double tnext_info = dt_info*(numinfo_done);
+		const double dtnext_info = tnext_info - gdata.time;
 
 		if(dtnext_info< dt_eps || numinfo_pass >= numinfo_out) {
 			outputflag[3] = 1;
@@ -422,8 +422,8 @@ void Environment::CheckOut(Data &gdata)
 
 		// Movie output
 #if (CRONOS_MOVIE == CRONOS_ON)
-		REAL tnext_mov = dt_mov*(nummov_done);
-		REAL dtnext_mov = tnext_mov - gdata.time;
+		double tnext_mov = dt_mov*(nummov_done);
+		double dtnext_mov = tnext_mov - gdata.time;
 
 		if(dtnext_mov < dt_eps) {
 			outputflag[4] = 1;
@@ -846,7 +846,7 @@ void Environment::LoadData(Data &gdata)
 #endif
 
 	// Recompute times for data output:
-	REAL dt_eps = gdata.dt*1.e-2;
+	double dt_eps = gdata.dt*1.e-2;
 	numdbl_done = static_cast<int>((gdata.time+dt_eps)/dt_dbl) + 1;
 	numflt_done = static_cast<int>((gdata.time+dt_eps)/dt_flt) + 1;
 	numascii_done = static_cast<int>((gdata.time+dt_eps)/dt_ascii) + 1;
@@ -894,7 +894,7 @@ void Environment::LoadData_flt(Data &gdata, int load_step)
 
 
 	// Recompute times for data output:
-	REAL dt_eps = gdata.dt*1.e-2;
+	double dt_eps = gdata.dt*1.e-2;
 	numdbl_done = static_cast<int>((gdata.time+dt_eps)/dt_dbl) + 1;
 	numflt_done = static_cast<int>((gdata.time+dt_eps)/dt_flt) + 1;
 	numascii_done = static_cast<int>((gdata.time+dt_eps)/dt_ascii) + 1;

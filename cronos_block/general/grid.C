@@ -438,7 +438,7 @@ int Grid::get_idx_global(int dir, int ii) const {
 
 #if (NON_LINEAR_GRID == CRONOS_ON)
 
-int Grid::get_CellIndex(int dir, REAL position) const {
+int Grid::get_CellIndex(int dir, double position) const {
 	int index(-99);
 	for(int ii=0; ii<=mx[dir]; ++ii) {
 		if(position >= getEdgL(dir, ii) && position <= getEdgR(dir, ii)) {
@@ -448,7 +448,7 @@ int Grid::get_CellIndex(int dir, REAL position) const {
 	return index;
 }
 
-REAL Grid::getCen_x(int ii) const {
+double Grid::getCen_x(int ii) const {
 	assert(ii <= numCells[0]+B-1);
 	return cellCentres[0](ii);
 }
@@ -466,7 +466,7 @@ double Grid::get_x_global(int ii, int shift_i) const {
 	return global_cellsDouble[0](iDouble);
 }
 
-REAL Grid::getCen_y(int jj) const {
+double Grid::getCen_y(int jj) const {
 	assert(jj <= numCells[1]+B-1);
 	return cellCentres[1](jj);
 }
@@ -484,7 +484,7 @@ double Grid::get_y_global(int jj, int shift_j) const {
 	return global_cellsDouble[1](jDouble);
 }
 
-REAL Grid::getCen_z(int kk) const {
+double Grid::getCen_z(int kk) const {
 	assert(kk <= numCells[2]+B-1);
 	return cellCentres[2](kk);
 }
@@ -502,7 +502,7 @@ double Grid::get_z_global(int kk, int shift_k) const {
 	return global_cellsDouble[2](kDouble);
 }
 
-REAL Grid::getCen(int dir, int ii) const {
+double Grid::getCen(int dir, int ii) const {
 	assert(ii <= numCells[dir]+B-1);
 	return cellCentres[dir](ii);
 }
@@ -523,111 +523,111 @@ double Grid::get_pos_global(int dir, int iPos, int shift_i) const {
 
 
 // Number zero is left side of cell 0
-// REAL Grid::getEdge_x(int ii) {
+// double Grid::getEdge_x(int ii) {
 // 	assert(ii <= numCells[0]+B-1);
 // 	return cellEdges[0](ii);
 // }
 
-// REAL Grid::getEdge_y(int jj) {
+// double Grid::getEdge_y(int jj) {
 // 	assert(jj <= numCells[1]+B-1);
 // 	return cellEdges[1](jj);
 // }
 
-// REAL Grid::getEdge_z(int kk) {
+// double Grid::getEdge_z(int kk) {
 // 	assert(kk <= numCells[2]+B-1);
 // 	return cellEdges[2](kk);
 // }
 
-// REAL Grid::getEdge(int dir, int ii) {
+// double Grid::getEdge(int dir, int ii) {
 // 	assert(ii <= numCells[dir]+B-1);
 // 	return cellEdges[dir](ii);
 // }
 
 
 // Get position of left edge of cell i
-REAL Grid::getEdgL_x(int ii) const {
+double Grid::getEdgL_x(int ii) const {
 	assert(ii <= numCells[0]+B-1);
 	return cellEdges[0](ii);
 }
 
 // Get position of right edge of cell i
-REAL Grid::getEdgR_x(int ii) const {
+double Grid::getEdgR_x(int ii) const {
 	assert(ii <= numCells[0]+B-1);
 	return cellEdges[0](ii+1);
 }
 
-REAL Grid::getEdgL_y(int jj) const {
+double Grid::getEdgL_y(int jj) const {
 	assert(jj <= numCells[1]+B-1);
 	return cellEdges[1](jj);
 }
 
-REAL Grid::getEdgR_y(int jj) const {
+double Grid::getEdgR_y(int jj) const {
 	assert(jj <= numCells[1]+B-1);
 	return cellEdges[1](jj+1);
 }
 
-REAL Grid::getEdgL_z(int kk) const {
+double Grid::getEdgL_z(int kk) const {
 	assert(kk <= numCells[2]+B-1);
 	return cellEdges[2](kk);
 }
 
-REAL Grid::getEdgR_z(int kk) const {
+double Grid::getEdgR_z(int kk) const {
 	assert(kk <= numCells[2]+B-1);
 	return cellEdges[2](kk+1);
 }
 
-REAL Grid::getEdgL(int dir, int ii) const {
+double Grid::getEdgL(int dir, int ii) const {
 	assert(ii <= numCells[dir]+B-1);
 	return cellEdges[dir](ii);
 }
 
-REAL Grid::getEdgR(int dir, int ii) const {
+double Grid::getEdgR(int dir, int ii) const {
 	assert(ii <= numCells[dir]+B-1);
 	return cellEdges[dir](ii+1);
 }
 
 
-REAL Grid::getCen_dx(int dir, int ii) const {
+double Grid::getCen_dx(int dir, int ii) const {
 	assert(ii <= numCells[dir]+B-1);
 	// return (cellEdges[dir](ii+1) - cellEdges[dir](ii));
 	return dxCentres[dir](ii);
 }
 
 // GLOBAL version of the above:
-REAL Grid::getCen_dx_global(int dir, int ii) const {
+double Grid::getCen_dx_global(int dir, int ii) const {
 	assert(ii <= global_numCells[dir]+B-1);
 	// return (cellEdges[dir](ii+1) - cellEdges[dir](ii));
 	return global_dxCentres[dir](ii);
 }
 
-REAL Grid::getCen_hx(int dir, int ii) const {
+double Grid::getCen_hx(int dir, int ii) const {
 	assert(ii <= numCells[dir]+B-1);
 	return 0.5*getCen_idx(dir, ii);
 }
 
-REAL Grid::getCen_idx(int dir, int ii) const {
+double Grid::getCen_idx(int dir, int ii) const {
 	assert(ii <= numCells[dir]+B-1);
 	return idxCentres[dir](ii);
 }
 
-REAL Grid::get_dx(int dir, int ii, int shift_i) {
+double Grid::get_dx(int dir, int ii, int shift_i) {
 	int iDouble = 2*ii + shift_i;
 	assert(iDouble <= numDouble[dir]);
 	return dxDouble[dir](iDouble);
 }
 
-REAL Grid::get_idx(int dir, int ii, int shift_i) {
+double Grid::get_idx(int dir, int ii, int shift_i) {
 	int iDouble = 2*ii + shift_i;
 	assert(iDouble <= numDouble[dir]);
 	return idxDouble[dir](iDouble);
 }
 
-REAL Grid::get_hx(int dir, int ii, int shift_i) {
+double Grid::get_hx(int dir, int ii, int shift_i) {
 	return 0.5*get_idx(dir,ii,shift_i);
 }
 
-REAL Grid::get_CellVolume(int ii, int jj, int kk) const {
-	REAL volume((getEdgR_x(ii) - getEdgL_x(ii))*
+double Grid::get_CellVolume(int ii, int jj, int kk) const {
+	double volume((getEdgR_x(ii) - getEdgL_x(ii))*
 	            (getEdgR_y(jj) - getEdgL_y(jj))*
 	            (getEdgR_z(kk) - getEdgL_z(kk)));
 #if (GEOM != CARTESIAN)
@@ -643,7 +643,7 @@ REAL Grid::get_CellVolume(int ii, int jj, int kk) const {
 
 
 
-int Grid::get_CellIndex(int dir, REAL position) const {
+int Grid::get_CellIndex(int dir, double position) const {
 	int index;
 	if(position < xb[dir] || position > xe[dir]) {
 		index = -99;
@@ -662,7 +662,7 @@ int Grid::Shift_Rank(int dir, int ii) const {
 
 
 
-double Grid::get_x(REAL ii) const
+double Grid::get_x(double ii) const
 {
 	return x0[0]+ii*dx[0];
 }
@@ -699,7 +699,7 @@ double Grid::getEdgR_x(int ii) const {
 	return x0[0]+(ii+0.5)*dx[0];
 }
 
-double Grid::get_y(REAL ii) const {
+double Grid::get_y(double ii) const {
 	return x0[1]+ii*dx[1];
 }
 
@@ -733,7 +733,7 @@ double Grid::getEdgR_y(int jj) const {
 	return x0[1]+(jj+0.5)*dx[1];
 }
 
-double Grid::get_z(REAL ii) const {
+double Grid::get_z(double ii) const {
 	return x0[2]+ii*dx[2];
 }
 
@@ -769,7 +769,7 @@ double Grid::getEdgR_z(int kk) const {
 	return x0[2]+(kk+0.5)*dx[2];
 }
 
-// double Grid::get_x(int dir, REAL ii) 
+// double Grid::get_x(int dir, double ii) 
 // {
 // 	assert((dir >=0) && (dir < DIM)); 
 // #ifdef parallel
@@ -778,7 +778,7 @@ double Grid::getEdgR_z(int kk) const {
 // 	return x0[dir]+ii*dx[dir];
 // }
 
-REAL Grid::getCen(int dir, int ii) const {
+double Grid::getCen(int dir, int ii) const {
 	assert(ii <= numCells[dir]+B-1);
 	return x0[dir]+ii*dx[dir];
 }
@@ -795,7 +795,7 @@ double Grid::get_pos_global(int dir, int iPos, int shift_i) const
 	return x0[dir]+(iPos+0.5*shift_i)*dx[dir];
 }
 
-// REAL Grid::getEdge(int dir, int ii) {
+// double Grid::getEdge(int dir, int ii) {
 // 	assert(ii <= numCells[dir]+B-1);
 // #ifdef parallel
 // 	ii += Shift_Rank(dir, ii);
@@ -804,48 +804,48 @@ double Grid::get_pos_global(int dir, int iPos, int shift_i) const
 // }
 
 // Left edge of cell in direction dir
-REAL Grid::getEdgL(int dir, int ii) const {
+double Grid::getEdgL(int dir, int ii) const {
 	assert(ii <= numCells[dir]+B-1);
 	return x0[dir]+(ii-0.5)*dx[dir];
 }
 
 // Right edge of cell in direction dir
-REAL Grid::getEdgR(int dir, int ii) const {
+double Grid::getEdgR(int dir, int ii) const {
 	assert(ii <= numCells[dir]+B-1);
 	return x0[dir]+(ii+0.5)*dx[dir];
 }
 
-REAL Grid::getCen_dx(int dir, int ii) const {
+double Grid::getCen_dx(int dir, int ii) const {
 	return dx[dir];
 }
 
 // GLOBAL version of the above:
-REAL Grid::getCen_dx_global(int dir, int ii) const {
+double Grid::getCen_dx_global(int dir, int ii) const {
 	return dx[dir];
 }
 
-REAL Grid::getCen_hx(int dir, int ii) const {
+double Grid::getCen_hx(int dir, int ii) const {
 	return hx[dir];
 }
 
-REAL Grid::getCen_idx(int dir, int ii) const {
+double Grid::getCen_idx(int dir, int ii) const {
 	return idx[dir];
 }
 
-REAL Grid::get_dx(int dir, int ii, int shift_i) {
+double Grid::get_dx(int dir, int ii, int shift_i) {
 	return dx[dir];
 }
 
-REAL Grid::get_idx(int dir, int ii, int shift_i) {
+double Grid::get_idx(int dir, int ii, int shift_i) {
 	return idx[dir];
 }
 
-REAL Grid::get_hx(int dir, int ii, int shift_i) {
+double Grid::get_hx(int dir, int ii, int shift_i) {
 	return hx[dir];
 }
 
-REAL Grid::get_CellVolume(int ii, int jj, int kk) const {
-	REAL volume = dx[0]*dx[1]*dx[2];
+double Grid::get_CellVolume(int ii, int jj, int kk) const {
+	double volume = dx[0]*dx[1]*dx[2];
 #if (GEOM != CARTESIAN)
 	volume *= getCen_h0(ii,jj,kk)*getCen_h1(ii,jj,kk)*getCen_h2(ii,jj,kk);
 #endif
@@ -856,7 +856,7 @@ REAL Grid::get_CellVolume(int ii, int jj, int kk) const {
 #endif
 
 
-// REAL Grid::get_GridFunction(ProblemType &Problem, int dir, REAL ratio) {
+// double Grid::get_GridFunction(ProblemType &Problem, int dir, double ratio) {
 	
 // 	if(parametrisation[dir] == 0) {
 // 		// Linear grid:
@@ -879,10 +879,10 @@ REAL Grid::get_CellVolume(int ii, int jj, int kk) const {
 // 	}
 // }
 
-// REAL Grid::get_GridFunction(int dir, REAL ratio) {
+// double Grid::get_GridFunction(int dir, double ratio) {
 
 #if (NON_LINEAR_GRID == CRONOS_ON)
-REAL Grid::get_GridFunction(int dir, REAL ratio, REAL (*func) (REAL)) {
+double Grid::get_GridFunction(int dir, double ratio, double (*func) (double)) {
 	
 	if(parametrisation[dir] == 0) {
 		// Linear grid:
@@ -916,7 +916,7 @@ REAL Grid::get_GridFunction(int dir, REAL ratio, REAL (*func) (REAL)) {
 	}
 }
 
-REAL Grid::get_ExpGrid(int dir, REAL ratio) {
+double Grid::get_ExpGrid(int dir, double ratio) {
 	return global_xb[dir]/Lx[dir]*
 		(pow(global_xe[dir]/global_xb[dir],ratio) - 1.);
 }
@@ -924,7 +924,7 @@ REAL Grid::get_ExpGrid(int dir, REAL ratio) {
 
 // Compute grid
 
-//void Grid::generate_Grid(REAL (*func) (int, REAL)) {
+//void Grid::generate_Grid(double (*func) (int, double)) {
 void Grid::generate_Grid() {
 
 	for(int dir=0; dir<DIM; ++dir) {
@@ -933,7 +933,7 @@ void Grid::generate_Grid() {
 		for(int ii=-B; ii<=numCells[dir]+B+1; ++ii) {
 
 			// New griding - xb at cell edge:
-			REAL ratio = (1.*(ii+coords[dir]*numCells[dir]))/
+			double ratio = (1.*(ii+coords[dir]*numCells[dir]))/
 				(1.*global_numCells[dir]);
 			if(!EdgeGridding) {
 				// Revert to old gridding scheme:
@@ -958,7 +958,7 @@ void Grid::generate_Grid() {
 		for(int ii=-B; ii<=global_numCells[dir]+B+1; ++ii) {
 
 			// New griding - xb at cell edge:
-			REAL ratio = (1.*(ii))/(1.*global_numCells[dir]);
+			double ratio = (1.*(ii))/(1.*global_numCells[dir]);
 			
 			if(!EdgeGridding) {
 				// Revert to old gridding scheme:
@@ -1057,13 +1057,13 @@ void Grid::generate_Grid() {
 #ifdef GEOM
 
 
-REAL Grid::get_CellGeomTrafo(int ii, int jj, int kk) {
+double Grid::get_CellGeomTrafo(int ii, int jj, int kk) {
 	//! Returns geometrical factors for cell centre
 	return getCen_h0(ii,jj,kk)*getCen_h1(ii,jj,kk)*getCen_h2(ii,jj,kk);
 }
 
 
-REAL Grid::get_AreaGeomTrafo(int dir, int ii, int jj, int kk) {
+double Grid::get_AreaGeomTrafo(int dir, int ii, int jj, int kk) {
 	//! Returns geometrical factors for left-handed cell face
 	if(dir==0) {
 		return get_AreaGeomTrafo_x(ii, jj, kk);
@@ -1077,50 +1077,50 @@ REAL Grid::get_AreaGeomTrafo(int dir, int ii, int jj, int kk) {
 }
 
 
-REAL Grid::get_AreaGeomTrafo_x(int ii, int jj, int kk) {
+double Grid::get_AreaGeomTrafo_x(int ii, int jj, int kk) {
 	//! Returns geometrical factors for left-handed cell face in x-direction
 	return getEdgL_h1(ii,jj,kk)*getEdgL_h2(ii,jj,kk);
 }
 
-REAL Grid::get_AreaGeomTrafo_y(int ii, int jj, int kk) {
+double Grid::get_AreaGeomTrafo_y(int ii, int jj, int kk) {
 	//! Returns geometrical factors for left-handed cell face in y-direction
 	return getEdgL_h0(ii,jj,kk)*getEdgL_h2(ii,jj,kk);
 }
 
-REAL Grid::get_AreaGeomTrafo_z(int ii, int jj, int kk) {
+double Grid::get_AreaGeomTrafo_z(int ii, int jj, int kk) {
 	//! Returns geometrical factors for left-handed cell face in z-direction
 	return getEdgL_h0(ii,jj,kk)*getEdgL_h1(ii,jj,kk);
 }
 
 
-REAL Grid::get_CellArea_x(int ii, int jj, int kk) {
+double Grid::get_CellArea_x(int ii, int jj, int kk) {
 	//! Return area of left-handed cell face in x-direction
 #if (NON_LINEAR_GRID == CRONOS_OFF)
-	REAL Area = dx[1]*dx[2];
+	double Area = dx[1]*dx[2];
 #else
-	REAL Area = getCen_dx(1,jj)*getCen_dx(2,kk);
+	double Area = getCen_dx(1,jj)*getCen_dx(2,kk);
 #endif
 	Area *= getEdgL_h1(ii,jj,kk)*getEdgL_h2(ii,jj,kk);
 	return Area;
 }
 
-REAL Grid::get_CellArea_y(int ii, int jj, int kk) {
+double Grid::get_CellArea_y(int ii, int jj, int kk) {
 	//! Return area of left-handed cell face in x-direction
 #if (NON_LINEAR_GRID == CRONOS_OFF)
-	REAL Area = dx[0]*dx[2];
+	double Area = dx[0]*dx[2];
 #else
-	REAL Area = getCen_dx(0,ii)*getCen_dx(2,kk);
+	double Area = getCen_dx(0,ii)*getCen_dx(2,kk);
 #endif
 	Area *= getEdgL_h0(ii,jj,kk)*getEdgL_h2(ii,jj,kk);
 	return Area;
 }
 
-REAL Grid::get_CellArea_z(int ii, int jj, int kk) {
+double Grid::get_CellArea_z(int ii, int jj, int kk) {
 	//! Return area of left-handed cell face in x-direction
 #if (NON_LINEAR_GRID == CRONOS_OFF)
-	REAL Area = dx[0]*dx[1];
+	double Area = dx[0]*dx[1];
 #else
-	REAL Area = getCen_dx(0,ii)*getCen_dx(1,jj);
+	double Area = getCen_dx(0,ii)*getCen_dx(1,jj);
 #endif
 	Area *= getEdgL_h0(ii,jj,kk)*getEdgL_h1(ii,jj,kk);
 	return Area;
@@ -1130,7 +1130,7 @@ REAL Grid::get_CellArea_z(int ii, int jj, int kk) {
 
 
 #if (NON_LINEAR_GRID == CRONOS_OFF)
-double Grid::h0(REAL ii, REAL jj, REAL kk) const {
+double Grid::h0(double ii, double jj, double kk) const {
 #if (GEOM == 1) // Cartesian
 	return 1.;
 #endif
@@ -1176,7 +1176,7 @@ double Grid::getEdgL_h0(int ii, int jj, int kk) const {
 
 
 #if (NON_LINEAR_GRID == CRONOS_OFF)
-double Grid::h1(REAL ii, REAL jj, REAL kk) const {
+double Grid::h1(double ii, double jj, double kk) const {
 #if (GEOM == 1) // Cartesian
 	return 1.;
 #endif
@@ -1225,7 +1225,7 @@ double Grid::getEdgL_h1(int ii, int jj, int kk) const {
 
 #if (NON_LINEAR_GRID == CRONOS_OFF)
 
-double Grid::h2(REAL ii, REAL jj, REAL kk) const {
+double Grid::h2(double ii, double jj, double kk) const {
 #if (GEOM == 1)
 	return 1.;
 #endif
@@ -1275,7 +1275,7 @@ double Grid::getEdgL_h2(int ii, int jj, int kk) const {
 #endif
 
 
-void Grid::ScaleGrid(NumArray<double>& xb, NumArray<double>& xe, const int &dim, const REAL &scale) {
+void Grid::ScaleGrid(NumArray<double>& xb, NumArray<double>& xe, const int &dim, const double &scale) {
 	xb[dim] *= scale;
 	xe[dim] *= scale;
 	//   dx[DIM] *= scale;
@@ -1676,7 +1676,7 @@ void Grid::add_nonLinGridToHdf(Hdf5Stream &h5out, int num_ghost) {
 
 
 
-REAL Grid::get_Volume() {
+double Grid::get_Volume() {
 	return ((global_xe[0] - global_xb[0])*
 	        (global_xe[1] - global_xb[1])*
 	        (global_xe[2] - global_xb[2]));

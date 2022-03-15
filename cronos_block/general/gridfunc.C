@@ -77,7 +77,7 @@ gridFunc::gridFunc(Data &gdata)
 
 	// if(atAxis) {
 #if (GEOM == CYLINDRICAL)
-	REAL eps(1.e-5*(gdata.global_xe[0]-gdata.global_xb[0]));
+	double eps(1.e-5*(gdata.global_xe[0]-gdata.global_xb[0]));
 		bc_Type[0] = int(value((char*)"bc_x_bot"));
 		if(gdata.get_singularity_treatment(0) > 0) {
 			compute_AxisPartners(gdata);
@@ -88,7 +88,7 @@ gridFunc::gridFunc(Data &gdata)
 			}
 		}
 #elif (GEOM == SPHERICAL)
-		REAL eps(1.e-5*(gdata.global_xe[1]-gdata.global_xb[1]));
+		double eps(1.e-5*(gdata.global_xe[1]-gdata.global_xb[1]));
 		// if(gdata.get_singularity_treatment(2) > 0 ||
 		// 		gdata.get_singularity_treatment(3) > 0) {
 		// 	compute_AxisPartners(gdata,0);
@@ -115,7 +115,7 @@ gridFunc::gridFunc(Data &gdata)
 			bc_Type[3] = 6;
 		}
 #else
-		REAL eps(0.);
+		double eps(0.);
 #endif
 	// }
 	// Ranks that do not participate in axis-stuff have to wait...
@@ -1111,8 +1111,8 @@ void gridFunc::boundary(Data &gdata, ProblemType &Problem,
 
 }
 
-void gridFunc::bc_SendRecv(Data &gdata, NumMatrix<REAL,3> &Send,
-                           NumMatrix<REAL,3> &Recv, int dir, int above,
+void gridFunc::bc_SendRecv(Data &gdata, NumMatrix<double,3> &Send,
+                           NumMatrix<double,3> &Recv, int dir, int above,
                            int q, bool do_Send, bool do_Receive)
 {
 	// (Nearly) Nothing to be done
@@ -1120,8 +1120,8 @@ void gridFunc::bc_SendRecv(Data &gdata, NumMatrix<REAL,3> &Send,
 }
 
 
-void gridFunc::bc_SendRecv(Data &gdata, NumArray<REAL> &Send,
-		NumArray<REAL> &Recv, int dir, int size_send, int size_recv, int above, int q, bool do_Send, bool do_Receive)
+void gridFunc::bc_SendRecv(Data &gdata, NumArray<double> &Send,
+		NumArray<double> &Recv, int dir, int size_send, int size_recv, int above, int q, bool do_Send, bool do_Receive)
 {
 	// (Nearly) Nothing to be done
 	for(int iter=0; iter<size_send; iter++) {
@@ -1131,7 +1131,7 @@ void gridFunc::bc_SendRecv(Data &gdata, NumArray<REAL> &Send,
 
 
 
-void gridFunc::bc_ISendRecv(Data &gdata, NumArray<REAL> &Send, NumArray<REAL> &Recv,
+void gridFunc::bc_ISendRecv(Data &gdata, NumArray<double> &Send, NumArray<double> &Recv,
 		int dir, int size_send, int size_recv, int above, int q, bool do_Send, bool do_Receive)
 {
 	// (Nearly) Nothing to be done
@@ -1143,7 +1143,7 @@ void gridFunc::bc_ISendRecv(Data &gdata, NumArray<REAL> &Send, NumArray<REAL> &R
 
 
 void gridFunc::bc_Periodic_old(Data &gdata, ProblemType &Problem,
-                           NumMatrix<REAL,3> &omb,
+                           NumMatrix<double,3> &omb,
                            int dir, int q, int rim, bool internal_only) {
 
 	NumMatrix<double,3> Recv;
@@ -1467,7 +1467,7 @@ void gridFunc::bc_Periodic_old(Data &gdata, ProblemType &Problem,
 
 
 void gridFunc::bc_Periodic_serial(Data &gdata, ProblemType &Problem,
-		NumMatrix<REAL,3> &omb, int dir, int q, int rim) {
+		NumMatrix<double,3> &omb, int dir, int q, int rim) {
 
 	int shift(0);
 	if(gdata.get_EdgeGridding()) {
@@ -1550,7 +1550,7 @@ void gridFunc::bc_Periodic_serial(Data &gdata, ProblemType &Problem,
 
 
 void gridFunc::bc_Periodic(Data &gdata, ProblemType &Problem,
-                           NumMatrix<REAL,3> &omb,
+                           NumMatrix<double,3> &omb,
                            int dir, int q, int rim, bool internal_only) {
 
 
@@ -2018,7 +2018,7 @@ int gridFunc::get_AxisPartners(Data &gdata, int top, int iz) {
 
 
 void gridFunc::bc_Axis(Data &gdata, ProblemType &Problem,
-		NumMatrix<REAL,3> &omb, int dir, int top, int q, int rim) {
+		NumMatrix<double,3> &omb, int dir, int top, int q, int rim) {
 #if (GEOM == CYLINDRICAL)
 	if(dir==0) {
 		bc_AxisCyl(gdata, Problem, omb, q, rim);
@@ -2032,7 +2032,7 @@ void gridFunc::bc_Axis(Data &gdata, ProblemType &Problem,
 
 
 void gridFunc::bc_AxisCyl(Data &gdata, ProblemType &Problem,
-		NumMatrix<REAL,3> &omb, int q, int rim) {
+		NumMatrix<double,3> &omb, int q, int rim) {
 
 	// Special treatment of coordinate axis - so far only for
 	// cylindrical coordinates.
@@ -2047,7 +2047,7 @@ void gridFunc::bc_AxisCyl(Data &gdata, ProblemType &Problem,
 	// 	cout << " Partner: " << AxisPartnersPhi(5) << " ";
 	// 	cout << (gdata.mx[1]+1)/2 + 5 << endl;
 	// }
-	NumMatrix<REAL,3> & omb_global = omb;
+	NumMatrix<double,3> & omb_global = omb;
 
 	for (int k = -rim; k <= gdata.mx[2]+rim; ++k) {
 		for (int j = -rim; j <= gdata.mx[1]+rim; ++j) {
@@ -2073,10 +2073,10 @@ void gridFunc::bc_AxisCyl(Data &gdata, ProblemType &Problem,
 
 
 void gridFunc::bc_AxisSph(Data &gdata, ProblemType &Problem,
-		NumMatrix<REAL,3> &omb, int top, int q, int rim) {
+		NumMatrix<double,3> &omb, int top, int q, int rim) {
 #if (GEOM == 3)
 
-	NumMatrix<REAL,3> & omb_global = omb;
+	NumMatrix<double,3> & omb_global = omb;
 
 	string qname = omb.getName();
 	string subsp = qname.substr(qname.size()-2,2); // last two letters
@@ -2139,21 +2139,21 @@ void gridFunc::do_AxisValCorrectionCyl(Data &gdata, ProblemType &Problem) {
 #if (GEOM == CYLINDRICAL)
 	int jnum = gdata.get_RankWidth(1);
 	for (int iz = -B; iz <= gdata.mx[2]+B; ++iz) {
-		REAL Bcx_sum = 0.;  // new values for Cartesian Bx, By
-		REAL Bcy_sum = 0.;  //  on the singular axis
+		double Bcx_sum = 0.;  // new values for Cartesian Bx, By
+		double Bcy_sum = 0.;  //  on the singular axis
 		int N_terms(0);
 			//		for (int j = 0; j <= gdata.mx[1]; j++) {
 			// Do not use phi=0 twice!
 		if(gdata.get_singularity_treatment(0) == 1) { // at lower r-bound
 			for (int iy = 0; iy < jnum; iy++) {
 				// br0_j, bp0_j: projected to (r,phi)=(0,phi_j) via avg.
-				REAL br0_j = (+gdata.om[q_Bx]( 0,iy,  iz)
+				double br0_j = (+gdata.om[q_Bx]( 0,iy,  iz)
 				              +gdata.om[q_Bx](-2,iy,  iz))/2.;
-				REAL bp0_j = (+gdata.om[q_By]( 0,iy-1,iz)
+				double bp0_j = (+gdata.om[q_By]( 0,iy-1,iz)
 				              +gdata.om[q_By]( 0,iy  ,iz)
 				              +gdata.om[q_By](-1,iy-1,iz)
 				              +gdata.om[q_By](-1,iy  ,iz))/4.;
-				REAL phi = gdata.getCen(1, iy);
+				double phi = gdata.getCen(1, iy);
 				Bcx_sum += br0_j * cos(phi) - bp0_j * sin(phi);
 				Bcy_sum += br0_j * sin(phi) + bp0_j * cos(phi);
 				// if(gdata.rank==0 && k==1) {
@@ -2173,8 +2173,8 @@ void gridFunc::do_AxisValCorrectionCyl(Data &gdata, ProblemType &Problem) {
 			N_terms = 0.;
 		}
 
-		REAL Bcx_ave(Bcx_sum/N_terms);
-		REAL Bcy_ave(Bcy_sum/N_terms);
+		double Bcx_ave(Bcx_sum/N_terms);
+		double Bcy_ave(Bcy_sum/N_terms);
 
 		// if((gdata.rank==0 && k==gdata.mx[2]) ||
 		//    (gdata.rank==1 && k==-1)) {
@@ -2185,8 +2185,8 @@ void gridFunc::do_AxisValCorrectionCyl(Data &gdata, ProblemType &Problem) {
 
 		if(gdata.get_singularity_treatment(0) == 1) { // at lower r-bound
 			for (int iy = -B; iy <= gdata.mx[1]+B; iy++) { // set Br(0)s
-				REAL phi = gdata.getCen(1, iy);
-				REAL Br0_ave = ( Bcx_ave * cos(phi) +
+				double phi = gdata.getCen(1, iy);
+				double Br0_ave = ( Bcx_ave * cos(phi) +
 				                 Bcy_ave * sin(phi) );
 				gdata.om[q_Bx](-1,iy,iz) = Br0_ave;
 			} // j
@@ -2205,16 +2205,16 @@ void gridFunc::do_AxisValCorrectionSph(Data &gdata, ProblemType &Problem, bool t
 //#if (GEOM == SPHERICAL)
 	// Check if singularity is on current rank
 	if(gdata.get_singularity_treatment(2+top) == 1) {
-		REAL cost0 = 1.-2.*top;      // cos({0|Pi}) = {+1|-1}
+		double cost0 = 1.-2.*top;      // cos({0|Pi}) = {+1|-1}
 		int jS = top*(gdata.mx[1]+1)-1; // {-1|mxtet} (sing. index)
 		for (int ix = -B; ix <= gdata.mx[0]+B; ++ix) {
-			REAL Bcx_sum = 0.;  // new values for Cartesian Bx, By
-			REAL Bcy_sum = 0.;  //  on the singular axis
+			double Bcx_sum = 0.;  // new values for Cartesian Bx, By
+			double Bcy_sum = 0.;  //  on the singular axis
 			for (int iz = 0; iz <= gdata.mx[2]; ++iz) {
 				// bt0_k, bp0_k: projected to (tet,phi)=(0,phi_k) via avg.
-				REAL bt0_k = (+gdata.om[q_By](ix,jS-1, iz  )
+				double bt0_k = (+gdata.om[q_By](ix,jS-1, iz  )
 						+gdata.om[q_By](ix,jS+1, iz  ))*0.5;
-				REAL bp0_k = (+gdata.om[q_Bz](ix,jS  , iz-1)
+				double bp0_k = (+gdata.om[q_Bz](ix,jS  , iz-1)
 						+gdata.om[q_Bz](ix,jS  , iz  )
 						+gdata.om[q_Bz](ix,jS+1, iz-1)
 						+gdata.om[q_Bz](ix,jS+1, iz  ))*0.25;
@@ -2224,11 +2224,11 @@ void gridFunc::do_AxisValCorrectionSph(Data &gdata, ProblemType &Problem, bool t
 			}
 			int N_terms = gdata.mx[2]+1;
 
-			REAL Bcx_ave(Bcx_sum/N_terms);
-			REAL Bcy_ave(Bcy_sum/N_terms);
+			double Bcx_ave(Bcx_sum/N_terms);
+			double Bcy_ave(Bcy_sum/N_terms);
 
 			for (int iz = -B; iz <= gdata.mx[2]+B; iz++) { // set Bt(0)s
-				REAL Bt0_ave = ( Bcx_ave * cost0 * cosPos[2](iz) +
+				double Bt0_ave = ( Bcx_ave * cost0 * cosPos[2](iz) +
 						Bcy_ave * cost0 * sinPos[2](iz) );
 				//         NB:  -Bcz_sum * sint0 ~ sin({0|Pi}) = 0
 				gdata.om[q_By](ix,jS,iz) = Bt0_ave;
@@ -2244,7 +2244,7 @@ void gridFunc::do_AxisValCorrectionSph(Data &gdata, ProblemType &Problem, bool t
 
 
 void gridFunc::bc_Extrapolate(Data &gdata, ProblemType &Problem, 
-                              NumMatrix<REAL,3> &omb,
+                              NumMatrix<double,3> &omb,
                               int dir, int above, int q, int rim)
 {
 
@@ -2360,7 +2360,7 @@ void gridFunc::bc_Extrapolate(Data &gdata, ProblemType &Problem,
 
 
 void gridFunc::bc_Outflow(Data &gdata, ProblemType &pr,
-                          NumMatrix<REAL,3> &omb,
+                          NumMatrix<double,3> &omb,
                           int dir, int above, int q, int rim)
 {
 
@@ -2551,7 +2551,7 @@ void gridFunc::bc_Outflow(Data &gdata, ProblemType &pr,
 
 
 void gridFunc::bc_Reflecting(Data &gdata, ProblemType &pr,
-                             NumMatrix<REAL,3> &omb,
+                             NumMatrix<double,3> &omb,
                              int dir, int above, int q, int rim)
 {
 	/*
@@ -2686,7 +2686,7 @@ void gridFunc::bc_Reflecting(Data &gdata, ProblemType &pr,
 
 
 void gridFunc::bc_Fixed(Data &gdata, ProblemType &pr,
-                        NumMatrix<REAL,3> &omb,
+                        NumMatrix<double,3> &omb,
                         int dir, int above, int q, int rim)
 {
 	/*
@@ -2718,12 +2718,12 @@ void gridFunc::bc_Fixed(Data &gdata, ProblemType &pr,
 			}
 
 			if(generic_vars) {
-				NumMatrix<REAL,3> & bcVals = bcVals_xb[q];
+				NumMatrix<double,3> & bcVals = bcVals_xb[q];
 				// Doing bcs:
 				bc_Fixed_general(omb, bcVals, imin, imax);
 #if (OMS_USER == TRUE)
 			} else {
-				NumMatrix<REAL,3> & bcVals = bcVals_User_xb[q];
+				NumMatrix<double,3> & bcVals = bcVals_User_xb[q];
 				// Doing bcs:
 				bc_Fixed_general(omb, bcVals, imin, imax);
 #endif
@@ -2735,12 +2735,12 @@ void gridFunc::bc_Fixed(Data &gdata, ProblemType &pr,
 			int imax[3] = {gdata.mx[0]+rim, gdata.mx[1]+rim, gdata.mx[2]+rim};
 
 			if(generic_vars) {
-				NumMatrix<REAL,3> & bcVals = bcVals_xe[q];
+				NumMatrix<double,3> & bcVals = bcVals_xe[q];
 				// Doing bcs:
 				bc_Fixed_general(omb, bcVals, imin, imax);
 #if (OMS_USER == TRUE)
 			} else {
-				NumMatrix<REAL,3> & bcVals = bcVals_User_xe[q];
+				NumMatrix<double,3> & bcVals = bcVals_User_xe[q];
 				// Doing bcs:
 				bc_Fixed_general(omb, bcVals, imin, imax);
 #endif
@@ -2760,12 +2760,12 @@ void gridFunc::bc_Fixed(Data &gdata, ProblemType &pr,
 			}
 
 			if(generic_vars) {
-				NumMatrix<REAL,3> & bcVals = bcVals_yb[q];
+				NumMatrix<double,3> & bcVals = bcVals_yb[q];
 				// Doing bcs:
 				bc_Fixed_general(omb, bcVals, imin, imax);
 #if (OMS_USER == TRUE)
 			} else {
-				NumMatrix<REAL,3> & bcVals = bcVals_User_yb[q];
+				NumMatrix<double,3> & bcVals = bcVals_User_yb[q];
 				// Doing bcs:
 				bc_Fixed_general(omb, bcVals, imin, imax);
 #endif
@@ -2777,12 +2777,12 @@ void gridFunc::bc_Fixed(Data &gdata, ProblemType &pr,
 			int imax[3] = {gdata.mx[0]+rim, gdata.mx[1]+rim, gdata.mx[2]+rim};
 
 			if(generic_vars) {
-				NumMatrix<REAL,3> & bcVals = bcVals_ye[q];
+				NumMatrix<double,3> & bcVals = bcVals_ye[q];
 				// Doing bcs:
 				bc_Fixed_general(omb, bcVals, imin, imax);
 #if (OMS_USER == TRUE)
 			} else {
-				NumMatrix<REAL,3> & bcVals = bcVals_User_ye[q];
+				NumMatrix<double,3> & bcVals = bcVals_User_ye[q];
 				// Doing bcs:
 				bc_Fixed_general(omb, bcVals, imin, imax);
 #endif
@@ -2802,12 +2802,12 @@ void gridFunc::bc_Fixed(Data &gdata, ProblemType &pr,
 			}
 
 			if(generic_vars) {
-				NumMatrix<REAL,3> & bcVals = bcVals_zb[q];
+				NumMatrix<double,3> & bcVals = bcVals_zb[q];
 				// Doing bcs:
 				bc_Fixed_general(omb, bcVals, imin, imax);
 #if (OMS_USER == TRUE)
 			} else {
-				NumMatrix<REAL,3> & bcVals = bcVals_User_zb[q];
+				NumMatrix<double,3> & bcVals = bcVals_User_zb[q];
 				// Doing bcs:
 				bc_Fixed_general(omb, bcVals, imin, imax);
 #endif
@@ -2819,12 +2819,12 @@ void gridFunc::bc_Fixed(Data &gdata, ProblemType &pr,
 			int imax[3] = {gdata.mx[0]+rim, gdata.mx[1]+rim, gdata.mx[2]+rim};
 
 			if(generic_vars) {
-				NumMatrix<REAL,3> & bcVals = bcVals_ze[q];
+				NumMatrix<double,3> & bcVals = bcVals_ze[q];
 				// Doing bcs:
 				bc_Fixed_general(omb, bcVals, imin, imax);
 #if (OMS_USER == TRUE)
 			} else {
-				NumMatrix<REAL,3> & bcVals = bcVals_User_ze[q];
+				NumMatrix<double,3> & bcVals = bcVals_User_ze[q];
 				// Doing bcs:
 				bc_Fixed_general(omb, bcVals, imin, imax);
 #endif
@@ -2836,8 +2836,8 @@ void gridFunc::bc_Fixed(Data &gdata, ProblemType &pr,
 
 }
 
-void gridFunc::bc_Fixed_general(NumMatrix<REAL,3> &omb,
-                                NumMatrix<REAL,3> &bcVals,
+void gridFunc::bc_Fixed_general(NumMatrix<double,3> &omb,
+                                NumMatrix<double,3> &bcVals,
                                 int imin[3], int imax[3]) {
 
 	for (int iz = imin[2]; iz <= imax[2]; iz++){
@@ -3210,7 +3210,7 @@ void gridFunc::datain_old(Data &gdata, Hdf5iStream & h5in, string &filename,
 		  }
 		*/
 
-		REAL facred = fac;
+		double facred = fac;
 		int mxloc[3] = {mxsm[0], mxsm[1], mxsm[2]};
 		if(fac != 1 && gdata.rank == 0) {
 			cout << " Prolongating: ";
@@ -3461,7 +3461,7 @@ void gridFunc::datain(Data &gdata, Hdf5iStream & h5in, string &filename,
 		  }
 		*/
 
-		REAL facred = fac;
+		double facred = fac;
 		int mxloc[3] = {mxsm[0], mxsm[1], mxsm[2]};
 
 		if(fac != 1 && gdata.rank == 0) {
@@ -3572,13 +3572,13 @@ double gridFunc::datain_collective(Data &gdata, Hdf5iStream & h5in, string &file
 
 	// Now, determine the respective grid ratios
 	NumArray<int> ratio(DIM);
-	REAL eps = 1.e-42;
+	double eps = 1.e-42;
 	for(int dir=0; dir<DIM; ++dir) {
 		if(gdata.get_EdgeGridding()) {
 			ratio(dir) = gdata.get_numCells_global(dir)/Nx_data[dir];
 //			ratio(dir) = Nx_data[dir]/(gdata.get_numCells_global(dir));
 			// Test if we have an integer number
-			REAL d_ratio = gdata.get_numCells_global(dir)/(1.*Nx_data[dir]-eps);
+			double d_ratio = gdata.get_numCells_global(dir)/(1.*Nx_data[dir]-eps);
 			if(std::abs(ratio(dir)-d_ratio) > 1.e-12) {
 				cerr << " Error in datain_collective - ratio of grids is not an integer " << endl;
 				exit(3);
@@ -3588,8 +3588,8 @@ double gridFunc::datain_collective(Data &gdata, Hdf5iStream & h5in, string &file
 			ratio(dir) = gdata.global_mx[dir]/(mx_data[dir]);
 //			ratio(dir) = mx_data[dir]/(gdata.global_mx[dir]);
 			// Test if we have an integer number
-			REAL d_ratio = gdata.global_mx[dir]/(1.*mx_data[dir]-eps);
-//			REAL d_ratio = mx_data[dir]/(1.*gdata.global_mx[dir]-eps);
+			double d_ratio = gdata.global_mx[dir]/(1.*mx_data[dir]-eps);
+//			double d_ratio = mx_data[dir]/(1.*gdata.global_mx[dir]-eps);
 			if(ratio(dir)-d_ratio > 1.e-12) {
 				cerr << " Error in datain_collective - ratio of grids is not an integer " << endl;
 				exit(3);

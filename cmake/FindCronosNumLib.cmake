@@ -7,8 +7,11 @@
 # CRONOSNUMLIB_MATRIX - Directory containing the matrix library for CronosNumLib.
 # CRONOSNUMLIB_UTIL - Directory containing the util library for CronosNumLib.
 
-cmake_minimum_required (VERSION 3.17)
+cmake_minimum_required (VERSION 3.16.3)
 include(FindPackageHandleStandardArgs)
+
+SET(CMAKE_FIND_LIBRARY_PREFIXES "lib")
+SET(CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".a")
 
 macro(CRONOSNUMLIB_REPORT_NOT_FOUND REASON_MSG)
     unset(CRONOSNUMLIB_FOUND)
@@ -32,15 +35,24 @@ list(APPEND CRONOSNUMLIB_CHECK_INCLUDE_DIRS
   /opt/local/include
   /usr/include
   ${CMAKE_CURRENT_SOURCE_DIR}/../external/CronosNumLib/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/include
   )
 
 list(APPEND CRONOSNUMLIB_CHECK_LIBRARY_DIRS
   /usr/local/lib
+  /usr/local/lib/CronosNumLib/Linux-amd64
   /usr/local/homebrew/lib
+  /usr/local/homebrew/lib/CronosNumLib/Linux-amd64
   /opt/local/lib
+  /opt/local/lib/CronosNumLib/Linux-amd64
   /usr/lib
+  /usr/lib/CronosNumLib/Linux-amd64
   /usr/lib/x86_64-linux-gnu
+  /usr/lib/x86_64-linux-gnu/CronosNumLib/Linux-amd64
   ${CMAKE_CURRENT_SOURCE_DIR}/../external/CronosNumLib/lib
+  ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib
+  ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib/CronosNumLib/Linux-amd64
+  
   )
 
 find_path(CRONOSNUMLIB_INCLUDE_DIR
@@ -50,14 +62,14 @@ find_path(CRONOSNUMLIB_INCLUDE_DIR
 )
 
 find_library(CRONOSNUMLIB_MATRIX
-  "CronosNumLib/Linux-amd64/libmatrix_mt.a"
-  PATHS ${CRONOSNUMLIB_CHECK_LIBRARY_DIRS}
+  matrix_mt
+  HINTS ${CRONOSNUMLIB_CHECK_LIBRARY_DIRS}
   NO_DEFAULT_PATH
 )
 
 find_library(CRONOSNUMLIB_UTIL
-  "CronosNumLib/Linux-amd64/libutil_mt.a"
-  PATHS ${CRONOSNUMLIB_CHECK_LIBRARY_DIRS}
+  util_mt
+  HINTS ${CRONOSNUMLIB_CHECK_LIBRARY_DIRS}
   NO_DEFAULT_PATH
 )
 

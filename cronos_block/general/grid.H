@@ -7,7 +7,7 @@
 
 #include "gridParam.H"
 
-#define REAL double
+//#define REAL double
 
 // Class holding the position of the grid-cells and cell-interfaces
 // Here we use the matrix class in order to be able to use negative
@@ -25,99 +25,99 @@ public:
 	Grid(bool constructFromCat = true);
 	virtual ~Grid(){}
 	// get position of cell centre - direction dependet versions
-	REAL getCen_x(int) const, getCen_y(int) const, getCen_z(int) const;
+	double getCen_x(int) const, getCen_y(int) const, getCen_z(int) const;
 	// get position of cell centre - direction independet version
-	REAL getCen(int, int) const;
+	double getCen(int, int) const;
 	// get position of cell eges - direction dependet versions
-	// REAL getEdge_x(int), getEdge_y(int), getEdge_z(int);
+	// double getEdge_x(int), getEdge_y(int), getEdge_z(int);
 	// get position of cell eges - direction independet version
-	// REAL getEdge(int, int);
+	// double getEdge(int, int);
 	// get position of left cell edge - direction dependent versions
-	REAL getEdgL_x(int) const;
-	REAL getEdgL_y(int) const;
-	REAL getEdgL_z(int) const;
+	double getEdgL_x(int) const;
+	double getEdgL_y(int) const;
+	double getEdgL_z(int) const;
 	// Same for right edge
-	REAL getEdgR_x(int) const;
-	REAL getEdgR_y(int) const;
-	REAL getEdgR_z(int) const;
+	double getEdgR_x(int) const;
+	double getEdgR_y(int) const;
+	double getEdgR_z(int) const;
 	// get position of cell eges - direction independet version
-	REAL getEdgL(int, int) const;
-	REAL getEdgR(int, int) const;
-	REAL get_x(int, int) const;
-	REAL get_y(int, int) const;
-	REAL get_z(int, int) const;
+	double getEdgL(int, int) const;
+	double getEdgR(int, int) const;
+	double get_x(int, int) const;
+	double get_y(int, int) const;
+	double get_z(int, int) const;
 
 	// Get positions globally:
-	REAL get_x_global(int, int) const;
-	REAL get_y_global(int, int) const;
-	REAL get_z_global(int, int) const;
-	REAL get_pos_global(int, int, int) const;
+	double get_x_global(int, int) const;
+	double get_y_global(int, int) const;
+	double get_z_global(int, int) const;
+	double get_pos_global(int, int, int) const;
 
-	REAL getCen_dx_global(int dir, int ii) const;
+	double getCen_dx_global(int dir, int ii) const;
 
 	bool get_EdgeGridding() const;
 	int get_RankWidth(int dir) const;
 	int get_RankShift(int dir) const;
 	int get_numCells_global(int dir) const;
 	
-	REAL get_pos(int, int, int) const;
-	REAL getCen_dx(int dir, int ii) const;
-	REAL getCen_hx(int dir, int ii) const;
-	REAL getCen_idx(int dir, int ii) const;
-	int get_CellIndex(int dir, REAL position) const;
-	REAL get_dx(int dir, int ii, int shift);
-	REAL get_idx(int, int, int);
-	REAL get_hx(int, int, int);
-	REAL get_CellGeomTrafo(int, int, int);
-	REAL get_AreaGeomTrafo(int, int, int, int);
-	REAL get_AreaGeomTrafo_x(int, int, int);
-	REAL get_AreaGeomTrafo_y(int, int, int);
-	REAL get_AreaGeomTrafo_z(int, int, int);
-	REAL get_CellVolume(int, int, int) const;
-	REAL get_CellArea_x(int, int, int);
-	REAL get_CellArea_y(int, int, int);
-	REAL get_CellArea_z(int, int, int);
-	REAL get_CellArea();
-	REAL get_Volume();
+	double get_pos(int, int, int) const;
+	double getCen_dx(int dir, int ii) const;
+	double getCen_hx(int dir, int ii) const;
+	double getCen_idx(int dir, int ii) const;
+	int get_CellIndex(int dir, double position) const;
+	double get_dx(int dir, int ii, int shift);
+	double get_idx(int, int, int);
+	double get_hx(int, int, int);
+	double get_CellGeomTrafo(int, int, int);
+	double get_AreaGeomTrafo(int, int, int, int);
+	double get_AreaGeomTrafo_x(int, int, int);
+	double get_AreaGeomTrafo_y(int, int, int);
+	double get_AreaGeomTrafo_z(int, int, int);
+	double get_CellVolume(int, int, int) const;
+	double get_CellArea_x(int, int, int);
+	double get_CellArea_y(int, int, int);
+	double get_CellArea_z(int, int, int);
+	double get_CellArea();
+	double get_Volume();
 
 	/** Maps from local (mpi) indices to global ones */
 	int get_idx_global(int dir, int ii) const;
 
 #if (NON_LINEAR_GRID == CRONOS_ON)
-	// REAL get_GridFunction(ProblemType &Problem, int dir, REAL ratio);
-	//	REAL get_GridFunction(int dir, REAL ratio);
-	REAL get_GridFunction(int dir, REAL ratio, REAL (*func)(REAL));
-	REAL get_ExpGrid(int dir, REAL ratio);
+	// double get_GridFunction(ProblemType &Problem, int dir, double ratio);
+	//	double get_GridFunction(int dir, double ratio);
+	double get_GridFunction(int dir, double ratio, double (*func)(double));
+	double get_ExpGrid(int dir, double ratio);
 	void set_NonLinGridFunction();
-	void set_UserGridFunction(int dir, REAL beg, REAL end, REAL len);
+	void set_UserGridFunction(int dir, double beg, double end, double len);
 	void add_nonLinGridToHdf(Hdf5Stream &, int num_ghost);
 #endif
 	// void generate_Grid(ProblemType &Problem);
 	//	void generate_Grid();
-	//	void generate_Grid(REAL (*func)(int, REAL));
+	//	void generate_Grid(double (*func)(int, double));
 	void generate_Grid();
 	int axis_treatment(int dir) const;
 	int get_singularity_treatment(int dir, int top) const;
 	int get_singularity_treatment(int bound) const;
 	int singularity_treatment(int dir, int top) const;
 #ifdef GEOM
-	double h0(REAL, REAL, REAL) const;
-	double h1(REAL, REAL, REAL) const;
-	double h2(REAL, REAL, REAL) const;
-	REAL h0(int, int, int, int, int, int) const;
-	REAL h1(int, int, int, int, int, int) const;
-	REAL h2(int, int, int, int, int, int) const;
-	REAL getCen_h0(int, int, int) const;
-	REAL getCen_h1(int, int, int) const;
-	REAL getCen_h2(int, int, int) const;
-	REAL getEdgL_h0(int, int, int) const;
-	REAL getEdgL_h1(int, int, int) const;
-	REAL getEdgL_h2(int, int, int) const;
+	double h0(double, double, double) const;
+	double h1(double, double, double) const;
+	double h2(double, double, double) const;
+	double h0(int, int, int, int, int, int) const;
+	double h1(int, int, int, int, int, int) const;
+	double h2(int, int, int, int, int, int) const;
+	double getCen_h0(int, int, int) const;
+	double getCen_h1(int, int, int) const;
+	double getCen_h2(int, int, int) const;
+	double getEdgL_h0(int, int, int) const;
+	double getEdgL_h1(int, int, int) const;
+	double getEdgL_h2(int, int, int) const;
 #endif
 	int mx[DIM] = { 0 }, global_mx[DIM] = { 0 }, coords[DIM] = { 0 };
-	REAL xb[DIM] = { 0 }, xe[DIM] = { 0 }, dx[DIM] = { 0 }, Lx[DIM] = { 0 }, hx[DIM] = { 0 }, idx[DIM] = { 0 };
-	REAL grid_ref[DIM] = { 0.0 };
-	REAL global_xb[DIM] = { 0.0 }, global_xe[DIM] = { 0.0 };
+	double xb[DIM] = { 0 }, xe[DIM] = { 0 }, dx[DIM] = { 0 }, Lx[DIM] = { 0 }, hx[DIM] = { 0 }, idx[DIM] = { 0 };
+	double grid_ref[DIM] = { 0.0 };
+	double global_xb[DIM] = { 0.0 }, global_xe[DIM] = { 0.0 };
 	int rank = 0, rank_constz = 0, rank_constx = 0;
 	int rank_constxy = 0;
 	static constexpr short phi_dir = GEOM-1; // phi dir: 1 for cyl, 2 for sph
@@ -125,12 +125,12 @@ public:
 protected:
 	int numCellsEff[DIM] = { 0 };
 private:
-	REAL get_x(REAL) const;
-	REAL get_y(REAL) const;
-	REAL get_z(REAL) const;
-	// REAL get_x(int, REAL);
+	double get_x(double) const;
+	double get_y(double) const;
+	double get_z(double) const;
+	// double get_x(int, double);
 
-	static void ScaleGrid(NumArray<double>& xb, NumArray<double>& xe, const int &, const REAL &);
+	static void ScaleGrid(NumArray<double>& xb, NumArray<double>& xe, const int &, const double &);
 	static void CheckScale(NumArray<double>& xb, NumArray<double>& xe);
 	void WriteGridInfo();
 	bool WriteGridData();
@@ -139,18 +139,18 @@ private:
 	void MakeGridDir();
 
 #if (NON_LINEAR_GRID == CRONOS_ON)
-	NumMatrix<REAL,1> cellCentres[DIM], global_cellCentres[DIM];
-	NumMatrix<REAL,1> cellEdges[DIM], global_cellEdges[DIM];
-	NumMatrix<REAL,1> cellsDouble[DIM], global_cellsDouble[DIM];
-	NumMatrix<REAL,1> dxCentres[DIM], global_dxCentres[DIM];
-	NumMatrix<REAL,1> idxCentres[DIM];
-	NumMatrix<REAL,1> dxDouble[DIM];
-	NumMatrix<REAL,1> idxDouble[DIM];
+	NumMatrix<double,1> cellCentres[DIM], global_cellCentres[DIM];
+	NumMatrix<double,1> cellEdges[DIM], global_cellEdges[DIM];
+	NumMatrix<double,1> cellsDouble[DIM], global_cellsDouble[DIM];
+	NumMatrix<double,1> dxCentres[DIM], global_dxCentres[DIM];
+	NumMatrix<double,1> idxCentres[DIM];
+	NumMatrix<double,1> dxDouble[DIM];
+	NumMatrix<double,1> idxDouble[DIM];
 	int numDouble[DIM], global_numDouble[DIM];
 #endif
 	int numCells[DIM] = { 0 }, global_numCells[DIM] = { 0 };
 	int parametrisation[DIM] = { 0 };
-	REAL x0[3] = { 0.0 };
+	double x0[3] = { 0.0 };
 	bool EdgeGridding = false;
 	int include_coordAxisPhi = 0;
 	int include_Singularity[2*DIM] = { 0 };

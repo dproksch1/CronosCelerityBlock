@@ -34,7 +34,7 @@ public:
 	virtual ~RiemannSolver(){};
 	virtual void get_vChar(const Data &, const ProblemType &, const phys_fields_0D &, const phys_fields_0D &,
 			num_fields_0D &,
-			int ix, int iy, int iz, int dir, REAL &cfl_lin) const = 0;
+			int ix, int iy, int iz, int dir, double &cfl_lin) const = 0;
 	virtual void get_NumFlux(const Data &, const phys_fields_0D &,
 		const phys_fields_0D &, num_fields_0D &, int dir, int iFluid=0) const = 0;
 	virtual void reset_Indices(const CronosFluid &) = 0;
@@ -49,7 +49,7 @@ protected:
 	int Fluid_Type;
 	int verbosity;
 	bool use_carbuncleFlag;
-	//NumMatrix<REAL, 1> ptotalL, ptotalR;
+	//NumMatrix<double, 1> ptotalL, ptotalR;
 };
 
 

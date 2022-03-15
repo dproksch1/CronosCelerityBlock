@@ -3,7 +3,7 @@
 
 
 void get_Changes(const Data &gdata,
-		const num_fields_0D &numfM, const num_fields_0D &numfP, NumMatrix<REAL, 3> nom[],
+		const num_fields_0D &numfM, const num_fields_0D &numfP, NumMatrix<double, 3> nom[],
 		int ix, int iy, int iz, int dir, int Fluid_Type, int iFluid) {
 
 	// Length of first dimension contains number of fields
@@ -18,7 +18,7 @@ void get_Changes(const Data &gdata,
 	}
 
 #if (GEOM != CARTESIAN)
-	REAL AreaM, AreaP;
+	double AreaM, AreaP;
 	if(dir==0) {
 		AreaM = gdata.get_CellArea_x(ix,iy,iz);
 		AreaP = gdata.get_CellArea_x(ix+1,iy,iz);
@@ -29,7 +29,7 @@ void get_Changes(const Data &gdata,
 		AreaM = gdata.get_CellArea_z(ix,iy,iz);
 		AreaP = gdata.get_CellArea_z(ix,iy,iz+1);
 	}
-	REAL iVol = 1./gdata.get_CellVolume(ix,iy,iz);
+	double iVol = 1./gdata.get_CellVolume(ix,iy,iz);
 #endif
 
 
@@ -87,14 +87,14 @@ void get_Changes(const Data &gdata,
 
 }
 
-REAL get_Changes1DCart(const Data &gdata,
-		const NumArray<REAL> &fluxP, const NumArray<REAL> &fluxM,
+double get_Changes1DCart(const Data &gdata,
+		const NumArray<double> &fluxP, const NumArray<double> &fluxM,
 		int dir, int iPos, int q) {
 
 #if (NON_LINEAR_GRID == CRONOS_ON)
-	REAL idx = gdata.getCen_idx(dir, iPos);
+	double idx = gdata.getCen_idx(dir, iPos);
 #else
-	REAL idx = gdata.idx[dir];
+	double idx = gdata.idx[dir];
 #endif
 
 	return (fluxP[q] - fluxM[q])*idx;
