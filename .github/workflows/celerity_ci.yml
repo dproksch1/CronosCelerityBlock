@@ -43,6 +43,11 @@ jobs:
       run: |
         cmake --build ./build_block --config Release
 
+    - name: Search For Celerity
+      run: |
+        cd /
+        ls  
+    
     - name: Test
       working-directory: ${{github.workspace}}/build_block
       # Execute tests defined by the CMake configuration.  
