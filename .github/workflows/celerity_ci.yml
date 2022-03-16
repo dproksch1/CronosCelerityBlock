@@ -45,7 +45,7 @@ jobs:
 
     - name: Search For Celerity
       run: |
-        cd /
+        cd /sycl
         ls  
     
     - name: Test
