@@ -47,8 +47,7 @@ jobs:
       run: |
         find /usr -name celerity-config.cmake
         find /lib32 -name celerity-config.cmake
-        find /opt -name celerity-config.cmake    
-        find /etc -name celerity-config.cmake  
+        find /opt -name celerity-config.cmake
     
     - name: Test
       working-directory: ${{github.workspace}}/build_block
