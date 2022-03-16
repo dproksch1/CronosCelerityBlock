@@ -45,7 +45,10 @@ jobs:
 
     - name: Search For Celerity
       run: |
-        find / -name celerity-config.cmake  
+        find /home -name celerity-config.cmake
+        find /lib -name celerity-config.cmake
+        find /lib64 -name celerity-config.cmake    
+        find /sycl -name celerity-config.cmake  
     
     - name: Test
       working-directory: ${{github.workspace}}/build_block
