@@ -38,10 +38,12 @@ jobs:
         repository: celerity/celerity-runtime
         path: dependencies/celerity
 
-    - name: Test Clone Step
+    - name: Configure Celerity Cmake
+      working-directory: ${{github.workspace}}/dependencies/celerity
       run: |
-        cd dependencies/celerity
-        ls
+        mkdir build
+        cd build
+        cmake -G Ninja .. -DCMAKE_PREFIX_PATH="/sycl/hipSYCL/lib/cmake/hipSYCL" -DHIPSYCL_TARGETS="cuda:sm_52" -DCMAKE_INSTALL_PREFIX="/usr/lib/cmake" -DCMAKE_BUILD_TYPE=Release
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
