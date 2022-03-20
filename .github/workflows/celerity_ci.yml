@@ -45,6 +45,8 @@ jobs:
         mkdir build
         cd build
         cmake -G Ninja .. -DCMAKE_PREFIX_PATH="/sycl/hipSYCL/lib/cmake/hipSYCL" -DHIPSYCL_TARGETS="cuda:sm_52" -DCMAKE_INSTALL_PREFIX="/usr/lib/cmake" -DCMAKE_BUILD_TYPE=Release
+        cd ..
+        cmake --build build --target install
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
