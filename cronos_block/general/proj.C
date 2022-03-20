@@ -67,9 +67,9 @@ int main(int argc, char* argv[])
 
 	int EndProgram(0);
 
-	DeviceSelector device_selector;
-	Queue queue(device_selector);
-	//Queue queue;
+	//DeviceSelector device_selector;
+	//Queue queue(device_selector);
+	Queue queue;
 
 	Data gdata;
 	Environment solver(gdata);
