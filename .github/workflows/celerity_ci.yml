@@ -41,6 +41,7 @@ jobs:
     - name: Configure Celerity Cmake
       working-directory: ${{github.workspace}}/dependencies/celerity
       run: |
+        git submodule update --recursive
         mkdir build
         cd build
         cmake -G Ninja .. -DCMAKE_PREFIX_PATH="/sycl/hipSYCL/lib/cmake/hipSYCL" -DHIPSYCL_TARGETS="cuda:sm_52" -DCMAKE_INSTALL_PREFIX="/usr/lib/cmake" -DCMAKE_BUILD_TYPE=Release
