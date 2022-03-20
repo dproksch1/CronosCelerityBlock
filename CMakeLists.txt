@@ -79,7 +79,7 @@ if(CELERITY_SYCL_IMPL STREQUAL "ComputeCpp" AND NOT COMPUTECPP_USER_FLAGS MATCHE
     CACHE STRING "" FORCE)
 endif()
 
-#find_package(Celerity CONFIG REQUIRED)
+find_package(Celerity CONFIG REQUIRED)
 
 if(CMAKE_GENERATOR STREQUAL "Ninja")
   # Force colored warnings in Ninja's output, if the compiler has -fdiagnostics-color support.
@@ -173,7 +173,7 @@ if(CELERITY_SYCL_IMPL STREQUAL "hipSYCL")
 endif()
 add_sycl_to_target(TARGET proj SOURCES ${DEVICE_SOURCES})
 
-#add_celerity_to_target(TARGET proj SOURCES cronos_block/general/proj.C ${HEADERS})
+add_celerity_to_target(TARGET proj SOURCES cronos_block/general/proj.C ${HEADERS})
 
 if(NOT MSVC)
 	target_link_libraries(proj PRIVATE stdc++fs)
