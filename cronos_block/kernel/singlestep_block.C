@@ -241,6 +241,10 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	const int ixStart = -n_ghost[0] + 1;
 	const int ixEnd = gdata.mx[0] + n_ghost[0] - 1;
 
+	for (int q = 0; q < gdata.omSYCL.size(); ++q) {
+		cout << gdata.omSYCL[q].get_range().size();
+	}
+
 	//auto range = Range<3>(izEnd-izStart, iyEnd-iyStart, ixEnd-ixStart);
 
 	//for (int q = 0; q < gdata.omSYCL.size(); ++q) {

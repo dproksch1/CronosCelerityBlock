@@ -141,7 +141,7 @@ double Pot::get_min()
 }
 
 Data::Data()
-{std::cerr<<"0\n";
+{
 
 	// Start runtime timer
 	gettimeofday(&tick_start, 0);
@@ -161,10 +161,10 @@ Data::Data()
 	om = new Pot[numElements];
 	//om = new Pot[N_OM+N_P]; //necessary for MHD
 
-	/*for (int i = 0; i < numElements; i++) {
+	for (int i = 0; i < numElements; i++) {
 		std::cout << "creating omSYCL buffer size " << mx[0] + 6 << ", " << mx[1] + 6 << ", " << mx[2] + 6 << std::endl << std::flush;
 		omSYCL.push_back(CelerityBuffer<double, 3>(Range<3>(mx[0]+6, mx[1]+6, mx[2]+6)));
-	}*/
+	}
 
 	nom = new NumMatrix<double,3> [n_omInt];
 

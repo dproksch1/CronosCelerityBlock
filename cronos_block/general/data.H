@@ -78,7 +78,7 @@ public:
 	CronosFluid fluid;
 
 	Pot *om;
-	//std::vector<CelerityBuffer<double, 3>> omSYCL;
+	std::vector<CelerityBuffer<double, 3>> omSYCL;
 	NumMatrix<double,3> *nom;
 //	Pot om[N_OM+N_P];
 //	Pot om[31];
