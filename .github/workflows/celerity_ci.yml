@@ -32,17 +32,33 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Clone Celerity Repository
+      uses: actions/checkout@v2
+      with:
+        repository: celerity/celerity-runtime
+        path: dependencies/celerity
+
+    - name: Configure Celerity Cmake and Install Celerity
+      working-directory: ${{github.workspace}}/dependencies/celerity
+      run: |
+        git submodule update --init --recursive
+        mkdir build
+        cd build
+        cmake -G Ninja .. -DCMAKE_PREFIX_PATH="/sycl/hipSYCL/lib/cmake/hipSYCL" -DHIPSYCL_TARGETS="cuda:sm_52" -DCMAKE_INSTALL_PREFIX="./../../../external/celerity" -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true -DCMAKE_BUILD_TYPE=Release
+        cd ..
+        cmake --build build --target install
+
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: |
-        cmake -B ./build_block -DCMAKE_BUILD_TYPE=Release -DdirectCNLincl=true -DHIPSYCL_TARGETS=omp -DCMAKE_PREFIX_PATH="./dependencies/bin;./dependencies/include;./dependencies/lib/;./dependencies/lib/cmake;./dependencies/lib/CronosNumLib;./dependencies/include/CronosNumLib;/usr/include/openmpi-x86_64;/usr/lib/cmake;/sycl/hipSYCL/lib/cmake/hipSYCL"
+        cmake -B ./build_block -DCMAKE_BUILD_TYPE=Release -DdirectCNLincl=true -DHIPSYCL_TARGETS=omp -DCMAKE_PREFIX_PATH="./dependencies/bin;./dependencies/include;./dependencies/lib/;./dependencies/lib/cmake;./dependencies/lib/CronosNumLib;./dependencies/include/CronosNumLib;./external/celerity/lib/cmake;/usr/include/openmpi-x86_64;/usr/lib/cmake;/sycl/hipSYCL/lib/cmake/hipSYCL"
 
     - name: Build
       # Build your program with the given configuration
       run: |
         cmake --build ./build_block --config Release
-
+    
     - name: Test
       working-directory: ${{github.workspace}}/build_block
       # Execute tests defined by the CMake configuration.  
