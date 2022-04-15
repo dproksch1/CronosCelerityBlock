@@ -32,6 +32,14 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Patch hipSYCL
+      with: |
+        cd /tmp/hipSYCL
+        git fetch https://github.com/fknorr/hipSYCL reduction-api
+        git checkout FETCH_HEAD
+        cd /tmp/hipSYCL-build
+        ninja install
+
     - name: Clone Celerity Repository
       uses: actions/checkout@v2
       with:

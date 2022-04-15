@@ -8,6 +8,8 @@ using Queue = celerity::distr_queue;
 
 //using DeviceSelector = cl::sycl::host_selector;
 
+using TestNS = celerity::property::reduction::initialize_to_identity{};
+
 template<typename DataType, int Dims>
 using CelerityBuffer = celerity::buffer<DataType, Dims>;
 
