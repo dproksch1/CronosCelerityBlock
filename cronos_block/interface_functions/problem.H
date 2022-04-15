@@ -20,7 +20,7 @@ using namespace std;
 class ProblemType {
 public:
 	ProblemType(const Data &gdata);
-	virtual void init_fields(Data &, int [], int []) = 0;
+	virtual void init_fields(Data &, int [], int []) {} /*=*/;
 	void init_fields(Data &);
 	virtual void init_problem(Data &) {};
 	virtual string get_Name(); 

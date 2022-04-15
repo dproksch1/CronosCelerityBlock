@@ -40,6 +40,9 @@ private:
 void get_vChar2(const Data &, const ProblemType &, const phys_fields_0D &, const phys_fields_0D &,
 			num_fields_0D &, int dir, double &);
 
+double get_vChar3(const Data &, const ProblemType &, const phys_fields_0D &, const phys_fields_0D &,
+			num_fields_0D &, int dir);
+
 void get_NumFlux2(const Data &, const phys_fields_0D &, const phys_fields_0D &,
 			num_fields_0D &, int dir, int iFluid=0);
 

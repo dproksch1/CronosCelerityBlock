@@ -241,9 +241,9 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	const int ixStart = -n_ghost[0] + 1;
 	const int ixEnd = gdata.mx[0] + n_ghost[0] - 1;
 
-	for (int q = 0; q < gdata.omSYCL.size(); ++q) {
+	/*for (int q = 0; q < gdata.omSYCL.size(); ++q) {
 		cout << gdata.omSYCL[q].get_range().size();
-	}
+	}*/
 
 	//auto range = Range<3>(izEnd-izStart, iyEnd-iyStart, ixEnd-ixStart);
 
@@ -270,7 +270,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	//	});
 	//}
 
-	auto computeStep = [](Reconstruction_Block& reconst, const std::unique_ptr<Transformations>& Trafo, const std::unique_ptr<PhysFluxes>& PhysFlux, const std::vector<std::unique_ptr<RiemannSolver>>& Riemann, const ProblemType& Problem, const std::unique_ptr<EquationOfState>& eos, const Data& gdata, int ix, int iy, int iz, double& cfl_lin) {
+	auto computeStep = [](Reconstruction_Block& reconst, const std::unique_ptr<Transformations>& Trafo, const std::unique_ptr<PhysFluxes>& PhysFlux, const std::vector<std::unique_ptr<RiemannSolver>>& Riemann, const ProblemType& Problem, const std::unique_ptr<EquationOfState>& eos, const Data& gdata, int ix, int iy, int iz, auto& cfl_lin) {
 
 
 		// Reconstruction at given position
@@ -316,11 +316,12 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		for (int idir = 0; idir < 3; ++idir) {
 			numVals.push_back(num_fields_0D(gdata, gdata.fluid));
 		}
-		
+
 		if (ix >= -1 && iy >= -1 && iz >= -1) {
 			for (int dir = 0; dir < DirMax; ++dir) {
 				int face = dir * 2;
-				get_vChar2(gdata, Problem, physVals[face], physVals[face + 1], numVals[dir], dir, cfl_lin);
+				double cfl_loc = get_vChar3(gdata, Problem, physVals[face], physVals[face + 1], numVals[dir], dir);
+				cfl_lin.combine(cfl_loc);
 				get_NumFlux2(gdata, physVals[face + 1], physVals[face], numVals[dir], dir);
 			}
 		}
@@ -329,6 +330,32 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 	};
 
+	auto range = Range<3>(izEnd-izStart, iyEnd-iyStart, ixEnd-ixStart);
+	CelerityBuffer<double,1> cfl_lin_SYCL(0.0);
+
+	for (int q = 0; q < gdata.omSYCL.size(); ++q) {
+		celerity::buffer<size_t, 1> max_buf{{1}};
+		queue.submit(celerity::allow_by_ref, [=](celerity::handler& cgh) {
+			auto r = gdata.omSYCL[q].get_range();
+			auto rd = celerity::reduction(max_buf, cgh, cl::sycl::maximum<size_t>{},
+                                  celerity::property::reduction::initialize_to_identity{});
+			cgh.parallel_for<class MyEdgeDetectionKernel>(range, rd, [=](celerity::item<3> item, auto&cfl_lin1) {
+				size_t iz = item.get_id(0) - izStart;
+				size_t iy = item.get_id(1) - iyStart;
+				size_t ix = item.get_id(2) - ixStart;
+
+				if (ix == ixEnd && iy == gdata.mx[1]+n_ghost[1]-1 && iz == gdata.mx[2]+n_ghost[2]-1) cout << "reach limit: " << ix << "." <<  iy << "." << iz << "\n";
+				const int fluidType = Riemann[DirX]->get_Fluid_Type();
+
+				if(ix >= 0 && ix <= gdata.mx[0] && iy >= 0 && iy <= gdata.mx[1] && iz >= 0 && iz <= gdata.mx[2]) {
+
+					const auto numVals = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix, iy, iz, cfl_lin);
+					cout << gdata.nom[0];
+				}
+			});
+		});
+	}
+/*cout << cfl_lin << " ";
 	// Loop over grid-block
 	for (int iz = -n_ghost[2]+1; iz <= gdata.mx[2]+n_ghost[2]-1; ++iz){
 
@@ -341,22 +368,22 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 				if(ix >= 0 && ix <= gdata.mx[0] && iy >= 0 && iy <= gdata.mx[1] && iz >= 0 && iz <= gdata.mx[2]) {
 
 					const auto numVals = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix, iy, iz, cfl_lin);
-
+cout << cfl_lin << " ";
 					//gdata.nom update n_OMINT
 					const auto numValsX = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix + 1, iy, iz, cfl_lin);
 					get_Changes(gdata, numVals[DirX], numValsX[DirX], gdata.nom, ix, iy, iz, DirX, fluidType);
-
+cout << cfl_lin << " ";
 					const auto numValsY = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix, iy + 1, iz, cfl_lin);
 					get_Changes(gdata, numVals[DirY], numValsY[DirY], gdata.nom, ix, iy, iz, DirY, fluidType);
-
+cout << cfl_lin << " ";
 					const auto numValsZ = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix, iy, iz + 1, cfl_lin);
 					get_Changes(gdata, numVals[DirZ], numValsZ[DirZ], gdata.nom, ix, iy, iz, DirZ, fluidType);
-				}
+cout << cfl_lin << endl;				}
 
 			}
 
 		}
-	}
+	}*/
 
 // ----------------------------------------------------------------
 //   Check for errors:
