@@ -338,7 +338,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		queue.submit(celerity::allow_by_ref, [=](celerity::handler& cgh) {
 			auto r = gdata.omSYCL[q].get_range();
 			auto rd = celerity::reduction(max_buf, cgh, cl::sycl::maximum<size_t>{},
-                                  celerity::property::reduction::initialize_to_identity{});
+                                  cl::sycl::property::reduction::initialize_to_identity{});
 			cgh.parallel_for<class MyEdgeDetectionKernel>(range, rd, [=](celerity::item<3> item, auto&cfl_lin1) {
 				size_t iz = item.get_id(0) - izStart;
 				size_t iy = item.get_id(1) - iyStart;
