@@ -33,7 +33,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Patch hipSYCL
-      with: |
+      run: |
         cd /tmp/hipSYCL
         git fetch https://github.com/fknorr/hipSYCL reduction-api
         git checkout FETCH_HEAD
