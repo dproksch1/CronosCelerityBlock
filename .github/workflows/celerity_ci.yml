@@ -32,7 +32,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Patch hipSYCL
+    - name: Patch hipSYCL for reductions
       run: |
         cd /tmp/hipSYCL
         git fetch https://github.com/fknorr/hipSYCL reduction-api
