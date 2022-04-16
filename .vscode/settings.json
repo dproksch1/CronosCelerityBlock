@@ -139,6 +139,7 @@
         "limiter.C": "cpp",
         "singlestep_stub.C": "cpp",
         "reconst_block.C": "cpp",
-        "celerity_test.C": "cpp"
+        "celerity_test.C": "cpp",
+        "*.inc": "cpp"
     }
 }

@@ -270,7 +270,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	//	});
 	//}
 
-	auto computeStep = [](Reconstruction_Block reconst, const std::unique_ptr<Transformations>& Trafo, const std::unique_ptr<PhysFluxes>& PhysFlux, const std::vector<std::unique_ptr<RiemannSolver>>& Riemann, const ProblemType& Problem, const std::unique_ptr<EquationOfState>& eos, const Data& gdata, int ix, int iy, int iz, auto& cfl_lin) {
+	auto computeStep = [](Reconstruction_Block reconst, const std::unique_ptr<Transformations>& Trafo, const std::unique_ptr<PhysFluxes>& PhysFlux, const std::vector<std::unique_ptr<RiemannSolver>>& Riemann, const ProblemType& Problem, const std::unique_ptr<EquationOfState>& eos, const Data& gdata, int ix, int iy, int iz, auto& max_cfl_lin) {
 
 
 		// Reconstruction at given position
@@ -321,7 +321,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 			for (int dir = 0; dir < DirMax; ++dir) {
 				int face = dir * 2;
 				double cfl_loc = get_vChar3(gdata, Problem, physVals[face], physVals[face + 1], numVals[dir], dir);
-				cfl_lin.combine(cfl_loc);
+				max_cfl_lin.combine(cfl_loc);
 				get_NumFlux2(gdata, physVals[face + 1], physVals[face], numVals[dir], dir);
 			}
 		}
@@ -339,7 +339,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 			auto r = gdata.omSYCL[q].get_range();
 			auto rd = celerity::reduction(max_buf, cgh, cl::sycl::maximum<size_t>{},
                                   cl::sycl::property::reduction::initialize_to_identity{});
-			cgh.parallel_for<class MyEdgeDetectionKernel>(range, rd, [=](celerity::item<3> item, auto&cfl_lin1) {
+			cgh.parallel_for<class MyEdgeDetectionKernel>(range, rd, [=](celerity::item<3> item, auto&max_cfl_lin) {
 				size_t iz = item.get_id(0) - izStart;
 				size_t iy = item.get_id(1) - iyStart;
 				size_t ix = item.get_id(2) - ixStart;
@@ -349,7 +349,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 				if(ix >= 0 && ix <= gdata.mx[0] && iy >= 0 && iy <= gdata.mx[1] && iz >= 0 && iz <= gdata.mx[2]) {
 
-					const auto numVals = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix, iy, iz, cfl_lin);
+					const auto numVals = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix, iy, iz, max_cfl_lin);
 					cout << gdata.nom[0];
 				}
 			});
