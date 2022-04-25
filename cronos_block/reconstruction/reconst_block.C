@@ -249,7 +249,7 @@ Reconstruction_Block::Reconstruction_Block(const Data &gdata, int dir, int num, 
 		ListNormal.push_back(q);
 	}
 	
-	set_singleReconstructions(gdata);
+	set_singleReconstructions(gdata);cout << "completed reconst_block" << endl;
 }
 
 
@@ -342,20 +342,20 @@ void Reconstruction_Block::set_singleReconstructions(const Data & gdata) {
 	for(iter = ListNormal.begin(); iter != ListNormal.end(); ++iter) {
 		ListReconstructionNormal.push_back(
 				get_reconst_block(ch_reconst, gdata, dir, substep)
-		);
-	}
+		);cout << "reconst_block iter\n";
+	}cout << "reconst_block iter complete 1" << endl;
 
 	for(iter = ListParallel.begin(); iter != ListParallel.end(); ++iter) {
 		ListReconstructionPar.push_back(
 				get_reconst_block(ch_reconst, gdata, dir, substep)
-		);
-	}
+		);cout << "reconst_block iter\n";
+	}cout << "reconst_block iter complete 1" << endl;
 
 	for(iter = ListPerp.begin(); iter != ListPerp.end(); ++iter) {
 		ListReconstructionPerp.push_back(
 				get_reconst_block(ch_reconst, gdata, dir, substep)
-		);
-	}
+		);cout << "reconst_block iter\n";
+	}cout << "reconst_block iter complete 1" << endl;
 }
 
 void Reconstruction_Block::set_singleReconstructions(const Data & gdata, const CronosFluid &fluid) {
