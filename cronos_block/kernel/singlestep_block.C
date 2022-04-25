@@ -93,7 +93,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 // ---------------------------------------------------------------	      
 //      Trafo of variables to conservative form
 //----------------------------------------------------------------
-
+cout << "setup Trafo" << endl;
 #if(CRSWITCH_DUAL_ENERGY == CRONOS_ON)
 	if(n_omInt > 7) {
 		Trafo->computeEntropyFromE(gdata, gfunc, Problem);
@@ -109,7 +109,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 	// User defined transform
 	Problem.TransPrim2Cons(gdata);
-
+cout << "finish setup Trafo" << endl;
 // ---------------------------------------------------------------	      
 //      Saving old variables for Runge-Kutta (conservative form)
 //----------------------------------------------------------------
@@ -184,7 +184,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	//num_fields_0D numVals_oldE(gdata, gdata.fluid);
 	//num_fields_0D numVals_oldN(gdata, gdata.fluid);
 	//num_fields_0D numVals_oldT(gdata, gdata.fluid);
-
+cout << "begin reconst in singlestep" << endl;
 	// TODO PHILGS: we need to specify a direction here, not sure whether it is used...
 	Reconstruction_Block reconst(gdata, 0, gdata.fluid);
 
