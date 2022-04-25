@@ -220,7 +220,7 @@ void SingleReconstruction_Block::get_Vals_BT(const Data& gdata, phys_fields_0D& 
 }
 
 Reconstruction_Block::Reconstruction_Block(const Data &gdata, int dir, const CronosFluid &fluid, int substep) {
-
+cout << "begin reconst_block" << endl;
 	assert(dir>=0  && dir<=2);
 	this->dir = dir;
 
@@ -235,7 +235,7 @@ Reconstruction_Block::Reconstruction_Block(const Data &gdata, int dir, const Cro
 
 #endif
 	
-	set_singleReconstructions(gdata, fluid);
+	set_singleReconstructions(gdata, fluid);cout << "completed reconst_block" << endl;
 }
 
 Reconstruction_Block::Reconstruction_Block(const Data &gdata, int dir, int num, int substep) {
@@ -366,20 +366,20 @@ void Reconstruction_Block::set_singleReconstructions(const Data & gdata, const C
 		ch_reconst = read_reconst(fluid.get_fieldName(*iter), substep);
 		ListReconstructionNormal.push_back(
 				get_reconst_block(ch_reconst, gdata, fluid, dir, *iter, substep)
-		);
-	}
+		);cout << "reconst_block iter 1\n";
+	}cout << "reconst_block iter complete 1" << endl;
 
 	for(iter = ListParallel.begin(); iter != ListParallel.end(); ++iter) {
 		ch_reconst = read_reconst(fluid.get_fieldName(*iter), substep);
 		ListReconstructionPar.push_back(
 				get_reconst_block(ch_reconst, gdata, fluid, dir, *iter, substep)
-		);
-	}
+		);cout << "reconst_block iter 2\n";
+	}cout << "reconst_block iter complete 2" << endl;
 
 	for(iter = ListPerp.begin(); iter != ListPerp.end(); ++iter) {
 		ch_reconst = read_reconst(fluid.get_fieldName(*iter), substep);
 		ListReconstructionPerp.push_back(
 				get_reconst_block(ch_reconst, gdata, fluid, dir, *iter, substep)
-		);
-	}
+		);cout << "reconst_block iter 3\n";
+	}cout << "reconst_block iter complete 3" << endl;
 }
