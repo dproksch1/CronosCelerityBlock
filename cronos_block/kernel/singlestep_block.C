@@ -184,10 +184,10 @@ cout << "finish setup Trafo" << endl;
 	//num_fields_0D numVals_oldE(gdata, gdata.fluid);
 	//num_fields_0D numVals_oldN(gdata, gdata.fluid);
 	//num_fields_0D numVals_oldT(gdata, gdata.fluid);
-cout << "begin reconst in singlestep" << endl;
+
 	// TODO PHILGS: we need to specify a direction here, not sure whether it is used...
 	Reconstruction_Block reconst(gdata, 0, gdata.fluid);
-cerr << "complete reconst in singlestep" << endl;
+
 	//cronos::vector<double> pos(0,0,0);
 	//cronos::vector<int> ipos(0,0,0);
 
@@ -336,7 +336,6 @@ cout << "begin queue in singlestep" << endl;
 	for (int q = 0; q < gdata.omSYCL.size(); ++q) {
 		celerity::buffer<size_t, 1> max_buf{{1}};cout << "setup buffer in singlestep" << endl;
 		queue.submit(celerity::allow_by_ref, [=](celerity::handler& cgh) {
-								cerr << "queue started\n";
 			auto r = gdata.omSYCL[q].get_range();
 			auto rd = celerity::reduction(max_buf, cgh, cl::sycl::maximum<size_t>{},
                                   cl::sycl::property::reduction::initialize_to_identity{});
