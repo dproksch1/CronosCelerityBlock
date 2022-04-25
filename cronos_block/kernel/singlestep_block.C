@@ -18,7 +18,7 @@ using namespace std;
 
 double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
                                   ProblemType &Problem, int n, Queue& queue)
-{
+{cout << "begin singlestep_block" << endl;
   //! Block structured version of singlestep
   /*! 
    * This version of singlestep solves all directions simultaneously

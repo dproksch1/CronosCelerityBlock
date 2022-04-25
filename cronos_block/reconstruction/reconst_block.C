@@ -239,7 +239,7 @@ Reconstruction_Block::Reconstruction_Block(const Data &gdata, int dir, const Cro
 }
 
 Reconstruction_Block::Reconstruction_Block(const Data &gdata, int dir, int num, int substep) {
-
+cout << "begin reconst_block" << endl;
 	assert(dir >= 0 && dir <= 2);
 	this->dir = dir;
 
