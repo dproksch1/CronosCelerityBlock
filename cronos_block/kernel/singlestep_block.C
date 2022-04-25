@@ -187,7 +187,7 @@ cout << "finish setup Trafo" << endl;
 cout << "begin reconst in singlestep" << endl;
 	// TODO PHILGS: we need to specify a direction here, not sure whether it is used...
 	Reconstruction_Block reconst(gdata, 0, gdata.fluid);
-cout << "complete reconst in singlestep" << endl;
+cerr << "complete reconst in singlestep" << endl;
 	//cronos::vector<double> pos(0,0,0);
 	//cronos::vector<int> ipos(0,0,0);
 
