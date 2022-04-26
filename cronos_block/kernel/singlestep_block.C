@@ -335,8 +335,8 @@ cout << "finish setup Trafo" << endl;
 cout << "begin queue in singlestep" << endl;
 	for (int q = 0; q < gdata.omSYCL.size(); ++q) {
 		celerity::buffer<size_t, 1> max_buf{{1}};cout << "setup buffer in singlestep" << endl;
-		queue.submit(celerity::allow_by_ref, [=](celerity::handler& cgh) {
-			auto r = gdata.omSYCL[q].get_range();
+		queue.submit(celerity::allow_by_ref, [=](celerity::handler& cgh) {cout << "test" << endl;
+			auto r = gdata.omSYCL[q].get_range();cout << "test" << endl;
 			auto rd = celerity::reduction(max_buf, cgh, cl::sycl::maximum<size_t>{},
                                   cl::sycl::property::reduction::initialize_to_identity{});
 			cout << "test" << endl;
