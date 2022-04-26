@@ -340,7 +340,7 @@ cout << "begin queue in singlestep" << endl;
 			auto rd = celerity::reduction(max_buf, cgh, cl::sycl::maximum<size_t>{},
                                   cl::sycl::property::reduction::initialize_to_identity{});
 			cout << "test" << endl;
-			cgh.parallel_for<class MyEdgeDetectionKernel>(range, rd, [=](celerity::item<3> item, auto&max_cfl_lin) {
+			cgh.parallel_for<class MyEdgeDetectionKernel>(range, rd, [=](celerity::item<3> item, auto& max_cfl_lin) {
 									cerr << "parallel started\n";
 				size_t iz = item.get_id(0) - izStart;
 				size_t iy = item.get_id(1) - iyStart;
