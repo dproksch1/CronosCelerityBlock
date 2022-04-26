@@ -339,7 +339,7 @@ cout << "begin queue in singlestep" << endl;
 			auto r = gdata.omSYCL[q].get_range();
 			auto rd = celerity::reduction(max_buf, cgh, cl::sycl::maximum<size_t>{},
                                   cl::sycl::property::reduction::initialize_to_identity{});
-			cgh.parallel_for<class MyEdgeDetectionKernel>(range, rd, [=](celerity::item<3> item, auto&max_cfl_lin) {
+			/*cgh.parallel_for<class MyEdgeDetectionKernel>(range, rd, [=](celerity::item<3> item, auto&max_cfl_lin) {
 									cerr << "parallel started\n";
 				size_t iz = item.get_id(0) - izStart;
 				size_t iy = item.get_id(1) - iyStart;
@@ -351,7 +351,7 @@ cout << "begin queue in singlestep" << endl;
 				if(ix >= 0 && ix <= gdata.mx[0] && iy >= 0 && iy <= gdata.mx[1] && iz >= 0 && iz <= gdata.mx[2]) {
 					const auto numVals = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix, iy, iz, max_cfl_lin);
 				}
-			});
+			});*/
 		});
 	}
 /*cout << cfl_lin << " ";
