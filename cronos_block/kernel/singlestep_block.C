@@ -333,7 +333,7 @@ cout << "finish setup Trafo" << endl;
 	auto range = Range<3>(izEnd-izStart, iyEnd-iyStart, ixEnd-ixStart);
 	CelerityBuffer<double,1> cfl_lin_SYCL(0.0);
 cout << "begin queue in singlestep" << endl;
-	for (int q = 0; q < gdata.omSYCL.size(); ++q) {
+	for (int q = 0; q < 1/*gdata.omSYCL.size()*/; ++q) {
 		celerity::buffer<size_t, 1> max_buf{{1}};cout << "setup buffer in singlestep" << endl;
 		queue.submit(celerity::allow_by_ref, [=](celerity::handler& cgh) {cout << "test" << endl;
 			// auto r = gdata.omSYCL[q].get_range();cout << "test" << endl;

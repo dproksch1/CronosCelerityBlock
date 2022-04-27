@@ -24,7 +24,7 @@ void Environment::pdestep(Data &gdata, Queue& queue)
 
 #ifdef TIME_INTEGRATOR
 
-	for (int n = 0; n < TIME_SUBSTEPS; n++) {
+	for (int n = 0; n < /*TIME_SUBSTEPS*/ 1; n++) {
 		if(gdata.rank==0 && Problem->checkout(0)){
 			cout << "  RKSTEP = " << n+1 << endl;
 		}
