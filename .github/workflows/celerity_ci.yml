@@ -59,7 +59,7 @@ jobs:
     - name: Patch Celerity
       working-directory: ${{github.workspace}}/external/celerity/
       run: |
-        patch ./include/task.h ../detail-epoch-action.patch
+        patch ./include/celerity/task.h ../detail-epoch-action.patch
 
 
     - name: Configure CMake
@@ -87,4 +87,3 @@ jobs:
       working-directory: ${{github.workspace}}/build_block
       run: |
         cat ./Testing/Temporary/LastTest.log
-      
