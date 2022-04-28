@@ -56,10 +56,10 @@ jobs:
         cd ..
         cmake --build build --target install
       
-    - name: Patch Celerity Cmake
+    - name: Patch Celerity
       working-directory: ${{github.workspace}}/external/celerity/
       run: |
-        patch -s -p0 < ../detail-epoch-action.patch
+        patch ./include/task.h ../detail-epoch-action.patch
 
 
     - name: Configure CMake
