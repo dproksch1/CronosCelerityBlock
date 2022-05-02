@@ -32,9 +32,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Get GPU Info
-      run: |
-        lspci -v | less  
+    #- name: Get GPU Info
+    #  run: |
+    #    lspci -v | less  
 
     - name: Patch hipSYCL
       run: |
@@ -56,7 +56,7 @@ jobs:
         git submodule update --init --recursive
         mkdir build
         cd build
-        cmake -G Ninja .. -DCMAKE_PREFIX_PATH="/sycl/hipSYCL/lib/cmake/hipSYCL" -DHIPSYCL_TARGETS="cuda:sm_52" -DCMAKE_INSTALL_PREFIX="./../../../external/celerity" -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true -DCMAKE_BUILD_TYPE=Release
+        cmake -G Ninja .. -DCMAKE_PREFIX_PATH="/sycl/hipSYCL/lib/cmake/hipSYCL" -DHIPSYCL_TARGETS="cuda:sm_80" -DCMAKE_INSTALL_PREFIX="./../../../external/celerity" -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true -DCMAKE_BUILD_TYPE=Release
         cd ..
         cmake --build build --target install
       
