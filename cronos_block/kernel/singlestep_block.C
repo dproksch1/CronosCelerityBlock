@@ -353,9 +353,9 @@ cout << "begin queue in singlestep" << endl;
 			// 		const auto numVals = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix, iy, iz, max_cfl_lin);
 			// 	}
 			// });
+			cout << "test" << endl;
 
-
-			cgh.parallel_for<class MyEdgeDetectionKernel>(celerity::range<2>(4,4), celerity::id<2>(1, 1), [=](celerity::item<2> item) {cout << "test" << endl;});
+			//cgh.parallel_for<class MyEdgeDetectionKernel>(celerity::range<2>(4,4), celerity::id<2>(1, 1), [=](celerity::item<2> item) {cout << "test" << endl;});
 		});
 	}
 /*cout << cfl_lin << " ";
