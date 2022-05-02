@@ -34,7 +34,7 @@ jobs:
 
     - name: Get GPU Info
       run: |
-        sudo lspci -v | less  
+        lspci -v | less  
 
     - name: Patch hipSYCL
       run: |
