@@ -355,7 +355,7 @@ cout << "begin queue in singlestep" << endl;
 			// });
 			cout << "test" << endl;
 
-			//cgh.parallel_for<class MyEdgeDetectionKernel>(celerity::range<2>(4,4), celerity::id<2>(1, 1), [=](celerity::item<2> item) {cout << "test" << endl;});
+			cgh.parallel_for<class MyEdgeDetectionKernel>(celerity::range<1>(4), celerity::id<1>(1), [=](celerity::item<1> item) {cout << "test" << endl;});
 		});
 	}
 /*cout << cfl_lin << " ";
