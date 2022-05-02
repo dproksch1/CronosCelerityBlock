@@ -34,7 +34,7 @@ jobs:
 
     - name: Get Cuda Info
       run: |
-        locate cuda | grep /cuda$  
+        find / -type d -name cuda 2>/dev/null  
 
     - name: Patch hipSYCL
       run: |
