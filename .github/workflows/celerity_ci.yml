@@ -32,10 +32,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    #- name: Run Test Example
-    #  working-directory: ${{github.workspace}}/test_example
-    #  run: |
-    #    cmake -B ./build_block -DCMAKE_BUILD_TYPE=Release
+    - name: Get GPU Info
+      run: |
+        nvidia-smi    
 
     - name: Patch hipSYCL
       run: |
