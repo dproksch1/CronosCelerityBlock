@@ -32,9 +32,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    #- name: Get GPU Info
-    #  run: |
-    #    lspci -v | less  
+    - name: Get Cuda Info
+      run: |
+        locate cuda | grep /cuda$  
 
     - name: Patch hipSYCL
       run: |
@@ -70,7 +70,7 @@ jobs:
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: |
-        cmake -B ./build_block -DCMAKE_BUILD_TYPE=Release -DdirectCNLincl=true -DHIPSYCL_TARGETS=cuda -DCMAKE_PREFIX_PATH="./dependencies/bin;./dependencies/include;./dependencies/lib/;./dependencies/lib/cmake;./dependencies/lib/CronosNumLib;./dependencies/include/CronosNumLib;./external/celerity/lib/cmake;/usr/include/openmpi-x86_64;/usr/lib/cmake;/sycl/hipSYCL/lib/cmake/hipSYCL"
+        cmake -B ./build_block -DCMAKE_BUILD_TYPE=Release -DdirectCNLincl=true -DHIPSYCL_TARGETS=cuda -DCHIPSYCL_CUDA_PATH= -DCMAKE_PREFIX_PATH="./dependencies/bin;./dependencies/include;./dependencies/lib/;./dependencies/lib/cmake;./dependencies/lib/CronosNumLib;./dependencies/include/CronosNumLib;./external/celerity/lib/cmake;/usr/include/openmpi-x86_64;/usr/lib/cmake;/sycl/hipSYCL/lib/cmake/hipSYCL"
 
     - name: Build
       # Build your program with the given configuration
