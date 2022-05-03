@@ -12,7 +12,7 @@
 class TimeIntegrator {
 public:
 	TimeIntegrator(const int);
-	~TimeIntegrator();
+	virtual ~TimeIntegrator() = 0;
 	void set_IntRange(int [], int []);
 	void set_corrField(int);
 	void save_data(const Pot om[], const int substep);
