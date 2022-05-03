@@ -156,9 +156,6 @@ HyperbolicSolver::~HyperbolicSolver() {
 	}  
 #endif
 
-	if (TimeIntegratorGeneric != NULL) {
-		delete [] TimeIntegratorGeneric;
-	}
 }
 
 
