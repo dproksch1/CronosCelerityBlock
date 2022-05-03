@@ -3,6 +3,7 @@
 #include <cmath>
 #include <sys/time.h>
 #include <vector>
+#include <string.h>
 //#include "DissipationMHD.H"
 #include "reconst_block.H"
 #include "changes.H"
