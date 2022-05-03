@@ -152,12 +152,12 @@ HyperbolicSolver::~HyperbolicSolver() {
 
 #if (OMS_USER == TRUE)
 	if(TimeIntegratorUser != NULL) {
-		TimeIntegratorUser.reset();
+		delete [] TimeIntegratorUser;
 	}  
 #endif
 
 	if (TimeIntegratorGeneric != NULL) {
-		TimeIntegratorGeneric.reset();
+		delete [] TimeIntegratorGeneric;
 	}
 }
 
