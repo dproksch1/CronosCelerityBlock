@@ -40,6 +40,7 @@ jobs:
     - name: Print Clang Version Info
       run: |
         clang --version
+        g++ --version
 
     - name: Patch hipSYCL
       run: |
