@@ -37,6 +37,10 @@ jobs:
     #  run: |
     #    cat /sycl/hipSYCL/etc/hipSYCL/syclcc.json
 
+    - name: Print Clang Version Info
+      run: |
+        clang --version
+
     - name: Patch hipSYCL
       run: |
         cd /tmp/hipSYCL
