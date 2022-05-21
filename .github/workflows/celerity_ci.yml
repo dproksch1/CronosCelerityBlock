@@ -37,10 +37,9 @@ jobs:
     #  run: |
     #    cat /sycl/hipSYCL/etc/hipSYCL/syclcc.json
 
-    - name: Print Clang Version Info
+    - name: Try to find Libc
       run: |
-        clang --version
-        g++ --version
+        find . -name "libc.so.6" 2>&1 | grep -v "Permission denied"
 
     - name: Patch hipSYCL
       run: |
