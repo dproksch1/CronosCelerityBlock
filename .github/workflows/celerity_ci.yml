@@ -38,9 +38,9 @@ jobs:
         cat /etc/os-release
         cat /sycl/hipSYCL/etc/hipSYCL/syclcc.json
 
-    - name: Try to find Libc
+    - name: Try to install libc
       run: |
-        find . -name "libc.so.6" 2>&1 | grep -v "Permission denied"
+        sudo apt-get install libc6-dev
 
     - name: Patch hipSYCL
       run: |
