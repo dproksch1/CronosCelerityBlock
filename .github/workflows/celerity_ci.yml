@@ -33,14 +33,10 @@ jobs:
     - uses: actions/checkout@v2
 
 
-    - name: Print hipsycl syclcc config file
-      run: |
-        cat /etc/os-release
-        cat /sycl/hipSYCL/etc/hipSYCL/syclcc.json
-
-    - name: Try to install libc
-      run: |
-        apt-get install libc6-dev
+    #- name: Print hipsycl syclcc config file
+    #  run: |
+    #    cat /etc/os-release
+    #    cat /sycl/hipSYCL/etc/hipSYCL/syclcc.json
 
     - name: Patch hipSYCL
       run: |
