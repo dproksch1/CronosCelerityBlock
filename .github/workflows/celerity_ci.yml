@@ -40,7 +40,7 @@ jobs:
 
     - name: Try to install libc
       run: |
-        sudo apt-get install libc6-dev
+        apt-get install libc6-dev
 
     - name: Patch hipSYCL
       run: |
