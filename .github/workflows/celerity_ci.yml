@@ -38,10 +38,9 @@ jobs:
     #    cat /etc/os-release
     #    cat /sycl/hipSYCL/etc/hipSYCL/syclcc.json
 
-    - name: Attempted version check libc6
+    - name: Search for libc6
       run: |
-        apt-show-versions libc6
-        apt-show-versions libc6-dev
+        find /usr/ -name "libc.so.6"
 
     - name: Patch hipSYCL
       run: |
