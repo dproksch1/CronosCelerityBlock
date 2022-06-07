@@ -667,7 +667,7 @@ void Environment::Output(Data &gdata, bool isfloat, bool terminate)
 	} else {
 		sprintf(dirname, "%s/%s_double", getenv("poub"),getenv("pname"));
 	}
-	//for (char *tmp=dirname+strlen(dirname)-1; *tmp=='0'; tmp--) *tmp=0;
+	for (char *tmp=dirname+strlen(dirname)-1; *tmp=='0'; tmp--) *tmp=0;
 
 	//mkdir(dirname, 511);
 	filesystem::create_directory(dirname);
@@ -776,7 +776,7 @@ void Environment::LoadData(Data &gdata)
 
 	char dirname[255];
 	sprintf(dirname, "%s/%s_double", getenv("poub"),getenv("pname"));
-	//for (char *tmp=dirname+strlen(dirname)-1; *tmp=='0'; tmp--) *tmp=0;
+	for (char *tmp=dirname+strlen(dirname)-1; *tmp=='0'; tmp--) *tmp=0;
 
 	double factor = 1.;
 
@@ -871,7 +871,7 @@ void Environment::LoadData_flt(Data &gdata, int load_step)
 
 	char dirname[255];
 	sprintf(dirname, "%s/%s_float", getenv("poub"),getenv("pname"));
-	//for (char *tmp=dirname+strlen(dirname)-1; *tmp=='0'; tmp--) *tmp=0;
+	for (char *tmp=dirname+strlen(dirname)-1; *tmp=='0'; tmp--) *tmp=0;
 
 
 	string filename = dirname;

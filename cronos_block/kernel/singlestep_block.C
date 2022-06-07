@@ -337,23 +337,23 @@ cout << "begin queue in singlestep" << endl;
 	for (int q = 0; q < gdata.omSYCL.size()	; ++q) {
 		celerity::buffer<size_t, 1> max_buf{{1}};cout << "setup buffer in singlestep" << endl;
 		queue.submit(celerity::allow_by_ref, [=](celerity::handler& cgh) {cout << "test" << endl;
-			// auto r = gdata.omSYCL[q].get_range();cout << "test" << endl;
-			// /*auto rd = celerity::reduction(max_buf, cgh, cl::sycl::maximum<size_t>{},
-            //                       cl::sycl::property::reduction::initialize_to_identity{});*/
-			// cout << "test" << endl;
-			// cgh.parallel_for<class MyEdgeDetectionKernel>(range/*, rd*/, [=](celerity::item<3> item/*, auto& max_cfl_lin*/) {
-			// 						cerr << "parallel started\n";
-			// 	isize_t iz = item.get_id(0) - izStart;
-			// 	size_t iy = item.get_id(1) - iyStart;
-			// 	size_t ix = item.get_id(2) - ixStart;
+			auto r = gdata.omSYCL[q].get_range();cout << "test" << endl;
+			auto rd = celerity::reduction(max_buf, cgh, cl::sycl::maximum<size_t>{},
+                                  cl::sycl::property::reduction::initialize_to_identity{});
+			cout << "test" << endl;
+			cgh.parallel_for<class MyEdgeDetectionKernel>(range, rd, [=](celerity::item<3> item/*, auto& max_cfl_lin*/) {
+									cerr << "parallel started\n";
+				isize_t iz = item.get_id(0) - izStart;
+				size_t iy = item.get_id(1) - iyStart;
+				size_t ix = item.get_id(2) - ixStart;
 
-			// 	if (ix == ixEnd && iy == gdata.mx[1]+n_ghost[1]-1 && iz == gdata.mx[2]+n_ghost[2]-1) cout << "reach limit: " << ix << "." <<  iy << "." << iz << "\n";
-			// 	const int fluidType = Riemann[DirX]->get_Fluid_Type();
+				if (ix == ixEnd && iy == gdata.mx[1]+n_ghost[1]-1 && iz == gdata.mx[2]+n_ghost[2]-1) cout << "reach limit: " << ix << "." <<  iy << "." << iz << "\n";
+				const int fluidType = Riemann[DirX]->get_Fluid_Type();
 
-			// 	if(ix >= 0 && ix <= gdata.mx[0] && iy >= 0 && iy <= gdata.mx[1] && iz >= 0 && iz <= gdata.mx[2]) {
-			// 		const auto numVals = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix, iy, iz, max_cfl_lin);
-			// 	}
-			// });
+				if(ix >= 0 && ix <= gdata.mx[0] && iy >= 0 && iy <= gdata.mx[1] && iz >= 0 && iz <= gdata.mx[2]) {
+					const auto numVals = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix, iy, iz, max_cfl_lin);
+				}
+			});
 			cout << "test" << endl;
 
 			cgh.parallel_for<class MyEdgeDetectionKernel>(celerity::range<2>(2,2), celerity::id<2>(2,2), [=](celerity::item<2> item) {cout << "kernel test" << endl;});
