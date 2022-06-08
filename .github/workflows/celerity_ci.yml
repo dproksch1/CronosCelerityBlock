@@ -33,11 +33,12 @@ jobs:
     - uses: actions/checkout@v2
 
 
-    - name: Print hipsycl syclcc config file
+    - name: Fetch gpu information
       run: |
-        cd /proc/driver/nvidia/gpus/
-        ls
-        tree
+        cat /proc/driver/nvidia/gpus/0000\:08\:00.0/information
+        cat /proc/driver/nvidia/gpus/0000\:09\:00.0/information
+        cat /proc/driver/nvidia/gpus/0000\:42\:00.0/information
+        cat /proc/driver/nvidia/gpus/0000\:43\:00.0/information
 
     #- name: Search for libc6
     #  run: |
