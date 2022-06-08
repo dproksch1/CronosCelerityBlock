@@ -41,6 +41,9 @@ jobs:
     - name: Search for libc6
       run: |
         find /usr/ -name "libc.so.6"
+        find /usr/ -name "ld-linux-x86-64.so.2"
+        find /usr/ -name "libc-2.27.so"
+        find /usr/ -name "libm.so.6"
 
     - name: Patch hipSYCL
       run: |
