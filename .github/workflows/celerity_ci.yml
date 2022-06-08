@@ -33,17 +33,18 @@ jobs:
     - uses: actions/checkout@v2
 
 
-    #- name: Print hipsycl syclcc config file
-    #  run: |
-    #    cat /etc/os-release
-    #    cat /sycl/hipSYCL/etc/hipSYCL/syclcc.json
-
-    - name: Search for libc6
+    - name: Print hipsycl syclcc config file
       run: |
-        find /usr/ -name "libc.so.6"
-        find /usr/ -name "ld-linux-x86-64.so.2"
-        find /usr/ -name "libc-2.27.so"
-        find /usr/ -name "libm.so.6"
+        cd /proc/driver/nvidia/gpus/
+        ls
+        tree
+
+    #- name: Search for libc6
+    #  run: |
+    #    find /usr/ -name "libc.so.6"
+    #    find /usr/ -name "ld-linux-x86-64.so.2"
+    #    find /usr/ -name "libc-2.27.so"
+    #    find /usr/ -name "libm.so.6"
 
     - name: Patch hipSYCL
       run: |
@@ -65,7 +66,7 @@ jobs:
         git submodule update --init --recursive
         mkdir build
         cd build
-        cmake -G Ninja .. -DCMAKE_PREFIX_PATH="/sycl/hipSYCL/lib/cmake/hipSYCL" -DHIPSYCL_TARGETS="cuda:sm_60" -DCMAKE_INSTALL_PREFIX="./../../../external/celerity" -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true -DCMAKE_BUILD_TYPE=Release
+        cmake -G Ninja .. -DCMAKE_PREFIX_PATH="/sycl/hipSYCL/lib/cmake/hipSYCL" -DHIPSYCL_TARGETS="cuda:sm_75" -DCMAKE_INSTALL_PREFIX="./../../../external/celerity" -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true -DCMAKE_BUILD_TYPE=Release
         cd ..
         cmake --build build --target install
       
@@ -79,7 +80,7 @@ jobs:
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: |
-        cmake -B ./build_block -DCMAKE_BUILD_TYPE=Release -DdirectCNLincl=true -DHIPSYCL_TARGETS="cuda:sm_60" -DCMAKE_PREFIX_PATH="./dependencies/bin;./dependencies/include;./dependencies/lib/;./dependencies/lib/cmake;./dependencies/lib/CronosNumLib;./dependencies/include/CronosNumLib;./external/celerity/lib/cmake;/usr/include/openmpi-x86_64;/usr/lib/cmake;/sycl/hipSYCL/lib/cmake/hipSYCL"
+        cmake -B ./build_block -DCMAKE_BUILD_TYPE=Release -DdirectCNLincl=true -DHIPSYCL_TARGETS="cuda:sm_75" -DCMAKE_PREFIX_PATH="./dependencies/bin;./dependencies/include;./dependencies/lib/;./dependencies/lib/cmake;./dependencies/lib/CronosNumLib;./dependencies/include/CronosNumLib;./external/celerity/lib/cmake;/usr/include/openmpi-x86_64;/usr/lib/cmake;/sycl/hipSYCL/lib/cmake/hipSYCL"
 
     - name: Build
       # Build your program with the given configuration
