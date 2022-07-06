@@ -333,16 +333,16 @@ cout << "finish setup Trafo" << endl;
 
 	auto range = Range<3>(izEnd-izStart, iyEnd-iyStart, ixEnd-ixStart);
 	CelerityBuffer<double,1> cfl_lin_SYCL(0.0);
-cout << "begin queue in singlestep" << endl;
+
 	for (int q = 0; q < gdata.omSYCL.size()	; ++q) {
-		celerity::buffer<size_t, 1> max_buf{{1}};cout << "setup buffer in singlestep" << endl;
-		queue.submit(celerity::allow_by_ref, [=](celerity::handler& cgh) {cout << "test" << endl;
-			auto r = gdata.omSYCL[q].get_range();cout << "test" << endl;
-			auto rd = celerity::reduction(max_buf, cgh, cl::sycl::maximum<size_t>{},
-                                  cl::sycl::property::reduction::initialize_to_identity{});
+		celerity::buffer<size_t, 1> max_buf{{1}};
+		queue.submit(celerity::allow_by_ref, [=](celerity::handler& cgh) {
+			auto r = gdata.omSYCL[q].get_range();
+			/*auto rd = celerity::reduction(max_buf, cgh, cl::sycl::maximum<size_t>{},
+                                  cl::sycl::property::reduction::initialize_to_identity{});*/
 			cout << "test" << endl;
-			cgh.parallel_for<class MyEdgeDetectionKernel>(range, rd, [=](celerity::item<3> item/*, auto& max_cfl_lin*/) {
-									cerr << "parallel started\n";
+			cgh.parallel_for<class MyEdgeDetectionKernel>(range, /*rd,*/ [=](celerity::item<3> item/*, auto& max_cfl_lin*/) {
+
 				size_t iz = item.get_id(0) - izStart;
 				size_t iy = item.get_id(1) - iyStart;
 				size_t ix = item.get_id(2) - ixStart;
