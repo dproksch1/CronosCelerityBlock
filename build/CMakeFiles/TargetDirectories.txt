@@ -1,4 +1,0 @@
-/home/dproksch/master_thesis/CronosCelerityBlock/build/CMakeFiles/rebuild_cache.dir
-/home/dproksch/master_thesis/CronosCelerityBlock/build/CMakeFiles/edit_cache.dir
-/home/dproksch/master_thesis/CronosCelerityBlock/build/CMakeFiles/test.dir
-/home/dproksch/master_thesis/CronosCelerityBlock/build/CMakeFiles/proj.dir
