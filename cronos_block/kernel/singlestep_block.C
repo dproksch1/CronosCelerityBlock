@@ -346,7 +346,7 @@ cout << "finish setup Trafo" << endl;
 				size_t iy = item.get_id(1) - iyStart;
 				size_t ix = item.get_id(2) - ixStart;
 
-				if (ix == ixEnd && iy == gdata.mx[1]+n_ghost[1]-1 && iz == gdata.mx[2]+n_ghost[2]-1) cout << "reach limit: " << ix << "." <<  iy << "." << iz << "\n";
+				//if (ix == ixEnd && iy == gdata.mx[1]+n_ghost[1]-1 && iz == gdata.mx[2]+n_ghost[2]-1) cout << "reach limit: " << ix << "." <<  iy << "." << iz << "\n";
 				const int fluidType = Riemann[DirX]->get_Fluid_Type();
 
 				if(ix >= 0 && ix <= gdata.mx[0] && iy >= 0 && iy <= gdata.mx[1] && iz >= 0 && iz <= gdata.mx[2]) {
@@ -354,7 +354,7 @@ cout << "finish setup Trafo" << endl;
 				}
 			});
 
-			//cgh.parallel_for<class MyEdgeDetectionKernel>(celerity::range<2>(2,2), celerity::id<2>(2,2), [=](celerity::item<2> item) {cout << "kernel test" << endl;});
+			//cgh.parallel_for<class MyEdgeDetectionKernel>(celerity::range<2>(2,2), celerity::id<2>(2,2), [=](celerity::item<2> item) {int i = i + 1;});
 		});
 	}
 /*cout << cfl_lin << " ";
