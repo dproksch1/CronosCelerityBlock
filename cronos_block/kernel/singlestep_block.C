@@ -8,6 +8,7 @@
 #include "reconst_block.H"
 #include "changes.H"
 #include "standalone_usage.H"
+#include <unistd.h>
 
 #if(STANDALONE_USAGE == TRUE)
 #include "utils.H"
@@ -17,9 +18,11 @@
 
 using namespace std;
 
+
+
 double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
                                   ProblemType &Problem, int n, Queue& queue)
-{cout << "begin singlestep_block" << endl;
+{
   //! Block structured version of singlestep
   /*! 
    * This version of singlestep solves all directions simultaneously
@@ -94,7 +97,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 // ---------------------------------------------------------------	      
 //      Trafo of variables to conservative form
 //----------------------------------------------------------------
-cout << "setup Trafo" << endl;
+
 #if(CRSWITCH_DUAL_ENERGY == CRONOS_ON)
 	if(n_omInt > 7) {
 		Trafo->computeEntropyFromE(gdata, gfunc, Problem);
@@ -110,7 +113,7 @@ cout << "setup Trafo" << endl;
 
 	// User defined transform
 	Problem.TransPrim2Cons(gdata);
-cout << "finish setup Trafo" << endl;
+
 // ---------------------------------------------------------------	      
 //      Saving old variables for Runge-Kutta (conservative form)
 //----------------------------------------------------------------
@@ -142,13 +145,13 @@ cout << "finish setup Trafo" << endl;
 //----------------------------------------------------------------
 
 	Trafo->TransCons2Prim(gdata, gfunc, Problem);
-
+sleep(1);cout << "TransCons2Prim" << endl;
 	// User defined transform
 	Problem.TransCons2Prim(gdata);
-
+sleep(1);cout << "TransCons2Prim" << endl;
 	// Check for nans in primitive variables
 	gdata.CheckNan(1);
-
+sleep(1);cout << "CheckNan" << endl;
 	// Compute the carbuncle-flag if necessary
 	if(gdata.use_carbuncleFlag) {
 		Riemann[DirX]->compute_carbuncleFlag(gdata);
@@ -187,7 +190,7 @@ cout << "finish setup Trafo" << endl;
 	//num_fields_0D numVals_oldT(gdata, gdata.fluid);
 
 	// TODO PHILGS: we need to specify a direction here, not sure whether it is used...
-	Reconstruction_Block reconst(gdata, 0, gdata.fluid);
+	//Reconstruction_Block reconst(gdata, 0, gdata.fluid);
 
 	//cronos::vector<double> pos(0,0,0);
 	//cronos::vector<int> ipos(0,0,0);
@@ -243,7 +246,7 @@ cout << "finish setup Trafo" << endl;
 	const int ixEnd = gdata.mx[0] + n_ghost[0] - 1;
 
 	/*for (int q = 0; q < gdata.omSYCL.size(); ++q) {
-		cout << gdata.omSYCL[q].get_range().size();
+		cout << gdata.omSYCL[q].get_range().size(); << "\n"
 	}*/
 
 	//auto range = Range<3>(izEnd-izStart, iyEnd-iyStart, ixEnd-ixStart);
@@ -273,7 +276,6 @@ cout << "finish setup Trafo" << endl;
 
 	auto computeStep = [](Reconstruction_Block reconst, const std::unique_ptr<Transformations>& Trafo, const std::unique_ptr<PhysFluxes>& PhysFlux, const std::vector<std::unique_ptr<RiemannSolver>>& Riemann, const ProblemType& Problem, const std::unique_ptr<EquationOfState>& eos, const Data& gdata, int ix, int iy, int iz, auto& max_cfl_lin) {
 
-
 		// Reconstruction at given position
 		std::vector<phys_fields_0D> physVals;
 		for (int inum = 0; inum < 6; ++inum) {
@@ -295,7 +297,7 @@ cout << "finish setup Trafo" << endl;
 			physVals[gpu::FaceEast] = physValsOld[gpu::FaceEast];
 			physVals[gpu::FaceNorth] = physValsOld[gpu::FaceNorth];
 			physVals[gpu::FaceTop] = physValsOld[gpu::FaceTop];
-		}				
+		}			
 		
 		for (int dir = 0; dir < DirMax; ++dir) {
 
@@ -332,29 +334,66 @@ cout << "finish setup Trafo" << endl;
 	};
 
 	auto range = Range<3>(izEnd-izStart, iyEnd-iyStart, ixEnd-ixStart);
-	CelerityBuffer<double,1> cfl_lin_SYCL(0.0);
+	
+
+	//std::vector<CelerityBuffer<double, 2>> physValsSYCL;
+	//for (int i = 0; i < gdata.omSYCL.size(); i++) physValsSYCL.push_back(CelerityBuffer<double, 2>(celerity::range<2>(2,2)));
+	
+	//buffers
+	std::vector<CelerityBuffer<double, 2>> physValsSYCL(gdata.omSYCL.size(), CelerityBuffer<double, 2>( /*reeval*/ celerity::range<2>(6,2)));
+	std::vector<CelerityBuffer<double, 2>> physValsSYCL_Old(gdata.omSYCL.size(), CelerityBuffer<double, 2>( /*reeval*/ celerity::range<2>(6,2)));
+	std::vector<CelerityBuffer<double, 2>> physPtotalPthermSYCL(gdata.omSYCL.size(), CelerityBuffer<double, 2>(celerity::range<2>(6,2)));
+	std::vector<CelerityBuffer<double, 2>> physPtotalPthermSYCL_Old(gdata.omSYCL.size(), CelerityBuffer<double, 2>(celerity::range<2>(6,2)));
+	celerity::buffer<double, 1> max_buf{{1}};
+
+	/*for (int q = 0; q < gdata.omSYCL.size()	; ++q) {
+		queue.submit([=](celerity::handler& cgh) {
+			celerity::accessor physVals_acc{physValsSYCL[q], cgh, celerity::access::one_for_one{}, celerity::write_only};	
+			//celerity::accessor physValsOld_acc{physValsSYCL_Old[q], cgh, celerity::access::one_for_one{}, celerity::write_only};
+			//celerity::accessor physPtotalPtherm_acc{physPtotalPthermSYCL[q], cgh, celerity::access::one_for_one{}, celerity::write_only};
+			//celerity::accessor physPtotalPthermOld_acc{physPtotalPthermSYCL[q], cgh, celerity::access::one_for_one{}, celerity::write_only};
+			cgh.parallel_for<class BufferInitializationKernel>(physValsSYCL[q].get_range(), [=](celerity::item<2> item) {
+				physVals_acc[item.get_id(0)][item.get_id(1)] = 0;
+			});
+		});
+	}*/
 
 	for (int q = 0; q < gdata.omSYCL.size()	; ++q) {
-		celerity::buffer<size_t, 1> max_buf{{1}};
-		queue.submit(celerity::allow_by_ref, [=](celerity::handler& cgh) {
+
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+
 			auto r = gdata.omSYCL[q].get_range();
-			auto rd = celerity::reduction(max_buf, cgh, cl::sycl::maximum<size_t>{},
+			auto rd = celerity::reduction(max_buf, cgh, cl::sycl::maximum<double>{},
                                   cl::sycl::property::reduction::initialize_to_identity{});
-			cgh.parallel_for<class MyEdgeDetectionKernel>(range, rd, [=](celerity::item<3> item, auto& max_cfl_lin) {
+			celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::read_only};
+			celerity::accessor physVals_acc{physValsSYCL[q], cgh, celerity::access::all{}, celerity::read_write};	
+			celerity::accessor physValsOld_acc{physValsSYCL_Old[q], cgh, celerity::access::all{}, celerity::read_write};
+			celerity::accessor physPtotalPtherm_acc{physPtotalPthermSYCL[q], cgh, celerity::access::all{}, celerity::read_write};
+			celerity::accessor physPtotalPthermOld_acc{physPtotalPthermSYCL[q], cgh, celerity::access::all{}, celerity::read_write};
+
+			cgh.parallel_for<class ReductionKernel>(range, rd, [=, &gdata](celerity::item<3> item, auto& max_cfl_lin) {
 
 				size_t iz = item.get_id(0) - izStart;
 				size_t iy = item.get_id(1) - iyStart;
 				size_t ix = item.get_id(2) - ixStart;
 
 				//if (ix == ixEnd && iy == gdata.mx[1]+n_ghost[1]-1 && iz == gdata.mx[2]+n_ghost[2]-1) cout << "reach limit: " << ix << "." <<  iy << "." << iz << "\n";
-				const int fluidType = Riemann[DirX]->get_Fluid_Type();
+				//const int fluidType = Riemann[DirX]->get_Fluid_Type();
 
-				if(ix >= 0 && ix <= gdata.mx[0] && iy >= 0 && iy <= gdata.mx[1] && iz >= 0 && iz <= gdata.mx[2]) {
-					const auto numVals = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix, iy, iz, max_cfl_lin);
-				}
+				//pointwise reconstruction (incomplete)
+				gpu::compute(om_acc, physVals_acc, ix, iy, iz);
+
+				/*if(ix >= 0 && ix <= gdata.mx[0] && iy >= 0 && iy <= gdata.mx[1] && iz >= 0 && iz <= gdata.mx[2]) {
+					//std::vector<phys_fields_0D> physVals;
+					for (int inum = 0; inum < 6; ++inum) {
+						//physVals_acc[inum] = phys_fields_0D(gdata, inum, gdata.fluid);
+					}
+					//reconst_inKernel.compute(gdata, physVals, ix, iy, iz);
+					//const auto numVals = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix, iy, iz, max_cfl_lin);
+				}*/
 			});
 
-			//cgh.parallel_for<class MyEdgeDetectionKernel>(celerity::range<2>(2,2), celerity::id<2>(2,2), [=](celerity::item<2> item) {int i = i + 1;});
+			//cgh.parallel_for<class EmptyTestKernel>(celerity::range<2>(2,2), celerity::id<2>(2,2), [=](celerity::item<2> item) {int i = i + 1;});
 		});
 	}
 /*cout << cfl_lin << " ";

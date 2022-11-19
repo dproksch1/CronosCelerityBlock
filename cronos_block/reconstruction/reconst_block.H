@@ -13,6 +13,123 @@
 #include "direction.H"
 #endif
 
+namespace gpu {
+
+	enum {
+
+		FaceWest = 0,
+		FaceEast,
+		FaceSouth,
+		FaceNorth,
+		FaceBottom,
+		FaceTop,
+
+		FaceMax,
+	};
+
+	enum {
+
+		TypeUPri = 0,
+		TypeUCon,
+		TypeFluxPhys,
+
+		TypeMax,
+	};
+
+	struct Dud {
+		double _m;
+		double _0;
+		double _p;
+	};
+	
+	inline double minmodCompute(double Theta, double& up, double& uc, double& um) {
+		up *= Theta;
+		um *= Theta;
+		if (up * um > 0.) {
+			if (up > 0) {
+				return fmin(up, (fmin(uc, um)));
+			} else if (up < 0) {
+				return fmax(up, (fmax(uc, um)));
+			} else {
+				return 0.0;
+			}
+		} else {
+			return 0.;
+		}
+	}
+
+	template<typename AccessorType>
+	auto getDerivs(AccessorType& omAcc, size_t ix, size_t iy, size_t iz) {
+		//size_t q = qReconst;
+		Dud x;
+		Dud y;
+		Dud z;
+
+		x._m = omAcc[ix][iy][iz] - omAcc[ix - 1][iy][iz];
+		x._p = omAcc[ix + 1][iy][iz] - omAcc[ix][iy][iz];
+		x._0 = 0.5 * (x._m + x._p);
+
+		y._m = omAcc[ix][iy][iz] - omAcc[ix][iy - 1][iz];
+		y._p = omAcc[ix][iy + 1][iz] - omAcc[ix][iy][iz];
+		y._0 = 0.5 * (y._m + y._p);
+
+		z._m = omAcc[ix][iy][iz] - omAcc[ix][iy][iz - 1];
+		z._p = omAcc[ix][iy][iz + 1] - omAcc[ix][iy][iz];
+		z._0 = 0.5 * (z._m + z._p);
+
+		return std::tuple{x, y, z};
+	}
+	
+	template<typename AccessorType>
+	auto prepareDerivs(AccessorType& omAcc, size_t ix, size_t iy, size_t iz) {
+
+		auto [dudx, dudy, dudz] = getDerivs(omAcc, ix, iy, iz);
+
+		//dproksch TODO: read from project parameters
+		double Theta = 1;
+
+		double deriv_x = minmodCompute(Theta, dudx._p, dudx._0, dudx._m);
+		double deriv_y = minmodCompute(Theta, dudy._p, dudy._0, dudy._m);
+		double deriv_z = minmodCompute(Theta, dudz._p, dudz._0, dudz._m);
+
+		return std::tuple{ deriv_x, deriv_y, deriv_z };
+	}
+
+	template<typename AccessorType, typename PhysValsAccessorType>
+	void get_Vals_EW(AccessorType& omAcc, PhysValsAccessorType& fieldAcc, size_t ix, size_t iy, size_t iz, double deriv_x) {
+		double shift(0.);
+		fieldAcc[FaceWest][TypeUPri] = omAcc[ix][iy][iz] - (0.5 + shift) * deriv_x;
+		fieldAcc[FaceEast][TypeUPri] = fieldAcc[FaceWest][TypeUPri] + deriv_x;
+	}
+
+	template<typename AccessorType, typename PhysValsAccessorType>
+	void get_Vals_SN(AccessorType& omAcc, PhysValsAccessorType& fieldAcc, size_t ix, size_t iy, size_t iz, double deriv_y) {
+		double shift(0.);
+		fieldAcc[FaceSouth][TypeUPri] = omAcc[ix][iy][iz] - 0.5 * deriv_y;
+		fieldAcc[FaceNorth][TypeUPri] = fieldAcc[FaceSouth][TypeUPri] + deriv_y;
+	}
+
+	template<typename AccessorType, typename PhysValsAccessorType>
+	void get_Vals_BT(AccessorType& omAcc, PhysValsAccessorType& fieldAcc, size_t ix, size_t iy, size_t iz, double deriv_z) {
+		double shift(0.);
+		fieldAcc[FaceBottom][TypeUPri] = omAcc[ix][iy][iz] - 0.5 * deriv_z;
+		fieldAcc[FaceTop][TypeUPri] = fieldAcc[FaceBottom][TypeUPri] + deriv_z;
+	}
+	
+	template<typename AccessorType, typename PhysValsAccessorType>
+	void compute(AccessorType& omAcc, PhysValsAccessorType& physValsAcc, size_t ix, size_t iy, size_t iz) {
+
+		auto [deriv_x, deriv_y, deriv_z] = prepareDerivs(omAcc, ix, iy, iz);
+
+		get_Vals_EW(omAcc, physValsAcc, ix, iy, iz, deriv_x);
+
+		get_Vals_SN(omAcc, physValsAcc, ix, iy, iz, deriv_y);
+
+		get_Vals_BT(omAcc, physValsAcc, ix, iy, iz, deriv_z);
+
+	}
+}
+
 class SingleReconstruction_Block{
 public:
 

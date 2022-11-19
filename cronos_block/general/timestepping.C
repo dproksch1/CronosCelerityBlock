@@ -7,10 +7,10 @@ TimeIntegrator::TimeIntegrator(const int n_saves):
 }
 
 
-/*TimeIntegrator::~TimeIntegrator()
+TimeIntegrator::~TimeIntegrator()
 {
 	delete [] om_save;
-}*/
+}
 
 
 void TimeIntegrator::set_corrField(int qch)

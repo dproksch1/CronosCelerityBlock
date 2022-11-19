@@ -38,22 +38,4 @@ namespace insieme {
 #define assert_fail_lazy()                                                                                                                                          \
 	if(__insieme_unused auto __x = insieme::utils::detail::LazyAssertion(false)) std::cerr << "\nAssertion failed in " __FILE__ ":" __xstr(__LINE__) " - "
 
-
-namespace gpu {
-
-	enum {
-
-		FaceWest = 0,
-		FaceEast,
-		FaceSouth,
-		FaceNorth,
-		FaceBottom,
-		FaceTop,
-
-		FaceMax,
-
-	};
-
-}
-
 #endif

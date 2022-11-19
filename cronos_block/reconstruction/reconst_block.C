@@ -235,7 +235,7 @@ Reconstruction_Block::Reconstruction_Block(const Data &gdata, int dir, const Cro
 
 #endif
 	
-	set_singleReconstructions(gdata, fluid);cout << "completed reconst_block" << endl;
+	set_singleReconstructions(gdata, fluid);
 }
 
 Reconstruction_Block::Reconstruction_Block(const Data &gdata, int dir, int num, int substep) {
@@ -249,7 +249,7 @@ Reconstruction_Block::Reconstruction_Block(const Data &gdata, int dir, int num, 
 		ListNormal.push_back(q);
 	}
 	
-	set_singleReconstructions(gdata);cout << "completed reconst_block" << endl;
+	set_singleReconstructions(gdata);
 }
 
 
