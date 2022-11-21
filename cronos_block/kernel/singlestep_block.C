@@ -145,13 +145,13 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 //----------------------------------------------------------------
 
 	Trafo->TransCons2Prim(gdata, gfunc, Problem);
-sleep(1);cout << "TransCons2Prim" << endl;
+//sleep(1);cout << "TransCons2Prim" << endl;
 	// User defined transform
 	Problem.TransCons2Prim(gdata);
-sleep(1);cout << "TransCons2Prim" << endl;
+//sleep(1);cout << "TransCons2Prim" << endl;
 	// Check for nans in primitive variables
 	gdata.CheckNan(1);
-sleep(1);cout << "CheckNan" << endl;
+//sleep(1);cout << "CheckNan" << endl;
 	// Compute the carbuncle-flag if necessary
 	if(gdata.use_carbuncleFlag) {
 		Riemann[DirX]->compute_carbuncleFlag(gdata);
@@ -335,15 +335,16 @@ sleep(1);cout << "CheckNan" << endl;
 
 	auto range = Range<3>(izEnd-izStart, iyEnd-iyStart, ixEnd-ixStart);
 	
-
+	//necessary due to a cuda memory freeing error for some reason
+	sleep(2);
 	//std::vector<CelerityBuffer<double, 2>> physValsSYCL;
 	//for (int i = 0; i < gdata.omSYCL.size(); i++) physValsSYCL.push_back(CelerityBuffer<double, 2>(celerity::range<2>(2,2)));
 	
 	//buffers
-	std::vector<CelerityBuffer<double, 2>> physValsSYCL(gdata.omSYCL.size(), CelerityBuffer<double, 2>( /*reeval*/ celerity::range<2>(6,2)));
-	std::vector<CelerityBuffer<double, 2>> physValsSYCL_Old(gdata.omSYCL.size(), CelerityBuffer<double, 2>( /*reeval*/ celerity::range<2>(6,2)));
-	std::vector<CelerityBuffer<double, 2>> physPtotalPthermSYCL(gdata.omSYCL.size(), CelerityBuffer<double, 2>(celerity::range<2>(6,2)));
-	std::vector<CelerityBuffer<double, 2>> physPtotalPthermSYCL_Old(gdata.omSYCL.size(), CelerityBuffer<double, 2>(celerity::range<2>(6,2)));
+	//std::vector<CelerityBuffer<double, 2>> physValsSYCL(gdata.omSYCL.size(), CelerityBuffer<double, 2>( /*reeval*/ celerity::range<2>(6,2)));
+	//std::vector<CelerityBuffer<double, 2>> physValsSYCL_Old(gdata.omSYCL.size(), CelerityBuffer<double, 2>( /*reeval*/ celerity::range<2>(6,2)));
+	//std::vector<CelerityBuffer<double, 2>> physPtotalPthermSYCL(gdata.omSYCL.size(), CelerityBuffer<double, 2>(celerity::range<2>(6,2)));
+	//std::vector<CelerityBuffer<double, 2>> physPtotalPthermSYCL_Old(gdata.omSYCL.size(), CelerityBuffer<double, 2>(celerity::range<2>(6,2)));
 	celerity::buffer<double, 1> max_buf{{1}};
 
 	/*for (int q = 0; q < gdata.omSYCL.size()	; ++q) {
@@ -366,22 +367,38 @@ sleep(1);cout << "CheckNan" << endl;
 			auto rd = celerity::reduction(max_buf, cgh, cl::sycl::maximum<double>{},
                                   cl::sycl::property::reduction::initialize_to_identity{});
 			celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::read_only};
-			celerity::accessor physVals_acc{physValsSYCL[q], cgh, celerity::access::all{}, celerity::read_write};	
-			celerity::accessor physValsOld_acc{physValsSYCL_Old[q], cgh, celerity::access::all{}, celerity::read_write};
-			celerity::accessor physPtotalPtherm_acc{physPtotalPthermSYCL[q], cgh, celerity::access::all{}, celerity::read_write};
-			celerity::accessor physPtotalPthermOld_acc{physPtotalPthermSYCL[q], cgh, celerity::access::all{}, celerity::read_write};
+			//celerity::accessor physVals_acc{physValsSYCL[q], cgh, celerity::access::all{}, celerity::read_write};	
+			//celerity::accessor physValsOld_acc{physValsSYCL_Old[q], cgh, celerity::access::all{}, celerity::read_write};
+			//celerity::accessor physPtotalPtherm_acc{physPtotalPthermSYCL[q], cgh, celerity::access::all{}, celerity::read_write};
+			//celerity::accessor physPtotalPthermOld_acc{physPtotalPthermSYCL[q], cgh, celerity::access::all{}, celerity::read_write};
 
 			cgh.parallel_for<class ReductionKernel>(range, rd, [=, &gdata](celerity::item<3> item, auto& max_cfl_lin) {
 
 				size_t iz = item.get_id(0) - izStart;
 				size_t iy = item.get_id(1) - iyStart;
 				size_t ix = item.get_id(2) - ixStart;
+				
+				//no vector in device code
+				double physVals[gpu::FaceMax][gpu::TypeMax] = {{0}};
+				double physValsOld[gpu::FaceMax][gpu::TypeMax] = {{0}};
 
 				//if (ix == ixEnd && iy == gdata.mx[1]+n_ghost[1]-1 && iz == gdata.mx[2]+n_ghost[2]-1) cout << "reach limit: " << ix << "." <<  iy << "." << iz << "\n";
 				//const int fluidType = Riemann[DirX]->get_Fluid_Type();
 
 				//pointwise reconstruction (incomplete)
-				gpu::compute(om_acc, physVals_acc, ix, iy, iz);
+				gpu::compute(om_acc, physVals, ix, iy, iz);
+
+				gpu::compute(om_acc, physValsOld, ix -1, iy, iz);
+				gpu::compute(om_acc, physValsOld, ix, iy -1, iz);
+				gpu::compute(om_acc, physValsOld, ix, iy, iz -1);
+
+				physVals[gpu::FaceEast][0] = physValsOld[gpu::FaceEast][0];
+				physVals[gpu::FaceEast][1] = physValsOld[gpu::FaceEast][1];
+				physVals[gpu::FaceNorth][0] = physValsOld[gpu::FaceNorth][0];
+				physVals[gpu::FaceNorth][1] = physValsOld[gpu::FaceNorth][1];
+				physVals[gpu::FaceTop][0] = physValsOld[gpu::FaceTop][0];
+				physVals[gpu::FaceTop][1] = physValsOld[gpu::FaceTop][1];
+				
 
 				/*if(ix >= 0 && ix <= gdata.mx[0] && iy >= 0 && iy <= gdata.mx[1] && iz >= 0 && iz <= gdata.mx[2]) {
 					//std::vector<phys_fields_0D> physVals;

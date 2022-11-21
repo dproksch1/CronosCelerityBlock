@@ -1,0 +1,7 @@
+tiny_run 7 1.27386
+tiny_compare 0 0
+small_run 7 1.23105
+small_compare 0 0
+---
+tiny_compare
+small_compare

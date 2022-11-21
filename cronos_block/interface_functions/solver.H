@@ -15,7 +15,7 @@ public:
 	virtual void init_constants(Data &) {}
 	virtual void addConstants_toH5(Data &, Hdf5Stream &h5out) {}
 	virtual void getConstants_fromH5(Data &, Hdf5iStream &h5in) {}
-	virtual void init(Data &, gridFunc &, ProblemType &) {}
+	virtual void init(Data &, gridFunc &, ProblemType &, Queue &) {}
 	virtual void restart(Data &, gridFunc &, ProblemType &) {}
 	virtual void Abort(CException) {}
 	virtual ~rksolver(){}

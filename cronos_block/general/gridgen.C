@@ -186,7 +186,7 @@ bool Environment::CheckEnd(Data &gdata)
 		RunTimeExit = true;
 	}
 
-	if(RunTimeExit) {
+	if(RunTimeExit) {cout <<"Hit Exceeded\n";
 		return Finalize(gdata, static_cast<string>("Runtime exceeded"));
 	}
 
@@ -196,7 +196,7 @@ bool Environment::CheckEnd(Data &gdata)
 		Completed = true;
 	}
 
-	if(Completed) {
+	if(Completed) {cout <<"Hit Completed\n";
 		return Finalize(gdata, static_cast<string>("Time integration completed"));
 	}
 
@@ -547,9 +547,9 @@ int Environment::Finalize(Data &gdata, string message)
 		cout << " Program exiting normally: " << endl;
 		cout << " ------ " << message << " ------ " << endl;
 	}
-	
+
 	Output(gdata, true, false);
-	
+
 	if(false) {
 		WriteDivB(gdata);
 	}

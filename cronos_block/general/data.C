@@ -166,15 +166,6 @@ Data::Data()
 		omSYCL.push_back(CelerityBuffer<double, 3>(Range<3>(mx[0]+6, mx[1]+6, mx[2]+6)));
 	}
 
-	/*for (int q = 0; q < omSYCL.size(); ++q) {
-		queue.submit([=](celerity::handler& cgh) {
-			celerity::accessor omSYCL_acc{omSYCL[q], cgh, celerity::access::one_for_one{}, celerity::write_only};
-			cgh.parallel_for<class BufferInitializationKernel>(omSYCL[q].get_range(), [=](celerity::item<2> item) {
-				omSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
-			});
-		});
-	}*/
-
 	nom = new NumMatrix<double,3> [n_omInt];
 
 	for (int q = 0; q < n_omInt; ++q) {
@@ -285,6 +276,7 @@ Data::Data()
 Data::~Data() {
 	delete [] om;
 	delete [] nom;
+	omSYCL.clear();
 #if (OMS_USER == TRUE)
 	delete [] om_user;
 	delete [] nom_user;

@@ -1,0 +1,331 @@
+Start testing: Nov 22 00:12 CET
+----------------------------------------------------------
+1/4 Testing: tiny_run
+1/4 Test: tiny_run
+Command: "/home/dproksch/master_thesis/CronosCelerityBlock/build/proj" "/home/dproksch/master_thesis/CronosCelerityBlock/build/tests/SodToro5HllcRef_tiny" "SodToro5HllcRef"
+Directory: /home/dproksch/master_thesis/CronosCelerityBlock/build
+"tiny_run" start time: Nov 22 00:12 CET
+Output:
+----------------------------------------------------------
+[2022-11-22 00:12:41.417] [0] [info] Celerity runtime version 0.3.2 59e7d61 running on hipSYCL 0.9.3. PID = 2705, build type = release
+[2022-11-22 00:12:41.933] [0] [info] Using platform 'CUDA', device 'NVIDIA GeForce RTX 3060' (automatically selected platform 0, device 0)
+ Writing Lines: /Lx
+ Writing Nodes: /Xn
+ Writing Cells: /Xc
+ Writing Multi /Tx
+ Done 
+ Writing Lines: /Ly
+ Writing Nodes: /Yn
+ Writing Cells: /Yc
+ Writing Multi /Ty
+ Done 
+ Writing Lines: /Lz
+ Writing Nodes: /Zn
+ Writing Cells: /Zc
+ Writing Multi /Tz
+ Done 
+creating omSYCL buffer size 205, 6, 6
+creating omSYCL buffer size 205, 6, 6
+creating omSYCL buffer size 205, 6, 6
+creating omSYCL buffer size 205, 6, 6
+creating omSYCL buffer size 205, 6, 6
+creating omSYCL buffer size 205, 6, 6
+creating omSYCL buffer size 205, 6, 6
+creating omSYCL buffer size 205, 6, 6
+creating omSYCL buffer size 205, 6, 6
+creating omSYCL buffer size 205, 6, 6
+creating omSYCL buffer size 205, 6, 6
+creating omSYCL buffer size 205, 6, 6
+ My upper type: 0 2 2
+======================================================
+ Writing info on... 
+  ... Runge Kutta Stepping 
+  ... value of cfl number 
+  ... I/O of data 
+  ... Energetics 
+  ... divergence of B 
+  ... Timing 
+======================================================
+ Using the HLLC solver 
+calling init (type=99)...
+ Shock Tube problem (HD) 1D 
+199 0 0
+all ICs set.
+ Storing values for fixed boundaries 
+------- Field ids-------------------------------------
+Add0      ->  5
+Add1      ->  6
+Etherm    ->  4
+rho       ->  0
+v_x       ->  1
+v_y       ->  2
+v_z       ->  3
+-------Fluctuations-----------------------------------
+ E_kin:  0.000e+00 E_dyn:  0.000e+00
+-------Energertics:-----------------------------------
+ E_ges:  1.442e+03 E_th:   0.000e+00
+-------Dynamics:--------------------------------------
+ Vorti.: 0.000e+00 Enstr.: 0.000e+00 M_rms:       -nan
+-------Conserved quantities:--------------------------
+ Mass: 1.000e+00 err: 0.000e+00
+ p_x:  -1.960e+01 err: 0.000e+00
+ p_y:  0.000e+00 err: 0.000e+00
+ p_z:  0.000e+00 err: 0.000e+00
+ Eges: 1.442e+03 err: 0.000e+00
+......................................................
+    Movie Output triggered 
+......................................................
+......................................................
+   Output (flt)  triggered at time: 0
+......................................................
+======================================================
+Integrating: time = 0 with dt = 2e-06 at step 0
+  RKSTEP = 1
+  RKSTEP = 2
+------------------------------------------------------
+ Time needed for substeps:  2.00032 0.000124931
+             for full step: 4.01063
+-------Fluctuations-----------------------------------
+ E_kin:  0.000e+00 E_dyn:  0.000e+00
+-------Energertics:-----------------------------------
+ E_ges:  1.442e+03 E_th:   0.000e+00
+-------Dynamics:--------------------------------------
+ Vorti.: 0.000e+00 Enstr.: 0.000e+00 M_rms:       -nan
+-------Conserved quantities:--------------------------
+ Mass: 1.000e+00 err: 0.000e+00
+ p_x:  -1.960e+01 err: 0.000e+00
+ p_y:  0.000e+00 err: 0.000e+00
+ p_z:  0.000e+00 err: 0.000e+00
+ Eges: 1.442e+03 err: 0.000e+00
+......................................................
+   Output (dbl)  triggered at time: 2e-06
+......................................................
+======================================================
+Integrating: time = 2e-06 with dt = 0.000998 at step 1
+  RKSTEP = 1
+  RKSTEP = 2
+------------------------------------------------------
+ Time needed for substeps:  2.00037 0.000113964
+             for full step: 4.00268
+-------Fluctuations-----------------------------------
+ E_kin:  0.000e+00 E_dyn:  0.000e+00
+-------Energertics:-----------------------------------
+ E_ges:  1.442e+03 E_th:   0.000e+00
+-------Dynamics:--------------------------------------
+ Vorti.: 0.000e+00 Enstr.: 0.000e+00 M_rms:       -nan
+-------Conserved quantities:--------------------------
+ Mass: 1.000e+00 err: 0.000e+00
+ p_x:  -1.960e+01 err: 0.000e+00
+ p_y:  0.000e+00 err: 0.000e+00
+ p_z:  0.000e+00 err: 0.000e+00
+ Eges: 1.442e+03 err: 0.000e+00
+......................................................
+   Output (flt)  triggered at time: 0.001
+......................................................
+Hit Completed
+ Program exiting normally: 
+ ------ Time integration completed ------ 
+......................................................
+   Output (flt)  triggered at time: 0.001
+......................................................
+======================================================
+ Total run time               8.01584s
+ Average time step duration   4.00792s
+======================================================
+[;35m[hipSYCL Warning] [0mdag_direct_scheduler: Detected a requirement that is neither of discard access mode (SYCL 1.2.1) nor noinit property (SYCL 2020) that accesses uninitialized data. Consider changing to discard/noinit. Optimizing potential data transfers away.
+[;35m[hipSYCL Warning] [0mdag_direct_scheduler: Detected a requirement that is neither of discard access mode (SYCL 1.2.1) nor noinit property (SYCL 2020) that accesses uninitialized data. Consider changing to discard/noinit. Optimizing potential data transfers away.
+[;35m[hipSYCL Warning] [0mdag_direct_scheduler: Detected a requirement that is neither of discard access mode (SYCL 1.2.1) nor noinit property (SYCL 2020) that accesses uninitialized data. Consider changing to discard/noinit. Optimizing potential data transfers away.
+[;35m[hipSYCL Warning] [0mdag_direct_scheduler: Detected a requirement that is neither of discard access mode (SYCL 1.2.1) nor noinit property (SYCL 2020) that accesses uninitialized data. Consider changing to discard/noinit. Optimizing potential data transfers away.
+[;35m[hipSYCL Warning] [0mdag_direct_scheduler: Detected a requirement that is neither of discard access mode (SYCL 1.2.1) nor noinit property (SYCL 2020) that accesses uninitialized data. Consider changing to discard/noinit. Optimizing potential data transfers away.
+[;35m[hipSYCL Warning] [0mdag_direct_scheduler: Detected a requirement that is neither of discard access mode (SYCL 1.2.1) nor noinit property (SYCL 2020) that accesses uninitialized data. Consider changing to discard/noinit. Optimizing potential data transfers away.
+[;35m[hipSYCL Warning] [0mdag_direct_scheduler: Detected a requirement that is neither of discard access mode (SYCL 1.2.1) nor noinit property (SYCL 2020) that accesses uninitialized data. Consider changing to discard/noinit. Optimizing potential data transfers away.
+[;35m[hipSYCL Warning] [0mdag_direct_scheduler: Detected a requirement that is neither of discard access mode (SYCL 1.2.1) nor noinit property (SYCL 2020) that accesses uninitialized data. Consider changing to discard/noinit. Optimizing potential data transfers away.
+<end of output>
+Test time =   8.92 sec
+----------------------------------------------------------
+Test Passed.
+"tiny_run" end time: Nov 22 00:12 CET
+"tiny_run" time elapsed: 00:00:08
+----------------------------------------------------------
+
+2/4 Testing: tiny_compare
+2/4 Test: tiny_compare
+Command: "/usr/bin/h5diff" "--exclude-path" "/Data/version" "/home/dproksch/master_thesis/CronosCelerityBlock/build/tests/SodToro5HllcRef_tiny/SodToro5HllcRef_float/SodToro5HllcRef_flt_step3.h5" "/home/dproksch/master_thesis/CronosCelerityBlock/tests/SodToro5HllcRef_tiny/SodToro5HllcRef_float/SodToro5HllcRef_flt_step3.h5"
+Directory: /home/dproksch/master_thesis/CronosCelerityBlock/build
+"tiny_compare" start time: Nov 22 00:12 CET
+Output:
+----------------------------------------------------------
+h5diff: </home/dproksch/master_thesis/CronosCelerityBlock/build/tests/SodToro5HllcRef_tiny/SodToro5HllcRef_float/SodToro5HllcRef_flt_step3.h5>: unable to open file
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Failed.
+"tiny_compare" end time: Nov 22 00:12 CET
+"tiny_compare" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/4 Testing: small_run
+3/4 Test: small_run
+Command: "/home/dproksch/master_thesis/CronosCelerityBlock/build/proj" "/home/dproksch/master_thesis/CronosCelerityBlock/build/tests/SodToro5HllcRef_small" "SodToro5HllcRef"
+Directory: /home/dproksch/master_thesis/CronosCelerityBlock/build
+"small_run" start time: Nov 22 00:12 CET
+Output:
+----------------------------------------------------------
+[2022-11-22 00:12:50.237] [0] [info] Celerity runtime version 0.3.2 59e7d61 running on hipSYCL 0.9.3. PID = 2750, build type = release
+[2022-11-22 00:12:50.506] [0] [info] Using platform 'CUDA', device 'NVIDIA GeForce RTX 3060' (automatically selected platform 0, device 0)
+ Writing Lines: /Lx
+ Writing Nodes: /Xn
+ Writing Cells: /Xc
+ Writing Multi /Tx
+ Done 
+ Writing Lines: /Ly
+ Writing Nodes: /Yn
+ Writing Cells: /Yc
+ Writing Multi /Ty
+ Done 
+ Writing Lines: /Lz
+ Writing Nodes: /Zn
+ Writing Cells: /Zc
+ Writing Multi /Tz
+ Done 
+creating omSYCL buffer size 205, 6, 6
+creating omSYCL buffer size 205, 6, 6
+creating omSYCL buffer size 205, 6, 6
+creating omSYCL buffer size 205, 6, 6
+creating omSYCL buffer size 205, 6, 6
+creating omSYCL buffer size 205, 6, 6
+creating omSYCL buffer size 205, 6, 6
+creating omSYCL buffer size 205, 6, 6
+creating omSYCL buffer size 205, 6, 6
+creating omSYCL buffer size 205, 6, 6
+creating omSYCL buffer size 205, 6, 6
+creating omSYCL buffer size 205, 6, 6
+ My upper type: 0 2 2
+======================================================
+ Writing info on... 
+  ... Runge Kutta Stepping 
+  ... value of cfl number 
+  ... I/O of data 
+  ... Energetics 
+  ... divergence of B 
+  ... Timing 
+======================================================
+ Using the HLLC solver 
+calling init (type=99)...
+ Shock Tube problem (HD) 1D 
+199 0 0
+all ICs set.
+ Storing values for fixed boundaries 
+------- Field ids-------------------------------------
+Add0      ->  5
+Add1      ->  6
+Etherm    ->  4
+rho       ->  0
+v_x       ->  1
+v_y       ->  2
+v_z       ->  3
+-------Fluctuations-----------------------------------
+ E_kin:  0.000e+00 E_dyn:  0.000e+00
+-------Energertics:-----------------------------------
+ E_ges:  1.442e+03 E_th:   0.000e+00
+-------Dynamics:--------------------------------------
+ Vorti.: 0.000e+00 Enstr.: 0.000e+00 M_rms:       -nan
+-------Conserved quantities:--------------------------
+ Mass: 1.000e+00 err: 0.000e+00
+ p_x:  -1.960e+01 err: 0.000e+00
+ p_y:  0.000e+00 err: 0.000e+00
+ p_z:  0.000e+00 err: 0.000e+00
+ Eges: 1.442e+03 err: 0.000e+00
+......................................................
+    Movie Output triggered 
+......................................................
+......................................................
+   Output (flt)  triggered at time: 0
+......................................................
+======================================================
+Integrating: time = 0 with dt = 2e-06 at step 0
+  RKSTEP = 1
+  RKSTEP = 2
+------------------------------------------------------
+ Time needed for substeps:  2.00036 0.000113964
+             for full step: 4.01034
+-------Fluctuations-----------------------------------
+ E_kin:  0.000e+00 E_dyn:  0.000e+00
+-------Energertics:-----------------------------------
+ E_ges:  1.442e+03 E_th:   0.000e+00
+-------Dynamics:--------------------------------------
+ Vorti.: 0.000e+00 Enstr.: 0.000e+00 M_rms:       -nan
+-------Conserved quantities:--------------------------
+ Mass: 1.000e+00 err: 0.000e+00
+ p_x:  -1.960e+01 err: 0.000e+00
+ p_y:  0.000e+00 err: 0.000e+00
+ p_z:  0.000e+00 err: 0.000e+00
+ Eges: 1.442e+03 err: 0.000e+00
+......................................................
+   Output (dbl)  triggered at time: 2e-06
+......................................................
+======================================================
+Integrating: time = 2e-06 with dt = 0.000998 at step 1
+  RKSTEP = 1
+  RKSTEP = 2
+------------------------------------------------------
+ Time needed for substeps:  2.00036 0.000119925
+             for full step: 4.0024
+-------Fluctuations-----------------------------------
+ E_kin:  0.000e+00 E_dyn:  0.000e+00
+-------Energertics:-----------------------------------
+ E_ges:  1.442e+03 E_th:   0.000e+00
+-------Dynamics:--------------------------------------
+ Vorti.: 0.000e+00 Enstr.: 0.000e+00 M_rms:       -nan
+-------Conserved quantities:--------------------------
+ Mass: 1.000e+00 err: 0.000e+00
+ p_x:  -1.960e+01 err: 0.000e+00
+ p_y:  0.000e+00 err: 0.000e+00
+ p_z:  0.000e+00 err: 0.000e+00
+ Eges: 1.442e+03 err: 0.000e+00
+......................................................
+   Output (flt)  triggered at time: 0.001
+......................................................
+Hit Completed
+ Program exiting normally: 
+ ------ Time integration completed ------ 
+......................................................
+   Output (flt)  triggered at time: 0.001
+......................................................
+======================================================
+ Total run time               8.01538s
+ Average time step duration   4.00769s
+======================================================
+[;35m[hipSYCL Warning] [0mdag_direct_scheduler: Detected a requirement that is neither of discard access mode (SYCL 1.2.1) nor noinit property (SYCL 2020) that accesses uninitialized data. Consider changing to discard/noinit. Optimizing potential data transfers away.
+[;35m[hipSYCL Warning] [0mdag_direct_scheduler: Detected a requirement that is neither of discard access mode (SYCL 1.2.1) nor noinit property (SYCL 2020) that accesses uninitialized data. Consider changing to discard/noinit. Optimizing potential data transfers away.
+[;35m[hipSYCL Warning] [0mdag_direct_scheduler: Detected a requirement that is neither of discard access mode (SYCL 1.2.1) nor noinit property (SYCL 2020) that accesses uninitialized data. Consider changing to discard/noinit. Optimizing potential data transfers away.
+[;35m[hipSYCL Warning] [0mdag_direct_scheduler: Detected a requirement that is neither of discard access mode (SYCL 1.2.1) nor noinit property (SYCL 2020) that accesses uninitialized data. Consider changing to discard/noinit. Optimizing potential data transfers away.
+[;35m[hipSYCL Warning] [0mdag_direct_scheduler: Detected a requirement that is neither of discard access mode (SYCL 1.2.1) nor noinit property (SYCL 2020) that accesses uninitialized data. Consider changing to discard/noinit. Optimizing potential data transfers away.
+[;35m[hipSYCL Warning] [0mdag_direct_scheduler: Detected a requirement that is neither of discard access mode (SYCL 1.2.1) nor noinit property (SYCL 2020) that accesses uninitialized data. Consider changing to discard/noinit. Optimizing potential data transfers away.
+[;35m[hipSYCL Warning] [0mdag_direct_scheduler: Detected a requirement that is neither of discard access mode (SYCL 1.2.1) nor noinit property (SYCL 2020) that accesses uninitialized data. Consider changing to discard/noinit. Optimizing potential data transfers away.
+[;35m[hipSYCL Warning] [0mdag_direct_scheduler: Detected a requirement that is neither of discard access mode (SYCL 1.2.1) nor noinit property (SYCL 2020) that accesses uninitialized data. Consider changing to discard/noinit. Optimizing potential data transfers away.
+<end of output>
+Test time =   8.62 sec
+----------------------------------------------------------
+Test Passed.
+"small_run" end time: Nov 22 00:12 CET
+"small_run" time elapsed: 00:00:08
+----------------------------------------------------------
+
+4/4 Testing: small_compare
+4/4 Test: small_compare
+Command: "/usr/bin/h5diff" "--exclude-path" "/Data/version" "/home/dproksch/master_thesis/CronosCelerityBlock/build/tests/SodToro5HllcRef_small/SodToro5HllcRef_float/SodToro5HllcRef_flt_step16.h5" "/home/dproksch/master_thesis/CronosCelerityBlock/tests/SodToro5HllcRef_small/SodToro5HllcRef_float/SodToro5HllcRef_flt_step16.h5"
+Directory: /home/dproksch/master_thesis/CronosCelerityBlock/build
+"small_compare" start time: Nov 22 00:12 CET
+Output:
+----------------------------------------------------------
+h5diff: </home/dproksch/master_thesis/CronosCelerityBlock/build/tests/SodToro5HllcRef_small/SodToro5HllcRef_float/SodToro5HllcRef_flt_step16.h5>: unable to open file
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Failed.
+"small_compare" end time: Nov 22 00:12 CET
+"small_compare" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Nov 22 00:12 CET

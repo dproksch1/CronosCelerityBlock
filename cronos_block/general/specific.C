@@ -235,7 +235,7 @@ void HyperbolicSolver::getConstants_fromH5(Data &gdata, Hdf5iStream &h5in)
 
 
 void HyperbolicSolver::init(Data &gdata, gridFunc &gfunc,
-                            ProblemType &Problem)
+                            ProblemType &Problem, Queue &queue)
 {
 
 	if(gdata.time < 0.1*gdata.dt) {
@@ -273,6 +273,15 @@ void HyperbolicSolver::init(Data &gdata, gridFunc &gfunc,
 			cout << "all ICs set." << endl;
 		}
 
+	}
+
+	for (int q = 0; q < gdata.omSYCL.size(); q++) {
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+			cgh.parallel_for<class BufferInitializationKernel>(gdata.omSYCL[q].get_range(), [=](celerity::item<3> item) {
+				omSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
+			});
+		});
 	}
 
 	// Store values at boundaries for fixed boundary conditions

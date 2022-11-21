@@ -30,39 +30,39 @@
 
 class HyperbolicSolver: public rksolver {
 public:
-	HyperbolicSolver(Data &, ProblemType &);//used
+	HyperbolicSolver(Data &, ProblemType &);
 	~HyperbolicSolver();
-	virtual void init_constants(Data &);//used
-	virtual void addConstants_toH5(Data &, Hdf5Stream &h5out);//not_used (keep)
-	virtual void getConstants_fromH5(Data &, Hdf5iStream &h5in);//not_used (keep)
-	virtual void init(Data &, gridFunc &, ProblemType &);//used
-	virtual void restart(Data &, gridFunc &, ProblemType &);//not used (could be eliminated, maybe keep)
+	virtual void init_constants(Data &);
+	virtual void addConstants_toH5(Data &, Hdf5Stream &h5out);
+	virtual void getConstants_fromH5(Data &, Hdf5iStream &h5in);
+	virtual void init(Data &, gridFunc &, ProblemType &, Queue &);
+	virtual void restart(Data &, gridFunc &, ProblemType &);
 	virtual double singlestep(Data &, gridFunc &, ProblemType &, int, Queue&);
-	virtual void phystest(Data &, gridFunc &, ProblemType &, int, int iFluid=0);//used
+	virtual void phystest(Data &, gridFunc &, ProblemType &, int, int iFluid=0);
 
 private:
-	void init_general(Data &, gridFunc &, ProblemType &);//used
+	void init_general(Data &, gridFunc &, ProblemType &);
 	double compute_cfl(Data &, ProblemType &, double, double, int);
-	void gen_MagBoundValues(Data &, gridFunc &, ProblemType &);//not used (keep if you keep restart)
+	void gen_MagBoundValues(Data &, gridFunc &, ProblemType &);
 	/**Compute magnetic field from vector potential
 	 * @PARAM initial_setup indicated if computation is done for the first time ->
 	 * to be used e.g. by TransPot2Mag
 	 * */
-	void compute_B(Data &, gridFunc &, ProblemType &, bool initial_setup=false);//not used
-	double compute_divB(Data &, gridFunc &, ProblemType &);//not used
-	double compute_divB(Data &, gridFunc &, ProblemType &, NumMatrix<double,3> &);//not used
-	void CheckNan(NumMatrix<double,3> &, int, int, int, string);//used
-	void TransPot2Mag(Data &, gridFunc &, ProblemType &); //not used
-	void TransMag2Pot(Data &, gridFunc &, ProblemType &); //not used
-	void ComputeChecksumA(Data &, double []); //not used
-	double power(double, int); //not used
+	void compute_B(Data &, gridFunc &, ProblemType &, bool initial_setup=false);
+	double compute_divB(Data &, gridFunc &, ProblemType &);
+	double compute_divB(Data &, gridFunc &, ProblemType &, NumMatrix<double,3> &);
+	void CheckNan(NumMatrix<double,3> &, int, int, int, string);
+	void TransPot2Mag(Data &, gridFunc &, ProblemType &);
+	void TransMag2Pot(Data &, gridFunc &, ProblemType &);
+	void ComputeChecksumA(Data &, double []);
+	double power(double, int);
 	inline double pressure(const double &);
 	inline double pressure(double, double, double, double, double);
 	inline double pressure(Data &, ProblemType &, const double &,
 	                     const double &, const double &, const double &);
 	void UserEquations(const Data &);
 	void set_UserPde(const Data &);
-	void set_TimeIntegrator(const Data &, gridFunc &); //used
+	void set_TimeIntegrator(const Data &, gridFunc &);
 
 	std::vector<std::unique_ptr<TimeIntegrator>> TimeIntegratorGeneric;
 	std::vector<std::unique_ptr<TimeIntegrator>> TimeIntegratorUser;
