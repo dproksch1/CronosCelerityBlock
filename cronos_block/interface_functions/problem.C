@@ -329,6 +329,11 @@ double ProblemType::c2_iso(const Data &gdata,
 	return cs2;
 }
 
+double ProblemType::get_cs2() const
+{
+	return cs2;
+}
+
 
 
 void ProblemType::set_q(int q, NumMatrix<double,3> &omField) {

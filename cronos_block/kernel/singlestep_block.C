@@ -347,12 +347,20 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	//std::vector<CelerityBuffer<double, 2>> physPtotalPthermSYCL_Old(gdata.omSYCL.size(), CelerityBuffer<double, 2>(celerity::range<2>(6,2)));
 	celerity::buffer<double, 1> max_buf{{1}};
 
+	//looking for better solution later
+	int fluidConst[] {gdata.fluid.get_q_rho(), gdata.fluid.get_q_sx(), gdata.fluid.get_q_sx(), gdata.fluid.get_q_sz(),
+						gdata.fluid.get_q_Eges(), gdata.fluid.get_q_Eadd(), gdata.fluid.get_q_Bx(), gdata.fluid.get_q_By(),
+						gdata.fluid.get_q_Bz()};
+
+	const int problem_cs2 = Problem.get_cs2();
+	const int fluidType = gdata.fluid.get_fluid_type();
+
 	/*for (int q = 0; q < gdata.omSYCL.size()	; ++q) {
 		queue.submit([=](celerity::handler& cgh) {
-			celerity::accessor physVals_acc{physValsSYCL[q], cgh, celerity::access::one_for_one{}, celerity::write_only};	
-			//celerity::accessor physValsOld_acc{physValsSYCL_Old[q], cgh, celerity::access::one_for_one{}, celerity::write_only};
-			//celerity::accessor physPtotalPtherm_acc{physPtotalPthermSYCL[q], cgh, celerity::access::one_for_one{}, celerity::write_only};
-			//celerity::accessor physPtotalPthermOld_acc{physPtotalPthermSYCL[q], cgh, celerity::access::one_for_one{}, celerity::write_only};
+			celerity::accessor physVals_acc{physValsSYCL[q], cgh, celerity::access::one_to_one{}, celerity::write_only};	
+			//celerity::accessor physValsOld_acc{physValsSYCL_Old[q], cgh, celerity::access::one_to_one{}, celerity::write_only};
+			//celerity::accessor physPtotalPtherm_acc{physPtotalPthermSYCL[q], cgh, celerity::access::one_to_one{}, celerity::write_only};
+			//celerity::accessor physPtotalPthermOld_acc{physPtotalPthermSYCL[q], cgh, celerity::access::one_to_one{}, celerity::write_only};
 			cgh.parallel_for<class BufferInitializationKernel>(physValsSYCL[q].get_range(), [=](celerity::item<2> item) {
 				physVals_acc[item.get_id(0)][item.get_id(1)] = 0;
 			});
@@ -379,26 +387,48 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 				size_t ix = item.get_id(2) - ixStart;
 				
 				//no vector in device code
-				double physVals[gpu::FaceMax][gpu::TypeMax] = {{0}};
-				double physValsOld[gpu::FaceMax][gpu::TypeMax] = {{0}};
+				double uPri[gpu::FaceMax][N_OMINT] = {{0.0}};
+				double uCon[gpu::FaceMax][N_OMINT] = {{0.0}};
+				double physFlux[gpu::FaceMax][N_OMINT] = {{0.0}};
+				double physValPtherm[gpu::FaceMax] = {0};
+				double physValPtotal[gpu::FaceMax] = {0};
+
+				double uPriOld[gpu::FaceMax][N_OMINT] = {{0}};
 
 				//if (ix == ixEnd && iy == gdata.mx[1]+n_ghost[1]-1 && iz == gdata.mx[2]+n_ghost[2]-1) cout << "reach limit: " << ix << "." <<  iy << "." << iz << "\n";
 				//const int fluidType = Riemann[DirX]->get_Fluid_Type();
 
 				//pointwise reconstruction (incomplete)
-				gpu::compute(om_acc, physVals, ix, iy, iz);
+				gpu::compute(om_acc, uPri, ix, iy, iz, q);
 
-				gpu::compute(om_acc, physValsOld, ix -1, iy, iz);
-				gpu::compute(om_acc, physValsOld, ix, iy -1, iz);
-				gpu::compute(om_acc, physValsOld, ix, iy, iz -1);
+				gpu::compute(om_acc, uPriOld, ix -1, iy, iz, q);
+				gpu::compute(om_acc, uPriOld, ix, iy -1, iz, q);
+				gpu::compute(om_acc, uPriOld, ix, iy, iz -1, q);
 
-				physVals[gpu::FaceEast][0] = physValsOld[gpu::FaceEast][0];
-				physVals[gpu::FaceEast][1] = physValsOld[gpu::FaceEast][1];
-				physVals[gpu::FaceNorth][0] = physValsOld[gpu::FaceNorth][0];
-				physVals[gpu::FaceNorth][1] = physValsOld[gpu::FaceNorth][1];
-				physVals[gpu::FaceTop][0] = physValsOld[gpu::FaceTop][0];
-				physVals[gpu::FaceTop][1] = physValsOld[gpu::FaceTop][1];
+				uPri[gpu::FaceEast][0] = uPri[gpu::FaceEast][0];
+				uPri[gpu::FaceEast][1] = uPri[gpu::FaceEast][1];
+				uPri[gpu::FaceNorth][0] = uPri[gpu::FaceNorth][0];
+				uPri[gpu::FaceNorth][1] = uPri[gpu::FaceNorth][1];
+				uPri[gpu::FaceTop][0] = uPri[gpu::FaceTop][0];
+				uPri[gpu::FaceTop][1] = uPri[gpu::FaceTop][1];
 				
+				for (int dir = 0; dir < DirMax; ++dir) {
+					int ixOff = (dir == DirX) ? ix : ix - 1;
+					int iyOff = (dir == DirY) ? iy : iy - 1;
+					int izOff = (dir == DirZ) ? iz : iz - 1;
+
+					int face = dir * 2;
+
+					gpu::get_Cons(om_acc, uPri[face], uCon[face], physValPtherm[face], physValPtotal[face], ix, iy, iz, face,
+							 		thermal, Problem.gamma, problem_cs2, *eos, fluidType, fluidConst);
+
+					gpu::get_PhysFlux(om_acc, physFlux[face], uPri[face], uCon[face], physValPtherm[face], face, fluidConst);
+
+					gpu::get_Cons(om_acc, uPri[face+1], uCon[face+1], physValPtherm[face+1], physValPtotal[face+1], ix, iy, iz, face+1,
+							 		thermal, Problem.gamma, problem_cs2, *eos, fluidType, fluidConst);
+
+					gpu::get_PhysFlux(om_acc, physFlux[face+1], uPri[face+1], uCon[face+1], physValPtherm[face+1], face+1, fluidConst);
+				}
 
 				/*if(ix >= 0 && ix <= gdata.mx[0] && iy >= 0 && iy <= gdata.mx[1] && iz >= 0 && iz <= gdata.mx[2]) {
 					//std::vector<phys_fields_0D> physVals;

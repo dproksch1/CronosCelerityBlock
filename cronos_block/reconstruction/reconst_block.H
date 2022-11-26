@@ -8,33 +8,13 @@
 #include "limiter.H"
 #include "fields_local.H"
 #include "standalone_usage.H"
+#include "utils.H"
 
 #if(STANDALONE_USAGE == TRUE)
 #include "direction.H"
 #endif
 
 namespace gpu {
-
-	enum {
-
-		FaceWest = 0,
-		FaceEast,
-		FaceSouth,
-		FaceNorth,
-		FaceBottom,
-		FaceTop,
-
-		FaceMax,
-	};
-
-	enum {
-
-		TypeUPri = 0,
-		TypeUCon,
-		TypeFluxPhys,
-
-		TypeMax,
-	};
 
 	struct Dud {
 		double _m;
@@ -96,36 +76,36 @@ namespace gpu {
 	}
 
 	template<typename AccessorType, typename PhysValsAccessorType>
-	void get_Vals_EW(AccessorType& omAcc, PhysValsAccessorType& fieldAcc, size_t ix, size_t iy, size_t iz, double deriv_x) {
+	void get_Vals_EW(AccessorType& omAcc, PhysValsAccessorType& uPri, size_t ix, size_t iy, size_t iz, int q, double deriv_x) {
 		double shift(0.);
-		fieldAcc[FaceWest][TypeUPri] = omAcc[ix][iy][iz] - (0.5 + shift) * deriv_x;
-		fieldAcc[FaceEast][TypeUPri] = fieldAcc[FaceWest][TypeUPri] + deriv_x;
+		uPri[FaceWest][q] = omAcc[ix][iy][iz] - (0.5 + shift) * deriv_x;
+		uPri[FaceEast][q] = uPri[FaceWest][q] + deriv_x;
 	}
 
 	template<typename AccessorType, typename PhysValsAccessorType>
-	void get_Vals_SN(AccessorType& omAcc, PhysValsAccessorType& fieldAcc, size_t ix, size_t iy, size_t iz, double deriv_y) {
+	void get_Vals_SN(AccessorType& omAcc, PhysValsAccessorType& uPri, size_t ix, size_t iy, size_t iz, int q, double deriv_y) {
 		double shift(0.);
-		fieldAcc[FaceSouth][TypeUPri] = omAcc[ix][iy][iz] - 0.5 * deriv_y;
-		fieldAcc[FaceNorth][TypeUPri] = fieldAcc[FaceSouth][TypeUPri] + deriv_y;
+		uPri[FaceSouth][q] = omAcc[ix][iy][iz] - 0.5 * deriv_y;
+		uPri[FaceNorth][q] = uPri[FaceSouth][q] + deriv_y;
 	}
 
 	template<typename AccessorType, typename PhysValsAccessorType>
-	void get_Vals_BT(AccessorType& omAcc, PhysValsAccessorType& fieldAcc, size_t ix, size_t iy, size_t iz, double deriv_z) {
+	void get_Vals_BT(AccessorType& omAcc, PhysValsAccessorType& uPri, size_t ix, size_t iy, size_t iz, int q, double deriv_z) {
 		double shift(0.);
-		fieldAcc[FaceBottom][TypeUPri] = omAcc[ix][iy][iz] - 0.5 * deriv_z;
-		fieldAcc[FaceTop][TypeUPri] = fieldAcc[FaceBottom][TypeUPri] + deriv_z;
+		uPri[FaceBottom][q] = omAcc[ix][iy][iz] - 0.5 * deriv_z;
+		uPri[FaceTop][q] = uPri[FaceBottom][q] + deriv_z;
 	}
 	
 	template<typename AccessorType, typename PhysValsAccessorType>
-	void compute(AccessorType& omAcc, PhysValsAccessorType& physValsAcc, size_t ix, size_t iy, size_t iz) {
+	void compute(AccessorType& omAcc, PhysValsAccessorType& physValsAcc, size_t ix, size_t iy, size_t iz, int q) {
 
 		auto [deriv_x, deriv_y, deriv_z] = prepareDerivs(omAcc, ix, iy, iz);
 
-		get_Vals_EW(omAcc, physValsAcc, ix, iy, iz, deriv_x);
+		get_Vals_EW(omAcc, physValsAcc, ix, iy, iz, q, deriv_x);
 
-		get_Vals_SN(omAcc, physValsAcc, ix, iy, iz, deriv_y);
+		get_Vals_SN(omAcc, physValsAcc, ix, iy, iz, q, deriv_y);
 
-		get_Vals_BT(omAcc, physValsAcc, ix, iy, iz, deriv_z);
+		get_Vals_BT(omAcc, physValsAcc, ix, iy, iz, q, deriv_z);
 
 	}
 }

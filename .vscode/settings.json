@@ -141,6 +141,7 @@
         "reconst_block.C": "cpp",
         "celerity_test.C": "cpp",
         "*.inc": "cpp",
-        "array.C": "cpp"
+        "array.C": "cpp",
+        "util.C": "cpp"
     }
 }
