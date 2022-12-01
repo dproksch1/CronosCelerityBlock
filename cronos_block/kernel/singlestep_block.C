@@ -145,13 +145,13 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 //----------------------------------------------------------------
 
 	Trafo->TransCons2Prim(gdata, gfunc, Problem);
-//sleep(1);cout << "TransCons2Prim" << endl;
+
 	// User defined transform
 	Problem.TransCons2Prim(gdata);
-//sleep(1);cout << "TransCons2Prim" << endl;
+
 	// Check for nans in primitive variables
 	gdata.CheckNan(1);
-//sleep(1);cout << "CheckNan" << endl;
+
 	// Compute the carbuncle-flag if necessary
 	if(gdata.use_carbuncleFlag) {
 		Riemann[DirX]->compute_carbuncleFlag(gdata);
@@ -333,10 +333,8 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 	};
 
-	auto range = Range<3>(izEnd-izStart, iyEnd-iyStart, ixEnd-ixStart);
+	//auto range = Range<3>(izEnd-izStart, iyEnd-iyStart, ixEnd-ixStart);
 	
-	//necessary due to a cuda memory freeing error for some reason
-	sleep(2);
 	//std::vector<CelerityBuffer<double, 2>> physValsSYCL;
 	//for (int i = 0; i < gdata.omSYCL.size(); i++) physValsSYCL.push_back(CelerityBuffer<double, 2>(celerity::range<2>(2,2)));
 	
@@ -345,15 +343,25 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	//std::vector<CelerityBuffer<double, 2>> physValsSYCL_Old(gdata.omSYCL.size(), CelerityBuffer<double, 2>( /*reeval*/ celerity::range<2>(6,2)));
 	//std::vector<CelerityBuffer<double, 2>> physPtotalPthermSYCL(gdata.omSYCL.size(), CelerityBuffer<double, 2>(celerity::range<2>(6,2)));
 	//std::vector<CelerityBuffer<double, 2>> physPtotalPthermSYCL_Old(gdata.omSYCL.size(), CelerityBuffer<double, 2>(celerity::range<2>(6,2)));
-	celerity::buffer<double, 1> max_buf{{1}};
+	
+	celerity::buffer<double, 1> max_buf{celerity::range{1}};
+	//celerity::buffer<double, 1> max_buf2(celerity::range<1>(1));
 
 	//looking for better solution later
 	int fluidConst[] {gdata.fluid.get_q_rho(), gdata.fluid.get_q_sx(), gdata.fluid.get_q_sx(), gdata.fluid.get_q_sz(),
 						gdata.fluid.get_q_Eges(), gdata.fluid.get_q_Eadd(), gdata.fluid.get_q_Bx(), gdata.fluid.get_q_By(),
 						gdata.fluid.get_q_Bz()};
 
-	const int problem_cs2 = Problem.get_cs2();
+	const double problem_cs2 = Problem.get_cs2();
+	const double denominator = pow(Problem.rho0,1.-Problem.gamma);
+	const double half_beta = (Problem.mag ? value((char*)"Plasma_beta")/2. : 1);
 	const int fluidType = gdata.fluid.get_fluid_type();
+	const bool thermal = Trafo->get_thermal();
+
+	double idx[DIM];
+	for (int i = 0; i < DIM; i++) {
+		idx[i] = gdata.idx[i];
+	}
 
 	/*for (int q = 0; q < gdata.omSYCL.size()	; ++q) {
 		queue.submit([=](celerity::handler& cgh) {
@@ -367,6 +375,8 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		});
 	}*/
 
+	auto range = Range<3>(gdata.mx[2] + 2*n_ghost[2] - 2, gdata.mx[1] + 2*n_ghost[1] - 2, gdata.mx[0] + 2*n_ghost[0] - 2);
+
 	for (int q = 0; q < gdata.omSYCL.size()	; ++q) {
 
 		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
@@ -375,42 +385,46 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 			auto rd = celerity::reduction(max_buf, cgh, cl::sycl::maximum<double>{},
                                   cl::sycl::property::reduction::initialize_to_identity{});
 			celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::read_only};
+			//celerity::accessor max_buf2_acc{max_buf2, cgh, celerity::access::all{}, celerity::write_only};
 			//celerity::accessor physVals_acc{physValsSYCL[q], cgh, celerity::access::all{}, celerity::read_write};	
 			//celerity::accessor physValsOld_acc{physValsSYCL_Old[q], cgh, celerity::access::all{}, celerity::read_write};
 			//celerity::accessor physPtotalPtherm_acc{physPtotalPthermSYCL[q], cgh, celerity::access::all{}, celerity::read_write};
 			//celerity::accessor physPtotalPthermOld_acc{physPtotalPthermSYCL[q], cgh, celerity::access::all{}, celerity::read_write};
 
-			cgh.parallel_for<class ReductionKernel>(range, rd, [=, &gdata](celerity::item<3> item, auto& max_cfl_lin) {
+			cgh.parallel_for<class ReductionKernel>(range, rd, [=](celerity::item<3> item, auto& max_cfl_lin) {
 
-				size_t iz = item.get_id(0) - izStart;
-				size_t iy = item.get_id(1) - iyStart;
-				size_t ix = item.get_id(2) - ixStart;
+				size_t iz = item.get_id(0) + 1;
+				size_t iy = item.get_id(1) + 1;
+				size_t ix = item.get_id(2) + 1;
 				
 				//no vector in device code
-				double uPri[gpu::FaceMax][N_OMINT] = {{0.0}};
-				double uCon[gpu::FaceMax][N_OMINT] = {{0.0}};
-				double physFlux[gpu::FaceMax][N_OMINT] = {{0.0}};
-				double physValPtherm[gpu::FaceMax] = {0};
-				double physValPtotal[gpu::FaceMax] = {0};
+				double uPri[gpu::FaceMax][N_OMINT] = {};
+				double uCon[gpu::FaceMax][N_OMINT] = {};
+				double physFlux[gpu::FaceMax][N_OMINT] = {};
+				double physValPtherm[gpu::FaceMax] = {};
+				double physValPtotal[gpu::FaceMax] = {};
 
-				double uPriOld[gpu::FaceMax][N_OMINT] = {{0}};
+				double uPriOld[gpu::FaceMax][N_OMINT] = {};
 
 				//if (ix == ixEnd && iy == gdata.mx[1]+n_ghost[1]-1 && iz == gdata.mx[2]+n_ghost[2]-1) cout << "reach limit: " << ix << "." <<  iy << "." << iz << "\n";
 				//const int fluidType = Riemann[DirX]->get_Fluid_Type();
 
 				//pointwise reconstruction (incomplete)
 				gpu::compute(om_acc, uPri, ix, iy, iz, q);
+				
+				if (ix >= 2 && iy >= 2 && iz >= 2) {
 
-				gpu::compute(om_acc, uPriOld, ix -1, iy, iz, q);
-				gpu::compute(om_acc, uPriOld, ix, iy -1, iz, q);
-				gpu::compute(om_acc, uPriOld, ix, iy, iz -1, q);
+					gpu::compute(om_acc, uPriOld, ix -1, iy, iz, q);
+					gpu::compute(om_acc, uPriOld, ix, iy -1, iz, q);
+					gpu::compute(om_acc, uPriOld, ix, iy, iz -1, q);
 
-				uPri[gpu::FaceEast][0] = uPri[gpu::FaceEast][0];
-				uPri[gpu::FaceEast][1] = uPri[gpu::FaceEast][1];
-				uPri[gpu::FaceNorth][0] = uPri[gpu::FaceNorth][0];
-				uPri[gpu::FaceNorth][1] = uPri[gpu::FaceNorth][1];
-				uPri[gpu::FaceTop][0] = uPri[gpu::FaceTop][0];
-				uPri[gpu::FaceTop][1] = uPri[gpu::FaceTop][1];
+					for (int i = 0; i < N_OMINT; i++) {
+						uPri[gpu::FaceEast][i] = uPri[gpu::FaceEast][i];
+						uPri[gpu::FaceNorth][i] = uPri[gpu::FaceNorth][i];
+						uPri[gpu::FaceTop][i] = uPri[gpu::FaceTop][i];
+					}
+				
+				}
 				
 				for (int dir = 0; dir < DirMax; ++dir) {
 					int ixOff = (dir == DirX) ? ix : ix - 1;
@@ -420,16 +434,29 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 					int face = dir * 2;
 
 					gpu::get_Cons(om_acc, uPri[face], uCon[face], physValPtherm[face], physValPtotal[face], ix, iy, iz, face,
-							 		thermal, Problem.gamma, problem_cs2, *eos, fluidType, fluidConst);
+							 		thermal, Problem.gamma, problem_cs2, denominator, half_beta, fluidType, fluidConst);
 
 					gpu::get_PhysFlux(om_acc, physFlux[face], uPri[face], uCon[face], physValPtherm[face], face, fluidConst);
 
 					gpu::get_Cons(om_acc, uPri[face+1], uCon[face+1], physValPtherm[face+1], physValPtotal[face+1], ix, iy, iz, face+1,
-							 		thermal, Problem.gamma, problem_cs2, *eos, fluidType, fluidConst);
+							 		thermal, Problem.gamma, problem_cs2, denominator, half_beta, fluidType, fluidConst);
 
 					gpu::get_PhysFlux(om_acc, physFlux[face+1], uPri[face+1], uCon[face+1], physValPtherm[face+1], face+1, fluidConst);
 				}
 
+				double numVals_Ch[DirMax][gpu::NumV_Max] = {1., 1.};
+				double cfl_loc = -20.0;
+
+				if (ix >= 2 && iy >= 2 && iz >= 2) {
+					for (int dir = 0; dir < DirMax; ++dir) {
+						int face = dir * 2;
+						cfl_loc = cl::sycl::fmax(gpu::get_vChar(om_acc, uPri[face], uCon[face], physValPtherm[face], uPri[face+1], uCon[face+1],
+									 physValPtherm[face+1], numVals_Ch[dir], dir, Problem.gamma, idx, fluidConst), cfl_loc);
+					}
+				}
+				
+				max_cfl_lin.combine(cfl_loc);
+	//max_cfl_lin.combine(cl::sycl::fmax(2, uPri[gpu::FaceTop][0]));
 				/*if(ix >= 0 && ix <= gdata.mx[0] && iy >= 0 && iy <= gdata.mx[1] && iz >= 0 && iz <= gdata.mx[2]) {
 					//std::vector<phys_fields_0D> physVals;
 					for (int inum = 0; inum < 6; ++inum) {
@@ -476,6 +503,16 @@ cout << cfl_lin << endl;				}
 // ----------------------------------------------------------------
 //   Check for errors:
 // ----------------------------------------------------------------
+
+//necessary due to a cuda memory freeing error for some reason
+sleep(1);
+
+queue.submit([=](celerity::handler& cgh) {
+	celerity::accessor max_buf_acc{max_buf, cgh, celerity::access::all{}, celerity::read_only_host_task};
+	cgh.host_task(celerity::on_master_node, [=]{
+		printf("result: %g\n", max_buf_acc[0]);
+	});
+});
 
 	for(int q = 0; q<n_omInt; ++q) {
 		CheckNan(gdata.nom[q],q, 0, 1,"nom");

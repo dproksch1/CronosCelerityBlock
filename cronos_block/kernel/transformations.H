@@ -12,12 +12,28 @@
 
 namespace gpu {
 
+	inline double pressure(double dens, const double problem_cs2, const double gamma, const double denominator, const double half_beta) {
+#ifdef SOUND
+		if(gamma != 1.){
+			return problem_cs2*cl::sycl::pow(dens, gamma)*denominator;
+		} else {
+			return problem_cs2*dens;
+		}
+#else
+		if(gamma != 1.){
+			return problem_cs2*cl::sycl::pow(dens, gamma)*denominator*half_beta;
+		} else {
+			return problem_cs2*dens*half_beta;
+		}
+#endif
+	}
+
 	inline double TransEth2E_gpu(double rhoinv, double psq, double Bsq, double ETherm, const int fluidType) {
 		
 		#if (FLUID_TYPE == CRONOS_MHD)
-			double Energy(ETherm + 0.5*psq*rhoinv + 0.5*Bsq);
+			double Energy = ETherm + 0.5*psq*rhoinv + 0.5*Bsq;
 		#elif (FLUID_TYPE == CRONOS_HYDRO)
-			double Energy(ETherm + 0.5*psq*rhoinv + 0.5*Bsq);
+			double Energy = ETherm + 0.5*psq*rhoinv + 0.5*Bsq;
 		#else
 			double Energy;
 			if(fluidType==CRONOS_MHD) {
@@ -30,16 +46,15 @@ namespace gpu {
 		return Energy;
 	}
 
-	inline double TransT2E_gpu(double problem_gamma, double rhoinv, double psq, double Bsq, double ETherm, const int fluidType) {
+	inline double TransT2Eth_gpu(double problem_gamma, double rhoinv, double ETherm) {
 
-		double Energy(1./(rhoinv*(problem_gamma-1.))*ETherm);
-		return TransEth2E_gpu(rhoinv, psq, Bsq, Energy, fluidType);
+		return 1./(rhoinv*(problem_gamma-1.))*ETherm;
 	}
 
 	template<typename AccessorType, typename UPriAccessorType, typename UConAccessorType, typename SinglePthermAccessorType, typename SinglePtotalAccessorType, typename FluidConstType>
 	void get_Cons(AccessorType& omAcc, UPriAccessorType& uPri, UConAccessorType& uCon, SinglePthermAccessorType& ptherm,
 				 SinglePtotalAccessorType& ptotal, int ix, int iy, int iz, int face, int thermal, double problem_gamma,
-				 const double problem_cs2, const EquationOfState &eos, const int fluidType, FluidConstType fluidConst) {
+				 const double problem_cs2, const double denominator, const double half_beta, const int fluidType, FluidConstType fluidConst) {
 		
 		int dir = face / 2;
 		
@@ -51,7 +66,7 @@ namespace gpu {
 				ptherm = uPri[fluidConst[fluidConst_q_rho]]*uPri[fluidConst[fluidConst_q_Eges]];
 			}
 		} else {
-			ptherm = eos.pressure(problem_cs2, uPri[fluidConst[fluidConst_q_rho]]);
+			ptherm = pressure(uPri[fluidConst[fluidConst_q_rho]], problem_cs2, problem_gamma, denominator, half_beta);
 		}
 
 		// Set / compute conservative variables:
@@ -68,21 +83,21 @@ namespace gpu {
 		if(ENERGETICS == FULL) {
 			double rhoinv = 1./uPri[fluidConst[fluidConst_q_rho]];
 
-			double psq = (sqr(uPri[fluidConst[fluidConst_q_sx]]) + sqr(uPri[fluidConst[fluidConst_q_sy]]) +
-					sqr(uPri[fluidConst[fluidConst_q_sz]]))*sqr(uPri[fluidConst[fluidConst_q_rho]]);
+			double psq = (cl::sycl::sqrt(uPri[fluidConst[fluidConst_q_sx]]) + cl::sycl::sqrt(uPri[fluidConst[fluidConst_q_sy]]) +
+					cl::sycl::sqrt(uPri[fluidConst[fluidConst_q_sz]]))*cl::sycl::sqrt(uPri[fluidConst[fluidConst_q_rho]]);
 
 			if(thermal) {
 				uCon[fluidConst[fluidConst_q_Eges]] = TransEth2E_gpu(rhoinv,psq,Bsq,
 						uPri[fluidConst[fluidConst_q_Eges]], fluidType);
 			} else {
-				uCon[fluidConst[fluidConst_q_Eges]] = TransT2E_gpu(problem_gamma, rhoinv,psq,Bsq,
-						uPri[fluidConst[fluidConst_q_Eges]], fluidType);
+				double Energy = TransT2Eth_gpu(problem_gamma, rhoinv, uPri[fluidConst[fluidConst_q_Eges]]);
+				uCon[fluidConst[fluidConst_q_Eges]] = TransEth2E_gpu(rhoinv,psq,Bsq, Energy, fluidType);
 			}
 
 #if(CRSWITCH_DUAL_ENERGY == CRONOS_ON)
 			// Computation of entropy for dual energy corrections
 			double Etherm = ptherm/(problem_gamma - 1.);
-			uPri[fluidConst[fluidConst_q_Eadd]] = Etherm*pow(uCon[fluidConst[fluidConst_q_rho]],
+			uPri[fluidConst[fluidConst_q_Eadd]] = Etherm*cl::sycl::pow(uCon[fluidConst[fluidConst_q_rho]],
 					1.-problem_gamma);
 			uCon[fluidConst[fluidConst_q_Eadd]] = uPri[fluidConst[fluidConst_q_Eadd]];
 #endif
@@ -99,6 +114,7 @@ namespace gpu {
 #endif
 
 	}
+
 }
 
 class Transformations {
@@ -118,16 +134,17 @@ public:
 	void get_Cons(const Data &, const ProblemType &, const EquationOfState &,
 			phys_fields_0D &, int ix, int iy, int iz, int face);
     void set_thermal(bool thermal);
+	bool get_thermal();
 
 	double TransEth2E(double, double, double, double) const;
 	double TransT2E(const ProblemType &, double, double, double, double) const;
 
-	void TransPrim2Cons(Data &gdata, gridFunc &gfunc, ProblemType &Problem, Queue &);
+	/*void TransPrim2Cons(Data &gdata, gridFunc &gfunc, ProblemType &Problem, Queue &);
 	void TransVel2Momen(Data &, gridFunc &, ProblemType &, Queue &);
 	void TransE2Eth(Data &, gridFunc &, ProblemType &, Queue &) const;
 	void TransEth2E(const Data &gdata, gridFunc &gfunc, ProblemType &Problem, Queue &queue) const;
 	void TransT2Eth(const Data &, gridFunc &, ProblemType &, Queue &) const;
-	void TransT2E(const Data &, gridFunc &, ProblemType &, Queue &) const;
+	void TransT2E(const Data &, gridFunc &, ProblemType &, Queue &) const;*/
 
 #if (USE_COROTATION == CRONOS_ON)
 	void TransCorotToInert(Data &, gridFunc &, ProblemType &);

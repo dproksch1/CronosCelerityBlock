@@ -75,6 +75,15 @@ namespace gpu {
 
 		fluidConstMax,
 	};
+
+	enum {
+
+		NumV_ch_p = 0,
+		NumV_ch_m,
+
+		NumV_Max,
+	};
+
 }
 
 

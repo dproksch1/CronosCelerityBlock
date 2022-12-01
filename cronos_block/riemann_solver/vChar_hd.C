@@ -189,4 +189,3 @@ double get_vChar3(const Data &gdata, const ProblemType &Problem,
 	
 	return cfl_loc;
 }
-

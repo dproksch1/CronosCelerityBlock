@@ -27,9 +27,9 @@ namespace gpu {
 		um *= Theta;
 		if (up * um > 0.) {
 			if (up > 0) {
-				return fmin(up, (fmin(uc, um)));
+				return cl::sycl::fmin(up, (cl::sycl::fmin(uc, um)));
 			} else if (up < 0) {
-				return fmax(up, (fmax(uc, um)));
+				return cl::sycl::fmax(up, (cl::sycl::fmax(uc, um)));
 			} else {
 				return 0.0;
 			}

@@ -1,0 +1,67 @@
+Start testing: Nov 30 12:04 CET
+----------------------------------------------------------
+Unable to find executable: /home/dproksch/master_thesis/CronosCelerityBlock/proj
+1/4 Testing: tiny_run
+1/4 Test: tiny_run
+Command: "" "/home/dproksch/master_thesis/CronosCelerityBlock/tests/SodToro5HllcRef_tiny" "SodToro5HllcRef"
+Directory: /home/dproksch/master_thesis/CronosCelerityBlock
+"tiny_run" start time: 
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"tiny_run" end time: Nov 30 12:04 CET
+"tiny_run" time elapsed: 00:00:00
+----------------------------------------------------------
+
+Failed test dependencies: tiny_run
+2/4 Testing: tiny_compare
+2/4 Test: tiny_compare
+Command: ""
+Directory: /home/dproksch/master_thesis/CronosCelerityBlock
+"tiny_compare" start time: 
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"tiny_compare" end time: Nov 30 12:04 CET
+"tiny_compare" time elapsed: 00:00:00
+----------------------------------------------------------
+
+Unable to find executable: /home/dproksch/master_thesis/CronosCelerityBlock/proj
+3/4 Testing: small_run
+3/4 Test: small_run
+Command: "" "/home/dproksch/master_thesis/CronosCelerityBlock/tests/SodToro5HllcRef_small" "SodToro5HllcRef"
+Directory: /home/dproksch/master_thesis/CronosCelerityBlock
+"small_run" start time: 
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"small_run" end time: Nov 30 12:04 CET
+"small_run" time elapsed: 00:00:00
+----------------------------------------------------------
+
+Failed test dependencies: small_run
+4/4 Testing: small_compare
+4/4 Test: small_compare
+Command: ""
+Directory: /home/dproksch/master_thesis/CronosCelerityBlock
+"small_compare" start time: 
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"small_compare" end time: Nov 30 12:04 CET
+"small_compare" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Nov 30 12:04 CET

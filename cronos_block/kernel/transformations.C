@@ -64,6 +64,10 @@ void Transformations::set_thermal(bool thermal) {
 	this->thermal = thermal;
 }
 
+bool Transformations::get_thermal() {
+	return thermal;
+}
+
 
 void Transformations::TransPrim2Cons(Data &gdata, gridFunc &gfunc,
                                      ProblemType &Problem) {
@@ -91,30 +95,7 @@ void Transformations::TransPrim2Cons(Data &gdata, gridFunc &gfunc,
 }
 
 
-void Transformations::TransPrim2Cons(Data &gdata, gridFunc &gfunc,
-                                     ProblemType &Problem, Queue& queue) {
-	//! Transform from primitive to conservative variables
 
-	if (ENERGETICS == FULL) {
-		if(gdata.om[q_Eges].getName() == "Etherm") {
-			TransEth2E(gdata, gfunc, Problem, queue);
-		} else if(gdata.om[q_Eges].getName() == "Temp") {
-			TransT2E(gdata, gfunc, Problem, queue);
-		}
-	}
-
-	if(gdata.om[q_sx].getName() == "v_x" && 
-	   gdata.om[q_sy].getName() == "v_y" &&
-	   gdata.om[q_sz].getName() == "v_z") {
-
-#if (USE_ANGULAR_MOMENTUM == TRUE)
-		TransVel2AngMom(gdata, gfunc, Problem);
-#else
-		TransVel2Momen(gdata, gfunc, Problem, queue);
-#endif
-
-	}
-}
 
 
 void Transformations::TransCons2Prim(Data &gdata, gridFunc &gfunc,
@@ -137,6 +118,9 @@ void Transformations::TransCons2Prim(Data &gdata, gridFunc &gfunc,
 }
 
 
+
+
+
 void Transformations::TransMomen2Vel(Data &gdata, gridFunc &gfunc,
                                      ProblemType &Problem)
 {
@@ -154,6 +138,9 @@ void Transformations::TransMomen2Vel(Data &gdata, gridFunc &gfunc,
 	gdata.om[q_sy].rename("v_y");
 	gdata.om[q_sz].rename("v_z");
 }
+
+
+
 
 
 
@@ -176,11 +163,7 @@ void Transformations::TransVel2Momen(Data &gdata, gridFunc &gfunc,
 
 }
 
-void Transformations::TransVel2Momen(Data &gdata, gridFunc &gfunc,
-                                     ProblemType &Problem, Queue &queue) {
 
-	//dproksch TODO: implement tensor multiplication for Celerity buffer
-}
 
 
 void Transformations::TransEth2E(const Data &gdata, gridFunc &gfunc,
@@ -227,75 +210,7 @@ void Transformations::TransEth2E(const Data &gdata, gridFunc &gfunc,
 }
 
 
-void Transformations::TransEth2E(const Data &gdata, gridFunc &gfunc,
-                                 ProblemType &Problem, Queue &queue) const
-{
 
-	if(gdata.om[q_Eges].getName() != "Etherm") {
-		cerr << " Energy is: " << gdata.om[q_Eges].getName() << " " << q_Eges << endl;
-		throw CException(" Transformations::TransEth2E - om[q_Eges] is not set as thermal energy ");
-	}
-
-	if(Problem.gamma < 1.0000000001) {
-		throw CException(" Must not be isothermal ");
-	}
-
-	const int izStart = -B + 1;
-	const int izEnd = gdata.mx[2] + B;
-	const int iyStart = -B + 1;
-	const int iyEnd = gdata.mx[1] + B;
-	const int ixStart = -B + 1;
-	const int ixEnd = gdata.mx[0] + B;
-
-	auto range = Range<3>(izEnd-izStart, iyEnd-iyStart, ixEnd-ixStart);
-
-	if(gdata.om[q_sx].getName() == "v_x" && gdata.om[q_sy].getName() == "v_y" &&
-	   gdata.om[q_sz].getName() == "v_z") {
-
-		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-
-			celerity::accessor omSYCL_Eges{gdata.omSYCL[q_Eges], cgh, celerity::access::one_to_one{}, celerity::read_write};	
-			celerity::accessor omSYCL_sx{gdata.omSYCL[q_sx], cgh, celerity::access::one_to_one{}, celerity::read_only};
-			celerity::accessor omSYCL_sy{gdata.omSYCL[q_sy], cgh, celerity::access::one_to_one{}, celerity::read_only};
-			celerity::accessor omSYCL_sz{gdata.omSYCL[q_sz], cgh, celerity::access::one_to_one{}, celerity::read_only};
-			celerity::accessor omSYCL_rho{gdata.omSYCL[q_rho], cgh, celerity::access::one_to_one{}, celerity::read_only};
-
-			cgh.parallel_for<class BufferInitializationKernel>(range, [=](celerity::item<3> item) {
-
-				size_t iz = item.get_id(0) - izStart;
-				size_t iy = item.get_id(1) - iyStart;
-				size_t ix = item.get_id(2) - izStart;
-
-				omSYCL_Eges[ix][iy][iz] += 0.5*(sqr(omSYCL_sx[ix][iy][iz]) + 
-					                            sqr(omSYCL_sy[ix][iy][iz]) +
-					                            sqr(omSYCL_sz[ix][iy][iz])) * omSYCL_rho[ix][iy][iz];
-			});
-		});
-
-	} else {
-
-		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-
-			celerity::accessor omSYCL_Eges{gdata.omSYCL[q_Eges], cgh, celerity::access::one_to_one{}, celerity::read_write};	
-			celerity::accessor omSYCL_sx{gdata.omSYCL[q_sx], cgh, celerity::access::one_to_one{}, celerity::read_only};
-			celerity::accessor omSYCL_sy{gdata.omSYCL[q_sy], cgh, celerity::access::one_to_one{}, celerity::read_only};
-			celerity::accessor omSYCL_sz{gdata.omSYCL[q_sz], cgh, celerity::access::one_to_one{}, celerity::read_only};
-			celerity::accessor omSYCL_rho{gdata.omSYCL[q_rho], cgh, celerity::access::one_to_one{}, celerity::read_only};
-
-			cgh.parallel_for<class BufferInitializationKernel>(range, [=](celerity::item<3> item) {
-
-				size_t iz = item.get_id(0) - izStart;
-				size_t iy = item.get_id(1) - iyStart;
-				size_t ix = item.get_id(2) - izStart;
-
-				omSYCL_Eges[ix][iy][iz] += 0.5*(sqr(omSYCL_sx[ix][iy][iz]) + 
-					                            sqr(omSYCL_sy[ix][iy][iz]) +
-					                            sqr(omSYCL_sz[ix][iy][iz])) / omSYCL_rho[ix][iy][iz];
-			});
-		});
-	}
-	gdata.om[q_Eges].rename("Eges");
-}
 
 
 void Transformations::TransE2Eth(Data &gdata, gridFunc &gfunc,
@@ -476,6 +391,9 @@ void Transformations::TransE2Eth(Data &gdata, gridFunc &gfunc,
 }
 
 
+
+
+
 void Transformations::TransT2Eth(const Data &gdata, gridFunc &gfunc,
                                  ProblemType &Problem) const
 {
@@ -510,52 +428,7 @@ void Transformations::TransT2Eth(const Data &gdata, gridFunc &gfunc,
 }
 
 
-void Transformations::TransT2Eth(const Data &gdata, gridFunc &gfunc,
-                                 ProblemType &Problem, Queue &queue) const
-{
 
-//	static const double kBoverMu_num = Problem.TrafoNorm->get_num(CRONOS_CONSTANTS::BoltzmannConstant / Problem.meanParticleMass);
-
-	if(gdata.om[q_Eges].getName() != "Temp") {
-		throw CException(" om[q_Eges] is not set as temperature ");
-	}
-
-	if(Problem.gamma < 1.0000000001) {
-		throw CException(" Must not be isothermal ");
-	}
-//	 double fac = 1./((Problem.gamma - 1.)*TNorm);
-//	 cout << " factor " << fac << " " << gdata.om[q_Eges](12,12,12) << endl;
-//	double fac = kBoverMu_num / (Problem.gamma - 1);
-
-	double fac = kBoverMeanMolWeight_num / (Problem.gamma - 1.);
-	fac /= TNorm;
-
-	const int izStart = -B;
-	const int izEnd = gdata.mx[2] + B;
-	const int iyStart = -B;
-	const int iyEnd = gdata.mx[1] + B;
-	const int ixStart = -B;
-	const int ixEnd = gdata.mx[0] + B;
-
-	auto range = Range<3>(izEnd-izStart, iyEnd-iyStart, ixEnd-ixStart);
-
-	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-
-		celerity::accessor omSYCL_Eges{gdata.omSYCL[q_Eges], cgh, celerity::access::one_to_one{}, celerity::read_write};	
-		celerity::accessor omSYCL_rho{gdata.omSYCL[q_rho], cgh, celerity::access::one_to_one{}, celerity::read_only};
-
-		cgh.parallel_for<class BufferInitializationKernel>(range, [=](celerity::item<3> item) {
-
-			size_t iz = item.get_id(0) - izStart;
-			size_t iy = item.get_id(1) - iyStart;
-			size_t ix = item.get_id(2) - izStart;
-
-			omSYCL_Eges[ix][iy][iz] *= fac * omSYCL_rho[ix][iy][iz];
-
-		});
-	});
-	gdata.om[q_Eges].rename("Etherm");
-}
 
 
 void Transformations::TransT2E(const Data &gdata, gridFunc &gfunc,
@@ -570,16 +443,7 @@ void Transformations::TransT2E(const Data &gdata, gridFunc &gfunc,
 }
 
 
-void Transformations::TransT2E(const Data &gdata, gridFunc &gfunc,
-                               ProblemType &Problem, Queue &queue) const
-{
-	if(gdata.om[q_Eges].getName() != "Temp") {
-		throw CException(" om[q_Eges] is not set as temperature ");
-	}
-	TransT2Eth(gdata, gfunc, Problem, queue);
-	TransEth2E(gdata, gfunc, Problem, queue);
 
-}
 
 double Transformations::TransEth2T(Data &gdata, gridFunc &gfunc,
                                  ProblemType &Problem) 
@@ -986,6 +850,364 @@ void Transformations::store_uInert(Data &gdata, phys_fields_0D &fields, int ix, 
 }
 #endif //USE_COROTATION
 
+
+/********* Transformation of Kernel Buffers (not used) ********/
+/*
+
+void Transformations::TransT2E(const Data &gdata, gridFunc &gfunc,
+                               ProblemType &Problem, Queue &queue) const
+{
+	if(gdata.om[q_Eges].getName() != "Temp") {
+		throw CException(" om[q_Eges] is not set as temperature ");
+	}
+	TransT2Eth(gdata, gfunc, Problem, queue);
+	TransEth2E(gdata, gfunc, Problem, queue);
+
+}
+
+void Transformations::TransPrim2Cons(Data &gdata, gridFunc &gfunc,
+                                     ProblemType &Problem, Queue& queue) {
+	//! Transform from primitive to conservative variables
+
+	if (ENERGETICS == FULL) {
+		if(gdata.om[q_Eges].getName() == "Etherm") {
+			TransEth2E(gdata, gfunc, Problem, queue);
+		} else if(gdata.om[q_Eges].getName() == "Temp") {
+			TransT2E(gdata, gfunc, Problem, queue);
+		}
+	}
+
+	if(gdata.om[q_sx].getName() == "v_x" && 
+	   gdata.om[q_sy].getName() == "v_y" &&
+	   gdata.om[q_sz].getName() == "v_z") {
+
+#if (USE_ANGULAR_MOMENTUM == TRUE)
+		TransVel2AngMom(gdata, gfunc, Problem);
+#else
+		TransVel2Momen(gdata, gfunc, Problem, queue);
+#endif
+
+	}
+}
+
+void Transformations::TransCons2Prim(Data &gdata, gridFunc &gfunc,
+                                     ProblemType &Problem, Queue& queue) {
+	//! Transform from conservative to primitive variables
+#if (USE_ANGULAR_MOMENTUM == TRUE)
+	TransAngMom2Vel(gdata, gfunc, Problem);
+#else
+	TransMomen2Vel(gdata, gfunc, Problem, queue);
+#endif
+
+	if(ENERGETICS == FULL) {
+		if(thermal) {
+			TransE2Eth(gdata, gfunc, Problem, queue);
+		} else {
+			//TransE2T(gdata, gfunc, Problem, queue);
+		}
+	}
+
+}
+
+void Transformations::TransMomen2Vel(Data &gdata, gridFunc &gfunc,
+                                     ProblemType &Problem, Queue &queue)
+{
+	if(gdata.om[q_sx].getName() == "v_x" || 
+	   gdata.om[q_sy].getName() == "v_y" ||
+	   gdata.om[q_sz].getName() == "v_z") {
+		throw CException(" Velocity instead of momentum ");
+	}
+
+	auto range = gdata.omSYCL[q_rho].get_range();
+
+	for (int q = q_sx; q <= q_sz; ++q) {
+		//pointwise kernel including ghost cells
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			celerity::accessor omSYCL_rho{gdata.omSYCL[q_rho], cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor omSYCL_q{gdata.omSYCL[q], cgh, celerity::access::one_to_one{}, celerity::read_write};
+
+			cgh.parallel_for<class Momen2VelTransformationKernel>(range, [=](celerity::item<3> item) {
+				omSYCL_q[item.get_id(0)][item.get_id(1)][item.get_id(2)] /= omSYCL_rho[item.get_id(0)][item.get_id(1)][item.get_id(2)];
+			});
+		});
+	}
+
+	gdata.om[q_sx].rename("v_x");
+	gdata.om[q_sy].rename("v_y");
+	gdata.om[q_sz].rename("v_z");
+}
+
+void Transformations::TransVel2Momen(Data &gdata, gridFunc &gfunc,
+                                     ProblemType &Problem, Queue &queue) {
+
+	if(gdata.om[q_sx].getName() == "s_x" || 
+	   gdata.om[q_sy].getName() == "s_y" ||
+	   gdata.om[q_sz].getName() == "s_z") {
+		throw CException(" Momentum instead of velocity ");
+	}
+
+	auto range = gdata.omSYCL[q_rho].get_range();
+
+	for (int q = q_sx; q <= q_sz; ++q) {
+		//pointwise kernel including ghost cells
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			celerity::accessor omSYCL_rho{gdata.omSYCL[q_rho], cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor omSYCL_q{gdata.omSYCL[q], cgh, celerity::access::one_to_one{}, celerity::read_write};
+
+			cgh.parallel_for<class Vel2MomenTransformationKernel>(range, [=](celerity::item<3> item) {
+				omSYCL_q[item.get_id(0)][item.get_id(1)][item.get_id(2)] *= omSYCL_rho[item.get_id(0)][item.get_id(1)][item.get_id(2)];
+			});
+		});
+	}
+
+	gdata.om[q_sx].rename("s_x");
+	gdata.om[q_sy].rename("s_y");
+	gdata.om[q_sz].rename("s_z");
+}
+
+void Transformations::TransEth2E(const Data &gdata, gridFunc &gfunc,
+                                 ProblemType &Problem, Queue &queue) const
+{
+
+	if(gdata.om[q_Eges].getName() != "Etherm") {
+		cerr << " Energy is: " << gdata.om[q_Eges].getName() << " " << q_Eges << endl;
+		throw CException(" Transformations::TransEth2E - om[q_Eges] is not set as thermal energy ");
+	}
+
+	if(Problem.gamma < 1.0000000001) {
+		throw CException(" Must not be isothermal ");
+	}
+
+	auto range = gdata.omSYCL[q_rho].get_range();
+
+	if(gdata.om[q_sx].getName() == "v_x" && gdata.om[q_sy].getName() == "v_y" &&
+	   gdata.om[q_sz].getName() == "v_z") {
+		
+		//pointwise kernel including ghost cells
+		//     (non-parallel function starts at -B+1 for some reason)
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+
+			celerity::accessor omSYCL_Eges{gdata.omSYCL[q_Eges], cgh, celerity::access::one_to_one{}, celerity::read_write};	
+			celerity::accessor omSYCL_sx{gdata.omSYCL[q_sx], cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor omSYCL_sy{gdata.omSYCL[q_sy], cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor omSYCL_sz{gdata.omSYCL[q_sz], cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor omSYCL_rho{gdata.omSYCL[q_rho], cgh, celerity::access::one_to_one{}, celerity::read_only};
+
+			cgh.parallel_for<class Eth2ETransformationKernelMulVar>(range, [=](celerity::item<3> item) {
+
+				size_t ix = item.get_id(0);
+				size_t iy = item.get_id(1);
+				size_t iz = item.get_id(2);
+
+				omSYCL_Eges[ix][iy][iz] += 0.5*(sqr(omSYCL_sx[ix][iy][iz]) + 
+					                            sqr(omSYCL_sy[ix][iy][iz]) +
+					                            sqr(omSYCL_sz[ix][iy][iz])) * omSYCL_rho[ix][iy][iz];
+			});
+		});
+
+	} else {
+
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+
+			celerity::accessor omSYCL_Eges{gdata.omSYCL[q_Eges], cgh, celerity::access::one_to_one{}, celerity::read_write};	
+			celerity::accessor omSYCL_sx{gdata.omSYCL[q_sx], cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor omSYCL_sy{gdata.omSYCL[q_sy], cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor omSYCL_sz{gdata.omSYCL[q_sz], cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor omSYCL_rho{gdata.omSYCL[q_rho], cgh, celerity::access::one_to_one{}, celerity::read_only};
+
+			cgh.parallel_for<class Eth2ETransformationKernelDivVar>(range, [=](celerity::item<3> item) {
+
+				size_t ix = item.get_id(0);
+				size_t iy = item.get_id(1);
+				size_t iz = item.get_id(2);
+
+				omSYCL_Eges[ix][iy][iz] += 0.5*(sqr(omSYCL_sx[ix][iy][iz]) + 
+					                            sqr(omSYCL_sy[ix][iy][iz]) +
+					                            sqr(omSYCL_sz[ix][iy][iz])) / omSYCL_rho[ix][iy][iz];
+			});
+		});
+	}
+	gdata.om[q_Eges].rename("Eges");
+}
+
+void Transformations::TransE2Eth(Data &gdata, gridFunc &gfunc,
+                                 ProblemType &Problem, Queue &queue) {
+	
+	if(gdata.om[q_Eges].getName() != "Eges") {
+		throw CException(" om[7] is not set as overall energy ");
+	}
+    
+	if(Problem.gamma < 1.0000000001) {
+		throw CException(" Must not be isothermal ");
+	}
+
+	int n_omIntAll = N_OMINT;
+	TempErr = 0;
+	bool force_min = Problem.force_min(q_Eges);
+
+	if(gdata.om[q_sx].getName() == "v_x" && gdata.om[q_sy].getName() == "v_y" &&
+	   gdata.om[q_sz].getName() == "v_z") {
+		
+		
+		//pointwise kernel including ghost cells
+		//     (non-parallel function starts at -B+1 for some reason)
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+
+			celerity::accessor omSYCL_Eges{gdata.omSYCL[q_Eges], cgh, celerity::access::one_to_one{}, celerity::read_write};	
+			celerity::accessor omSYCL_sx{gdata.omSYCL[q_sx], cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor omSYCL_sy{gdata.omSYCL[q_sy], cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor omSYCL_sz{gdata.omSYCL[q_sz], cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor omSYCL_rho{gdata.omSYCL[q_rho], cgh, celerity::access::one_to_one{}, celerity::read_only};
+
+			cgh.parallel_for<class Eth2ETransformationKernelMulVar>(range, [=](celerity::item<3> item) {
+
+				size_t ix = item.get_id(0);
+				size_t iy = item.get_id(1);
+				size_t iz = item.get_id(2);
+
+				omSYCL_Eges[ix][iy][iz] -= 0.5*(sqr(omSYCL_sx[ix][iy][iz]) + 
+					                            sqr(omSYCL_sy[ix][iy][iz]) +
+					                            sqr(omSYCL_sz[ix][iy][iz])) * omSYCL_rho[ix][iy][iz];
+			});
+		});
+
+		celerity::accessor omSYCL_Eges{gdata.omSYCL[q_Eges], cgh, celerity::read_write}
+
+		// Check of negative energy only in computational domain - not in ghost cells
+		for(int k = 0; k<=gdata.mx[2]; ++k){
+			for(int j = 0; j<=gdata.mx[1]; ++j){
+				for(int i = 0; i<=gdata.mx[0]; ++i){
+
+	        
+#if(CRSWITCH_DUAL_ENERGY == CRONOS_OFF)
+					if(!force_min && omSYCL_Eges[i][j][k] < 0.){
+						cerr << " Transformations::TransE2Eth " << endl;
+//						cerr << q_rho << " " << q_sx << " " << q_Eges << endl;
+						cerr << " Error! negative energy at cell ("
+							  << i << " " << j << " " << k << "), pos ("
+							  << gdata.getCen_x(i) << " "
+							  << gdata.getCen_y(j) << " "
+							  << gdata.getCen_z(k) << "); "
+							  << gdata.om[q_Eges].getName() << " = "
+							  << omSYCL_Eges[i][j][k] << endl;
+						TempErr     += 1;
+						exit(3);
+					}
+#else
+					if(!Problem.force_min(q_Eges) && 
+					   omSYCL_Eges[i][j][k] < 0.){
+						TempErr += 1;
+//						cout << i << " " << j << " " << k << " " << gdata.om[q_Eges](i,j,k) << endl;
+					}
+#endif
+
+				}
+			}
+		}
+	} else {
+		// for(int k = -B+1; k<=gdata.mx[2]+B; ++k){
+		// 	for(int j = -B+1; j<=gdata.mx[1]+B; ++j){
+		// 		for(int i = -B+1; i<=gdata.mx[0]+B; ++i){
+
+		//pointwise kernel EXCLUDING ghost cells
+
+		const int izStart = n_ghost[2];
+		const int izEnd = gdata.mx[2] + n_ghost[2];
+		const int iyStart = n_ghost[1];
+		const int iyEnd = gdata.mx[1] + n_ghost[1];
+		const int ixStart = n_ghost[0];
+		const int ixEnd = gdata.mx[0] + n_ghost[0];
+
+		auto range = Range<3>(izEnd, iyEnd, ixEnd);
+
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+
+			celerity::accessor omSYCL_Eges{gdata.omSYCL[q_Eges], cgh, celerity::access::one_to_one{}, celerity::read_write};	
+			celerity::accessor omSYCL_sx{gdata.omSYCL[q_sx], cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor omSYCL_sy{gdata.omSYCL[q_sy], cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor omSYCL_sz{gdata.omSYCL[q_sz], cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor omSYCL_rho{gdata.omSYCL[q_rho], cgh, celerity::access::one_to_one{}, celerity::read_only};
+
+			cgh.parallel_for<class Eth2ETransformationKernelMulVar>(range, [=](celerity::item<3> item) {
+
+				size_t iz = item.get_id(0) + izStart;
+				size_t iy = item.get_id(1) + iyStart;
+				size_t ix = item.get_id(2) + ixStart;
+
+				omSYCL_Eges[ix][iy][iz] -= 0.5*(sqr(omSYCL_sx[ix][iy][iz]) + 
+												sqr(omSYCL_sy[ix][iy][iz]) +
+												sqr(omSYCL_sz[ix][iy][iz])) / omSYCL_rho[ix][iy][iz];
+
+				// rework for kernel
+				if(!force_min &&
+					gdata.om[q_Eges](i,j,k) < 0){
+					TempErr     += 1;
+//						cout << i << " " << j << " " << k << " " << gdata.om[q_Eges](i,j,k) << endl;
+
+				}
+			});
+		});
+
+		for(int k = 0; k<=gdata.mx[2]; ++k){
+			for(int j = 0; j<=gdata.mx[1]; ++j){
+				for(int i = 0; i<=gdata.mx[0]; ++i){
+
+					gdata.om[q_Eges](i,j,k) -= 0.5*(sqr(gdata.om[q_sx](i,j,k)) +    //  sub e_kin
+					                                sqr(gdata.om[q_sy](i,j,k)) +
+					                                sqr(gdata.om[q_sz](i,j,k)))/gdata.om[q_rho](i,j,k);
+
+					if(!force_min &&
+					   gdata.om[q_Eges](i,j,k) < 0){
+						TempErr     += 1;
+//						cout << i << " " << j << " " << k << " " << gdata.om[q_Eges](i,j,k) << endl;
+
+					}
+				}
+			}
+		}
+	}
+}
+
+void Transformations::TransT2Eth(const Data &gdata, gridFunc &gfunc,
+                                 ProblemType &Problem, Queue &queue) const
+{
+
+//	static const double kBoverMu_num = Problem.TrafoNorm->get_num(CRONOS_CONSTANTS::BoltzmannConstant / Problem.meanParticleMass);
+
+	if(gdata.om[q_Eges].getName() != "Temp") {
+		throw CException(" om[q_Eges] is not set as temperature ");
+	}
+
+	if(Problem.gamma < 1.0000000001) {
+		throw CException(" Must not be isothermal ");
+	}
+//	 double fac = 1./((Problem.gamma - 1.)*TNorm);
+//	 cout << " factor " << fac << " " << gdata.om[q_Eges](12,12,12) << endl;
+//	double fac = kBoverMu_num / (Problem.gamma - 1);
+
+	double fac = kBoverMeanMolWeight_num / (Problem.gamma - 1.);
+	fac /= TNorm;
+
+	auto range = gdata.omSYCL[q_rho].get_range();
+	
+	//pointwise kernel including ghost cells
+	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+
+		celerity::accessor omSYCL_Eges{gdata.omSYCL[q_Eges], cgh, celerity::access::one_to_one{}, celerity::read_write};	
+		celerity::accessor omSYCL_rho{gdata.omSYCL[q_rho], cgh, celerity::access::one_to_one{}, celerity::read_only};
+
+		cgh.parallel_for<class T2EthTransformationKernel>(range, [=](celerity::item<3> item) {
+
+			omSYCL_Eges[item.get_id(0)][item.get_id(1)][item.get_id(2)] *= fac * omSYCL_rho[item.get_id(0)][item.get_id(2)][item.get_id(3)];
+
+		});
+	});
+	gdata.om[q_Eges].rename("Etherm");
+}
+
+*/
+
+/****** Inner Kernel Transformation******/
 
 double Transformations::TransEth2E(double rhoinv, double psq, double Bsq, double ETherm) const {
 #if (FLUID_TYPE == CRONOS_MHD)

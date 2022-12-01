@@ -142,6 +142,14 @@
         "celerity_test.C": "cpp",
         "*.inc": "cpp",
         "array.C": "cpp",
-        "util.C": "cpp"
+        "util.C": "cpp",
+        "num_boundary_2d_inc.C": "cpp",
+        "matrix_3d_inc.C": "cpp",
+        "matrix_1d_inc.C": "cpp",
+        "fftmatrix.C": "cpp",
+        "num_matrix_3d_inc.C": "cpp",
+        "num_matrix_2d_inc.C": "cpp",
+        "matrix_2d_inc.C": "cpp",
+        "num_boundary_1d_inc.C": "cpp"
     }
 }
