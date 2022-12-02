@@ -357,7 +357,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	const double half_beta = (Problem.mag ? value((char*)"Plasma_beta")/2. : 1);
 	const int fluidType = gdata.fluid.get_fluid_type();
 	const bool thermal = Trafo->get_thermal();
-
+	
 	double idx[DIM];
 	for (int i = 0; i < DIM; i++) {
 		idx[i] = gdata.idx[i];
@@ -385,11 +385,6 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 			auto rd = celerity::reduction(max_buf, cgh, cl::sycl::maximum<double>{},
                                   cl::sycl::property::reduction::initialize_to_identity{});
 			celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::read_only};
-			//celerity::accessor max_buf2_acc{max_buf2, cgh, celerity::access::all{}, celerity::write_only};
-			//celerity::accessor physVals_acc{physValsSYCL[q], cgh, celerity::access::all{}, celerity::read_write};	
-			//celerity::accessor physValsOld_acc{physValsSYCL_Old[q], cgh, celerity::access::all{}, celerity::read_write};
-			//celerity::accessor physPtotalPtherm_acc{physPtotalPthermSYCL[q], cgh, celerity::access::all{}, celerity::read_write};
-			//celerity::accessor physPtotalPthermOld_acc{physPtotalPthermSYCL[q], cgh, celerity::access::all{}, celerity::read_write};
 
 			cgh.parallel_for<class ReductionKernel>(range, rd, [=](celerity::item<3> item, auto& max_cfl_lin) {
 
@@ -447,24 +442,22 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 				double numVals_Ch[DirMax][gpu::NumV_Max] = {1., 1.};
 				double cfl_loc = -20.0;
 
+				//potentially change to celerity buffer later
+				double numFlux[DirMax][N_OMINT] = {};
+				double num_ptotal[DirMax] = {};
+
 				if (ix >= 2 && iy >= 2 && iz >= 2) {
 					for (int dir = 0; dir < DirMax; ++dir) {
 						int face = dir * 2;
 						cfl_loc = cl::sycl::fmax(gpu::get_vChar(om_acc, uPri[face], uCon[face], physValPtherm[face], uPri[face+1], uCon[face+1],
 									 physValPtherm[face+1], numVals_Ch[dir], dir, Problem.gamma, idx, fluidConst), cfl_loc);
+						num_ptotal[dir] = gpu::get_NumFlux(om_acc, uPri[face+1], uCon[face+1], physFlux[face+1], physValPtherm[face+1],
+									 			physValPtotal[face+1], uPri[face], uCon[face], physFlux[face], physValPtherm[face], 
+												physValPtotal[face], numFlux[dir], numVals_Ch[dir], dir, Problem.gamma, fluidConst);
 					}
 				}
 				
 				max_cfl_lin.combine(cfl_loc);
-	//max_cfl_lin.combine(cl::sycl::fmax(2, uPri[gpu::FaceTop][0]));
-				/*if(ix >= 0 && ix <= gdata.mx[0] && iy >= 0 && iy <= gdata.mx[1] && iz >= 0 && iz <= gdata.mx[2]) {
-					//std::vector<phys_fields_0D> physVals;
-					for (int inum = 0; inum < 6; ++inum) {
-						//physVals_acc[inum] = phys_fields_0D(gdata, inum, gdata.fluid);
-					}
-					//reconst_inKernel.compute(gdata, physVals, ix, iy, iz);
-					//const auto numVals = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix, iy, iz, max_cfl_lin);
-				}*/
 			});
 
 			//cgh.parallel_for<class EmptyTestKernel>(celerity::range<2>(2,2), celerity::id<2>(2,2), [=](celerity::item<2> item) {int i = i + 1;});
