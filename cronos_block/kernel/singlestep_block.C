@@ -8,6 +8,7 @@
 #include "reconst_block.H"
 #include "changes.H"
 #include "standalone_usage.H"
+#include "compute_step.H"
 #include <unistd.h>
 
 #if(STANDALONE_USAGE == TRUE)
@@ -363,6 +364,18 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		idx[i] = gdata.idx[i];
 	}
 
+	auto omRange = gdata.omSYCL[0].get_range();
+	CelerityBuffer<double, 3> nomSYCL {celerity::range<3>(omRange.get(0), omRange.get(1) + omRange.get(2), N_OMINT)};
+
+	size_t z_max = omRange.get(2);
+
+	queue.submit([=](celerity::handler& cgh) {
+		celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+		cgh.parallel_for<class BufferInitializationKernel>(nomSYCL.get_range(), [=](celerity::item<3> item) {
+			nomSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
+		});
+	});
+
 	/*for (int q = 0; q < gdata.omSYCL.size()	; ++q) {
 		queue.submit([=](celerity::handler& cgh) {
 			celerity::accessor physVals_acc{physValsSYCL[q], cgh, celerity::access::one_to_one{}, celerity::write_only};	
@@ -384,14 +397,43 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 			auto r = gdata.omSYCL[q].get_range();
 			auto rd = celerity::reduction(max_buf, cgh, cl::sycl::maximum<double>{},
                                   cl::sycl::property::reduction::initialize_to_identity{});
-			celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::read_only};
+			celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{2,2,2}, celerity::read_only};
+			celerity::accessor nom_acc{nomSYCL, cgh, celerity::access::all{}, celerity::read_write};
 
 			cgh.parallel_for<class ReductionKernel>(range, rd, [=](celerity::item<3> item, auto& max_cfl_lin) {
 
 				size_t iz = item.get_id(0) + 1;
 				size_t iy = item.get_id(1) + 1;
 				size_t ix = item.get_id(2) + 1;
+
+				double numFlux[DirMax][N_OMINT] = {};
+        		double num_ptotal[DirMax] = {};
+				double cfl_lin = -100;
 				
+				gpu::computeStep(om_acc, ix, iy, iz, q, &cfl_lin, numFlux, num_ptotal, thermal, Problem.gamma, problem_cs2,
+													denominator, half_beta, fluidType, idx, fluidConst);
+
+				double numFlux_Dir[DirMax][N_OMINT] = {};
+				double num_ptotal_Dir[DirMax] = {};
+
+				gpu::computeStep(om_acc, ix + 1, iy, iz, q, &cfl_lin, numFlux_Dir, num_ptotal_Dir, thermal, Problem.gamma, problem_cs2,
+													denominator, half_beta, fluidType, idx, fluidConst);
+				gpu::get_Changes(om_acc, nom_acc, ix, iy, iz, q, DirX, numFlux[DirX], num_ptotal[DirX], numFlux_Dir[DirX], num_ptotal_Dir[DirX],
+									 N_OMINT, z_max, idx);
+
+
+				gpu::computeStep(om_acc, ix, iy + 1, iz, q, &cfl_lin, numFlux_Dir, num_ptotal_Dir, thermal, Problem.gamma, problem_cs2,
+													denominator, half_beta, fluidType, idx, fluidConst);
+				gpu::get_Changes(om_acc, nom_acc, ix, iy, iz, q, DirY, numFlux[DirY], num_ptotal[DirY], numFlux_Dir[DirY], num_ptotal_Dir[DirY],
+									 N_OMINT, z_max, idx);
+
+				gpu::computeStep(om_acc, ix, iy, iz + 1, q, &cfl_lin, numFlux_Dir, num_ptotal_Dir, thermal, Problem.gamma, problem_cs2,
+													denominator, half_beta, fluidType, idx, fluidConst);
+				gpu::get_Changes(om_acc, nom_acc, ix, iy, iz, q, DirZ, numFlux[DirZ], num_ptotal[DirZ], numFlux_Dir[DirZ], num_ptotal_Dir[DirZ],
+									 N_OMINT, z_max, idx);
+
+				max_cfl_lin.combine(cfl_lin);
+				/*
 				//no vector in device code
 				double uPri[gpu::FaceMax][N_OMINT] = {};
 				double uCon[gpu::FaceMax][N_OMINT] = {};
@@ -458,6 +500,8 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 				}
 				
 				max_cfl_lin.combine(cfl_loc);
+				*/
+				
 			});
 
 			//cgh.parallel_for<class EmptyTestKernel>(celerity::range<2>(2,2), celerity::id<2>(2,2), [=](celerity::item<2> item) {int i = i + 1;});
