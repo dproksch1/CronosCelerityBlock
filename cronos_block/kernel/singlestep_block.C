@@ -95,6 +95,40 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 #endif
 
+	// ----------------------------------------------------------------
+	// Setup Buffer for RK-Step
+	// ----------------------------------------------------------------
+
+	auto omRange = gdata.omSYCL[0].get_range();
+	size_t nom_max[3] = {omRange.get(0), omRange.get(1), omRange.get(2)};
+
+	for (int q = 0; q < 7; q++) {
+		double om_temp[205][6][6];
+
+		for (int i = 0; i < nom_max[0]; i++) {
+			for (int j = 0; j < nom_max[1]; j++) {
+				for (int k = 0; k < nom_max[2]; k++) {
+					om_temp[i][j][k] = gdata.om[q](i-3,j-3,k-3);
+					
+				}
+			}
+		}
+
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::write_only_host_task};
+			cgh.host_task(celerity::on_master_node, [=, &gdata]{
+				for (int i = 0; i < nom_max[0]; i++) {
+					for (int j = 0; j < nom_max[1]; j++) {
+						for (int k = 0; k < nom_max[2]; k++) {
+							omSYCL_acc[i][j][k] = om_temp[i][j][k];
+						}
+					}
+				}
+			});
+		});
+	}
+
+
 // ---------------------------------------------------------------	      
 //      Trafo of variables to conservative form
 //----------------------------------------------------------------
@@ -364,10 +398,9 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		idx[i] = gdata.idx[i];
 	}
 
-	auto omRange = gdata.omSYCL[0].get_range();
+	
 	CelerityBuffer<double, 3> nomSYCL {celerity::range<3>(omRange.get(0), omRange.get(1) + omRange.get(2), N_OMINT)};
 
-	size_t z_max = omRange.get(2);
 
 	queue.submit([=](celerity::handler& cgh) {
 		celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
@@ -389,7 +422,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	}*/
 
 	auto range = Range<3>(gdata.mx[2] + 2*n_ghost[2] - 2, gdata.mx[1] + 2*n_ghost[1] - 2, gdata.mx[0] + 2*n_ghost[0] - 2);
-
+cout << "kernel start" << endl;
 	for (int q = 0; q < gdata.omSYCL.size()	; ++q) {
 
 		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
@@ -419,18 +452,18 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 				gpu::computeStep(om_acc, ix + 1, iy, iz, q, &cfl_lin, numFlux_Dir, num_ptotal_Dir, thermal, Problem.gamma, problem_cs2,
 													denominator, half_beta, fluidType, idx, fluidConst);
 				gpu::get_Changes(om_acc, nom_acc, ix, iy, iz, q, DirX, numFlux[DirX], num_ptotal[DirX], numFlux_Dir[DirX], num_ptotal_Dir[DirX],
-									 N_OMINT, z_max, idx);
+									 N_OMINT, nom_max[2], idx);
 
 
 				gpu::computeStep(om_acc, ix, iy + 1, iz, q, &cfl_lin, numFlux_Dir, num_ptotal_Dir, thermal, Problem.gamma, problem_cs2,
 													denominator, half_beta, fluidType, idx, fluidConst);
 				gpu::get_Changes(om_acc, nom_acc, ix, iy, iz, q, DirY, numFlux[DirY], num_ptotal[DirY], numFlux_Dir[DirY], num_ptotal_Dir[DirY],
-									 N_OMINT, z_max, idx);
+									 N_OMINT, nom_max[2], idx);
 
 				gpu::computeStep(om_acc, ix, iy, iz + 1, q, &cfl_lin, numFlux_Dir, num_ptotal_Dir, thermal, Problem.gamma, problem_cs2,
 													denominator, half_beta, fluidType, idx, fluidConst);
 				gpu::get_Changes(om_acc, nom_acc, ix, iy, iz, q, DirZ, numFlux[DirZ], num_ptotal[DirZ], numFlux_Dir[DirZ], num_ptotal_Dir[DirZ],
-									 N_OMINT, z_max, idx);
+									 N_OMINT, nom_max[2], idx);
 
 				max_cfl_lin.combine(cfl_lin);
 				/*
@@ -601,6 +634,13 @@ queue.submit([=](celerity::handler& cgh) {
 		CheckNan(gdata.nom[q],q, 0, 2,"nom");
 	}
 
+	/*for (int q = 0; q < 7	; ++q) {
+		cout << "q = " << q << "\n";
+					cout << gdata.om[q](-3,-3,-3) << " ";
+		cout << "\n";
+
+	}*/
+
 // ----------------------------------------------------------------
 //   Transform to conservative variables:
 // ----------------------------------------------------------------
@@ -612,11 +652,11 @@ queue.submit([=](celerity::handler& cgh) {
 // ----------------------------------------------------------------
 //   Determine domain to be integrated and apply changes:
 // ----------------------------------------------------------------
-
+cout << "start integrator" << endl;
 	for (int q = 0; q < n_omInt; ++q) {
 		
+		//TimeIntegratorGeneric[q]->Substep(queue, gdata, omRange, nomSYCL, gdata.om, n, nom_max);
 		TimeIntegratorGeneric[q]->Substep(gdata, Problem, gdata.nom[q], gdata.om, n);
-
 	}
 
 #if (OMS_USER == TRUE)

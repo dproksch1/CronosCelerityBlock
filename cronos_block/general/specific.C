@@ -370,7 +370,6 @@ void HyperbolicSolver::set_TimeIntegrator(const Data &gdata,
 
 	// Normal settings for 
 	for(int q=0; q<n_omInt; ++q) {
-
 		int qchange(q);
 
 		int ibeg[3] = {0,0,0};

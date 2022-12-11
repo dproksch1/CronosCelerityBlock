@@ -160,6 +160,114 @@ void RKSteps::Substep(const Data &gdata, ProblemType &Problem,
 #endif
 }
 
+void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
+		CelerityBuffer<double, 3> nomSYCL, 
+		Pot om[], const int substep, size_t nom_max[3]) {
+
+	double dt = gdata.dt;
+	int B = -3;
+	//auto range = celerity::range<3>(iend[0]-ibeg[0], iend[1]-ibeg[1], iend[2]-ibeg[2]);
+
+#if  (RK_STEPS == 3)
+	double nom_temp[nom_max[0]][nom_max[1]][nom_max[2]];
+	queue.submit(celerity::allow_by_ref, [=, &nom_temp](celerity::handler& cgh) {
+		celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::all{}, celerity::read_only_host_task};
+		cgh.host_task(celerity::on_master_node, [=, &nom_temp]{
+			for (int i = 0; i < nom_max[0]; i++) {
+				for (int j = 0; j < nom_max[1]; j++) {
+					for (int k = 0; k < nom_max[2]; k++) {
+						nom_temp[i][j][k] = nomSYCL_acc[i][j*nom_max[2] + k][qch];
+					}
+				}
+			}
+		});
+	});
+
+	if(substep == 0) {
+		save_data(om, 0);
+		for (int i = 0; i < nom_max[0]; i++) {
+			for (int j = 0; j < nom_max[1]; j++) {
+				for (int k = 0; k < nom_max[2]; k++) {
+					om[qch](i + B,j + B,k + B) -= dt * nom_temp[i][j][k];
+				}
+			}
+		}
+	} else if (substep == 1) {
+		for (int i = 0; i < nom_max[0]; i++) {
+			for (int j = 0; j < nom_max[1]; j++) {
+				for (int k = 0; k < nom_max[2]; k++) {
+					om[qch](i + B,j + B,k + B) = 0.75*om_save[0](i + B,j + B,k + B) + 0.25*om[qch](i + B,j + B,k + B)
+								 				- dt * nom_temp[i][j][k];
+				}
+			}
+		}
+	} else {
+		double twth   = 2./3.;
+		double twthdt = twth*dt;
+		
+		for (int i = 0; i < nom_max[0]; i++) {
+			for (int j = 0; j < nom_max[1]; j++) {
+				for (int k = 0; k < nom_max[2]; k++) {
+					om[qch](i + B,j + B,k + B) = 1./3.*om_save[0](i + B,j + B,k + B) + twth*om[qch](i + B,j + B,k + B)
+								  - twthdt * nom_temp[i][j][k];
+				}
+			}
+		}
+	}
+#else
+
+#if (FLUID_TYPE == CRONOS_HYDRO)
+	//	if(Problem.mag == 0) {
+	if(om[qch].getName() == "B_x" ||
+	   om[qch].getName() == "B_y" ||
+	   om[qch].getName() == "B_z" ||
+	   om[qch].getName() == "A_x" ||
+	   om[qch].getName() == "A_y" ||
+	   om[qch].getName() == "A_z") {
+		return;
+	}
+#endif
+	//	}
+	
+	double nom_temp[nom_max[0]][nom_max[1]][nom_max[2]];
+	queue.submit(celerity::allow_by_ref, [=, &nom_temp](celerity::handler& cgh) {
+		celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::all{}, celerity::read_only_host_task};
+		cgh.host_task(celerity::on_master_node, [=, &nom_temp]{
+			for (int i = 0; i < nom_max[0]; i++) {
+				for (int j = 0; j < nom_max[1]; j++) {
+					for (int k = 0; k < nom_max[2]; k++) {
+						nom_temp[i][j][k] = nomSYCL_acc[i][j*nom_max[2] + k][qch];
+					}
+				}
+			}
+		});
+	});
+
+	if (substep == 0) { // First Runge Kutta step
+
+		save_data(om, 0);
+		
+		for (int i = 0; i < nom_max[0]; i++) {
+			for (int j = 0; j < nom_max[1]; j++) {
+				for (int k = 0; k < nom_max[2]; k++) {
+					om[qch](i + B,j + B,k + B) -= dt * nom_temp[i][j][k];
+				}
+			}
+		}
+
+	} else if (substep == 1) { // Second Runge Kutta step
+
+		for (int i = 0; i < nom_max[0]; i++) {
+			for (int j = 0; j < nom_max[1]; j++) {
+				for (int k = 0; k < nom_max[2]; k++) {
+					om[qch](i + B,j + B,k + B) = 0.5*om_save[0](i,j,k) + 0.5*om[qch](i,j,k) 
+								- 0.5 * dt * nom_temp[i][j][k];
+				}
+			}
+		}
+	}
+#endif
+}
 
 
 VanLeerIntegrator::VanLeerIntegrator():
@@ -202,3 +310,7 @@ void VanLeerIntegrator::Substep(const Data &gdata, ProblemType &Problem,
 		}
 	}
 }
+
+void VanLeerIntegrator::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
+                      CelerityBuffer<double, 3> nomSYCL,
+                      Pot om[], const int substep, size_t nom_max[3]) {}
