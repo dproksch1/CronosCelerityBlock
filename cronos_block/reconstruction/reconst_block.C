@@ -193,7 +193,14 @@ void SingleReconstruction_Block::get_Vals_SN(const Data& gdata, phys_fields_0D& 
             xFieldsN.uPri(q) = xFieldsS.uPri(q) + deriv_y * dely;
 #else
             xFieldsS.uPri(q) = gdata.om[q](ix, iy, iz) - 0.5 * deriv_y;
-            xFieldsN.uPri(q) = xFieldsS.uPri(q) + deriv_y;
+            xFieldsN.uPri(q) = xFieldsS.uPri(q) + deriv_y;		
+
+			/*if (q == 1) {
+				cout << "uPri[FaceSouth][" << q << "] = " << xFieldsS.uPri(q) << endl;
+				cout << "gdata: " << ix << "," << iy << ","<< iz << " " << gdata.om[q](ix, iy, iz) << endl;
+				cout << "derivs: " << deriv_x << ", " << deriv_y << ","<< deriv_z << endl;
+				cout << "uPri[FaceNorth][" << q << "] = " << xFieldsN.uPri(q) << endl;
+			}*/
 #endif
         }
 }

@@ -20,7 +20,6 @@
 using namespace std;
 
 
-
 double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
                                   ProblemType &Problem, int n, Queue& queue)
 {
@@ -103,13 +102,12 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	size_t nom_max[3] = {omRange.get(0), omRange.get(1), omRange.get(2)};
 
 	for (int q = 0; q < 7; q++) {
-		double om_temp[205][6][6];
+		double om_temp[206][7][7];
 
 		for (int i = 0; i < nom_max[0]; i++) {
 			for (int j = 0; j < nom_max[1]; j++) {
 				for (int k = 0; k < nom_max[2]; k++) {
 					om_temp[i][j][k] = gdata.om[q](i-3,j-3,k-3);
-					
 				}
 			}
 		}
@@ -225,7 +223,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	//num_fields_0D numVals_oldT(gdata, gdata.fluid);
 
 	// TODO PHILGS: we need to specify a direction here, not sure whether it is used...
-	//Reconstruction_Block reconst(gdata, 0, gdata.fluid);
+	Reconstruction_Block reconst(gdata, 0, gdata.fluid);
 
 	//cronos::vector<double> pos(0,0,0);
 	//cronos::vector<int> ipos(0,0,0);
@@ -309,7 +307,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	//	});
 	//}
 
-	auto computeStep = [](Reconstruction_Block reconst, const std::unique_ptr<Transformations>& Trafo, const std::unique_ptr<PhysFluxes>& PhysFlux, const std::vector<std::unique_ptr<RiemannSolver>>& Riemann, const ProblemType& Problem, const std::unique_ptr<EquationOfState>& eos, const Data& gdata, int ix, int iy, int iz, auto& max_cfl_lin) {
+	auto computeStep = [](Reconstruction_Block reconst, const std::unique_ptr<Transformations>& Trafo, const std::unique_ptr<PhysFluxes>& PhysFlux, const std::vector<std::unique_ptr<RiemannSolver>>& Riemann, const ProblemType& Problem, const std::unique_ptr<EquationOfState>& eos, const Data& gdata, int ix, int iy, int iz, double& cfl_lin) {
 
 		// Reconstruction at given position
 		std::vector<phys_fields_0D> physVals;
@@ -317,6 +315,14 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 			physVals.push_back(phys_fields_0D(gdata, inum, gdata.fluid));
 		}
 		reconst.compute(gdata, physVals, ix, iy, iz);
+
+		/*if (ix == 0 && iy == 0 && iz == 0) {
+			for (auto phys : physVals) {
+				for (int inum = 0; inum < phys.uPri.getLength(); inum++) {
+					cout << phys.uPri[inum] << "_om ";
+				} cout << endl;
+			} cout << endl;
+		}*/
 
 		if (ix >= -1 && iy >= -1 && iz >= -1) {
 
@@ -358,8 +364,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		if (ix >= -1 && iy >= -1 && iz >= -1) {
 			for (int dir = 0; dir < DirMax; ++dir) {
 				int face = dir * 2;
-				double cfl_loc = get_vChar3(gdata, Problem, physVals[face], physVals[face + 1], numVals[dir], dir);
-				max_cfl_lin.combine(cfl_loc);
+				get_vChar2(gdata, Problem, physVals[face], physVals[face + 1], numVals[dir], dir, cfl_lin);
 				get_NumFlux2(gdata, physVals[face + 1], physVals[face], numVals[dir], dir);
 			}
 		}
@@ -374,7 +379,8 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	//for (int i = 0; i < gdata.omSYCL.size(); i++) physValsSYCL.push_back(CelerityBuffer<double, 2>(celerity::range<2>(2,2)));
 	
 	//buffers
-	//std::vector<CelerityBuffer<double, 2>> physValsSYCL(gdata.omSYCL.size(), CelerityBuffer<double, 2>( /*reeval*/ celerity::range<2>(6,2)));
+	CelerityBuffer<double, 2> physValsUPriSYCL{celerity::range<2>(gpu::FaceMax,N_OMINT)};
+	//CelerityBuffer<double, 3> uPriSYCL{celerity::range<3>(omRange.get(0) * omRange.get(1) * omRange.get(2), gpu::FaceMax, N_OMINT)};
 	//std::vector<CelerityBuffer<double, 2>> physValsSYCL_Old(gdata.omSYCL.size(), CelerityBuffer<double, 2>( /*reeval*/ celerity::range<2>(6,2)));
 	//std::vector<CelerityBuffer<double, 2>> physPtotalPthermSYCL(gdata.omSYCL.size(), CelerityBuffer<double, 2>(celerity::range<2>(6,2)));
 	//std::vector<CelerityBuffer<double, 2>> physPtotalPthermSYCL_Old(gdata.omSYCL.size(), CelerityBuffer<double, 2>(celerity::range<2>(6,2)));
@@ -399,7 +405,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	}
 
 	
-	CelerityBuffer<double, 3> nomSYCL {celerity::range<3>(omRange.get(0), omRange.get(1) + omRange.get(2), N_OMINT)};
+	CelerityBuffer<double, 3> nomSYCL {celerity::range<3>(omRange.get(0), omRange.get(1) * omRange.get(2), N_OMINT)};
 
 
 	queue.submit([=](celerity::handler& cgh) {
@@ -409,20 +415,67 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		});
 	});
 
-	/*for (int q = 0; q < gdata.omSYCL.size()	; ++q) {
-		queue.submit([=](celerity::handler& cgh) {
-			celerity::accessor physVals_acc{physValsSYCL[q], cgh, celerity::access::one_to_one{}, celerity::write_only};	
-			//celerity::accessor physValsOld_acc{physValsSYCL_Old[q], cgh, celerity::access::one_to_one{}, celerity::write_only};
-			//celerity::accessor physPtotalPtherm_acc{physPtotalPthermSYCL[q], cgh, celerity::access::one_to_one{}, celerity::write_only};
-			//celerity::accessor physPtotalPthermOld_acc{physPtotalPthermSYCL[q], cgh, celerity::access::one_to_one{}, celerity::write_only};
-			cgh.parallel_for<class BufferInitializationKernel>(physValsSYCL[q].get_range(), [=](celerity::item<2> item) {
-				physVals_acc[item.get_id(0)][item.get_id(1)] = 0;
+	queue.submit([=](celerity::handler& cgh) {
+		celerity::accessor physValsUPri_acc{physValsUPriSYCL, cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};	
+		cgh.parallel_for<class BufferInitializationKernel>(physValsUPriSYCL.get_range(), [=](celerity::item<2> item) {
+			physValsUPri_acc[item.get_id(0)][item.get_id(1)] = -2.87;
+		});
+	});
+
+	std::vector<CelerityBuffer<double, 3>> uPri_West(gdata.omSYCL.size(), CelerityBuffer<double, 3>(omRange));
+	std::vector<CelerityBuffer<double, 3>> uPri_East(gdata.omSYCL.size(), CelerityBuffer<double, 3>(omRange));
+	std::vector<CelerityBuffer<double, 3>> uPri_North(gdata.omSYCL.size(), CelerityBuffer<double, 3>(omRange));
+	std::vector<CelerityBuffer<double, 3>> uPri_South(gdata.omSYCL.size(), CelerityBuffer<double, 3>(omRange));
+	std::vector<CelerityBuffer<double, 3>> uPri_Bottom(gdata.omSYCL.size(), CelerityBuffer<double, 3>(omRange));
+	std::vector<CelerityBuffer<double, 3>> uPri_Top(gdata.omSYCL.size(), CelerityBuffer<double, 3>(omRange));
+
+	//auto old_range = Range<3>(gdata.mx[2] + 2*n_ghost[2] - 2, gdata.mx[1] + 2*n_ghost[1] - 2, gdata.mx[0] + 2*n_ghost[0] - 2);
+	auto range = Range<3>(gdata.mx[0] + 2*n_ghost[0] + 1, gdata.mx[1] + 2*n_ghost[1] + 1, gdata.mx[2] + 2*n_ghost[2] + 1);
+	int rangeEnd[3] = {gdata.mx[0] + n_ghost[0] + 1, gdata.mx[1] + n_ghost[1] + 1, gdata.mx[2] + n_ghost[2] + 1};
+
+	for (int q = 0; q < N_OMINT	; ++q) {
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+
+			celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{2,2,2}, celerity::read_only};
+
+			celerity::accessor uPriWest_acc{uPri_West[q], cgh, celerity::access::all{}, celerity::write_only, celerity::no_init};
+			celerity::accessor uPriEast_acc{uPri_East[q], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};	
+			celerity::accessor uPriNorth_acc{uPri_North[q], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};	
+			celerity::accessor uPriSouth_acc{uPri_South[q], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};	
+			celerity::accessor uPriBottom_acc{uPri_Bottom[q], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};	
+			celerity::accessor uPriTop_acc{uPri_Top[q], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+
+			cgh.parallel_for<class PointwiseReconstructionKernel>(range, [=](celerity::item<3> item) {
+
+				size_t iz = item.get_id(0);
+				size_t iy = item.get_id(1);
+				size_t ix = item.get_id(2);
+
+				if (ix >= n_ghost[0] && ix < rangeEnd[0] && iy >= n_ghost[1] && iy < rangeEnd[1] && iz >= n_ghost[2] && iz < rangeEnd[2]) {
+					if (ix >= n_ghost[0] && iy >= n_ghost[1] && iz >= n_ghost[2]) {
+						auto [uPriWest, uPriSouth, uPriBottom] = gpu::computeWSB(om_acc, ix, iy, iz);
+						auto [uPriEast, uPriNorth, uPriTop] = gpu::computeENT(om_acc, ix, iy, iz);
+						uPriWest_acc[ix][iy][iz] = 44.4;
+						uPriEast_acc[ix][iy][iz] = uPriSouth;
+						uPriNorth_acc[ix][iy][iz] = uPriBottom;
+						uPriSouth_acc[ix][iy][iz] = uPriEast;
+						uPriBottom_acc[ix][iy][iz] = uPriNorth;
+						uPriTop_acc[ix][iy][iz] = uPriTop;
+					} else {
+						auto [uPriWest, uPriEast, uPriSouth, uPriNorth, uPriBottom, uPriTop] = gpu::computeLowerCorner(om_acc, ix, iy, iz);
+						uPriWest_acc[ix][iy][iz] = 77.7;
+						uPriEast_acc[ix][iy][iz] = uPriSouth;
+						uPriNorth_acc[ix][iy][iz] = uPriBottom;
+						uPriSouth_acc[ix][iy][iz] = uPriEast;
+						uPriBottom_acc[ix][iy][iz] = uPriNorth;
+						uPriTop_acc[ix][iy][iz] = uPriTop;
+					}
+				}
 			});
 		});
-	}*/
+	}
 
-	auto range = Range<3>(gdata.mx[2] + 2*n_ghost[2] - 2, gdata.mx[1] + 2*n_ghost[1] - 2, gdata.mx[0] + 2*n_ghost[0] - 2);
-cout << "kernel start" << endl;
+/*
 	for (int q = 0; q < gdata.omSYCL.size()	; ++q) {
 
 		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
@@ -432,6 +485,7 @@ cout << "kernel start" << endl;
                                   cl::sycl::property::reduction::initialize_to_identity{});
 			celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{2,2,2}, celerity::read_only};
 			celerity::accessor nom_acc{nomSYCL, cgh, celerity::access::all{}, celerity::read_write};
+			celerity::accessor physValsUPri_acc{physValsUPriSYCL, cgh, celerity::access::all{}, celerity::write_only};
 
 			cgh.parallel_for<class ReductionKernel>(range, rd, [=](celerity::item<3> item, auto& max_cfl_lin) {
 
@@ -443,8 +497,13 @@ cout << "kernel start" << endl;
         		double num_ptotal[DirMax] = {};
 				double cfl_lin = -100;
 				
-				gpu::computeStep(om_acc, ix, iy, iz, q, &cfl_lin, numFlux, num_ptotal, thermal, Problem.gamma, problem_cs2,
+				if (ix == 1 && iy == 1 && iz == 1 && q == 1) {
+					gpu::computeStep(om_acc, ix, iy, iz, q, &cfl_lin, numFlux, num_ptotal, thermal, Problem.gamma, problem_cs2,
+													denominator, half_beta, fluidType, idx, fluidConst, physValsUPri_acc);
+				} else {
+					gpu::computeStep(om_acc, ix, iy, iz, q, &cfl_lin, numFlux, num_ptotal, thermal, Problem.gamma, problem_cs2,
 													denominator, half_beta, fluidType, idx, fluidConst);
+				}
 
 				double numFlux_Dir[DirMax][N_OMINT] = {};
 				double num_ptotal_Dir[DirMax] = {};
@@ -466,81 +525,13 @@ cout << "kernel start" << endl;
 									 N_OMINT, nom_max[2], idx);
 
 				max_cfl_lin.combine(cfl_lin);
-				/*
-				//no vector in device code
-				double uPri[gpu::FaceMax][N_OMINT] = {};
-				double uCon[gpu::FaceMax][N_OMINT] = {};
-				double physFlux[gpu::FaceMax][N_OMINT] = {};
-				double physValPtherm[gpu::FaceMax] = {};
-				double physValPtotal[gpu::FaceMax] = {};
-
-				double uPriOld[gpu::FaceMax][N_OMINT] = {};
-
-				//if (ix == ixEnd && iy == gdata.mx[1]+n_ghost[1]-1 && iz == gdata.mx[2]+n_ghost[2]-1) cout << "reach limit: " << ix << "." <<  iy << "." << iz << "\n";
-				//const int fluidType = Riemann[DirX]->get_Fluid_Type();
-
-				//pointwise reconstruction (incomplete)
-				gpu::compute(om_acc, uPri, ix, iy, iz, q);
-				
-				if (ix >= 2 && iy >= 2 && iz >= 2) {
-
-					gpu::compute(om_acc, uPriOld, ix -1, iy, iz, q);
-					gpu::compute(om_acc, uPriOld, ix, iy -1, iz, q);
-					gpu::compute(om_acc, uPriOld, ix, iy, iz -1, q);
-
-					for (int i = 0; i < N_OMINT; i++) {
-						uPri[gpu::FaceEast][i] = uPri[gpu::FaceEast][i];
-						uPri[gpu::FaceNorth][i] = uPri[gpu::FaceNorth][i];
-						uPri[gpu::FaceTop][i] = uPri[gpu::FaceTop][i];
-					}
-				
-				}
-				
-				for (int dir = 0; dir < DirMax; ++dir) {
-					int ixOff = (dir == DirX) ? ix : ix - 1;
-					int iyOff = (dir == DirY) ? iy : iy - 1;
-					int izOff = (dir == DirZ) ? iz : iz - 1;
-
-					int face = dir * 2;
-
-					gpu::get_Cons(om_acc, uPri[face], uCon[face], physValPtherm[face], physValPtotal[face], ix, iy, iz, face,
-							 		thermal, Problem.gamma, problem_cs2, denominator, half_beta, fluidType, fluidConst);
-
-					gpu::get_PhysFlux(om_acc, physFlux[face], uPri[face], uCon[face], physValPtherm[face], face, fluidConst);
-
-					gpu::get_Cons(om_acc, uPri[face+1], uCon[face+1], physValPtherm[face+1], physValPtotal[face+1], ix, iy, iz, face+1,
-							 		thermal, Problem.gamma, problem_cs2, denominator, half_beta, fluidType, fluidConst);
-
-					gpu::get_PhysFlux(om_acc, physFlux[face+1], uPri[face+1], uCon[face+1], physValPtherm[face+1], face+1, fluidConst);
-				}
-
-				double numVals_Ch[DirMax][gpu::NumV_Max] = {1., 1.};
-				double cfl_loc = -20.0;
-
-				//potentially change to celerity buffer later
-				double numFlux[DirMax][N_OMINT] = {};
-				double num_ptotal[DirMax] = {};
-
-				if (ix >= 2 && iy >= 2 && iz >= 2) {
-					for (int dir = 0; dir < DirMax; ++dir) {
-						int face = dir * 2;
-						cfl_loc = cl::sycl::fmax(gpu::get_vChar(om_acc, uPri[face], uCon[face], physValPtherm[face], uPri[face+1], uCon[face+1],
-									 physValPtherm[face+1], numVals_Ch[dir], dir, Problem.gamma, idx, fluidConst), cfl_loc);
-						num_ptotal[dir] = gpu::get_NumFlux(om_acc, uPri[face+1], uCon[face+1], physFlux[face+1], physValPtherm[face+1],
-									 			physValPtotal[face+1], uPri[face], uCon[face], physFlux[face], physValPtherm[face], 
-												physValPtotal[face], numFlux[dir], numVals_Ch[dir], dir, Problem.gamma, fluidConst);
-					}
-				}
-				
-				max_cfl_lin.combine(cfl_loc);
-				*/
 				
 			});
 
 			//cgh.parallel_for<class EmptyTestKernel>(celerity::range<2>(2,2), celerity::id<2>(2,2), [=](celerity::item<2> item) {int i = i + 1;});
 		});
-	}
-/*cout << cfl_lin << " ";
+	}*/
+
 	// Loop over grid-block
 	for (int iz = -n_ghost[2]+1; iz <= gdata.mx[2]+n_ghost[2]-1; ++iz){
 
@@ -551,38 +542,93 @@ cout << "kernel start" << endl;
 				const int fluidType = Riemann[DirX]->get_Fluid_Type();
 
 				if(ix >= 0 && ix <= gdata.mx[0] && iy >= 0 && iy <= gdata.mx[1] && iz >= 0 && iz <= gdata.mx[2]) {
-
+					//cout << "seq kernel iteration " << ix << " " << iy << " " << iz <<"\n";
 					const auto numVals = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix, iy, iz, cfl_lin);
-cout << cfl_lin << " ";
+//cout << cfl_lin << " ";
 					//gdata.nom update n_OMINT
 					const auto numValsX = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix + 1, iy, iz, cfl_lin);
 					get_Changes(gdata, numVals[DirX], numValsX[DirX], gdata.nom, ix, iy, iz, DirX, fluidType);
-cout << cfl_lin << " ";
+//cout << cfl_lin << " ";
 					const auto numValsY = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix, iy + 1, iz, cfl_lin);
 					get_Changes(gdata, numVals[DirY], numValsY[DirY], gdata.nom, ix, iy, iz, DirY, fluidType);
-cout << cfl_lin << " ";
+//cout << cfl_lin << " ";
 					const auto numValsZ = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix, iy, iz + 1, cfl_lin);
 					get_Changes(gdata, numVals[DirZ], numValsZ[DirZ], gdata.nom, ix, iy, iz, DirZ, fluidType);
-cout << cfl_lin << endl;				}
-
+//cout << cfl_lin << endl;				
+				}
 			}
 
 		}
-	}*/
-
+	}
+cout << "om_result: " << cfl_lin << endl;	
 // ----------------------------------------------------------------
 //   Check for errors:
 // ----------------------------------------------------------------
 
 //necessary due to a cuda memory freeing error for some reason
-sleep(1);
+	sleep(1);
 
-queue.submit([=](celerity::handler& cgh) {
-	celerity::accessor max_buf_acc{max_buf, cgh, celerity::access::all{}, celerity::read_only_host_task};
-	cgh.host_task(celerity::on_master_node, [=]{
-		printf("result: %g\n", max_buf_acc[0]);
-	});
-});
+	/*queue.submit([=](celerity::handler& cgh) {
+		celerity::accessor max_buf_acc{max_buf, cgh, celerity::access::all{}, celerity::read_only_host_task};
+		cgh.host_task(celerity::on_master_node, [=]{
+			printf("result: %g\n", max_buf_acc[0]);
+		});
+	});*/
+
+	/*for (int q = 0; q < 1; ++q) { cout << q << "_Qnom\n";
+		int lo[3], up[3];
+		lo[0] = gdata.nom[q].getLow(0);
+		lo[1] = gdata.nom[q].getLow(1);
+		lo[2] = gdata.nom[q].getLow(2);
+
+		up[0] = gdata.nom[q].getHigh(0);
+		up[1] = gdata.nom[q].getHigh(1);
+		up[2] = gdata.nom[q].getHigh(2);
+
+		for (int k = lo[2]; k <= up[2]; k++){
+			for (int j = lo[1]; j <= up[1]; j++){
+				for (int i = lo[0]; i <= up[0]; i++){
+					cout <<  gdata.nom[q](i,j,k) << "_nom ";
+				}
+			}cout << endl;
+		}
+	}cout <<"\n"<< endl;
+
+	for (int q = 0; q < 1; ++q) { cout << q << "_Qsycl\n";
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::write_only_host_task};
+			celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::all{}, celerity::read_only_host_task};
+			cgh.host_task(celerity::on_master_node, [=]{
+				for (int i = 0; i < nom_max[0]; i++) {
+					for (int j = 0; j < nom_max[1]; j++) {
+						for (int k = 0; k < nom_max[2]; k++) {
+							printf("%f_sycl ", nomSYCL_acc[i][j*nom_max[2] + k][q]);
+						}
+					}
+				}printf("\n");
+			});
+		});
+	}cout <<"\n"<< endl;*/
+
+	//for (int q = 0; q < N_OMINT; q++) {
+	{ int q = 1;
+		queue.submit([=](celerity::handler& cgh) {
+			celerity::accessor uPriWest_acc{uPri_West[q], cgh, celerity::access::all{}, celerity::read_only_host_task};
+			celerity::accessor uPriEast_acc{uPri_East[q], cgh, celerity::access::all{}, celerity::read_only_host_task};	
+			celerity::accessor uPriNorth_acc{uPri_North[q], cgh, celerity::access::all{}, celerity::read_only_host_task};	
+			celerity::accessor uPriSouth_acc{uPri_South[q], cgh, celerity::access::all{}, celerity::read_only_host_task};	
+			celerity::accessor uPriBottom_acc{uPri_Bottom[q], cgh, celerity::access::all{}, celerity::read_only_host_task};	
+			celerity::accessor uPriTop_acc{uPri_Top[q], cgh, celerity::access::all{}, celerity::read_only_host_task};
+			cgh.host_task(celerity::on_master_node, [=]{
+				printf("%d_%d_%f_sycl ", 0, q, uPriWest_acc[3][3][3]);
+				printf("%d_%d_%f_sycl ", 1, q, uPriEast_acc[1][1][1]);
+				printf("%d_%d_%f_sycl ", 2, q, uPriSouth_acc[2][2][2]);
+				printf("%d_%d_%f_sycl ", 3, q, uPriNorth_acc[3][3][3]);
+				printf("%d_%d_%f_sycl ", 4, q, uPriBottom_acc[4][4][4]);
+				printf("%d_%d_%f_sycl\n", 5, q, uPriTop_acc[5][5][5]);
+			});
+		});
+	}
 
 	for(int q = 0; q<n_omInt; ++q) {
 		CheckNan(gdata.nom[q],q, 0, 1,"nom");

@@ -279,7 +279,7 @@ void HyperbolicSolver::init(Data &gdata, gridFunc &gfunc,
 		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 			celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
 			cgh.parallel_for<class BufferInitializationKernel>(gdata.omSYCL[q].get_range(), [=](celerity::item<3> item) {
-				omSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
+				omSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0.0;
 			});
 		});
 	}

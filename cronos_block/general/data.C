@@ -162,8 +162,8 @@ Data::Data()
 	//om = new Pot[N_OM+N_P]; //necessary for MHD
 
 	for (int i = 0; i < numElements; i++) {
-		std::cout << "creating omSYCL buffer size " << mx[0] + 6 << ", " << mx[1] + 6 << ", " << mx[2] + 6 << std::endl << std::flush;
-		omSYCL.push_back(CelerityBuffer<double, 3>(Range<3>(mx[0]+6, mx[1]+6, mx[2]+6)));
+		std::cout << "creating omSYCL buffer size " << mx[0] + 6 + 1 << ", " << mx[1] + 6 + 1 << ", " << mx[2] + 6 + 1 << std::endl << std::flush;
+		omSYCL.push_back(CelerityBuffer<double, 3>(Range<3>(mx[0]+6 +1, mx[1]+6+1, mx[2]+6+1)));
 	}
 
 	nom = new NumMatrix<double,3> [n_omInt];
