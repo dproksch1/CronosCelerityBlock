@@ -1,0 +1,3 @@
+ xbeg[0] = 0 xbeg[1] = 0 xbeg[2] = 0
+ xend[0] = 1 xend[1] = 1 xend[2] = 1
+ dx[0] = 0.005 dx[1] = 1 dx[2] = 1
