@@ -6,8 +6,8 @@
 
 namespace gpu {
 
-	template<typename AccessorType, typename PhysFluxAccessorType, typename UPriAccessorType, typename UConAccessorType, typename SinglePthermAccessorType, typename FluidConstType>
-	void get_PhysFlux(AccessorType& omAcc, PhysFluxAccessorType& physFlux, UPriAccessorType& uPri, UConAccessorType& uCon,
+	template<typename PhysFluxAccessorType, typename UPriAccessorType, typename UConAccessorType, typename SinglePthermAccessorType, typename FluidConstType>
+	void get_PhysFlux(PhysFluxAccessorType& physFlux, UPriAccessorType& uPri, UConAccessorType& uCon,
 					SinglePthermAccessorType& ptherm, int face, FluidConstType fluidConst) {
 		
 		int dir = face/2;

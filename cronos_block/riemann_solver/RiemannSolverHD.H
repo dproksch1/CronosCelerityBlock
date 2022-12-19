@@ -9,10 +9,10 @@
 
 namespace gpu {
 
-	template<typename AccessorType, typename UPriAccessorType, typename UConAccessorType, typename PThermAccessorType, typename NumValsAccessorType, typename IdxConstType, typename FluidConstType>
-	double get_vChar(const AccessorType& omAcc, UPriAccessorType &pfL_uPri, UConAccessorType &pfL_uCon, PThermAccessorType &pfL_ptherm,
+	template<typename UPriAccessorType, typename UConAccessorType, typename PThermAccessorType, typename NumValsAccessorType, typename FluidConstType>
+	double get_vChar(UPriAccessorType &pfL_uPri, UConAccessorType &pfL_uCon, PThermAccessorType &pfL_ptherm,
 			UPriAccessorType &pfR_uPri, UConAccessorType &pfR_uCon, PThermAccessorType &pfR_ptherm, NumValsAccessorType &f_num,
-			int dir, double problem_gamma, IdxConstType idx, FluidConstType fluidConst) {
+			int dir, double problem_gamma, const double idx[], FluidConstType fluidConst) {
 		//! Compute characteristic velocities
 
 		int shift_vec[3] = {0,0,0};
@@ -46,7 +46,7 @@ namespace gpu {
 
 		// Local computation of cfl number
 	#if  (NON_LINEAR_GRID == CRONOS_OFF)
-		double cfl_loc = vmax*idx[dir];
+		double cfl_loc = vmax * idx[dir];
 	#else
 		//dproksch TODO implement
 		//double cfl_loc = vmax*gdata.getCen_idx(dir, iPos[dir]);
@@ -68,8 +68,8 @@ namespace gpu {
 		return cfl_loc;
 	}
 
-	template<typename AccessorType, typename UPriAccessorType, typename UConAccessorType, typename PhysFluxAccessorType, typename SinglePthermAccessorType, typename SinglePtotalAccessorType, typename NumFluxAccessorType, typename NumValsAccessorType, typename FluidConstType>
-	double get_NumFlux(const AccessorType& omAcc, const UPriAccessorType &pfM_uPri, const UConAccessorType &pfM_uCon, const PhysFluxAccessorType& pfM_flux,
+	template<typename UPriAccessorType, typename UConAccessorType, typename PhysFluxAccessorType, typename SinglePthermAccessorType, typename SinglePtotalAccessorType, typename NumFluxAccessorType, typename NumValsAccessorType, typename FluidConstType>
+	double get_NumFlux(const UPriAccessorType &pfM_uPri, const UConAccessorType &pfM_uCon, const PhysFluxAccessorType& pfM_flux,
 				const SinglePthermAccessorType pfM_ptherm, const SinglePtotalAccessorType& pfM_ptotal, const UPriAccessorType &pfP_uPri,
 				const UConAccessorType &pfP_uCon, const PhysFluxAccessorType& pfP_flux, const SinglePthermAccessorType pfP_ptherm,
 				const SinglePtotalAccessorType& pfP_ptotal, NumFluxAccessorType& numFlux, const NumValsAccessorType numVals, int dir,

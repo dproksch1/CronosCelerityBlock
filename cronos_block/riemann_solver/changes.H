@@ -11,8 +11,8 @@ namespace gpu {
 		return (iy * iz) + z_max;
 	}
 
-	template<typename DataAccessorType, typename NumFluxAccessorType, typename IdxConstType>
-	double get_Changes1DCart(const DataAccessorType& omAcc, const NumFluxAccessorType& numfM, const NumFluxAccessorType &numfP,
+	template<typename NumFluxAccessorType, typename IdxConstType>
+	double get_Changes1DCart(const NumFluxAccessorType& numfM, const NumFluxAccessorType &numfP,
 			int dir, IdxConstType idx, int q) {
 
 /*#if (NON_LINEAR_GRID == CRONOS_ON)
@@ -26,8 +26,8 @@ namespace gpu {
 	}
 
 
-	template<typename DataAccessorType, typename NumAccessorType, typename NumFluxAccessorType, typename SinglePtotalAccessorType, typename IdxConstType>
-	void get_Changes(const DataAccessorType& omAcc, NumAccessorType& nomAcc, int ix, int iy, int iz, int q, int dir, const NumFluxAccessorType& numfM,
+	template<typename NumAccessorType, typename NumFluxAccessorType, typename SinglePtotalAccessorType, typename IdxConstType>
+	void get_Changes(NumAccessorType& nomAcc, int ix, int iy, int iz, int dir, const NumFluxAccessorType& numfM,
 					const SinglePtotalAccessorType &numPtotal_M, const NumFluxAccessorType &numfP, const SinglePtotalAccessorType &numPtotal_P,
 					int num_len, size_t z_max, IdxConstType idx) {
 		
@@ -46,14 +46,14 @@ namespace gpu {
 
 #if (GEOM == CARTESIAN)
 			// Cartesian case
-			nomAcc[ix][nom_iyiz(iy,iz,z_max)][q_global] += get_Changes1DCart(omAcc, numfM, numfP, dir, idx, q);
+			nomAcc[ix][nom_iyiz(iy,iz,z_max)][q_global] += get_Changes1DCart(numfM, numfP, dir, idx, q);
 #else
 
 			/*// general case
 			double change = (numfP[q]*AreaP - numfM[q]*AreaM)*iVol;
 
 			nom[ix][iy][iz] += change;*/
-			nomAcc[ix][nom_iyiz(iy,iz,z_max)][q_global] += get_Changes1DCart(omAcc, numfM, numfP, dir, iPos, q);
+			nomAcc[ix][nom_iyiz(iy,iz,z_max)][q_global] += get_Changes1DCart(numfM, numfP, dir, iPos, q);
 
 			// Compute mass flux in case of spherical coordinates
 #if (GEOM == SPHERICAL)

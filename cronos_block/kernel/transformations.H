@@ -51,8 +51,8 @@ namespace gpu {
 		return 1./(rhoinv*(problem_gamma-1.))*ETherm;
 	}
 
-	template<typename AccessorType, typename UPriAccessorType, typename UConAccessorType, typename SinglePthermAccessorType, typename SinglePtotalAccessorType, typename FluidConstType>
-	void get_Cons(AccessorType& omAcc, UPriAccessorType& uPri, UConAccessorType& uCon, SinglePthermAccessorType& ptherm,
+	template<typename UPriAccessorType, typename UConAccessorType, typename SinglePthermAccessorType, typename SinglePtotalAccessorType, typename FluidConstType>
+	void get_Cons(UPriAccessorType& uPri, UConAccessorType& uCon, SinglePthermAccessorType& ptherm,
 				 SinglePtotalAccessorType& ptotal, int ix, int iy, int iz, int face, int thermal, double problem_gamma,
 				 const double problem_cs2, const double denominator, const double half_beta, const int fluidType, FluidConstType fluidConst) {
 		
