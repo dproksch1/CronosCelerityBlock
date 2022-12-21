@@ -30,7 +30,7 @@ namespace gpu {
 			if(q == dir+1) {
 				//causes error for RK_STEP 2 for some reason
 				//dprokschTODO: readd after rependencies are fixed
-				physFlux[q] /*+*/= ((uPri[q] * uCon[q]) + ptherm);
+				physFlux[q] += ((uPri[q] * uCon[q]) + ptherm);
 			} else {
 				physFlux[q] = (uCon[q] * uPri[dir + fluidConst[fluidConst_q_sx]]);
 			}

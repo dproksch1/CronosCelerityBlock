@@ -8,7 +8,7 @@
 namespace gpu {
 
 	inline size_t nom_iyiz(size_t iy, size_t iz, size_t z_max) {
-		return (iy * iz) + z_max;
+		return (iy * z_max) + iz;
 	}
 
 	template<typename NumFluxAccessorType, typename IdxConstType>

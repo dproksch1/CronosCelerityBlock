@@ -222,7 +222,6 @@ void SingleReconstruction_Block::get_Vals_BT(const Data& gdata, phys_fields_0D& 
             xFieldsB.uPri(q) = gdata.om[q](ix, iy, iz) - 0.5 * deriv_z;
             xFieldsT.uPri(q) = xFieldsB.uPri(q) + deriv_z;
 #endif
-
         }
 }
 

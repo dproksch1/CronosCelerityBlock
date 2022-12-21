@@ -94,14 +94,14 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 #endif
 
-	// ----------------------------------------------------------------
-	// Setup Buffer for RK-Step
-	// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+//      Setup Buffer for RK-Step
+// ----------------------------------------------------------------
 
 	auto omRange = gdata.omSYCL[0].get_range();
 	size_t nom_max[3] = {omRange.get(0), omRange.get(1), omRange.get(2)};
 
-	for (int q = 0; q < 7; q++) {
+	for (int q = 0; q < N_OMINT; q++) {
 		double om_temp[206][7][7];
 
 		for (int i = 0; i < nom_max[0]; i++) {
@@ -316,14 +316,6 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		}
 		reconst.compute(gdata, physVals, ix, iy, iz);
 
-		/*if (ix == 0 && iy == 0 && iz == 0) {
-			for (auto phys : physVals) {
-				for (int inum = 0; inum < phys.uPri.getLength(); inum++) {
-					cout << phys.uPri[inum] << "_om ";
-				} cout << endl;
-			} cout << endl;
-		}*/
-
 		if (ix >= -1 && iy >= -1 && iz >= -1) {
 
 			std::vector<phys_fields_0D> physValsOld;
@@ -372,23 +364,21 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		return numVals;
 
 	};
-
-	//auto range = Range<3>(izEnd-izStart, iyEnd-iyStart, ixEnd-ixStart);
 	
-	//std::vector<CelerityBuffer<double, 2>> physValsSYCL;
-	//for (int i = 0; i < gdata.omSYCL.size(); i++) physValsSYCL.push_back(CelerityBuffer<double, 2>(celerity::range<2>(2,2)));
-	
-	//buffers
-	CelerityBuffer<double, 2> physValsUPriSYCL{celerity::range<2>(gpu::FaceMax,N_OMINT)};
-	//std::vector<CelerityBuffer<double, 2>> physValsSYCL_Old(gdata.omSYCL.size(), CelerityBuffer<double, 2>( /*reeval*/ celerity::range<2>(6,2)));
-	//std::vector<CelerityBuffer<double, 2>> physPtotalPthermSYCL(gdata.omSYCL.size(), CelerityBuffer<double, 2>(celerity::range<2>(6,2)));
-	//std::vector<CelerityBuffer<double, 2>> physPtotalPthermSYCL_Old(gdata.omSYCL.size(), CelerityBuffer<double, 2>(celerity::range<2>(6,2)));
-	
+	//buffers	
 	celerity::buffer<double, 1> max_buf{celerity::range{1}};
-	//celerity::buffer<double, 1> max_buf2(celerity::range<1>(1));
+	CelerityBuffer<double, 3> nomSYCL {celerity::range<3>(omRange.get(0), omRange.get(1) * omRange.get(2), N_OMINT)};
+	CelerityBuffer<double, 3> uPriSYCL{celerity::range<3>(omRange.get(0) * omRange.get(1) * omRange.get(2), gpu::FaceMax, N_OMINT)};
+
+	queue.submit([=](celerity::handler& cgh) {
+		celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+		cgh.parallel_for<class BufferInitializationKernel>(nomSYCL.get_range(), [=](celerity::item<3> item) {
+			nomSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
+		});
+	});
 
 	//looking for better solution later
-	int fluidConst[] {gdata.fluid.get_q_rho(), gdata.fluid.get_q_sx(), gdata.fluid.get_q_sx(), gdata.fluid.get_q_sz(),
+	int fluidConst[] {gdata.fluid.get_q_rho(), gdata.fluid.get_q_sx(), gdata.fluid.get_q_sy(), gdata.fluid.get_q_sz(),
 						gdata.fluid.get_q_Eges(), gdata.fluid.get_q_Eadd(), gdata.fluid.get_q_Bx(), gdata.fluid.get_q_By(),
 						gdata.fluid.get_q_Bz()};
 
@@ -404,24 +394,6 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		idx[i] = gdata.idx[i];
 	}
 
-	CelerityBuffer<double, 3> nomSYCL {celerity::range<3>(omRange.get(0), omRange.get(1) * omRange.get(2), N_OMINT)};
-
-	queue.submit([=](celerity::handler& cgh) {
-		celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
-		cgh.parallel_for<class BufferInitializationKernel>(nomSYCL.get_range(), [=](celerity::item<3> item) {
-			nomSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
-		});
-	});
-
-	queue.submit([=](celerity::handler& cgh) {
-		celerity::accessor physValsUPri_acc{physValsUPriSYCL, cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};	
-		cgh.parallel_for<class BufferInitializationKernel>(physValsUPriSYCL.get_range(), [=](celerity::item<2> item) {
-			physValsUPri_acc[item.get_id(0)][item.get_id(1)] = -2.87;
-		});
-	});
-
-	CelerityBuffer<double, 3> uPriSYCL{celerity::range<3>(omRange.get(0) * omRange.get(1) * omRange.get(2), gpu::FaceMax, N_OMINT)};
-	
 	//auto old_range = Range<3>(gdata.mx[2] + 2*n_ghost[2] - 2, gdata.mx[1] + 2*n_ghost[1] - 2, gdata.mx[0] + 2*n_ghost[0] - 2);
 	auto range = Range<3>(gdata.mx[0] + 2*n_ghost[0] + 1, gdata.mx[1] + 2*n_ghost[1] + 1, gdata.mx[2] + 2*n_ghost[2] + 1);
 	int rangeEnd[3] = {gdata.mx[0] + n_ghost[0] + 1, gdata.mx[1] + n_ghost[1] + 1, gdata.mx[2] + n_ghost[2] + 1};
@@ -439,7 +411,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 				size_t iz = item.get_id(2);
 				size_t ixyz = (ix * range.get(1) + iy) * range.get(2) + iz;
 
-				if (ix >= n_ghost[0] && ix < rangeEnd[0] && iy >= n_ghost[1] && iy < rangeEnd[1] && iz >= n_ghost[2] && iz < rangeEnd[2]) {
+				if (ix >= n_ghost[0] && ix <= rangeEnd[0] && iy >= n_ghost[1] && iy <= rangeEnd[1] && iz >= n_ghost[2] && iz <= rangeEnd[2]) {
 					if (ix >= n_ghost[0] && iy >= n_ghost[1] && iz >= n_ghost[2]) {
 						auto [uPriWest, uPriSouth, uPriBottom] = gpu::computeWSB(om_acc, ix, iy, iz);
 						auto [uPriEast, uPriNorth, uPriTop] = gpu::computeENT(om_acc, ix, iy, iz);
@@ -471,14 +443,12 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		celerity::accessor nom_acc{nomSYCL, cgh, celerity::access::all{}, celerity::read_write};
 		celerity::accessor uPri_acc{uPriSYCL, cgh, celerity::access::all{}, celerity::read_only};
 
-		celerity::accessor physValsUPri_acc{physValsUPriSYCL, cgh, celerity::access::all{}, celerity::write_only};
-
 		cgh.parallel_for<class ReductionKernel>(range, rd, [=](celerity::item<3> item, auto& max_cfl_lin) {
 
 			size_t ix = item.get_id(0);
 			size_t iy = item.get_id(1);
 			size_t iz = item.get_id(2);
-			double cfl_lin = -100;
+			double cfl_lin = -100.0;
 
 			if (ix >= n_ghost[0] && ix < rangeEnd[0] && iy >= n_ghost[1] && iy < rangeEnd[1] && iz >= n_ghost[2] && iz < rangeEnd[2]) {
 
@@ -507,6 +477,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 													denominator, half_beta, fluidType, idx, fluidConst);
 				gpu::get_Changes(nom_acc, ix, iy, iz, DirZ, numFlux[DirZ], num_ptotal[DirZ], numFlux_Dir[DirZ], num_ptotal_Dir[DirZ],
 										N_OMINT, nom_max[2], idx);
+
 			}
 
 			max_cfl_lin.combine(cfl_lin);
@@ -526,17 +497,17 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 				if(ix >= 0 && ix <= gdata.mx[0] && iy >= 0 && iy <= gdata.mx[1] && iz >= 0 && iz <= gdata.mx[2]) {
 					//cout << "seq kernel iteration " << ix << " " << iy << " " << iz <<"\n";
 					const auto numVals = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix, iy, iz, cfl_lin);
-//cout << cfl_lin << " ";
+
 					//gdata.nom update n_OMINT
 					const auto numValsX = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix + 1, iy, iz, cfl_lin);
 					get_Changes(gdata, numVals[DirX], numValsX[DirX], gdata.nom, ix, iy, iz, DirX, fluidType);
-//cout << cfl_lin << " ";
+
 					const auto numValsY = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix, iy + 1, iz, cfl_lin);
 					get_Changes(gdata, numVals[DirY], numValsY[DirY], gdata.nom, ix, iy, iz, DirY, fluidType);
-//cout << cfl_lin << " ";
+
 					const auto numValsZ = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix, iy, iz + 1, cfl_lin);
 					get_Changes(gdata, numVals[DirZ], numValsZ[DirZ], gdata.nom, ix, iy, iz, DirZ, fluidType);
-//cout << cfl_lin << endl;				
+		
 				}
 			}
 
@@ -548,9 +519,6 @@ cout << "om_result: " << cfl_lin << endl;
 //   Check for errors:
 // ----------------------------------------------------------------
 
-//necessary due to a cuda memory freeing error for some reason
-	sleep(1);
-
 	queue.submit([=](celerity::handler& cgh) {
 		celerity::accessor max_buf_acc{max_buf, cgh, celerity::access::all{}, celerity::read_only_host_task};
 		cgh.host_task(celerity::on_master_node, [=]{
@@ -558,7 +526,7 @@ cout << "om_result: " << cfl_lin << endl;
 		});
 	});
 
-	/*for (int q = 0; q < 1; ++q) { cout << q << "_Qnom\n";
+	/*for (int q = 0; q < N_OMINT; ++q) {
 		int lo[3], up[3];
 		lo[0] = gdata.nom[q].getLow(0);
 		lo[1] = gdata.nom[q].getLow(1);
@@ -571,21 +539,25 @@ cout << "om_result: " << cfl_lin << endl;
 		for (int k = lo[2]; k <= up[2]; k++){
 			for (int j = lo[1]; j <= up[1]; j++){
 				for (int i = lo[0]; i <= up[0]; i++){
-					cout <<  gdata.nom[q](i,j,k) << "_nom ";
+					if (gdata.nom[q](i,j,k) != 0.0) {
+						cout << q<< "_" <<i <<","<<j<<","<<k<<"_" << gdata.nom[q](i,j,k) << "_nom ";
+					}
 				}
 			}cout << endl;
 		}
 	}cout <<"\n"<< endl;
 
-	for (int q = 0; q < 1; ++q) { cout << q << "_Qsycl\n";
+	for (int q = 0; q < N_OMINT; ++q) {
 		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 			celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::write_only_host_task};
 			celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::all{}, celerity::read_only_host_task};
 			cgh.host_task(celerity::on_master_node, [=]{
-				for (int i = 0; i < nom_max[0]; i++) {
+				for (int k = 0; k < nom_max[2]; k++) {
 					for (int j = 0; j < nom_max[1]; j++) {
-						for (int k = 0; k < nom_max[2]; k++) {
-							printf("%f_sycl ", nomSYCL_acc[i][j*nom_max[2] + k][q]);
+						for (int i = 0; i < nom_max[0]; i++) {
+							if (nomSYCL_acc[i][j*nom_max[2] + k][q] != 0.0) {
+								printf("%d_%d,%d,%d_%f_sycl ",q, i-3,j-3,k-3,nomSYCL_acc[i][j*nom_max[2] + k][q]);
+							}
 						}
 					}
 				}printf("\n");
@@ -593,37 +565,33 @@ cout << "om_result: " << cfl_lin << endl;
 		});
 	}cout <<"\n"<< endl;*/
 
-	//for (int q = 0; q < N_OMINT; q++) {
-	/*{ int q = 1;
-		queue.submit([=](celerity::handler& cgh) {
-			celerity::accessor uPriWest_acc{uPri_West[q], cgh, celerity::access::all{}, celerity::read_only_host_task};
-			celerity::accessor uPriEast_acc{uPri_East[q], cgh, celerity::access::all{}, celerity::read_only_host_task};	
-			celerity::accessor uPriNorth_acc{uPri_North[q], cgh, celerity::access::all{}, celerity::read_only_host_task};	
-			celerity::accessor uPriSouth_acc{uPri_South[q], cgh, celerity::access::all{}, celerity::read_only_host_task};	
-			celerity::accessor uPriBottom_acc{uPri_Bottom[q], cgh, celerity::access::all{}, celerity::read_only_host_task};	
-			celerity::accessor uPriTop_acc{uPri_Top[q], cgh, celerity::access::all{}, celerity::read_only_host_task};
-			cgh.host_task(celerity::on_master_node, [=]{
-				printf("%d_%d_%f_sycl ", 0, q, uPriWest_acc[3][3][3]);
-				printf("%d_%d_%f_sycl ", 1, q, uPriEast_acc[1][1][1]);
-				printf("%d_%d_%f_sycl ", 2, q, uPriSouth_acc[2][2][2]);
-				printf("%d_%d_%f_sycl ", 3, q, uPriNorth_acc[3][3][3]);
-				printf("%d_%d_%f_sycl ", 4, q, uPriBottom_acc[4][4][4]);
-				printf("%d_%d_%f_sycl\n", 5, q, uPriTop_acc[5][5][5]);
-			});
-		});
-	}*/
-
-	queue.submit([=](celerity::handler& cgh) {
+	/*queue.submit([=](celerity::handler& cgh) {
 		celerity::accessor uPri_acc{uPriSYCL, cgh, celerity::access::all{}, celerity::read_only_host_task};
 		cgh.host_task(celerity::on_master_node, [=]{
-			int index = (3 * range.get(1) + 3) * range.get(2) + 3;
-			printf("%d_%d_%f_sycl ", 0, 0, uPri_acc[index][0][0]);
-			printf("%d_%d_%f_sycl ", 0, 1, uPri_acc[index][0][1]);
-			printf("%d_%d_%f_sycl ", 0, 2, uPri_acc[index][0][2]);
-			printf("%d_%d_%f_sycl ", 0, 3, uPri_acc[index][0][3]);
-			printf("%d_%d_%f_sycl ", 0, 4, uPri_acc[index][0][4]);
+			int index = (102 * range.get(1) + 3) * range.get(2) + 3;
+			for (int face = 0; face < 6; face++) {
+				printf("%d_%d_%f_sycl ", face, 0, uPri_acc[index][face][0]);
+				printf("%d_%d_%f_sycl ", face, 1, uPri_acc[index][face][1]);
+				printf("%d_%d_%f_sycl ", face, 2, uPri_acc[index][face][2]);
+				printf("%d_%d_%f_sycl ", face, 3, uPri_acc[index][face][3]);
+				printf("%d_%d_%f_sycl\n", face, 4, uPri_acc[index][face][4]);
+			}
 		});
-	});
+	});*/
+
+	/*queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+		celerity::accessor uPri_acc{uPriSYCL, cgh, celerity::access::all{}, celerity::read_only_host_task};
+		cgh.host_task(celerity::on_master_node, [=]{
+			for (int k = 0; k < range.get(2); k++) {
+				for (int j = 0; j < range.get(1); j++) {
+					for (int i = 0; i < range.get(0); i++) {
+						int index = (i * range.get(1) + j) * range.get(2) + k;
+						printf("%d,%d,%d_sycl %f\n",i-3,j-3,k-3,uPri_acc[index][0][4]);
+					}
+				}
+			}printf("\n");
+		});
+	});*/
 
 	for(int q = 0; q<n_omInt; ++q) {
 		CheckNan(gdata.nom[q],q, 0, 1,"nom");

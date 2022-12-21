@@ -83,8 +83,8 @@ namespace gpu {
 		if(ENERGETICS == FULL) {
 			double rhoinv = 1./uPri[fluidConst[fluidConst_q_rho]];
 
-			double psq = (cl::sycl::sqrt(uPri[fluidConst[fluidConst_q_sx]]) + cl::sycl::sqrt(uPri[fluidConst[fluidConst_q_sy]]) +
-					cl::sycl::sqrt(uPri[fluidConst[fluidConst_q_sz]]))*cl::sycl::sqrt(uPri[fluidConst[fluidConst_q_rho]]);
+			double psq = (sqr(uPri[fluidConst[fluidConst_q_sx]]) + sqr(uPri[fluidConst[fluidConst_q_sy]]) +
+					sqr(uPri[fluidConst[fluidConst_q_sz]]))*sqr(uPri[fluidConst[fluidConst_q_rho]]);
 
 			if(thermal) {
 				uCon[fluidConst[fluidConst_q_Eges]] = TransEth2E_gpu(rhoinv,psq,Bsq,
