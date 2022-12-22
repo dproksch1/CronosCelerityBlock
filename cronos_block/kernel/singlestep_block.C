@@ -229,6 +229,8 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	//cronos::vector<int> ipos(0,0,0);
 
 	int n_omInt = gdata.fluid.get_N_OMINT();
+	cout << "omInt: " << n_omInt << endl;
+	cout << "nom_max: " << nom_max[0] << " " << nom_max[1] << " "<< nom_max[2] << endl;
 	//NumArray<double> uPriOld_E(n_omInt);
 	//NumArray<double> flux_numOld_E(n_omInt);
 	
@@ -435,9 +437,8 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		});
 	}
 
-	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+	queue.submit([=](celerity::handler& cgh) {
 
-		auto r = gdata.omSYCL[0].get_range();
 		auto rd = celerity::reduction(max_buf, cgh, cl::sycl::maximum<double>{},
 								cl::sycl::property::reduction::initialize_to_identity{});
 		celerity::accessor nom_acc{nomSYCL, cgh, celerity::access::all{}, celerity::read_write};
@@ -513,16 +514,17 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 		}
 	}
-cout << "om_result: " << cfl_lin << endl;
+/*cout << "om_result: " << cfl_lin << endl;*/
 
 // ----------------------------------------------------------------
 //   Check for errors:
 // ----------------------------------------------------------------
 
-	queue.submit([=](celerity::handler& cgh) {
+	queue.submit(celerity::allow_by_ref, [=, &cfl_lin](celerity::handler& cgh) {
 		celerity::accessor max_buf_acc{max_buf, cgh, celerity::access::all{}, celerity::read_only_host_task};
-		cgh.host_task(celerity::on_master_node, [=]{
+		cgh.host_task(celerity::on_master_node, [=, &cfl_lin]{
 			printf("result: %g\n", max_buf_acc[0]);
+			cfl_lin = max_buf_acc[0];
 		});
 	});
 
@@ -664,10 +666,10 @@ cout << "om_result: " << cfl_lin << endl;
 cout << "start integrator" << endl;
 	for (int q = 0; q < n_omInt; ++q) {
 		
-		//TimeIntegratorGeneric[q]->Substep(queue, gdata, omRange, nomSYCL, gdata.om, n, nom_max);
-		TimeIntegratorGeneric[q]->Substep(gdata, Problem, gdata.nom[q], gdata.om, n);
+		TimeIntegratorGeneric[q]->Substep(queue, gdata, omRange, nomSYCL, gdata.om, n, nom_max);
+		//TimeIntegratorGeneric[q]->Substep(gdata, Problem, gdata.nom[q], gdata.om, n);
 	}
-
+cout << "post integrator" << endl;
 #if (OMS_USER == TRUE)
 
 	for (int q=0; q<n_omIntUser; ++q) {
