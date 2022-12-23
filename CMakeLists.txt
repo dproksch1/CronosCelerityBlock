@@ -117,7 +117,7 @@ include_directories(cronos_block/configuration/ShockTubeSod)
 include_directories(cronos_block/configuration/standalone/cronos_block)
 
 if(DIRECTLINK_CNL)
-  message("attempting direct inclusion of CronosNumLib\n")
+  message(STATUS "Direct Inclusion of CronosNumLib")
   include_directories(external/CronosNumLib/Matrix)
   include_directories(external/CronosNumLib/util)
 endif()

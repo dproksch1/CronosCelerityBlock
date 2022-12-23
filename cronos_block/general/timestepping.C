@@ -145,9 +145,6 @@ void RKSteps::Substep(const Data &gdata, ProblemType &Problem,
 			for (int j = ibeg[1]; j <= iend[1]; ++j){
 				for (int i = ibeg[0]; i <= iend[0]; ++i){
 					om[qch](i,j,k) -= gdata.dt*nom(i,j,k);
-					if (qch == 4) {
-						std::cout << "[" << i << "," << j<< ","<< k<< "]" << om[qch](i,j,k) << std::endl;
-					}
 				}
 			}
 		}
@@ -160,13 +157,10 @@ void RKSteps::Substep(const Data &gdata, ProblemType &Problem,
 //						 0.5*om[qold](i,j,k)
 						+0.5*om[qch](i,j,k)
 						-0.5*gdata.dt*nom(i,j,k);
-					/*if (qch == 4) {
-						std::cout << "[" << i << "," << j<< ","<< k<< "]" << om[qch](i,j,k) << std::endl;
-					}*/
 				}
 			}
 		}
-	}cout << "end\n";
+	}
 #endif
 }
 
@@ -184,9 +178,9 @@ void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
 	queue.submit(celerity::allow_by_ref, [=, &nom_temp](celerity::handler& cgh) {
 		celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::all{}, celerity::read_only_host_task};
 		cgh.host_task(celerity::on_master_node, [=, &nom_temp]{
-			for (int i = 0; i < nom_max[0]; i++) {
-				for (int j = 0; j < nom_max[1]; j++) {
-					for (int k = 0; k < nom_max[2]; k++) {
+			for (int i = -B; i < nom_max[0]+B; i++) {
+				for (int j = -B; j < nom_max[1]+B; j++) {
+					for (int k = -B; k < nom_max[2]+B; k++) {
 						nom_temp[i][j][k] = nomSYCL_acc[i][j*nom_max[2] + k][qch];
 					}
 				}
@@ -196,17 +190,17 @@ void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
 
 	if(substep == 0) {
 		save_data(om, 0);
-		for (int i = 0; i < nom_max[0]; i++) {
-			for (int j = 0; j < nom_max[1]; j++) {
-				for (int k = 0; k < nom_max[2]; k++) {
+		for (int i = -B; i < nom_max[0]+B; i++) {
+			for (int j = -B; j < nom_max[1]+B; j++) {
+				for (int k = -B; k < nom_max[2]+B; k++) {
 					om[qch](i + B,j + B,k + B) -= dt * nom_temp[i][j][k];
 				}
 			}
 		}
 	} else if (substep == 1) {
-		for (int i = 0; i < nom_max[0]; i++) {
-			for (int j = 0; j < nom_max[1]; j++) {
-				for (int k = 0; k < nom_max[2]; k++) {
+		for (int i = -B; i < nom_max[0]+B; i++) {
+			for (int j = -B; j < nom_max[1]+B; j++) {
+				for (int k = -B; k < nom_max[2]+B; k++) {
 					om[qch](i + B,j + B,k + B) = 0.75*om_save[0](i + B,j + B,k + B) + 0.25*om[qch](i + B,j + B,k + B)
 								 				- dt * nom_temp[i][j][k];
 				}
@@ -216,9 +210,9 @@ void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
 		double twth   = 2./3.;
 		double twthdt = twth*dt;
 		
-		for (int i = 0; i < nom_max[0]; i++) {
-			for (int j = 0; j < nom_max[1]; j++) {
-				for (int k = 0; k < nom_max[2]; k++) {
+		for (int i = -B; i < nom_max[0]+B; i++) {
+			for (int j = -B; j < nom_max[1]+B; j++) {
+				for (int k = -B; k < nom_max[2]+B; k++) {
 					om[qch](i + B,j + B,k + B) = 1./3.*om_save[0](i + B,j + B,k + B) + twth*om[qch](i + B,j + B,k + B)
 								  - twthdt * nom_temp[i][j][k];
 				}
@@ -253,7 +247,9 @@ void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
 			}
 		});
 	});}
-std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
+	queue.slow_full_sync();
+
 	if (substep == 0) { // First Runge Kutta step
 
 		save_data(om, 0);
@@ -262,9 +258,6 @@ std::this_thread::sleep_for(std::chrono::milliseconds(10));
 			for (int j = -B; j < nom_max[1]+B; j++) {
 				for (int k = -B; k < nom_max[2]+B; k++) {
 					om[qch](i + B,j + B,k + B) -= dt * nom_temp[i][j][k];
-					/*if (qch == 4) {
-						std::cout << "(" << i + B << "," << j + B<< ","<< k + B<< ")" << om[qch](i + B,j + B,k + B) - dt * nom_temp[i][j][k] << std::endl;
-					}*/
 				}
 			}
 		}
@@ -276,9 +269,6 @@ std::this_thread::sleep_for(std::chrono::milliseconds(10));
 				for (int k = -B; k < nom_max[2]+B; k++) {
 					om[qch](i + B,j + B,k + B) = 0.5*om_save[0](i + B,j + B,k + B) + 0.5*om[qch](i + B,j + B,k + B) 
 								- 0.5 * dt * nom_temp[i][j][k];
-					/*if (qch == 4) {
-						std::cout << "(" << i + B << "," << j + B<< ","<< k + B<< ")" << 0.5*om[0](i,j,k) + 0.5*om[qch](i,j,k) - 0.5 * dt * nom_temp[i][j][k] << std::endl;
-					}*/
 				}
 			}
 		}

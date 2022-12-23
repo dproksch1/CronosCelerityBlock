@@ -307,7 +307,7 @@ void get_NumFlux2(const Data &gdata, const phys_fields_0D &pfM,
 
 		// If carbuncle test is used -> check whether cells i and i-1 are
 		// flagged as lying within the vicinity of a strong shock
-		if(gdata.use_carbuncleFlag) {
+		/*if(gdata.use_carbuncleFlag) {
 			// if both cells are flagged -> use hll for all variables instead
 			if(pfM.carbuncle_flag*pfP.carbuncle_flag > 0) {
 				for(int q=0; q<pfM.get_num(); ++q) {
@@ -319,7 +319,7 @@ void get_NumFlux2(const Data &gdata, const phys_fields_0D &pfM,
 				}
 				return;
 			}
-		}
+		}*/
 
 
 
