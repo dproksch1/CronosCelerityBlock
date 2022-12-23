@@ -12,13 +12,16 @@
 class TimeIntegrator {
 public:
 	TimeIntegrator(const int);
-	~TimeIntegrator();
+	virtual ~TimeIntegrator() = 0;
 	void set_IntRange(int [], int []);
 	void set_corrField(int);
 	void save_data(const Pot om[], const int substep);
 	virtual double get_dt(Data & gdata, const int substep);
 	virtual void Substep(const Data &gdata, ProblemType &, NumMatrix<double, 3> &nom,
 	             Pot om[], const int substep) = 0;
+	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
+                      CelerityBuffer<double, 3> nomSYCL,
+                      Pot om[], const int substep, size_t nom_max[]) = 0;
 
 protected:
 	int ibeg[DIM], iend[DIM];
@@ -34,6 +37,9 @@ public:
 	virtual double get_dt(Data & gdata, int substep);
 	virtual void Substep(const Data &gdata, ProblemType &, NumMatrix<double, 3> &nom,
 	             Pot om[], const int substep);
+	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
+                      CelerityBuffer<double, 3> nomSYCL,
+                      Pot om[], const int substep, size_t nom_max[]);
 
 private:
 	double oneThird, twoThirds;
@@ -46,6 +52,9 @@ public:
 	virtual double get_dt(Data & gdata, int substep);
 	virtual void Substep(const Data &gdata, ProblemType &, NumMatrix<double, 3> &nom,
 	             Pot om[], const int substep);
+	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
+                      CelerityBuffer<double, 3> nomSYCL,
+                      Pot om[], const int substep, size_t nom_max[]);
 
 };
 

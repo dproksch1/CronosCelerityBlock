@@ -14,6 +14,7 @@ public:
 	inline double pressure(const double &, const double &, const double &,
 	                     const double &);
 	inline double pressure(const Data &, const ProblemType &, double, double, double, double) const;
+	inline double pressure(const double, double) const;
 protected:
 	double eps, gamma, half_beta, denominator;
 };
@@ -35,6 +36,23 @@ inline double EquationOfState::pressure(const Data &gdata, const ProblemType &Pr
 		return Problem.c2_iso(gdata,i,j,k)*pow(dens, gamma)*denominator*half_beta;
 	} else {
 		return Problem.c2_iso(gdata,i,j,k)*dens*half_beta;
+	}
+#endif
+}
+
+inline double EquationOfState::pressure(const double problem_cs2, double dens) const
+{
+#ifdef SOUND
+	if(gamma != 1.){
+		return problem_cs2*pow(dens, gamma)*denominator;
+	} else {
+		return problem_cs2*dens;
+	}
+#else
+	if(gamma != 1.){
+		return problem_cs2*pow(dens, gamma)*denominator*half_beta;
+	} else {
+		return problem_cs2*dens*half_beta;
 	}
 #endif
 }

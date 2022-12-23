@@ -88,7 +88,7 @@ int main(int argc, char* argv[])
 	} else {
 		gdata.time = 0.;
 		try {
-			solver.RKSolver->init(gdata, *solver.gfunc, *solver.Problem);
+			solver.RKSolver->init(gdata, *solver.gfunc, *solver.Problem, queue);
 			// solver->EulerSolver->init(gdata, *solver->gfunc, *solver->Problem);
 		} catch (CException exep) {
 			solver.Abort(gdata, exep);

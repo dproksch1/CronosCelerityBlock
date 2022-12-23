@@ -20,7 +20,7 @@ using namespace std;
 class ProblemType {
 public:
 	ProblemType(const Data &gdata);
-	virtual void init_fields(Data &, int [], int []) = 0;
+	virtual void init_fields(Data &, int [], int []) {} /*=*/;
 	void init_fields(Data &);
 	virtual void init_problem(Data &) {};
 	virtual string get_Name(); 
@@ -68,6 +68,7 @@ public:
 	/**Routine to access some internal variables from anywhere (e.g. from an Euler solver)*/
 	double get_internalValue(int){return 0.;}
 	int get_q(NumMatrix<double,3> &, string fluidName="fluid00");
+	double get_cs2() const;
 	void set_q(int q, NumMatrix<double,3> &);
 	void set_Info(bool);
 	void set_AsciiOut(bool);

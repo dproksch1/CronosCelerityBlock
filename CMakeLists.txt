@@ -44,7 +44,11 @@ find_package(GSL REQUIRED)
 find_package(MPI REQUIRED)
 find_package(HDF5 REQUIRED COMPONENTS C) # CXX HL
 
-if(NOT directCNLincl)
+if(NOT DEFINED DIRECTLINK_CNL)
+  SET(DIRECTLINK_CNL false)
+endif()
+
+if(NOT DIRECTLINK_CNL)
   find_package(CronosNumLib REQUIRED)
 endif()
 
@@ -96,7 +100,7 @@ include_directories(${HDF5_INCLUDE_DIRS})
 include_directories(${GSL_INCLUDE_DIRS})
 
 
-if(directCNLincl)
+if(DIRECTLINK_CNL)
   add_subdirectory(external/CronosNumLib)
 else()
   include_directories(${CRONOSNUMLIB_INCLUDE_DIR}/CronosNumLib)
@@ -112,7 +116,8 @@ include_directories(cronos_block/utils)
 include_directories(cronos_block/configuration/ShockTubeSod)
 include_directories(cronos_block/configuration/standalone/cronos_block)
 
-if(directCNLincl)
+if(DIRECTLINK_CNL)
+  message(STATUS "Direct Inclusion of CronosNumLib")
   include_directories(external/CronosNumLib/Matrix)
   include_directories(external/CronosNumLib/util)
 endif()
@@ -179,7 +184,7 @@ if(NOT MSVC)
 	target_link_libraries(proj PRIVATE stdc++fs)
 endif()
 
-if(directCNLincl)
+if(DIRECTLINK_CNL)
   target_link_libraries(proj PRIVATE matrix util)
 else()
   target_link_libraries(proj PUBLIC ${CRONOSNUMLIB_MATRIX} ${CRONOSNUMLIB_UTIL})
@@ -196,7 +201,7 @@ enable_testing()
 
 configure_file(${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_tiny/SodToro5HllcRef.cat ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_tiny/SodToro5HllcRef.cat COPYONLY)
 configure_file(${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_small/SodToro5HllcRef.cat ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_small/SodToro5HllcRef.cat COPYONLY)
-configure_file(${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef.cat ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef.cat COPYONLY)
+#configure_file(${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef.cat ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef.cat COPYONLY)
 
 add_test(NAME tiny_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_tiny SodToro5HllcRef)
 add_test(NAME tiny_compare COMMAND ${HDF5_DIFF_EXECUTABLE} --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_tiny/SodToro5HllcRef_float/SodToro5HllcRef_flt_step3.h5 ${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_tiny/SodToro5HllcRef_float/SodToro5HllcRef_flt_step3.h5)
@@ -204,8 +209,8 @@ add_test(NAME tiny_compare COMMAND ${HDF5_DIFF_EXECUTABLE} --exclude-path /Data/
 add_test(NAME small_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_small SodToro5HllcRef)
 add_test(NAME small_compare COMMAND ${HDF5_DIFF_EXECUTABLE} --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_small/SodToro5HllcRef_float/SodToro5HllcRef_flt_step16.h5 ${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_small/SodToro5HllcRef_float/SodToro5HllcRef_flt_step16.h5)
 
-add_test(NAME medium_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_medium SodToro5HllcRef)
-add_test(NAME medium_compare COMMAND ${HDF5_DIFF_EXECUTABLE} --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef_float/SodToro5HllcRef_flt_step990.h5 ${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef_float/SodToro5HllcRef_flt_step990.h5)
+#add_test(NAME medium_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_medium SodToro5HllcRef)
+#add_test(NAME medium_compare COMMAND ${HDF5_DIFF_EXECUTABLE} --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef_float/SodToro5HllcRef_flt_step990.h5 ${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef_float/SodToro5HllcRef_flt_step990.h5)
 
 set_tests_properties(tiny_run PROPERTIES DEPENDS proj)
 set_tests_properties(tiny_run PROPERTIES FIXTURES_SETUP EXEC_TINY)
@@ -215,6 +220,6 @@ set_tests_properties(small_run PROPERTIES DEPENDS proj)
 set_tests_properties(small_run PROPERTIES FIXTURES_SETUP EXEC_SMALL)
 set_tests_properties(small_compare PROPERTIES FIXTURES_REQUIRED EXEC_SMALL)
 	
-set_tests_properties(medium_run PROPERTIES DEPENDS proj)
-set_tests_properties(medium_run PROPERTIES FIXTURES_SETUP EXEC_MEDIUM)
-set_tests_properties(medium_compare PROPERTIES FIXTURES_REQUIRED EXEC_MEDIUM)
+#set_tests_properties(medium_run PROPERTIES DEPENDS proj)
+#set_tests_properties(medium_run PROPERTIES FIXTURES_SETUP EXEC_MEDIUM)
+#set_tests_properties(medium_compare PROPERTIES FIXTURES_REQUIRED EXEC_MEDIUM)

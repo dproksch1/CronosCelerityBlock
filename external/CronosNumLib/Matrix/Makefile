@@ -1,4 +1,4 @@
-include /home/dproksch/Documents/master/master_thesis/repos/CronosNumLib/makeinclude/include.mak
+include /home/dproksch/master_thesis/CronosCelerityBlock/external/CronosNumLib/makeinclude/include.mak
 
 OFLAGS  = $(X_OFLAGS) $(CFLAGS) -DNDEBUG
 

@@ -1,4 +1,4 @@
-include /home/dproksch/Documents/master/master_thesis/repos/CronosNumLib/makeinclude/ostype.mak
+include /home/dproksch/master_thesis/CronosCelerityBlock/external/CronosNumLib/makeinclude/ostype.mak
 
 .SUFFIXES:
 
