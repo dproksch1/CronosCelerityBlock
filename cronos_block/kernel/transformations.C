@@ -434,6 +434,7 @@ void Transformations::TransT2Eth(const Data &gdata, gridFunc &gfunc,
 void Transformations::TransT2E(const Data &gdata, gridFunc &gfunc,
                                ProblemType &Problem) const
 {
+	
 	if(gdata.om[q_Eges].getName() != "Temp") {
 		throw CException(" om[q_Eges] is not set as temperature ");
 	}

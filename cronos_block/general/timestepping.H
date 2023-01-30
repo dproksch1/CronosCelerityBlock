@@ -6,6 +6,7 @@
 #include "problem.H"
 #include "data.H"
 #include "constants.H"
+#include "utils.H"
 #include <vector>
 
 
@@ -15,19 +16,25 @@ public:
 	virtual ~TimeIntegrator() = 0;
 	void set_IntRange(int [], int []);
 	void set_corrField(int);
+	void init_omSYCL_save(const int mx[DIM]);
 	void save_data(const Pot om[], const int substep);
+	void save_data(Queue &queue, std::vector<CelerityBuffer<double, 3>> omSYCL, const int substep, const int B);
 	virtual double get_dt(Data & gdata, const int substep);
 	virtual void Substep(const Data &gdata, ProblemType &, NumMatrix<double, 3> &nom,
 	             Pot om[], const int substep) = 0;
 	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
                       CelerityBuffer<double, 3> nomSYCL,
                       Pot om[], const int substep, size_t nom_max[]) = 0;
+	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
+						CelerityBuffer<double, 3> nomSYCL, Pot om[],
+						 const int substep, size_t nom_max1, size_t nom_max[]) = 0;
 
 protected:
 	int ibeg[DIM], iend[DIM];
 	int qch;
 	const int n_saves;
 	NumMatrix<double, DIM> *om_save;
+	std::vector<CelerityBuffer<double, 3>> omSYCL_save;
 };
 
 
@@ -40,6 +47,9 @@ public:
 	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
                       CelerityBuffer<double, 3> nomSYCL,
                       Pot om[], const int substep, size_t nom_max[]);
+	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
+						CelerityBuffer<double, 3> nomSYCL, Pot om[],
+						 const int substep, size_t nom_max1, size_t nom_max[]);
 
 private:
 	double oneThird, twoThirds;
@@ -55,8 +65,13 @@ public:
 	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
                       CelerityBuffer<double, 3> nomSYCL,
                       Pot om[], const int substep, size_t nom_max[]);
+	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
+						CelerityBuffer<double, 3> nomSYCL, Pot om[],
+						 const int substep, size_t nom_max1, size_t nom_max[]);
 
 };
+
+void TransformOmSycl_Cons2Prim(Queue &queue, const Data &gdata, CelerityRange<3> omRange, size_t nom_max[3]);
 
 
 

@@ -2980,13 +2980,15 @@ void gridFunc::dataout(Data &gdata,  Hdf5Stream &h5out, ProblemType & Problem,
 			                         Index::set(gdata.mx[0]+rim, gdata.mx[1]+rim,
 			                                    gdata.mx[2]+rim));
 
-			for (int k = -rim; k <= gdata.mx[2]+rim; k++) {
+			/*for (int k = -rim; k <= gdata.mx[2]+rim; k++) {
 				for (int j = -rim; j <= gdata.mx[1]+rim; j++) {
 					for (int i = -rim; i <= gdata.mx[0]+rim; i++) {
 						data(i,j,k) = gdata.om[qout](i,j,k);
 					}
 				}
-			}
+			}*/
+			
+
 			h5out.Write3DMatrix(dsetName, data, xmin, gdata.dx, group, q_index);
 		}
 

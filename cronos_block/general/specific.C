@@ -362,6 +362,7 @@ void HyperbolicSolver::set_TimeIntegrator(const Data &gdata,
 #if (TIME_INTEGRATOR == RUNGEKUTTA)
 	//TimeIntegratorGeneric[iom] = new RKSteps;
 	TimeIntegratorGeneric[iom] = std::make_unique<RKSteps>();
+	TimeIntegratorGeneric[iom]->init_omSYCL_save(gdata.mx);
 #elif (TIME_INTEGRATOR == VANLEER)
 	//TimeIntegratorGeneric[iom] = new VanLeerIntegrator;
 	TimeIntegratorGeneric[iom] = std::make_unique<VanLeerIntegrator>();

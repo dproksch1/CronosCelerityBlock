@@ -101,29 +101,31 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	auto omRange = gdata.omSYCL[0].get_range();
 	size_t nom_max[3] = {omRange.get(0), omRange.get(1), omRange.get(2)};
 
-	for (int q = 0; q < N_OMINT; q++) {
-		double om_temp[206][7][7];
+    if (gdata.tstep == 0) {
+		for (int q = 0/*(gdata.tstep == 0 ? 0 : 4)*/; q < N_OMINT; q++) {
+			double om_temp[206][7][7];
 
-		for (int i = 0; i < nom_max[0]; i++) {
-			for (int j = 0; j < nom_max[1]; j++) {
-				for (int k = 0; k < nom_max[2]; k++) {
-					om_temp[i][j][k] = gdata.om[q](i-3,j-3,k-3);
-				}
-			}
-		}
-
-		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-			celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::write_only_host_task};
-			cgh.host_task(celerity::on_master_node, [=, &gdata]{
-				for (int i = 0; i < nom_max[0]; i++) {
-					for (int j = 0; j < nom_max[1]; j++) {
-						for (int k = 0; k < nom_max[2]; k++) {
-							omSYCL_acc[i][j][k] = om_temp[i][j][k];
-						}
+			for (int i = 0; i < nom_max[0]; i++) {
+				for (int j = 0; j < nom_max[1]; j++) {
+					for (int k = 0; k < nom_max[2]; k++) {
+						om_temp[i][j][k] = gdata.om[q](i-3,j-3,k-3);
 					}
 				}
+			}
+
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+				celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::write_only_host_task};
+				cgh.host_task(celerity::on_master_node, [=, &gdata]{
+					for (int i = 0; i < nom_max[0]; i++) {
+						for (int j = 0; j < nom_max[1]; j++) {
+							for (int k = 0; k < nom_max[2]; k++) {
+								omSYCL_acc[i][j][k] = om_temp[i][j][k];
+							}
+						}
+					}
+				});
 			});
-		});
+		}
 	}
 
 // ---------------------------------------------------------------	      
@@ -240,6 +242,35 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		idx[i] = gdata.idx[i];
 	}
 
+
+	/*for (int q = 0; q < N_OMINT; q++) {
+		double om_temp[206][7][7];
+
+		for (int i = 0; i < nom_max[0]; i++) {
+			for (int j = 0; j < nom_max[1]; j++) {
+				for (int k = 0; k < nom_max[2]; k++) {
+					om_temp[i][j][k] = gdata.om[q](i-3,j-3,k-3);
+				}
+			}
+		}
+
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::write_only_host_task};
+			cgh.host_task(celerity::on_master_node, [=, &gdata]{
+				for (int i = 0; i < nom_max[0]; i++) {
+					for (int j = 0; j < nom_max[1]; j++) {
+						for (int k = 0; k < nom_max[2]; k++) {
+							if(omSYCL_acc[i][j][k] != om_temp[i][j][k]) {
+								printf("%f %f %f\n", omSYCL_acc[i][j][k], om_temp[i][j][k], omSYCL_acc[i][j][k] - om_temp[i][j][k]);
+							}
+						}
+					}
+				}
+			});
+		});
+	}
+	queue.slow_full_sync();*/
+
 // ---------------------------------------------------------------	      
 //      Pointwise Reconstruction
 //----------------------------------------------------------------
@@ -350,6 +381,19 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	
 	queue.slow_full_sync();
 
+	/*cout << "1: " << gdata.om[4](100,0,0) << " ";
+	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+		celerity::accessor omSYCL_Eges_acc{gdata.omSYCL[4], cgh, celerity::access::all{}, celerity::read_write_host_task};
+		celerity::accessor omSYCL_rho_acc{gdata.omSYCL[0], cgh, celerity::access::all{}, celerity::read_only_host_task};
+		celerity::accessor omSYCL_sx_acc{gdata.omSYCL[1], cgh, celerity::access::all{}, celerity::read_only_host_task};
+		celerity::accessor omSYCL_sy_acc{gdata.omSYCL[2], cgh, celerity::access::all{}, celerity::read_only_host_task};
+		celerity::accessor omSYCL_sz_acc{gdata.omSYCL[3], cgh, celerity::access::all{}, celerity::read_only_host_task};
+		celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::all{}, celerity::read_only_host_task};
+		cgh.host_task(celerity::on_master_node, [=, &gdata]{
+			printf("%lf\n",omSYCL_Eges_acc[103][3][3]);
+		});
+	});*/
+
 // ---------------------------------------------------------------	      
 //      Former Kernel for Non-Parallel Execution
 //----------------------------------------------------------------
@@ -444,8 +488,6 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 //   Check for errors:
 // ----------------------------------------------------------------
 
-	
-
 	for(int q = 0; q<n_omInt; ++q) {
 		CheckNan(gdata.nom[q],q, 0, 1,"nom");
 	}
@@ -501,17 +543,33 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 //   Transform to conservative variables:
 // ----------------------------------------------------------------
 
-	Trafo->TransPrim2Cons(gdata, gfunc, Problem);
+	//Trafo->TransPrim2Cons(gdata, gfunc, Problem);
 
-	Problem.TransPrim2Cons(gdata);
+	//Problem.TransPrim2Cons(gdata);
 
 // ----------------------------------------------------------------
 //   Determine domain to be integrated and apply changes:
 // ----------------------------------------------------------------
 
-	for (int q = 0; q < n_omInt; ++q) {
+	for (int q = n_omInt-1; q >= 0; --q) {
+
+		TimeIntegratorGeneric[q]->Substep(queue, gdata, omRange, nomSYCL, gdata.om, n, nom_max[1], nom_max);
 		
+		
+		//TimeIntegratorGeneric[q]->Substep(gdata, Problem, gdata.nom[q], gdata.om, n);
+	}
+
+	TransformOmSycl_Cons2Prim(queue, gdata, omRange, nom_max);
+
+	Trafo->TransPrim2Cons(gdata, gfunc, Problem);
+
+	Problem.TransPrim2Cons(gdata);
+
+	for (int q = n_omInt-1; q >= 0; --q) {
+
 		TimeIntegratorGeneric[q]->Substep(queue, gdata, omRange, nomSYCL, gdata.om, n, nom_max);
+		
+		
 		//TimeIntegratorGeneric[q]->Substep(gdata, Problem, gdata.nom[q], gdata.om, n);
 	}
 
@@ -658,6 +716,75 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	// Transform to inertial frame velocity for phystest
 	Trafo->TransCorotToInert(gdata, gfunc, Problem);
 #endif
+	queue.slow_full_sync();
+	for (int q = 0; q < N_OMINT; q++) {
+		double om_temp[206][7][7];
+
+		for (int i = 0; i < nom_max[0]; i++) {
+			for (int j = 0; j < nom_max[1]; j++) {
+				for (int k = 0; k < nom_max[2]; k++) {
+					om_temp[i][j][k] = gdata.om[q](i-3,j-3,k-3);
+				}
+			}
+		}
+
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::read_write_host_task};
+			celerity::accessor omSYCL_rho_acc{gdata.omSYCL[0], cgh, celerity::access::all{}, celerity::read_only_host_task};
+			celerity::accessor omSYCL_sx_acc{gdata.omSYCL[1], cgh, celerity::access::all{}, celerity::read_only_host_task};
+			celerity::accessor omSYCL_sy_acc{gdata.omSYCL[2], cgh, celerity::access::all{}, celerity::read_only_host_task};
+			celerity::accessor omSYCL_sz_acc{gdata.omSYCL[3], cgh, celerity::access::all{}, celerity::read_only_host_task};
+			celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::all{}, celerity::read_only_host_task};
+			cgh.host_task(celerity::on_master_node, [=, &gdata]{
+				for (int i = 3; i < nom_max[0]-3; i++) {
+					for (int j = 3; j < nom_max[1]-3; j++) {
+						for (int k = 3; k < nom_max[2]-3; k++) {
+							if(omSYCL_acc[i][j][k] != om_temp[i][j][k]) {
+								double Ekin = 0.5*(sqr(omSYCL_sx_acc[i][j][k]) + 
+														sqr(omSYCL_sy_acc[i][j][k]) +
+														sqr(omSYCL_sz_acc[i][j][k])) * omSYCL_rho_acc[i][j][k];
+								printf("%d_%d_%d_%d %lf %lf %lf ekin%f rho%f nom%f\n", q,i,j,k, omSYCL_acc[i][j][k], om_temp[i][j][k], (omSYCL_acc[i][j][k] - om_temp[i][j][k]), Ekin, omSYCL_rho_acc[i][j][k], nomSYCL_acc[i][j*nom_max[1] + k][q]);
+								//omSYCL_acc[i][j][k] = om_temp[i][j][k];
+							}
+						}
+					}
+				}
+			});
+		});
+		queue.slow_full_sync();
+	}
+
+	for (int q = 0; q < N_OMINT; q++) {
+		double om_temp[206][7][7];
+
+		queue.submit(celerity::allow_by_ref, [=, &gdata, &om_temp](celerity::handler& cgh) {
+			celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::read_only_host_task};
+			cgh.host_task(celerity::on_master_node, [=, &gdata, &om_temp]{
+				for (int i = 0; i < nom_max[0]; i++) {
+					for (int j = 0; j < nom_max[1]; j++) {
+						for (int k = 0; k < nom_max[2]; k++) {
+							om_temp[i][j][k] = omSYCL_acc[i][j][k];
+						}
+					}
+				}
+			});
+		});
+
+		queue.slow_full_sync();
+
+		for (int i = 0; i < nom_max[0]; i++) {
+			for (int j = 0; j < nom_max[1]; j++) {
+				for (int k = 0; k < nom_max[2]; k++) {
+					if(std::isnan(om_temp[i][j][k])) {
+						gdata.om[q](i-3,j-3,k-3) = 1.0;
+					} else {
+						gdata.om[q](i-3,j-3,k-3) = om_temp[i][j][k];
+					}
+				}
+			}
+		}
+		
+	}
 
 	phystest(gdata, gfunc, Problem, n);
 
@@ -672,7 +799,6 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	}
 
 //	cout << " my cfl: " << cfl << endl;
-
 	return cfl;
 
 }
