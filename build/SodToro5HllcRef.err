@@ -1,9 +1,0 @@
-phystest called with the following parameters:
- rhomin = 1e-06
- Ethmin = 1e-06
- vmax   = 300
- time   = 2e-06
-err: NaN @(ijk) = (108   0   0) # q= 4
- -> (x,y,z) = ( 0.54, 0.50, 0.50)
-err: NaN @(ijk) = (112   0   0) # q= 4
- -> (x,y,z) = ( 0.56, 0.50, 0.50)
