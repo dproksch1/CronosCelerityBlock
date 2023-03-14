@@ -9,3 +9,5 @@ tiny_run
 tiny_compare
 small_run
 small_compare
+medium_run
+medium_compare

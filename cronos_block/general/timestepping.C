@@ -242,6 +242,7 @@ void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
 				for (int j = -B; j < nom_max[1]+B; j++) {
 					for (int k = -B; k < nom_max[2]+B; k++) {
 						nom_temp[i][j][k] = nomSYCL_acc[i][j*nom_max[2] + k][qch];
+						//nom_temp[i][j][k] = nomSYCL_acc[i][j][k];
 					}
 				}
 			}

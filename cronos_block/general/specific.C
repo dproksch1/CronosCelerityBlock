@@ -1062,6 +1062,7 @@ void HyperbolicSolver::phystest(Data &gdata, gridFunc &gfunc,
 
 				for (int q = 0; q < N_OMEGA; q++) {
 					if (std::isnan(gdata.om[q](i,j,k))) {
+						cout << "NaN: " << i << "," << j <<"," << k << endl;
 						e_nan[q] += 1;	    
 					}
 				}

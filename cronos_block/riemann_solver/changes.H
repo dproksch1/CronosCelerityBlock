@@ -92,6 +92,18 @@ namespace gpu {
 
 		}
 	}
+
+	template<typename NumAccessorType, typename NumFluxAccessorType, typename IdxConstType>
+	void get_Changes_Local(NumAccessorType& nomAcc, int q, int ix, int iy, int iz, int dir,
+							const NumFluxAccessorType& numfM, const NumFluxAccessorType &numfP, IdxConstType idx) {
+		
+
+#if (GEOM == CARTESIAN)
+		// Cartesian case
+		nomAcc[ix][iy][iz] += get_Changes1DCart(numfM, numfP, dir, idx, q);
+#endif // IF GEOM
+
+	}
 }
 
 void get_Changes(const Data &, const num_fields_0D &, const num_fields_0D &,
