@@ -1,0 +1,7 @@
+tiny_run 110 0.00592303
+tiny_compare 60 5.35524e-05
+small_run 13 0.0510453
+small_compare 13 0.000215662
+medium_run 11 0.801742
+medium_compare 11 0.000261653
+---

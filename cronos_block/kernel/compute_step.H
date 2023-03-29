@@ -28,9 +28,6 @@ namespace gpu {
         }
         
         for (int dir = 0; dir < DirMax; ++dir) {
-            int ixOff = (dir == DirX) ? ix : ix - 1;
-            int iyOff = (dir == DirY) ? iy : iy - 1;
-            int izOff = (dir == DirZ) ? iz : iz - 1;
 
             int face = dir * 2;
 
@@ -59,8 +56,8 @@ namespace gpu {
         }
     }
 
-    template<typename uPriAccessorType, typename NumFluxAccessorType, typename NumPtotalAccessorType, typename IdxConstType, typename FluidConstType>
-    void computeStep2(uPriAccessorType& uPri, size_t ix, size_t iy, size_t iz, size_t ixyz, double* cfl_lin, NumFluxAccessorType& numFlux,
+    template<typename uPriConstType, typename NumFluxAccessorType, typename NumPtotalAccessorType, typename IdxConstType, typename FluidConstType>
+    void computeStep2(uPriConstType uPri, size_t ix, size_t iy, size_t iz, Direction global_dir, double* cfl_lin, NumFluxAccessorType& numFlux,
                     NumPtotalAccessorType& num_ptotal, const bool thermal, const double gamma, const double problem_cs2, const double denominator,
                     const double half_beta, const int fluidType, IdxConstType idx, FluidConstType fluidConst) {
 
@@ -90,14 +87,14 @@ namespace gpu {
 
         double numVals_Ch[DirMax][gpu::NumV_Max] = {};
 
-        if (ix >= 2 && iy >= 2 && iz >= 2) {
+        if (ix >= 2 - (global_dir == 0 ? 1 : 0) && iy >= 2 - (global_dir == 1 ? 1 : 0)&& iz >= 2 - (global_dir == 2 ? 1 : 0)) {
             for (int dir = 0; dir < DirMax; ++dir) {
                 int face = dir * 2;
                 *cfl_lin = cl::sycl::fmax(gpu::get_vChar(uPri[face], uCon[face], physValPtherm[face], uPri[face+1], uCon[face+1],
                                 physValPtherm[face+1], numVals_Ch[dir], dir, gamma, idx, fluidConst), *cfl_lin);
                 num_ptotal[dir] = gpu::get_NumFlux(uPri[face+1], uCon[face+1], physFlux[face+1], physValPtherm[face+1],
                                         physValPtotal[face+1], uPri[face], uCon[face], physFlux[face], physValPtherm[face], 
-                                        physValPtotal[face], numFlux[dir], numVals_Ch[dir], dir, gamma, fluidConst);
+                                        physValPtotal[face], numFlux[dir], numVals_Ch[dir], dir, gamma, fluidConst);                     
             }
         }
     }

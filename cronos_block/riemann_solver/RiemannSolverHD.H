@@ -109,8 +109,13 @@ namespace gpu {
 			for(int q=0; q<N_OMINT; ++q) {
 				numFlux[q] = pfM_flux[q];
 			}
-
-			num_ptotal = pfM_ptotal;
+			
+			//num_ptotal = pfM_ptotal;
+			if (dir == 0) {
+				num_ptotal = 70.0;
+			} else {
+				num_ptotal = pfM_ptotal;
+			}
 
 		} else if (numVals[NumV_ch_p] <= 0.) { // Riemann fan going left
 
@@ -118,7 +123,12 @@ namespace gpu {
 				numFlux[q] = pfP_flux[q];
 			}
 
-			num_ptotal = pfP_ptotal;
+			//num_ptotal = pfP_ptotal;
+			if (dir == 0) {
+				num_ptotal = pfP_flux[4];
+			} else {
+				num_ptotal = pfP_ptotal;
+			}
 
 		} else {
 
@@ -267,6 +277,7 @@ namespace gpu {
 				}
 
 				// fl.ptotal(i) = ptotalL(i);
+				
 				num_ptotal = pfM_ptherm;
 
 			} else {
@@ -276,6 +287,7 @@ namespace gpu {
 							uConR[q]);
 				}
 				// fl.ptotal(i) = ptotalR(i);
+				
 				num_ptotal = pfP_ptherm;
 			}
 		}

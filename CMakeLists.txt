@@ -210,7 +210,7 @@ add_test(NAME small_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/So
 add_test(NAME small_compare COMMAND ${HDF5_DIFF_EXECUTABLE} -v -d 1.5e-11 --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_small/SodToro5HllcRef_float/SodToro5HllcRef_flt_step16.h5 ${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_small/SodToro5HllcRef_float/SodToro5HllcRef_flt_step16.h5)
 
 add_test(NAME medium_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_medium SodToro5HllcRef)
-add_test(NAME medium_compare COMMAND ${HDF5_DIFF_EXECUTABLE} -v -d 1.5e-11 --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef_float/SodToro5HllcRef_flt_step990.h5 ${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef_float/SodToro5HllcRef_flt_step990.h5)
+add_test(NAME medium_compare COMMAND ${HDF5_DIFF_EXECUTABLE} -v -d 1.5e-11 --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef_float/SodToro5HllcRef_flt_step262.h5 ${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef_float/SodToro5HllcRef_flt_step262.h5)
 
 set_tests_properties(tiny_run PROPERTIES DEPENDS proj)
 set_tests_properties(tiny_run PROPERTIES FIXTURES_SETUP EXEC_TINY)

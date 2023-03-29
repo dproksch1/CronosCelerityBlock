@@ -1,0 +1,438 @@
+Start testing: Mar 22 17:35 CET
+----------------------------------------------------------
+1/2 Testing: tiny_run
+1/2 Test: tiny_run
+Command: "/home/dproksch/master_thesis/CronosCelerityBlock/build/proj" "/home/dproksch/master_thesis/CronosCelerityBlock/build/tests/SodToro5HllcRef_tiny" "SodToro5HllcRef"
+Directory: /home/dproksch/master_thesis/CronosCelerityBlock/build
+"tiny_run" start time: Mar 22 17:35 CET
+Output:
+----------------------------------------------------------
+[2023-03-22 17:35:49.848] [0] [info] Celerity runtime version 0.3.2 59e7d61 running on hipSYCL 0.9.3. PID = 4624, build type = release
+[2023-03-22 17:35:50.165] [0] [info] Using platform 'CUDA', device 'NVIDIA GeForce RTX 3060' (automatically selected platform 0, device 0)
+ Writing Lines: /Lx
+ Writing Nodes: /Xn
+ Writing Cells: /Xc
+ Writing Multi /Tx
+ Done 
+ Writing Lines: /Ly
+ Writing Nodes: /Yn
+ Writing Cells: /Yc
+ Writing Multi /Ty
+ Done 
+ Writing Lines: /Lz
+ Writing Nodes: /Zn
+ Writing Cells: /Zc
+ Writing Multi /Tz
+ Done 
+creating omSYCL buffer size 206, 7, 7
+creating omSYCL buffer size 206, 7, 7
+creating omSYCL buffer size 206, 7, 7
+creating omSYCL buffer size 206, 7, 7
+creating omSYCL buffer size 206, 7, 7
+creating omSYCL buffer size 206, 7, 7
+creating omSYCL buffer size 206, 7, 7
+creating omSYCL buffer size 206, 7, 7
+creating omSYCL buffer size 206, 7, 7
+creating omSYCL buffer size 206, 7, 7
+creating omSYCL buffer size 206, 7, 7
+creating omSYCL buffer size 206, 7, 7
+ My upper type: 0 2 2
+======================================================
+ Writing info on... 
+  ... Runge Kutta Stepping 
+  ... value of cfl number 
+  ... I/O of data 
+  ... Energetics 
+  ... divergence of B 
+  ... Timing 
+======================================================
+ Using the HLLC solver 
+calling init (type=99)...
+ Shock Tube problem (HD) 1D 
+199 0 0
+all ICs set.
+ Storing values for fixed boundaries 
+------- Field ids-------------------------------------
+Add0      ->  5
+Add1      ->  6
+Etherm    ->  4
+rho       ->  0
+v_x       ->  1
+v_y       ->  2
+v_z       ->  3
+dV: 0.005
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+
+
+
+
+-------Fluctuations-----------------------------------
+ E_kin:  0.000e+00 E_dyn:  0.000e+00
+-------Energertics:-----------------------------------
+ E_ges:  1.442e+03 E_th:   0.000e+00
+-------Dynamics:--------------------------------------
+ Vorti.: 0.000e+00 Enstr.: 0.000e+00 M_rms:       -nan
+-------Conserved quantities:--------------------------
+ Mass: 1.000e+00 err: 0.000e+00
+ p_x:  -1.960e+01 err: 0.000e+00
+ p_y:  0.000e+00 err: 0.000e+00
+ p_z:  0.000e+00 err: 0.000e+00
+ Eges: 1.442e+03 err: 0.000e+00
+......................................................
+    Movie Output triggered 
+......................................................
+......................................................
+   Output (flt)  triggered at time: 0
+......................................................
+======================================================
+Integrating: time = 0 with dt = 2e-06 at step 0
+  RKSTEP = 1
+  Using Reconst:  - rho - dir 0 - substep -1
+  Using Reconst:  - v_x - dir 0 - substep -1
+  Using Reconst:  - v_y - dir 0 - substep -1
+  Using Reconst:  - v_z - dir 0 - substep -1
+  Using Reconst:  - Etherm - dir 0 - substep -1
+rangeEnd[0]: 203
+cfl: 11402.8
+qch: 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1979.87 -1979.87 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+qch: 1
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -164718 -35279.6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+qch: 2
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+qch: 3
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+qch: 4
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.36365e+07 81589.4 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+dV: 0.005
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0.99604 1.00396 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+
+
+
+
+  RKSTEP = 2
+  Using Reconst:  - rho - dir 0 - substep -1
+  Using Reconst:  - v_x - dir 0 - substep -1
+  Using Reconst:  - v_y - dir 0 - substep -1
+  Using Reconst:  - v_z - dir 0 - substep -1
+  Using Reconst:  - Etherm - dir 0 - substep -1
+rangeEnd[0]: 203
+cfl: 11402.8
+qch: 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 59.2803 1946.01 -2005.29 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+qch: 1
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -3249.28 -162318 -34430.5 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+qch: 2
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+qch: 3
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+qch: 4
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 247578 1.34011e+07 69351.4 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+------------------------------------------------------
+ Time needed for substeps:  0.00373387 8.51154e-05
+             for full step: 0.0214679
+dV: 0.005
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0.999941 0.996074 1.00399 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+
+
+
+
+-------Fluctuations-----------------------------------
+ E_kin:  0.000e+00 E_dyn:  0.000e+00
+-------Energertics:-----------------------------------
+ E_ges:  1.442e+03 E_th:   0.000e+00
+-------Dynamics:--------------------------------------
+ Vorti.: 0.000e+00 Enstr.: 0.000e+00 M_rms:       -nan
+-------Conserved quantities:--------------------------
+ Mass: 1.000e+00 err: 0.000e+00
+ p_x:  -1.960e+01 err: 1.021e-04
+ p_y:  0.000e+00 err: 0.000e+00
+ p_z:  0.000e+00 err: 0.000e+00
+ Eges: 1.442e+03 err: -1.372e-01
+......................................................
+   Output (dbl)  triggered at time: 2e-06
+......................................................
+======================================================
+Integrating: time = 2e-06 with dt = 3.50791e-05 at step 1
+  RKSTEP = 1
+  Using Reconst:  - rho - dir 0 - substep -1
+  Using Reconst:  - v_x - dir 0 - substep -1
+  Using Reconst:  - v_y - dir 0 - substep -1
+  Using Reconst:  - v_z - dir 0 - substep -1
+  Using Reconst:  - Etherm - dir 0 - substep -1
+rangeEnd[0]: 203
+cfl: 11402.8
+qch: 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.324935 58.561 1946.22 -2005.11 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+qch: 1
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -18.2703 -3213.41 -162322 -34444.2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+qch: 2
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+qch: 3
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+qch: 4
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1409.02 244982 1.34022e+07 69505.9 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+dV: 0.005
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0.999989 0.997886 0.927802 1.07432 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+
+
+
+
+  RKSTEP = 2
+  Using Reconst:  - rho - dir 0 - substep -1
+  Using Reconst:  - v_x - dir 0 - substep -1
+  Using Reconst:  - v_y - dir 0 - substep -1
+  Using Reconst:  - v_z - dir 0 - substep -1
+  Using Reconst:  - Etherm - dir 0 - substep -1
+rangeEnd[0]: 203
+cfl: 11402.8
+qch: 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.0640906 11.6022 1037.34 1417.2 -2466.21 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+qch: 1
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -3.63649 -652.544 -56387 -124391 -18564 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+qch: 2
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+qch: 3
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+qch: 4
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 281.632 50332.8 4.26834e+06 9.56109e+06 -161971 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+------------------------------------------------------
+ Time needed for substeps:  0.00363898 8.4877e-05
+             for full step: 0.00957489
+dV: 0.005
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0.999999 0.999791 0.980719 0.937081 1.08241 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+
+
+
+
+-------Fluctuations-----------------------------------
+ E_kin:  0.000e+00 E_dyn:  0.000e+00
+-------Energertics:-----------------------------------
+ E_ges:  1.439e+03 E_th:   0.000e+00
+-------Dynamics:--------------------------------------
+ Vorti.: 0.000e+00 Enstr.: 0.000e+00 M_rms:       -nan
+-------Conserved quantities:--------------------------
+ Mass: 1.000e+00 err: 0.000e+00
+ p_x:  -1.956e+01 err: 1.895e-03
+ p_y:  0.000e+00 err: 0.000e+00
+ p_z:  0.000e+00 err: 0.000e+00
+ Eges: 1.439e+03 err: -2.543e+00
+======================================================
+Integrating: time = 3.70791e-05 with dt = 3.50791e-05 at step 2
+  RKSTEP = 1
+  Using Reconst:  - rho - dir 0 - substep -1
+  Using Reconst:  - v_x - dir 0 - substep -1
+  Using Reconst:  - v_y - dir 0 - substep -1
+  Using Reconst:  - v_z - dir 0 - substep -1
+  Using Reconst:  - Etherm - dir 0 - substep -1
+rangeEnd[0]: 203
+cfl: 11402.8
+qch: 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00637824 1.17663 105.2 846.749 1465.21 -2418.34 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+qch: 1
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -0.363045 -66.768 -5887.83 -46498.2 -124533 -23011.4 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+qch: 2
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+qch: 3
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+qch: 4
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 28.1573 5171.14 453244 3.56757e+06 9.81387e+06 -121808 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+dV: 0.005
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0.999958 0.9961 0.951016 0.885683 1.16724 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+
+
+
+
+  RKSTEP = 2
+  Using Reconst:  - rho - dir 0 - substep -1
+  Using Reconst:  - v_x - dir 0 - substep -1
+  Using Reconst:  - v_y - dir 0 - substep -1
+  Using Reconst:  - v_z - dir 0 - substep -1
+  Using Reconst:  - Etherm - dir 0 - substep -1
+rangeEnd[0]: 203
+cfl: 11402.8
+qch: 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00127353 0.240596 21.8474 270.118 1417.57 1108.93 -2818.71 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+qch: 1
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -0.0725674 -13.695 -1237.51 -15115.2 -76382.3 -94554 -12695.2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+qch: 2
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+qch: 3
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+qch: 4
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 5.63105 1062.18 95769.4 1.16551e+06 5.84904e+06 6.91393e+06 -307237 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+dV: 0.005
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0.999996 0.999595 0.993208 0.941004 0.891932 1.17427 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+
+
+
+
+Hit Completed
+ Program exiting normally: 
+ ------ Time integration completed ------ 
+......................................................
+   Output (flt)  triggered at time: 7.21582e-05
+......................................................
+======================================================
+ Total run time               0.0408089s
+ Average time step duration   0.013603s
+======================================================
+<end of output>
+Test time =   0.67 sec
+----------------------------------------------------------
+Test Passed.
+"tiny_run" end time: Mar 22 17:35 CET
+"tiny_run" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/2 Testing: tiny_compare
+2/2 Test: tiny_compare
+Command: "/usr/bin/h5diff" "-v" "-d" "1.5e-11" "--exclude-path" "/Data/version" "/home/dproksch/master_thesis/CronosCelerityBlock/build/tests/SodToro5HllcRef_tiny/SodToro5HllcRef_float/SodToro5HllcRef_flt_step3.h5" "/home/dproksch/master_thesis/CronosCelerityBlock/tests/SodToro5HllcRef_tiny/SodToro5HllcRef_float/SodToro5HllcRef_flt_step3.h5"
+Directory: /home/dproksch/master_thesis/CronosCelerityBlock/build
+"tiny_compare" start time: Mar 22 17:35 CET
+Output:
+----------------------------------------------------------
+
+file1     file2
+---------------------------------------
+    x      x    /              
+    x      x    /Data          
+    x      x    /Data/SodPars  
+    x      x    /fluid00       
+    x      x    /fluid00/Etherm
+    x      x    /fluid00/rho   
+    x      x    /fluid00/v_x   
+    x      x    /fluid00/v_y   
+    x      x    /fluid00/v_z   
+
+group  : </> and </>
+0 differences found
+group  : </Data> and </Data>
+0 differences found
+attribute: <CflNumber of </Data>> and <CflNumber of </Data>>
+0 differences found
+attribute: <Entries of </Data>> and <Entries of </Data>>
+0 differences found
+attribute: <HyperbolicSolver_Gamma of </Data>> and <HyperbolicSolver_Gamma of </Data>>
+0 differences found
+attribute: <HyperbolicSolver_Initial_density of </Data>> and <HyperbolicSolver_Initial_density of </Data>>
+0 differences found
+attribute: <HyperbolicSolver_IntegrateA of </Data>> and <HyperbolicSolver_IntegrateA of </Data>>
+0 differences found
+attribute: <HyperbolicSolver_Isothermal_Soundspeed of </Data>> and <HyperbolicSolver_Isothermal_Soundspeed of </Data>>
+0 differences found
+attribute: <HyperbolicSolver_SQR_Soundspeed of </Data>> and <HyperbolicSolver_SQR_Soundspeed of </Data>>
+0 differences found
+attribute: <HyperbolicSolver_pmin of </Data>> and <HyperbolicSolver_pmin of </Data>>
+0 differences found
+attribute: <HyperbolicSolver_rhomin of </Data>> and <HyperbolicSolver_rhomin of </Data>>
+0 differences found
+attribute: <HyperbolicSolver_vmax of </Data>> and <HyperbolicSolver_vmax of </Data>>
+0 differences found
+attribute: <Name_om00 of </Data>> and <Name_om00 of </Data>>
+0 differences found
+attribute: <Name_om01 of </Data>> and <Name_om01 of </Data>>
+0 differences found
+attribute: <Name_om02 of </Data>> and <Name_om02 of </Data>>
+0 differences found
+attribute: <Name_om03 of </Data>> and <Name_om03 of </Data>>
+0 differences found
+attribute: <Name_om04 of </Data>> and <Name_om04 of </Data>>
+0 differences found
+attribute: <TestCase of </Data>> and <TestCase of </Data>>
+0 differences found
+attribute: <coords of </Data>> and <coords of </Data>>
+0 differences found
+attribute: <dt of </Data>> and <dt of </Data>>
+0 differences found
+attribute: <dx of </Data>> and <dx of </Data>>
+0 differences found
+attribute: <fluid_type of </Data>> and <fluid_type of </Data>>
+0 differences found
+attribute: <geometry of </Data>> and <geometry of </Data>>
+0 differences found
+attribute: <itime of </Data>> and <itime of </Data>>
+0 differences found
+attribute: <procs of </Data>> and <procs of </Data>>
+0 differences found
+attribute: <rank of </Data>> and <rank of </Data>>
+0 differences found
+attribute: <rim of </Data>> and <rim of </Data>>
+0 differences found
+attribute: <time of </Data>> and <time of </Data>>
+0 differences found
+attribute: <timestep of </Data>> and <timestep of </Data>>
+0 differences found
+attribute: <using_cbase of </Data>> and <using_cbase of </Data>>
+0 differences found
+attribute: <xmin of </Data>> and <xmin of </Data>>
+0 differences found
+group  : </Data/SodPars> and </Data/SodPars>
+0 differences found
+attribute: <gamma of </Data/SodPars>> and <gamma of </Data/SodPars>>
+0 differences found
+attribute: <pL of </Data/SodPars>> and <pL of </Data/SodPars>>
+0 differences found
+attribute: <pR of </Data/SodPars>> and <pR of </Data/SodPars>>
+0 differences found
+attribute: <rhoL of </Data/SodPars>> and <rhoL of </Data/SodPars>>
+0 differences found
+attribute: <rhoR of </Data/SodPars>> and <rhoR of </Data/SodPars>>
+0 differences found
+attribute: <uL of </Data/SodPars>> and <uL of </Data/SodPars>>
+0 differences found
+attribute: <uR of </Data/SodPars>> and <uR of </Data/SodPars>>
+0 differences found
+group  : </fluid00> and </fluid00>
+0 differences found
+attribute: <Entries of </fluid00>> and <Entries of </fluid00>>
+0 differences found
+attribute: <Name_om00 of </fluid00>> and <Name_om00 of </fluid00>>
+0 differences found
+attribute: <Name_om01 of </fluid00>> and <Name_om01 of </fluid00>>
+0 differences found
+attribute: <Name_om02 of </fluid00>> and <Name_om02 of </fluid00>>
+0 differences found
+attribute: <Name_om03 of </fluid00>> and <Name_om03 of </fluid00>>
+0 differences found
+attribute: <Name_om04 of </fluid00>> and <Name_om04 of </fluid00>>
+0 differences found
+dataset: </fluid00/Etherm> and </fluid00/Etherm>
+0 differences found
+attribute: <delta of </fluid00/Etherm>> and <delta of </fluid00/Etherm>>
+0 differences found
+attribute: <origin of </fluid00/Etherm>> and <origin of </fluid00/Etherm>>
+0 differences found
+dataset: </fluid00/rho> and </fluid00/rho>
+0 differences found
+attribute: <delta of </fluid00/rho>> and <delta of </fluid00/rho>>
+0 differences found
+attribute: <origin of </fluid00/rho>> and <origin of </fluid00/rho>>
+0 differences found
+dataset: </fluid00/v_x> and </fluid00/v_x>
+0 differences found
+attribute: <delta of </fluid00/v_x>> and <delta of </fluid00/v_x>>
+0 differences found
+attribute: <origin of </fluid00/v_x>> and <origin of </fluid00/v_x>>
+0 differences found
+dataset: </fluid00/v_y> and </fluid00/v_y>
+0 differences found
+attribute: <delta of </fluid00/v_y>> and <delta of </fluid00/v_y>>
+0 differences found
+attribute: <origin of </fluid00/v_y>> and <origin of </fluid00/v_y>>
+0 differences found
+dataset: </fluid00/v_z> and </fluid00/v_z>
+0 differences found
+attribute: <delta of </fluid00/v_z>> and <delta of </fluid00/v_z>>
+0 differences found
+attribute: <origin of </fluid00/v_z>> and <origin of </fluid00/v_z>>
+0 differences found
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"tiny_compare" end time: Mar 22 17:35 CET
+"tiny_compare" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Mar 22 17:35 CET

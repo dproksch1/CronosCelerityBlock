@@ -251,6 +251,19 @@ void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
 
 	queue.slow_full_sync();
 
+	// cout << "qch: " << qch <<"\n";
+	// for (int i = -B; i < nom_max[0]+B; i++) {
+	// 	for (int j = -B; j < nom_max[1]+B; j++) {
+	// 		for (int k = -B; k < nom_max[2]+B; k++) {
+	// 			cout << nom_temp[i][j][k] << " ";
+	// 			// if(std::isnan(nom_temp[i][j][k])) {
+	// 				// cout << i << "," << j << "," << k << " ";
+	// 			// }
+	// 		}
+	// 	}
+	// }
+	// cout << "\n";
+
 	if (substep == 0) { // First Runge Kutta step
 
 		save_data(om, 0);
