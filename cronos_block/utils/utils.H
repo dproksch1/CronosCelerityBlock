@@ -86,5 +86,9 @@ namespace gpu {
 
 }
 
+struct nom_t {
+	double rho, sx, sy, sz, Eges;
+};
+
 
 #endif

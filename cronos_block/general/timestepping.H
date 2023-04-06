@@ -6,7 +6,25 @@
 #include "problem.H"
 #include "data.H"
 #include "constants.H"
+#include "utils.H"
 #include <vector>
+
+
+namespace gpu {
+
+	template<typename NumAccessorType>
+	double get_nomSYCL_at_q(NumAccessorType nomAcc, int ix, int iy, int iz, short q) {
+		switch(q) {
+			case 0: return nomAcc[ix][iy][iz].rho;
+			case 1: return nomAcc[ix][iy][iz].sx;
+			case 2: return nomAcc[ix][iy][iz].sy;
+			case 3: return nomAcc[ix][iy][iz].sz;
+			case 4: return nomAcc[ix][iy][iz].Eges;
+			default: return 0.;
+		}
+	}
+
+}
 
 
 class TimeIntegrator {
@@ -20,7 +38,7 @@ public:
 	virtual void Substep(const Data &gdata, ProblemType &, NumMatrix<double, 3> &nom,
 	             Pot om[], const int substep) = 0;
 	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
-                      CelerityBuffer<double, 3> nomSYCL,
+                      CelerityBuffer<nom_t, 3> nomSYCL,
                       Pot om[], const int substep, size_t nom_max[]) = 0;
 
 protected:
@@ -38,7 +56,7 @@ public:
 	virtual void Substep(const Data &gdata, ProblemType &, NumMatrix<double, 3> &nom,
 	             Pot om[], const int substep);
 	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
-                      CelerityBuffer<double, 3> nomSYCL,
+                      CelerityBuffer<nom_t, 3> nomSYCL,
                       Pot om[], const int substep, size_t nom_max[]);
 
 private:
@@ -53,7 +71,7 @@ public:
 	virtual void Substep(const Data &gdata, ProblemType &, NumMatrix<double, 3> &nom,
 	             Pot om[], const int substep);
 	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
-                      CelerityBuffer<double, 3> nomSYCL,
+                      CelerityBuffer<nom_t, 3> nomSYCL,
                       Pot om[], const int substep, size_t nom_max[]);
 
 };

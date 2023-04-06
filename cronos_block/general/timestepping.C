@@ -165,7 +165,7 @@ void RKSteps::Substep(const Data &gdata, ProblemType &Problem,
 }
 
 void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
-		CelerityBuffer<double, 3> nomSYCL, 
+		CelerityBuffer<nom_t, 3> nomSYCL, 
 		Pot om[], const int substep, size_t nom_max[3]) {
 
 	double dt = gdata.dt;
@@ -241,8 +241,9 @@ void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
 			for (int i = -B; i < nom_max[0]+B; i++) {
 				for (int j = -B; j < nom_max[1]+B; j++) {
 					for (int k = -B; k < nom_max[2]+B; k++) {
-						nom_temp[i][j][k] = nomSYCL_acc[i][j*nom_max[2] + k][qch];
+						//nom_temp[i][j][k] = nomSYCL_acc[i][j*nom_max[2] + k][qch];
 						//nom_temp[i][j][k] = nomSYCL_acc[i][j][k];
+						nom_temp[i][j][k] = gpu::get_nomSYCL_at_q(nomSYCL_acc, i, j, k, qch);
 					}
 				}
 			}
@@ -333,5 +334,5 @@ void VanLeerIntegrator::Substep(const Data &gdata, ProblemType &Problem,
 }
 
 void VanLeerIntegrator::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
-                      CelerityBuffer<double, 3> nomSYCL,
+                      CelerityBuffer<nom_t, 3> nomSYCL,
                       Pot om[], const int substep, size_t nom_max[3]) {}

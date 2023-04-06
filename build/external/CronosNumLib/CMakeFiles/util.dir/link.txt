@@ -1,0 +1,2 @@
+/usr/bin/ar qc libutil.a  CMakeFiles/util.dir/util/CronosOstream.C.o CMakeFiles/util.dir/util/ParameterFileReader.C.o CMakeFiles/util.dir/util/util.C.o
+/usr/bin/ranlib libutil.a

@@ -25,7 +25,6 @@
 
 using namespace std;
 
-
 double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
                                   ProblemType &Problem, int n, Queue& queue)
 {
@@ -220,38 +219,41 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	
 	//buffers	
 	celerity::buffer<double, 1> max_buf{celerity::range{1}};
-	CelerityBuffer<double, 3> nomSYCL {celerity::range<3>(omRange.get(0), omRange.get(1) * omRange.get(2), N_OMINT)};
+	//CelerityBuffer<double, 3> nomSYCL {celerity::range<3>(omRange.get(0), omRange.get(1) * omRange.get(2), N_OMINT)};
+	CelerityBuffer<nom_t, 3> nomSYCL {celerity::range<3>(omRange.get(0), omRange.get(1), omRange.get(2))};
 	CelerityBuffer<double, 3> uPriSYCL{celerity::range<3>(omRange.get(0) * omRange.get(1) * omRange.get(2), gpu::FaceMax, N_OMINT)};
-	CelerityBuffer<double, 3> uPriSYCL2{celerity::range<3>(omRange.get(0) * omRange.get(1) * omRange.get(2), gpu::FaceMax, N_OMINT)};
 
-	/*std::vector<CelerityBuffer<double, 3>> nomSYCL;
-	for (int i = 0; i < 5; i++) {
-		nomSYCL.push_back(CelerityBuffer<double, 3>(Range<3>(gdata.mx[0]+6 +1, gdata.mx[1]+6+1, gdata.mx[2]+6+1)));
-	}*/
+	// std::vector<CelerityBuffer<double, 3>> nomSYCL;
+	// for (int i = 0; i < gpu::FaceMax; i++) {
+	// 	nomSYCL.push_back(CelerityBuffer<double, 3>(Range<3>(gdata.mx[0]+6 +1, gdata.mx[1]+6+1, gdata.mx[2]+6+1)));
+	// }
 
 	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 		celerity::accessor uPri_acc{uPriSYCL, cgh, celerity::access::all{}, celerity::write_only, celerity::no_init};
-		celerity::accessor uPri_acc2{uPriSYCL2, cgh, celerity::access::all{}, celerity::write_only, celerity::no_init};
 		cgh.parallel_for<class PointwiseReconstructionKernel>(uPriSYCL.get_range(), [=](celerity::item<3> item) {
 			uPri_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
-			uPri_acc2[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
 		});
 	});
 
 	queue.submit([=](celerity::handler& cgh) {
 		celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
-		/*celerity::accessor nom_rho_acc{nomSYCL[0], cgh, celerity::access::one_to_one{}, celerity::read_write};
-		celerity::accessor nom_sx_acc{nomSYCL[1], cgh, celerity::access::one_to_one{}, celerity::read_write};
-		celerity::accessor nom_sy_acc{nomSYCL[2], cgh, celerity::access::one_to_one{}, celerity::read_write};
-		celerity::accessor nom_sz_acc{nomSYCL[3], cgh, celerity::access::one_to_one{}, celerity::read_write};
-		celerity::accessor nom_Eges_acc{nomSYCL[4], cgh, celerity::access::one_to_one{}, celerity::read_write};*/
-		cgh.parallel_for<class BufferInitializationKernel>(nomSYCL.get_range(), [=](celerity::item<3> item) {
-			nomSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
-			/*nom_rho_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
-			nom_sx_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
-			nom_sy_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
-			nom_sz_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
-			nom_Eges_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;*/
+		// celerity::accessor nom_rho_acc{nomSYCL[0], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+		// celerity::accessor nom_sx_acc{nomSYCL[1], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+		// celerity::accessor nom_sy_acc{nomSYCL[2], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+		// celerity::accessor nom_sz_acc{nomSYCL[3], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+		// celerity::accessor nom_Eges_acc{nomSYCL[4], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+		cgh.parallel_for<class BufferInitializationKernel>(nomSYCL/*[0]*/.get_range(), [=](celerity::item<3> item) {
+			//nomSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
+			// nom_rho_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
+			// nom_sx_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
+			// nom_sy_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
+			// nom_sz_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
+			// nom_Eges_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
+			nomSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)].rho = 0;
+			nomSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)].sx = 0;
+			nomSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)].sy = 0;
+			nomSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)].sz = 0;
+			nomSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)].Eges = 0;
 		});
 	});
 
@@ -336,8 +338,8 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 				auto [uPriEast0, uPriNorth0, uPriTop0] = gpu::computeENT(om_rho_acc, ix, iy, iz);
 				uPri_acc[ixyz][gpu::FaceWest][0] = uPriWest0;
 				uPri_acc[ixyz][gpu::FaceEast][0] = uPriEast0;
-				uPri_acc[ixyz][gpu::FaceNorth][0] = uPriNorth0;
 				uPri_acc[ixyz][gpu::FaceSouth][0] = uPriSouth0;
+				uPri_acc[ixyz][gpu::FaceNorth][0] = uPriNorth0;
 				uPri_acc[ixyz][gpu::FaceBottom][0] = uPriBottom0;
 				uPri_acc[ixyz][gpu::FaceTop][0] = uPriTop0;
 
@@ -393,6 +395,11 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		auto rd = celerity::reduction(max_buf, cgh, cl::sycl::maximum<double>{},
 								cl::sycl::property::reduction::initialize_to_identity{});
 		celerity::accessor nom_acc{nomSYCL, cgh, celerity::access::all{}, celerity::read_write};
+		// celerity::accessor nom_rho_acc{nomSYCL[0], cgh, celerity::access::one_to_one{}, celerity::read_write};
+		// celerity::accessor nom_sx_acc{nomSYCL[1], cgh, celerity::access::one_to_one{}, celerity::read_write};
+		// celerity::accessor nom_sy_acc{nomSYCL[2], cgh, celerity::access::one_to_one{}, celerity::read_write};
+		// celerity::accessor nom_sz_acc{nomSYCL[3], cgh, celerity::access::one_to_one{}, celerity::read_write};
+		// celerity::accessor nom_Eges_acc{nomSYCL[4], cgh, celerity::access::one_to_one{}, celerity::read_write};
 		celerity::accessor uPri_acc{uPriSYCL, cgh, celerity::access::all{}, celerity::read_only};
 
 		cgh.parallel_for<class ReductionKernel>(range, rd, [=](celerity::item<3> item, auto& max_cfl_lin) {
@@ -418,17 +425,47 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 													thermal, problem_gamma, problem_cs2, denominator, half_beta, fluidType, idx, fluidConst);
 				gpu::get_Changes(nom_acc, ix, iy, iz, DirX, numFlux[DirX], num_ptotal[DirX], numFlux_Dir[DirX], num_ptotal_Dir[DirX],
 										N_OMINT, nom_max[2], idx);
+				// gpu::get_Changes(nom_rho_acc, 0, ix, iy, iz, DirX, numFlux[DirX], num_ptotal[DirX], numFlux_Dir[DirX], num_ptotal_Dir[DirX],
+				// 						N_OMINT, nom_max[2], idx);
+				// gpu::get_Changes(nom_sx_acc, 1, ix, iy, iz, DirX, numFlux[DirX], num_ptotal[DirX], numFlux_Dir[DirX], num_ptotal_Dir[DirX],
+				// 						N_OMINT, nom_max[2], idx);
+				// gpu::get_Changes(nom_sy_acc, 2, ix, iy, iz, DirX, numFlux[DirX], num_ptotal[DirX], numFlux_Dir[DirX], num_ptotal_Dir[DirX],
+				// 						N_OMINT, nom_max[2], idx);
+				// gpu::get_Changes(nom_sz_acc, 3, ix, iy, iz, DirX, numFlux[DirX], num_ptotal[DirX], numFlux_Dir[DirX], num_ptotal_Dir[DirX],
+				// 						N_OMINT, nom_max[2], idx);
+				// gpu::get_Changes(nom_Eges_acc, 4, ix, iy, iz, DirX, numFlux[DirX], num_ptotal[DirX], numFlux_Dir[DirX], num_ptotal_Dir[DirX],
+				// 						N_OMINT, nom_max[2], idx);
 
 
 				gpu::computeStep(uPri_acc, ix, iy + 1, iz, ixyz + range.get(2), &cfl_lin, numFlux_Dir, num_ptotal_Dir, thermal, problem_gamma, problem_cs2,
 													denominator, half_beta, fluidType, idx, fluidConst);
 				gpu::get_Changes(nom_acc, ix, iy, iz, DirY, numFlux[DirY], num_ptotal[DirY], numFlux_Dir[DirY], num_ptotal_Dir[DirY],
 										N_OMINT, nom_max[2], idx);
+				// gpu::get_Changes(nom_rho_acc, 0, ix, iy, iz, DirY, numFlux[DirY], num_ptotal[DirY], numFlux_Dir[DirY], num_ptotal_Dir[DirY],
+				// 						N_OMINT, nom_max[2], idx);
+				// gpu::get_Changes(nom_sx_acc, 1, ix, iy, iz, DirY, numFlux[DirY], num_ptotal[DirY], numFlux_Dir[DirY], num_ptotal_Dir[DirY],
+				// 						N_OMINT, nom_max[2], idx);
+				// gpu::get_Changes(nom_sy_acc, 2, ix, iy, iz, DirY, numFlux[DirY], num_ptotal[DirY], numFlux_Dir[DirY], num_ptotal_Dir[DirY],
+				// 						N_OMINT, nom_max[2], idx);
+				// gpu::get_Changes(nom_sz_acc, 3, ix, iy, iz, DirY, numFlux[DirY], num_ptotal[DirY], numFlux_Dir[DirY], num_ptotal_Dir[DirY],
+				// 						N_OMINT, nom_max[2], idx);
+				// gpu::get_Changes(nom_Eges_acc, 4, ix, iy, iz, DirY, numFlux[DirY], num_ptotal[DirY], numFlux_Dir[DirY], num_ptotal_Dir[DirY],
+				// 						N_OMINT, nom_max[2], idx);
 
 				gpu::computeStep(uPri_acc, ix, iy, iz + 1, ixyz + 1, &cfl_lin, numFlux_Dir, num_ptotal_Dir, thermal, problem_gamma, problem_cs2,
 													denominator, half_beta, fluidType, idx, fluidConst);
 				gpu::get_Changes(nom_acc, ix, iy, iz, DirZ, numFlux[DirZ], num_ptotal[DirZ], numFlux_Dir[DirZ], num_ptotal_Dir[DirZ],
 										N_OMINT, nom_max[2], idx);
+				// gpu::get_Changes(nom_rho_acc, 0, ix, iy, iz, DirZ, numFlux[DirZ], num_ptotal[DirZ], numFlux_Dir[DirZ], num_ptotal_Dir[DirZ],
+				// 						N_OMINT, nom_max[2], idx);
+				// gpu::get_Changes(nom_sx_acc, 1, ix, iy, iz, DirZ, numFlux[DirZ], num_ptotal[DirZ], numFlux_Dir[DirZ], num_ptotal_Dir[DirZ],
+				// 						N_OMINT, nom_max[2], idx);
+				// gpu::get_Changes(nom_sy_acc, 2, ix, iy, iz, DirZ, numFlux[DirZ], num_ptotal[DirZ], numFlux_Dir[DirZ], num_ptotal_Dir[DirZ],
+				// 						N_OMINT, nom_max[2], idx);
+				// gpu::get_Changes(nom_sz_acc, 3, ix, iy, iz, DirZ, numFlux[DirZ], num_ptotal[DirZ], numFlux_Dir[DirZ], num_ptotal_Dir[DirZ],
+				// 						N_OMINT, nom_max[2], idx);
+				// gpu::get_Changes(nom_Eges_acc, 4, ix, iy, iz, DirZ, numFlux[DirZ], num_ptotal[DirZ], numFlux_Dir[DirZ], num_ptotal_Dir[DirZ],
+				// 						N_OMINT, nom_max[2], idx);
 			}
 
 			max_cfl_lin.combine(cfl_lin);
@@ -608,7 +645,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 	for (int q = 0; q < n_omInt; ++q) {
 		
-		TimeIntegratorGeneric[q]->Substep(queue, gdata, omRange, nomSYCL/*[q]*/, gdata.om, n, nom_max);
+		TimeIntegratorGeneric[q]->Substep(queue, gdata, omRange, nomSYCL, gdata.om, n, nom_max);
 		//TimeIntegratorGeneric[q]->Substep(gdata, Problem, gdata.nom[q], gdata.om, n);
 	}
 
