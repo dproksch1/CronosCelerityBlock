@@ -86,8 +86,9 @@ namespace gpu {
 
 }
 
+typedef double nomMat[N_OMINT];
 struct nom_t {
-	double rho, sx, sy, sz, Eges;
+	nomMat mat;
 };
 
 typedef double uPriMat[gpu::FaceMax][N_OMINT];

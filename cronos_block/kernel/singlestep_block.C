@@ -254,11 +254,9 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 			// nom_sy_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
 			// nom_sz_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
 			// nom_Eges_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
-			nomSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)].rho = 0;
-			nomSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)].sx = 0;
-			nomSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)].sy = 0;
-			nomSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)].sz = 0;
-			nomSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)].Eges = 0;
+			for (int d = 0; d < N_OMINT; d++) {
+				nomSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)].mat[d] = 0;
+			}
 		});
 	});
 
@@ -400,11 +398,6 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		auto rd = celerity::reduction(max_buf, cgh, cl::sycl::maximum<double>{},
 								cl::sycl::property::reduction::initialize_to_identity{});
 		celerity::accessor nom_acc{nomSYCL, cgh, celerity::access::all{}, celerity::read_write};
-		// celerity::accessor nom_rho_acc{nomSYCL[0], cgh, celerity::access::one_to_one{}, celerity::read_write};
-		// celerity::accessor nom_sx_acc{nomSYCL[1], cgh, celerity::access::one_to_one{}, celerity::read_write};
-		// celerity::accessor nom_sy_acc{nomSYCL[2], cgh, celerity::access::one_to_one{}, celerity::read_write};
-		// celerity::accessor nom_sz_acc{nomSYCL[3], cgh, celerity::access::one_to_one{}, celerity::read_write};
-		// celerity::accessor nom_Eges_acc{nomSYCL[4], cgh, celerity::access::one_to_one{}, celerity::read_write};
 		celerity::accessor uPri_acc{uPriSYCL, cgh, celerity::access::one_to_one{}, celerity::read_only};
 
 		cgh.parallel_for<class ReductionKernel>(range, rd, [=](celerity::item<3> item, auto& max_cfl_lin) {
@@ -430,47 +423,16 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 													thermal, problem_gamma, problem_cs2, denominator, half_beta, fluidType, idx, fluidConst);
 				gpu::get_Changes(nom_acc, ix, iy, iz, DirX, numFlux[DirX], num_ptotal[DirX], numFlux_Dir[DirX], num_ptotal_Dir[DirX],
 										N_OMINT, nom_max[2], idx);
-				// gpu::get_Changes(nom_rho_acc, 0, ix, iy, iz, DirX, numFlux[DirX], num_ptotal[DirX], numFlux_Dir[DirX], num_ptotal_Dir[DirX],
-				// 						N_OMINT, nom_max[2], idx);
-				// gpu::get_Changes(nom_sx_acc, 1, ix, iy, iz, DirX, numFlux[DirX], num_ptotal[DirX], numFlux_Dir[DirX], num_ptotal_Dir[DirX],
-				// 						N_OMINT, nom_max[2], idx);
-				// gpu::get_Changes(nom_sy_acc, 2, ix, iy, iz, DirX, numFlux[DirX], num_ptotal[DirX], numFlux_Dir[DirX], num_ptotal_Dir[DirX],
-				// 						N_OMINT, nom_max[2], idx);
-				// gpu::get_Changes(nom_sz_acc, 3, ix, iy, iz, DirX, numFlux[DirX], num_ptotal[DirX], numFlux_Dir[DirX], num_ptotal_Dir[DirX],
-				// 						N_OMINT, nom_max[2], idx);
-				// gpu::get_Changes(nom_Eges_acc, 4, ix, iy, iz, DirX, numFlux[DirX], num_ptotal[DirX], numFlux_Dir[DirX], num_ptotal_Dir[DirX],
-				// 						N_OMINT, nom_max[2], idx);
-
 
 				gpu::computeStep(uPri_acc, ix, iy + 1, iz, ixyz + range.get(2), &cfl_lin, numFlux_Dir, num_ptotal_Dir, thermal, problem_gamma, problem_cs2,
 													denominator, half_beta, fluidType, idx, fluidConst);
 				gpu::get_Changes(nom_acc, ix, iy, iz, DirY, numFlux[DirY], num_ptotal[DirY], numFlux_Dir[DirY], num_ptotal_Dir[DirY],
 										N_OMINT, nom_max[2], idx);
-				// gpu::get_Changes(nom_rho_acc, 0, ix, iy, iz, DirY, numFlux[DirY], num_ptotal[DirY], numFlux_Dir[DirY], num_ptotal_Dir[DirY],
-				// 						N_OMINT, nom_max[2], idx);
-				// gpu::get_Changes(nom_sx_acc, 1, ix, iy, iz, DirY, numFlux[DirY], num_ptotal[DirY], numFlux_Dir[DirY], num_ptotal_Dir[DirY],
-				// 						N_OMINT, nom_max[2], idx);
-				// gpu::get_Changes(nom_sy_acc, 2, ix, iy, iz, DirY, numFlux[DirY], num_ptotal[DirY], numFlux_Dir[DirY], num_ptotal_Dir[DirY],
-				// 						N_OMINT, nom_max[2], idx);
-				// gpu::get_Changes(nom_sz_acc, 3, ix, iy, iz, DirY, numFlux[DirY], num_ptotal[DirY], numFlux_Dir[DirY], num_ptotal_Dir[DirY],
-				// 						N_OMINT, nom_max[2], idx);
-				// gpu::get_Changes(nom_Eges_acc, 4, ix, iy, iz, DirY, numFlux[DirY], num_ptotal[DirY], numFlux_Dir[DirY], num_ptotal_Dir[DirY],
-				// 						N_OMINT, nom_max[2], idx);
 
 				gpu::computeStep(uPri_acc, ix, iy, iz + 1, ixyz + 1, &cfl_lin, numFlux_Dir, num_ptotal_Dir, thermal, problem_gamma, problem_cs2,
 													denominator, half_beta, fluidType, idx, fluidConst);
 				gpu::get_Changes(nom_acc, ix, iy, iz, DirZ, numFlux[DirZ], num_ptotal[DirZ], numFlux_Dir[DirZ], num_ptotal_Dir[DirZ],
 										N_OMINT, nom_max[2], idx);
-				// gpu::get_Changes(nom_rho_acc, 0, ix, iy, iz, DirZ, numFlux[DirZ], num_ptotal[DirZ], numFlux_Dir[DirZ], num_ptotal_Dir[DirZ],
-				// 						N_OMINT, nom_max[2], idx);
-				// gpu::get_Changes(nom_sx_acc, 1, ix, iy, iz, DirZ, numFlux[DirZ], num_ptotal[DirZ], numFlux_Dir[DirZ], num_ptotal_Dir[DirZ],
-				// 						N_OMINT, nom_max[2], idx);
-				// gpu::get_Changes(nom_sy_acc, 2, ix, iy, iz, DirZ, numFlux[DirZ], num_ptotal[DirZ], numFlux_Dir[DirZ], num_ptotal_Dir[DirZ],
-				// 						N_OMINT, nom_max[2], idx);
-				// gpu::get_Changes(nom_sz_acc, 3, ix, iy, iz, DirZ, numFlux[DirZ], num_ptotal[DirZ], numFlux_Dir[DirZ], num_ptotal_Dir[DirZ],
-				// 						N_OMINT, nom_max[2], idx);
-				// gpu::get_Changes(nom_Eges_acc, 4, ix, iy, iz, DirZ, numFlux[DirZ], num_ptotal[DirZ], numFlux_Dir[DirZ], num_ptotal_Dir[DirZ],
-				// 						N_OMINT, nom_max[2], idx);
 			}
 
 			max_cfl_lin.combine(cfl_lin);

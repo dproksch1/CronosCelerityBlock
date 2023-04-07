@@ -25,19 +25,6 @@ namespace gpu {
 
 	}
 
-	template<typename NumAccessorType, typename NumFluxAccessorType, typename IdxConstType>
-	void apply_change(NumAccessorType& nomAcc, int q, int ix, int iy, int iz, int dir, const NumFluxAccessorType& numfM, const NumFluxAccessorType &numfP, int num_len, IdxConstType idx) {
-		switch(q) {
-			case 0: nomAcc[ix][iy][iz].rho  += get_Changes1DCart(numfM, numfP, dir, idx, 0); break;
-			case 1: nomAcc[ix][iy][iz].sx   += get_Changes1DCart(numfM, numfP, dir, idx, 1); break;
-			case 2: nomAcc[ix][iy][iz].sy   += get_Changes1DCart(numfM, numfP, dir, idx, 2); break;
-			case 3: nomAcc[ix][iy][iz].sz   += get_Changes1DCart(numfM, numfP, dir, idx, 3); break;
-			case 4: nomAcc[ix][iy][iz].Eges += get_Changes1DCart(numfM, numfP, dir, idx, 4); break;
-			default: nomAcc[ix][iy][iz].rho += get_Changes1DCart(numfM, numfP, dir, idx, 0);
-		}
-	}
-
-
 	template<typename NumAccessorType, typename NumFluxAccessorType, typename SinglePtotalAccessorType, typename IdxConstType>
 	void get_Changes(NumAccessorType& nomAcc, int ix, int iy, int iz, int dir, const NumFluxAccessorType& numfM,
 					const SinglePtotalAccessorType &numPtotal_M, const NumFluxAccessorType &numfP, const SinglePtotalAccessorType &numPtotal_P,
@@ -58,8 +45,7 @@ namespace gpu {
 
 #if (GEOM == CARTESIAN)
 			// Cartesian case
-			//nomAcc[ix][nom_iyiz(iy,iz,z_max)][q_global] += get_Changes1DCart(numfM, numfP, dir, idx, q);
-			apply_change(nomAcc, q, ix, iy, iz, dir, numfM, numfP, num_len, idx);
+			nomAcc[ix][iy][iz].mat[q] += get_Changes1DCart(numfM, numfP, dir, idx, q);
 #else
 
 			/*// general case
@@ -104,36 +90,6 @@ namespace gpu {
 */
 
 		}
-	}
-
-	template<typename NumAccessorType, typename NumFluxAccessorType, typename SinglePtotalAccessorType, typename IdxConstType>
-	void get_Changes(NumAccessorType& nomAcc, int q, int ix, int iy, int iz, int dir, const NumFluxAccessorType& numfM,
-					const SinglePtotalAccessorType &numPtotal_M, const NumFluxAccessorType &numfP, const SinglePtotalAccessorType &numPtotal_P,
-					int num_len, size_t z_max, IdxConstType idx) {
-		
-
-		int q_global = q;
-
-#if (GEOM == CARTESIAN)
-		// Cartesian case
-		nomAcc[ix][iy][iz] += get_Changes1DCart(numfM, numfP, dir, idx, q);
-#else
-
-		/*// general case
-		double change = (numfP[q]*AreaP - numfM[q]*AreaM)*iVol;
-
-		nom[ix][iy][iz] += change;*/
-		nomAcc[ix][nom_iyiz(iy,iz,z_max)][q_global] += get_Changes1DCart(numfM, numfP, dir, iPos, q);
-
-		// Compute mass flux in case of spherical coordinates
-#if (GEOM == SPHERICAL)
-		if(dir==0) {
-			gdata.massFlux(ix) += numfM.flux_num[0]*AreaM;
-		}
-#endif
-
-#endif 
-
 	}
 
 	template<typename NumAccessorType, typename NumFluxAccessorType, typename IdxConstType>
