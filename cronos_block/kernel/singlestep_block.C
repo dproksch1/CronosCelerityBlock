@@ -221,7 +221,8 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	celerity::buffer<double, 1> max_buf{celerity::range{1}};
 	//CelerityBuffer<double, 3> nomSYCL {celerity::range<3>(omRange.get(0), omRange.get(1) * omRange.get(2), N_OMINT)};
 	CelerityBuffer<nom_t, 3> nomSYCL {celerity::range<3>(omRange.get(0), omRange.get(1), omRange.get(2))};
-	CelerityBuffer<double, 3> uPriSYCL{celerity::range<3>(omRange.get(0) * omRange.get(1) * omRange.get(2), gpu::FaceMax, N_OMINT)};
+	// CelerityBuffer<double, 3> uPriSYCL{celerity::range<3>(omRange.get(0) * omRange.get(1) * omRange.get(2), gpu::FaceMax, N_OMINT)};
+	CelerityBuffer<uPri_t, 3> uPriSYCL{celerity::range<3>(omRange.get(0), omRange.get(1), omRange.get(2))};
 
 	// std::vector<CelerityBuffer<double, 3>> nomSYCL;
 	// for (int i = 0; i < gpu::FaceMax; i++) {
@@ -231,7 +232,11 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 		celerity::accessor uPri_acc{uPriSYCL, cgh, celerity::access::all{}, celerity::write_only, celerity::no_init};
 		cgh.parallel_for<class PointwiseReconstructionKernel>(uPriSYCL.get_range(), [=](celerity::item<3> item) {
-			uPri_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
+			for (int f = 0; f < gpu::FaceMax; f++) {
+				for (int d = 0; d < N_OMINT; d++) {
+					uPri_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)].mat[f][d] = 0;
+				}
+			}
 		});
 	});
 
@@ -319,7 +324,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 
-		celerity::accessor uPri_acc{uPriSYCL, cgh, celerity::access::all{}, celerity::read_write};
+		celerity::accessor uPri_acc{uPriSYCL, cgh, celerity::access::one_to_one{}, celerity::read_write};
 		celerity::accessor om_rho_acc{gdata.omSYCL[0], cgh, celerity::access::neighborhood{2,2,2}, celerity::read_only};
 		celerity::accessor om_sx_acc{gdata.omSYCL[1], cgh, celerity::access::neighborhood{2,2,2}, celerity::read_only};
 		celerity::accessor om_sy_acc{gdata.omSYCL[2], cgh, celerity::access::neighborhood{2,2,2}, celerity::read_only};
@@ -336,48 +341,48 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 			if (ix >= n_ghost[0] && ix <= rangeEnd[0] && iy >= n_ghost[1] && iy <= rangeEnd[1] && iz >= n_ghost[2] && iz <= rangeEnd[2]) {
 				auto [uPriWest0, uPriSouth0, uPriBottom0] = gpu::computeWSB(om_rho_acc, ix, iy, iz);
 				auto [uPriEast0, uPriNorth0, uPriTop0] = gpu::computeENT(om_rho_acc, ix, iy, iz);
-				uPri_acc[ixyz][gpu::FaceWest][0] = uPriWest0;
-				uPri_acc[ixyz][gpu::FaceEast][0] = uPriEast0;
-				uPri_acc[ixyz][gpu::FaceSouth][0] = uPriSouth0;
-				uPri_acc[ixyz][gpu::FaceNorth][0] = uPriNorth0;
-				uPri_acc[ixyz][gpu::FaceBottom][0] = uPriBottom0;
-				uPri_acc[ixyz][gpu::FaceTop][0] = uPriTop0;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceWest][0] = uPriWest0;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceEast][0] = uPriEast0;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceSouth][0] = uPriSouth0;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceNorth][0] = uPriNorth0;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceBottom][0] = uPriBottom0;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceTop][0] = uPriTop0;
 
 				auto [uPriWest1, uPriSouth1, uPriBottom1] = gpu::computeWSB(om_sx_acc, ix, iy, iz);
 				auto [uPriEast1, uPriNorth1, uPriTop1] = gpu::computeENT(om_sx_acc, ix, iy, iz);
-				uPri_acc[ixyz][gpu::FaceWest][1] = uPriWest1;
-				uPri_acc[ixyz][gpu::FaceEast][1]= uPriEast1;
-				uPri_acc[ixyz][gpu::FaceNorth][1] = uPriNorth1;
-				uPri_acc[ixyz][gpu::FaceSouth][1] = uPriSouth1;
-				uPri_acc[ixyz][gpu::FaceBottom][1] = uPriBottom1;
-				uPri_acc[ixyz][gpu::FaceTop][1] = uPriTop1;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceWest][1] = uPriWest1;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceEast][1]= uPriEast1;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceNorth][1] = uPriNorth1;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceSouth][1] = uPriSouth1;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceBottom][1] = uPriBottom1;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceTop][1] = uPriTop1;
 
 				auto [uPriWest2, uPriSouth2, uPriBottom2] = gpu::computeWSB(om_sy_acc, ix, iy, iz);
 				auto [uPriEast2, uPriNorth2, uPriTop2] = gpu::computeENT(om_sy_acc, ix, iy, iz);
-				uPri_acc[ixyz][gpu::FaceWest][2] = uPriWest2;
-				uPri_acc[ixyz][gpu::FaceEast][2] = uPriEast2;
-				uPri_acc[ixyz][gpu::FaceNorth][2] = uPriNorth2;
-				uPri_acc[ixyz][gpu::FaceSouth][2] = uPriSouth2;
-				uPri_acc[ixyz][gpu::FaceBottom][2] = uPriBottom2;
-				uPri_acc[ixyz][gpu::FaceTop][2] = uPriTop2;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceWest][2] = uPriWest2;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceEast][2] = uPriEast2;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceNorth][2] = uPriNorth2;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceSouth][2] = uPriSouth2;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceBottom][2] = uPriBottom2;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceTop][2] = uPriTop2;
 
 				auto [uPriWest3, uPriSouth3, uPriBottom3] = gpu::computeWSB(om_sz_acc, ix, iy, iz);
 				auto [uPriEast3, uPriNorth3, uPriTop3] = gpu::computeENT(om_sz_acc, ix, iy, iz);
-				uPri_acc[ixyz][gpu::FaceWest][3] = uPriWest3;
-				uPri_acc[ixyz][gpu::FaceEast][3] = uPriEast3;
-				uPri_acc[ixyz][gpu::FaceNorth][3] = uPriNorth3;
-				uPri_acc[ixyz][gpu::FaceSouth][3] = uPriSouth3;
-				uPri_acc[ixyz][gpu::FaceBottom][3] = uPriBottom3;
-				uPri_acc[ixyz][gpu::FaceTop][3] = uPriTop3;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceWest][3] = uPriWest3;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceEast][3] = uPriEast3;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceNorth][3] = uPriNorth3;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceSouth][3] = uPriSouth3;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceBottom][3] = uPriBottom3;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceTop][3] = uPriTop3;
 
 				auto [uPriWest4, uPriSouth4, uPriBottom4] = gpu::computeWSB(om_Eges_acc, ix, iy, iz);
 				auto [uPriEast4, uPriNorth4, uPriTop4] = gpu::computeENT(om_Eges_acc, ix, iy, iz);
-				uPri_acc[ixyz][gpu::FaceWest][4] = uPriWest4;
-				uPri_acc[ixyz][gpu::FaceEast][4] = uPriEast4;
-				uPri_acc[ixyz][gpu::FaceNorth][4] = uPriNorth4;
-				uPri_acc[ixyz][gpu::FaceSouth][4] = uPriSouth4;
-				uPri_acc[ixyz][gpu::FaceBottom][4] = uPriBottom4;
-				uPri_acc[ixyz][gpu::FaceTop][4] = uPriTop4;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceWest][4] = uPriWest4;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceEast][4] = uPriEast4;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceNorth][4] = uPriNorth4;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceSouth][4] = uPriSouth4;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceBottom][4] = uPriBottom4;
+				uPri_acc[ix][iy][iz].mat[gpu::FaceTop][4] = uPriTop4;
 			}
 			
 		});
@@ -400,7 +405,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		// celerity::accessor nom_sy_acc{nomSYCL[2], cgh, celerity::access::one_to_one{}, celerity::read_write};
 		// celerity::accessor nom_sz_acc{nomSYCL[3], cgh, celerity::access::one_to_one{}, celerity::read_write};
 		// celerity::accessor nom_Eges_acc{nomSYCL[4], cgh, celerity::access::one_to_one{}, celerity::read_write};
-		celerity::accessor uPri_acc{uPriSYCL, cgh, celerity::access::all{}, celerity::read_only};
+		celerity::accessor uPri_acc{uPriSYCL, cgh, celerity::access::one_to_one{}, celerity::read_only};
 
 		cgh.parallel_for<class ReductionKernel>(range, rd, [=](celerity::item<3> item, auto& max_cfl_lin) {
 

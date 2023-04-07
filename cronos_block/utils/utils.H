@@ -90,5 +90,10 @@ struct nom_t {
 	double rho, sx, sy, sz, Eges;
 };
 
+typedef double uPriMat[gpu::FaceMax][N_OMINT];
+struct uPri_t {
+	uPriMat mat;
+};
+
 
 #endif

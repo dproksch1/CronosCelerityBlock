@@ -23,7 +23,7 @@ namespace gpu {
 
         for (int i = 0; i < gpu::FaceMax; i++) {
             for (int j = 0; j < N_OMINT; j++) {
-                uPri[i][j] = uPri_acc[ixyz][i][j];
+                uPri[i][j] = uPri_acc[ix][iy][iz].mat[i][j];
             }
         }
         
