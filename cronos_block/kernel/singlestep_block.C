@@ -107,15 +107,6 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	size_t nom_max[3] = {omRange.get(0), omRange.get(1), omRange.get(2)};
 
 	for (int q = 0; q < N_OMINT; q++) {
-		double om_temp[206][7][7];
-
-		for (int i = 0; i < nom_max[0]; i++) {
-			for (int j = 0; j < nom_max[1]; j++) {
-				for (int k = 0; k < nom_max[2]; k++) {
-					om_temp[i][j][k] = gdata.om[q](i-3,j-3,k-3);
-				}
-			}
-		}
 
 		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 			celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::write_only_host_task};
@@ -123,7 +114,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 				for (int i = 0; i < nom_max[0]; i++) {
 					for (int j = 0; j < nom_max[1]; j++) {
 						for (int k = 0; k < nom_max[2]; k++) {
-							omSYCL_acc[i][j][k] = om_temp[i][j][k];
+							omSYCL_acc[i][j][k] = gdata.om[q](i-3,j-3,k-3);
 						}
 					}
 				}
@@ -219,15 +210,8 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	
 	//buffers	
 	celerity::buffer<double, 1> max_buf{celerity::range{1}};
-	//CelerityBuffer<double, 3> nomSYCL {celerity::range<3>(omRange.get(0), omRange.get(1) * omRange.get(2), N_OMINT)};
 	CelerityBuffer<nom_t, 3> nomSYCL {celerity::range<3>(omRange.get(0), omRange.get(1), omRange.get(2))};
-	// CelerityBuffer<double, 3> uPriSYCL{celerity::range<3>(omRange.get(0) * omRange.get(1) * omRange.get(2), gpu::FaceMax, N_OMINT)};
 	CelerityBuffer<uPri_t, 3> uPriSYCL{celerity::range<3>(omRange.get(0), omRange.get(1), omRange.get(2))};
-
-	// std::vector<CelerityBuffer<double, 3>> nomSYCL;
-	// for (int i = 0; i < gpu::FaceMax; i++) {
-	// 	nomSYCL.push_back(CelerityBuffer<double, 3>(Range<3>(gdata.mx[0]+6 +1, gdata.mx[1]+6+1, gdata.mx[2]+6+1)));
-	// }
 
 	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 		celerity::accessor uPri_acc{uPriSYCL, cgh, celerity::access::all{}, celerity::write_only, celerity::no_init};
@@ -242,18 +226,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 	queue.submit([=](celerity::handler& cgh) {
 		celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
-		// celerity::accessor nom_rho_acc{nomSYCL[0], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
-		// celerity::accessor nom_sx_acc{nomSYCL[1], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
-		// celerity::accessor nom_sy_acc{nomSYCL[2], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
-		// celerity::accessor nom_sz_acc{nomSYCL[3], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
-		// celerity::accessor nom_Eges_acc{nomSYCL[4], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
-		cgh.parallel_for<class BufferInitializationKernel>(nomSYCL/*[0]*/.get_range(), [=](celerity::item<3> item) {
-			//nomSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
-			// nom_rho_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
-			// nom_sx_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
-			// nom_sy_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
-			// nom_sz_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
-			// nom_Eges_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
+		cgh.parallel_for<class BufferInitializationKernel>(nomSYCL.get_range(), [=](celerity::item<3> item) {
 			for (int d = 0; d < N_OMINT; d++) {
 				nomSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)].mat[d] = 0;
 			}
@@ -545,8 +518,6 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 //   Check for errors:
 // ----------------------------------------------------------------
 
-	
-
 	for(int q = 0; q<n_omInt; ++q) {
 		CheckNan(gdata.nom[q],q, 0, 1,"nom");
 	}
@@ -603,7 +574,6 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 // ----------------------------------------------------------------
 
 	Trafo->TransPrim2Cons(gdata, gfunc, Problem);
-
 	Problem.TransPrim2Cons(gdata);
 
 // ----------------------------------------------------------------
@@ -611,10 +581,10 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 // ----------------------------------------------------------------
 
 	for (int q = 0; q < n_omInt; ++q) {
-		
 		TimeIntegratorGeneric[q]->Substep(queue, gdata, omRange, nomSYCL, gdata.om, n, nom_max);
 		//TimeIntegratorGeneric[q]->Substep(gdata, Problem, gdata.nom[q], gdata.om, n);
 	}
+	queue.slow_full_sync();
 
 #if (OMS_USER == TRUE)
 

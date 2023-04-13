@@ -4,6 +4,8 @@
 
 #include "timestepping.H"
 
+static bool nom_temp_decl = false;
+
 TimeIntegrator::TimeIntegrator(const int n_saves):
 	n_saves(n_saves)
 {
@@ -233,60 +235,40 @@ void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
 	}
 #endif
 	//	}
-	double nom_temp[nom_max[0]][nom_max[1]][nom_max[2]];
-	{
-	queue.submit(celerity::allow_by_ref, [=, &nom_temp](celerity::handler& cgh) {
-		celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::all{}, celerity::read_only_host_task};
-		cgh.host_task(celerity::on_master_node, [=, &nom_temp]{
-			for (int i = -B; i < nom_max[0]+B; i++) {
-				for (int j = -B; j < nom_max[1]+B; j++) {
-					for (int k = -B; k < nom_max[2]+B; k++) {
-						//nom_temp[i][j][k] = nomSYCL_acc[i][j*nom_max[2] + k][qch];
-						//nom_temp[i][j][k] = nomSYCL_acc[i][j][k];
-						nom_temp[i][j][k] = nomSYCL_acc[i][j][k].mat[qch];
-					}
-				}
-			}
-		});
-	});}
-
-	queue.slow_full_sync();
-
-	// cout << "qch: " << qch <<"\n";
-	// for (int i = -B; i < nom_max[0]+B; i++) {
-	// 	for (int j = -B; j < nom_max[1]+B; j++) {
-	// 		for (int k = -B; k < nom_max[2]+B; k++) {
-	// 			cout << nom_temp[i][j][k] << " ";
-	// 			// if(std::isnan(nom_temp[i][j][k])) {
-	// 				// cout << i << "," << j << "," << k << " ";
-	// 			// }
-	// 		}
-	// 	}
-	// }
-	// cout << "\n";
 
 	if (substep == 0) { // First Runge Kutta step
 
 		save_data(om, 0);
-		
-		for (int i = -B; i < nom_max[0]+B; i++) {
-			for (int j = -B; j < nom_max[1]+B; j++) {
-				for (int k = -B; k < nom_max[2]+B; k++) {
-					om[qch](i + B,j + B,k + B) -= dt * nom_temp[i][j][k];
+
+		queue.submit(celerity::allow_by_ref, [=, &om](celerity::handler& cgh) {
+			celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::all{}, celerity::read_only_host_task};
+			cgh.host_task(celerity::on_master_node, [=, &om]{
+				for (int i = -B; i < nom_max[0]+B; i++) {
+					for (int j = -B; j < nom_max[1]+B; j++) {
+						for (int k = -B; k < nom_max[2]+B; k++) {
+							om[qch](i + B,j + B,k + B) -= dt * nomSYCL_acc[i][j][k].mat[qch];
+						}
+					}
 				}
-			}
-		}
+			});
+		});
 
 	} else if (substep == 1) { // Second Runge Kutta step
 
-		for (int i = -B; i < nom_max[0]+B; i++) {
-			for (int j = -B; j < nom_max[1]+B; j++) {
-				for (int k = -B; k < nom_max[2]+B; k++) {
-					om[qch](i + B,j + B,k + B) = 0.5*om_save[0](i + B,j + B,k + B) + 0.5*om[qch](i + B,j + B,k + B) 
-								- 0.5 * dt * nom_temp[i][j][k];
+		queue.submit(celerity::allow_by_ref, [=, &om](celerity::handler& cgh) {
+			celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::all{}, celerity::read_only_host_task};
+			cgh.host_task(celerity::on_master_node, [=, &om]{
+				for (int i = -B; i < nom_max[0]+B; i++) {
+					for (int j = -B; j < nom_max[1]+B; j++) {
+						for (int k = -B; k < nom_max[2]+B; k++) {
+							om[qch](i + B,j + B,k + B) = 0.5*om_save[0](i + B,j + B,k + B) + 0.5*om[qch](i + B,j + B,k + B) 
+								- 0.5 * dt * nomSYCL_acc[i][j][k].mat[qch];
+						}
+					}
 				}
-			}
-		}
+			});
+		});
+			
 	}
 #endif
 }

@@ -17,7 +17,6 @@ void Environment::setType(Data &gdata) {
 }
 
 
-
 #if (NON_LINEAR_GRID == CRONOS_ON)
 void Grid::set_UserGridFunction(int dir, double beg, double end, double len) {
 //	myNonlinGrid[dir] = new GridFunction_Sin();

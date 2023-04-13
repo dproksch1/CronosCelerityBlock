@@ -16,4 +16,12 @@ add_test(medium_run "/home/dproksch/master_thesis/CronosCelerityBlock/proj" "/ho
 set_tests_properties(medium_run PROPERTIES  DEPENDS "proj" FIXTURES_SETUP "EXEC_MEDIUM" _BACKTRACE_TRIPLES "/home/dproksch/master_thesis/CronosCelerityBlock/CMakeLists.txt;299;add_test;/home/dproksch/master_thesis/CronosCelerityBlock/CMakeLists.txt;0;")
 add_test(medium_compare "/usr/bin/h5diff" "-v" "-d 1.5e-11" "--exclude-path" "/Data/version" "/home/dproksch/master_thesis/CronosCelerityBlock/tests/SodToro5HllcRef_medium/SodToro5HllcRef_float/SodToro5HllcRef_flt_step990.h5" "/home/dproksch/master_thesis/CronosCelerityBlock/tests/SodToro5HllcRef_medium/SodToro5HllcRef_float/SodToro5HllcRef_flt_step990.h5")
 set_tests_properties(medium_compare PROPERTIES  FIXTURES_REQUIRED "EXEC_MEDIUM" _BACKTRACE_TRIPLES "/home/dproksch/master_thesis/CronosCelerityBlock/CMakeLists.txt;300;add_test;/home/dproksch/master_thesis/CronosCelerityBlock/CMakeLists.txt;0;")
+add_test(new_test_run "/home/dproksch/master_thesis/CronosCelerityBlock/proj" "/home/dproksch/master_thesis/CronosCelerityBlock/tests/SodToro5HllcRef_new_test" "SodToro5HllcRef")
+set_tests_properties(new_test_run PROPERTIES  DEPENDS "proj" FIXTURES_SETUP "EXEC_NEW_TEST" _BACKTRACE_TRIPLES "/home/dproksch/master_thesis/CronosCelerityBlock/CMakeLists.txt;299;add_test;/home/dproksch/master_thesis/CronosCelerityBlock/CMakeLists.txt;0;")
+
+# add_test(small_run "/home/dproksch/master_thesis/CronosCelerityBlock/proj" "/home/dproksch/master_thesis/CronosCelerityBlock/tests/SedovExplosionHllcRef_small" "SedovCartesian_hllc")
+# set_tests_properties(small_run PROPERTIES  DEPENDS "proj" FIXTURES_SETUP "EXEC_SMALL" _BACKTRACE_TRIPLES "/home/dproksch/master_thesis/CronosCelerityBlock/CMakeLists.txt;234;add_test;/home/dproksch/master_thesis/CronosCelerityBlock/CMakeLists.txt;0;")
+# add_test(medium_run "/home/dproksch/master_thesis/CronosCelerityBlock/proj" "/home/dproksch/master_thesis/CronosCelerityBlock/tests/SedovExplosionHllcRef_medium" "SedovCartesian_hllc")
+# set_tests_properties(medium_run PROPERTIES  DEPENDS "proj" FIXTURES_SETUP "EXEC_MEDIUM" _BACKTRACE_TRIPLES "/home/dproksch/master_thesis/CronosCelerityBlock/CMakeLists.txt;235;add_test;/home/dproksch/master_thesis/CronosCelerityBlock/CMakeLists.txt;0;")
+
 subdirs("external/CronosNumLib")

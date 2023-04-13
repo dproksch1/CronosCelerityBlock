@@ -113,8 +113,10 @@ include_directories(cronos_block/kernel)
 include_directories(cronos_block/riemann_solver)
 include_directories(cronos_block/reconstruction)
 include_directories(cronos_block/utils)
-include_directories(cronos_block/configuration/ShockTubeSod)
 include_directories(cronos_block/configuration/standalone/cronos_block)
+include_directories(cronos_block/configuration/ShockTubeSod)
+# include_directories(cronos_block/configuration/SedovExplosion)
+# include_directories(cronos_block/configuration/SedovExplosion/randgen)
 
 if(DIRECTLINK_CNL)
   message(STATUS "Direct Inclusion of CronosNumLib")
@@ -156,6 +158,8 @@ set(SOURCES
     #test/test_data.C
     #test/singlestep_stub.C
     cronos_block/configuration/ShockTubeSod/modules.C
+    # cronos_block/configuration/SedovExplosion/modules.C
+    # cronos_block/configuration/SedovExplosion/randgen/randgen.C
 
     #cronos_block/utils/celerity_test.C
 )
@@ -223,3 +227,14 @@ set_tests_properties(small_compare PROPERTIES FIXTURES_REQUIRED EXEC_SMALL)
 set_tests_properties(medium_run PROPERTIES DEPENDS proj)
 set_tests_properties(medium_run PROPERTIES FIXTURES_SETUP EXEC_MEDIUM)
 set_tests_properties(medium_compare PROPERTIES FIXTURES_REQUIRED EXEC_MEDIUM)
+
+# configure_file(${CMAKE_SOURCE_DIR}/tests/SedovExplosionHllcRef_small/SedovCartesian_hllc.cat ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_small/SedovCartesian_hllc.cat COPYONLY)
+# configure_file(${CMAKE_SOURCE_DIR}/tests/SedovExplosionHllcRef_medium/SedovCartesian_hllc.cat ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_medium/SedovCartesian_hllc.cat COPYONLY)
+
+# add_test(NAME small_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_small SedovCartesian_hllc)
+# add_test(NAME medium_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_medium SedovCartesian_hllc)
+
+# set_tests_properties(small_run PROPERTIES DEPENDS proj)
+# set_tests_properties(small_run PROPERTIES FIXTURES_SETUP EXEC_SMALL)
+# set_tests_properties(medium_run PROPERTIES DEPENDS proj)
+# set_tests_properties(medium_run PROPERTIES FIXTURES_SETUP EXEC_MEDIUM)
