@@ -359,7 +359,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		});
 	});
 
-	// queue.slow_full_sync();
+	queue.slow_full_sync();
 	
 
 // ---------------------------------------------------------------	      
@@ -370,8 +370,8 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 		auto rd = celerity::reduction(max_buf, cgh, cl::sycl::maximum<double>{},
 								cl::sycl::property::reduction::initialize_to_identity{});
-		celerity::accessor nom_acc{nomSYCL, cgh, celerity::access::all{}, celerity::read_write};
-		celerity::accessor uPri_acc{uPriSYCL, cgh, celerity::access::one_to_one{}, celerity::read_only};
+		celerity::accessor nom_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_write};
+		celerity::accessor uPri_acc{uPriSYCL, cgh, celerity::access::neighborhood{2,2,2}, celerity::read_only};
 
 		cgh.parallel_for<class ReductionKernel>(range, rd, [=](celerity::item<3> item, auto& max_cfl_lin) {
 
