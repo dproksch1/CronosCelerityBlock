@@ -4,6 +4,7 @@
 # 
 # This file includes the relevant testing commands required for 
 # testing this directory and lists subdirectories to be tested as well.
+
 add_test(tiny_run "/home/dproksch/master_thesis/CronosCelerityBlock/proj" "/home/dproksch/master_thesis/CronosCelerityBlock/tests/SodToro5HllcRef_tiny" "SodToro5HllcRef")
 set_tests_properties(tiny_run PROPERTIES  DEPENDS "proj" FIXTURES_SETUP "EXEC_TINY" _BACKTRACE_TRIPLES "/home/dproksch/master_thesis/CronosCelerityBlock/CMakeLists.txt;293;add_test;/home/dproksch/master_thesis/CronosCelerityBlock/CMakeLists.txt;0;")
 add_test(tiny_compare "/usr/bin/h5diff" "-v" "-d 1.5e-11" "--exclude-path" "/Data/version" "/home/dproksch/master_thesis/CronosCelerityBlock/tests/SodToro5HllcRef_tiny/SodToro5HllcRef_float/SodToro5HllcRef_flt_step3.h5" "/home/dproksch/master_thesis/CronosCelerityBlock/tests/SodToro5HllcRef_tiny/SodToro5HllcRef_float/SodToro5HllcRef_flt_step3.h5")

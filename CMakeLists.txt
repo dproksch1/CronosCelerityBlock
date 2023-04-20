@@ -229,10 +229,10 @@ set_tests_properties(medium_run PROPERTIES FIXTURES_SETUP EXEC_MEDIUM)
 set_tests_properties(medium_compare PROPERTIES FIXTURES_REQUIRED EXEC_MEDIUM)
 
 # configure_file(${CMAKE_SOURCE_DIR}/tests/SedovExplosionHllcRef_small/SedovCartesian_hllc.cat ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_small/SedovCartesian_hllc.cat COPYONLY)
-# configure_file(${CMAKE_SOURCE_DIR}/tests/SedovExplosionHllcRef_medium/SedovCartesian_hllc.cat ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_medium/SedovCartesian_hllc.cat COPYONLY)
+# # configure_file(${CMAKE_SOURCE_DIR}/tests/SedovExplosionHllcRef_medium/SedovCartesian_hllc.cat ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_medium/SedovCartesian_hllc.cat COPYONLY)
 
 # add_test(NAME small_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_small SedovCartesian_hllc)
-# add_test(NAME medium_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_medium SedovCartesian_hllc)
+# # add_test(NAME medium_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_medium SedovCartesian_hllc)
 
 # set_tests_properties(small_run PROPERTIES DEPENDS proj)
 # set_tests_properties(small_run PROPERTIES FIXTURES_SETUP EXEC_SMALL)

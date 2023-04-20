@@ -40,6 +40,7 @@ public:
 	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
                       CelerityBuffer<nom_t, 3> nomSYCL,
                       Pot om[], const int substep, size_t nom_max[]) = 0;
+	
 
 protected:
 	int ibeg[DIM], iend[DIM];
