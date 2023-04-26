@@ -25,6 +25,9 @@ public:
 	void boundary(Data &gdata, ProblemType &problem, NumMatrix<double,3> &omb,
 			int rim, int q, int iFluid=0);
 
+	void boundary(Queue &, Data &gdata, ProblemType &problem, NumMatrix<double,3> &omb,
+			int rim, int q, int iFluid=0);
+
 	// void dataout(Data &, string &, ProblemType &, int, bool);
 	void dataout(Data &, Hdf5Stream &, ProblemType &, int, bool, bool is_collective);
 	void datain(Data &, Hdf5iStream &, string &, ProblemType &);
@@ -60,6 +63,9 @@ private:
 	 * Periodic boundary conditions for non-mpi version of the code, only
 	 * */
 	void bc_Periodic_serial(Data &gdata, ProblemType &, NumMatrix<double,3> &omb,
+			int dir, int q, int rim);
+		
+	void bc_Periodic(Queue &, Data &gdata, ProblemType &, NumMatrix<double,3> &omb,
 			int dir, int q, int rim);
 
 	/*!
@@ -108,6 +114,12 @@ private:
 	void Prolongate(Data &, NumMatrix<double,3> &, const int &, int mxloc[], int);
 	void ExchangePositions(Data &, int top=0);
 	int get_powerTwo(int val);
+
+	void bc_Outflow(Queue &queue, Data &, ProblemType &, NumMatrix<double,3> &,
+	                int, int, int, int);
+	void bc_Extrapolate(Queue &queue, Data &, ProblemType &, NumMatrix<double,3> &,
+	                    int, int, int, int);
+
 	/**
 	 * Adapt resolution of input data to version of cat file
 	 * */

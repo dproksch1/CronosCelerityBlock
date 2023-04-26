@@ -32,6 +32,7 @@ public:
 	TimeIntegrator(const int);
 	virtual ~TimeIntegrator() = 0;
 	void set_IntRange(int [], int []);
+	void init_omBuffer(const int []);
 	void set_corrField(int);
 	void save_data(const Pot om[], const int substep);
 	virtual double get_dt(Data & gdata, const int substep);
@@ -40,6 +41,9 @@ public:
 	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
                       CelerityBuffer<nom_t, 3> nomSYCL,
                       Pot om[], const int substep, size_t nom_max[]) = 0;
+	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
+                      CelerityBuffer<nom_t, 3> nomSYCL,
+                      double dt, const int substep, size_t nom_max[]) = 0;
 	
 
 protected:
@@ -47,6 +51,7 @@ protected:
 	int qch;
 	const int n_saves;
 	NumMatrix<double, DIM> *om_save;
+	std::vector<CelerityBuffer<double, 3>> omSYCL_save;
 };
 
 
@@ -59,6 +64,9 @@ public:
 	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
                       CelerityBuffer<nom_t, 3> nomSYCL,
                       Pot om[], const int substep, size_t nom_max[]);
+	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
+                      CelerityBuffer<nom_t, 3> nomSYCL,
+                      double dt, const int substep, size_t nom_max[]);
 
 private:
 	double oneThird, twoThirds;
@@ -74,6 +82,9 @@ public:
 	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
                       CelerityBuffer<nom_t, 3> nomSYCL,
                       Pot om[], const int substep, size_t nom_max[]);
+	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
+                      CelerityBuffer<nom_t, 3> nomSYCL,
+                      double dt, const int substep, size_t nom_max[]);
 
 };
 

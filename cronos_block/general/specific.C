@@ -368,6 +368,8 @@ void HyperbolicSolver::set_TimeIntegrator(const Data &gdata,
 #endif
 	}
 
+	TimeIntegratorGeneric[0]->init_omBuffer(gdata.mx);
+
 	// Normal settings for 
 	for(int q=0; q<n_omInt; ++q) {
 		int qchange(q);

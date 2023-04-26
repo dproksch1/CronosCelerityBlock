@@ -26,6 +26,7 @@ public:
 	virtual string get_Name(); 
 	int get_Type();
 	virtual void bc_User(Data &, NumMatrix<double,3> &, int, int, int, int);
+	virtual void bc_User(Queue &, Data &, NumMatrix<double,3> &, int, int, int, int);
 	virtual void bc_periodic(Data &,
 	                         NumMatrix<double,3> &, NumMatrix<double,3> &,
 	                         int, int, bool){};
@@ -62,7 +63,9 @@ public:
 			phys_fields_1D &pf, int dir, double shift) {}*/
 
 	virtual void TransPrim2Cons(Data &) {}
+	virtual void TransPrim2Cons(Queue &, Data &) {}
 	virtual void TransCons2Prim(Data &) {}
+	virtual void TransCons2Prim(Queue &, Data &) {}
 
 	void name_User(Data &);
 	/**Routine to access some internal variables from anywhere (e.g. from an Euler solver)*/

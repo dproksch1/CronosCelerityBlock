@@ -114,9 +114,9 @@ include_directories(cronos_block/riemann_solver)
 include_directories(cronos_block/reconstruction)
 include_directories(cronos_block/utils)
 include_directories(cronos_block/configuration/standalone/cronos_block)
-include_directories(cronos_block/configuration/ShockTubeSod)
-# include_directories(cronos_block/configuration/SedovExplosion)
-# include_directories(cronos_block/configuration/SedovExplosion/randgen)
+# include_directories(cronos_block/configuration/ShockTubeSod)
+include_directories(cronos_block/configuration/SedovExplosion)
+include_directories(cronos_block/configuration/SedovExplosion/randgen)
 
 if(DIRECTLINK_CNL)
   message(STATUS "Direct Inclusion of CronosNumLib")
@@ -157,9 +157,9 @@ set(SOURCES
     #test/proj.C
     #test/test_data.C
     #test/singlestep_stub.C
-    cronos_block/configuration/ShockTubeSod/modules.C
-    # cronos_block/configuration/SedovExplosion/modules.C
-    # cronos_block/configuration/SedovExplosion/randgen/randgen.C
+    # cronos_block/configuration/ShockTubeSod/modules.C
+    cronos_block/configuration/SedovExplosion/modules.C
+    cronos_block/configuration/SedovExplosion/randgen/randgen.C
 
     #cronos_block/utils/celerity_test.C
 )
@@ -203,38 +203,40 @@ target_link_libraries(proj PRIVATE ${HDF5_LIBRARIES})
 
 enable_testing()
 
-configure_file(${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_tiny/SodToro5HllcRef.cat ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_tiny/SodToro5HllcRef.cat COPYONLY)
-configure_file(${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_small/SodToro5HllcRef.cat ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_small/SodToro5HllcRef.cat COPYONLY)
-configure_file(${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef.cat ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef.cat COPYONLY)
+# configure_file(${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_tiny/SodToro5HllcRef.cat ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_tiny/SodToro5HllcRef.cat COPYONLY)
+# configure_file(${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_small/SodToro5HllcRef.cat ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_small/SodToro5HllcRef.cat COPYONLY)
+# configure_file(${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef.cat ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef.cat COPYONLY)
 
-add_test(NAME tiny_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_tiny SodToro5HllcRef)
-add_test(NAME tiny_compare COMMAND ${HDF5_DIFF_EXECUTABLE} -v -d 1.5e-11 --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_tiny/SodToro5HllcRef_float/SodToro5HllcRef_flt_step3.h5 ${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_tiny/SodToro5HllcRef_float/SodToro5HllcRef_flt_step3.h5)
+# add_test(NAME tiny_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_tiny SodToro5HllcRef)
+# add_test(NAME tiny_compare COMMAND ${HDF5_DIFF_EXECUTABLE} -v -d 1.5e-11 --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_tiny/SodToro5HllcRef_float/SodToro5HllcRef_flt_step3.h5 ${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_tiny/SodToro5HllcRef_float/SodToro5HllcRef_flt_step3.h5)
 	
-add_test(NAME small_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_small SodToro5HllcRef)
-add_test(NAME small_compare COMMAND ${HDF5_DIFF_EXECUTABLE} -v -d 1.5e-11 --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_small/SodToro5HllcRef_float/SodToro5HllcRef_flt_step16.h5 ${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_small/SodToro5HllcRef_float/SodToro5HllcRef_flt_step16.h5)
+# add_test(NAME small_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_small SodToro5HllcRef)
+# add_test(NAME small_compare COMMAND ${HDF5_DIFF_EXECUTABLE} -v -d 1.5e-11 --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_small/SodToro5HllcRef_float/SodToro5HllcRef_flt_step16.h5 ${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_small/SodToro5HllcRef_float/SodToro5HllcRef_flt_step16.h5)
 
-add_test(NAME medium_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_medium SodToro5HllcRef)
-add_test(NAME medium_compare COMMAND ${HDF5_DIFF_EXECUTABLE} -v -d 1.5e-11 --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef_float/SodToro5HllcRef_flt_step990.h5 ${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef_float/SodToro5HllcRef_flt_step990.h5)
+# add_test(NAME medium_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_medium SodToro5HllcRef)
+# add_test(NAME medium_compare COMMAND ${HDF5_DIFF_EXECUTABLE} -v -d 1.5e-11 --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef_float/SodToro5HllcRef_flt_step990.h5 ${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef_float/SodToro5HllcRef_flt_step990.h5)
 
-set_tests_properties(tiny_run PROPERTIES DEPENDS proj)
-set_tests_properties(tiny_run PROPERTIES FIXTURES_SETUP EXEC_TINY)
-set_tests_properties(tiny_compare PROPERTIES FIXTURES_REQUIRED EXEC_TINY)
+# set_tests_properties(tiny_run PROPERTIES DEPENDS proj)
+# set_tests_properties(tiny_run PROPERTIES FIXTURES_SETUP EXEC_TINY)
+# set_tests_properties(tiny_compare PROPERTIES FIXTURES_REQUIRED EXEC_TINY)
 	
+# set_tests_properties(small_run PROPERTIES DEPENDS proj)
+# set_tests_properties(small_run PROPERTIES FIXTURES_SETUP EXEC_SMALL)
+# set_tests_properties(small_compare PROPERTIES FIXTURES_REQUIRED EXEC_SMALL)
+	
+# set_tests_properties(medium_run PROPERTIES DEPENDS proj)
+# set_tests_properties(medium_run PROPERTIES FIXTURES_SETUP EXEC_MEDIUM)
+# set_tests_properties(medium_compare PROPERTIES FIXTURES_REQUIRED EXEC_MEDIUM)
+
+configure_file(${CMAKE_SOURCE_DIR}/tests/SedovExplosionHllcRef_small/SedovCartesian_hllc.cat ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_small/SedovCartesian_hllc.cat COPYONLY)
+add_test(NAME small_compare COMMAND ${HDF5_DIFF_EXECUTABLE} -v -d 1.5e-11 --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_small/SedovCartesian_hllc_float/SedovCartesian_hllc_flt_step4.h5 ${CMAKE_SOURCE_DIR}/tests/SedovExplosionHllcRef_small/SedovCartesian_hllc_float/SedovCartesian_hllc_flt_step4.h5)
+configure_file(${CMAKE_SOURCE_DIR}/tests/SedovExplosionHllcRef_medium/SedovCartesian_hllc.cat ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_medium/SedovCartesian_hllc.cat COPYONLY)
+
+add_test(NAME small_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_small SedovCartesian_hllc)
+add_test(NAME medium_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_medium SedovCartesian_hllc)
+
 set_tests_properties(small_run PROPERTIES DEPENDS proj)
 set_tests_properties(small_run PROPERTIES FIXTURES_SETUP EXEC_SMALL)
 set_tests_properties(small_compare PROPERTIES FIXTURES_REQUIRED EXEC_SMALL)
-	
 set_tests_properties(medium_run PROPERTIES DEPENDS proj)
 set_tests_properties(medium_run PROPERTIES FIXTURES_SETUP EXEC_MEDIUM)
-set_tests_properties(medium_compare PROPERTIES FIXTURES_REQUIRED EXEC_MEDIUM)
-
-# configure_file(${CMAKE_SOURCE_DIR}/tests/SedovExplosionHllcRef_small/SedovCartesian_hllc.cat ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_small/SedovCartesian_hllc.cat COPYONLY)
-# # configure_file(${CMAKE_SOURCE_DIR}/tests/SedovExplosionHllcRef_medium/SedovCartesian_hllc.cat ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_medium/SedovCartesian_hllc.cat COPYONLY)
-
-# add_test(NAME small_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_small SedovCartesian_hllc)
-# # add_test(NAME medium_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_medium SedovCartesian_hllc)
-
-# set_tests_properties(small_run PROPERTIES DEPENDS proj)
-# set_tests_properties(small_run PROPERTIES FIXTURES_SETUP EXEC_SMALL)
-# set_tests_properties(medium_run PROPERTIES DEPENDS proj)
-# set_tests_properties(medium_run PROPERTIES FIXTURES_SETUP EXEC_MEDIUM)

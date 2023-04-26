@@ -4,6 +4,7 @@
 #include "problem.H"
 #include "data.H"
 #include "gridgen.H"
+#include "utils.H"
 
 
 class ShockTubeTestHydro: public ProblemType {
@@ -11,6 +12,7 @@ public:
 	ShockTubeTestHydro(const Data &);
 	virtual void init_fields(Data &, int [], int []);
 	void bc_User(Data &, NumMatrix<double,3> &, int, int, int, int);
+	void bc_User(Queue &, Data &, NumMatrix<double,3> &, int, int, int, int);
 	void WriteToH5(Hdf5Stream &);
 private:
 	double rhoLInit, rhoRInit;
@@ -171,6 +173,52 @@ void ShockTubeTestHydro::bc_User(Data &gdata, NumMatrix<double,3> &omb,
 					}
 				}
 			}
+		}
+	}
+}
+
+void ShockTubeTestHydro::bc_User(Queue &queue, Data &gdata, NumMatrix<double,3> &omb,
+		int dir, int top, int q, int rim) {
+
+	if(dir == 0) {
+		if(top == 1) {
+
+			auto omRange = gdata.omSYCL[q].get_range();
+			auto range = Range<3>(rim, omRange.get(1), omRange.get(2));
+
+			double rhoRInit_local = this->rhoRInit;
+			double VRXInit_local = this->VRXInit;
+			double VRYInit_local = this->VRYInit;
+			double VRZInit_local = this->VRZInit;
+			double PRInit_local = this->PRInit;
+			double gamma_local = gamma;
+			double mx = gdata.mx[0];
+
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::write_only};
+
+				cgh.parallel_for<class BCUserKernel>(range, [=](celerity::item<3> item) {
+
+					size_t ix = item.get_id(0) + mx + rim + 1;
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					if (q == 0) {      // density
+						om_acc[ix][iy][iz] = rhoRInit_local;
+					} else if (q == 1) {
+						om_acc[ix][iy][iz] =  VRXInit_local;
+					} else if (q == 2) {
+						om_acc[ix][iy][iz] =  VRYInit_local;
+					} else if (q == 3) {
+						om_acc[ix][iy][iz] =  VRZInit_local;
+					} else if (q == 4) {
+						om_acc[ix][iy][iz] = PRInit_local/rhoRInit_local/(gamma_local-1.);
+					} else {
+						om_acc[ix][iy][iz] = 0.;
+					}
+				});
+			});
 		}
 	}
 }

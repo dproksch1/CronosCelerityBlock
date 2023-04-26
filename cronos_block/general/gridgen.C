@@ -186,7 +186,7 @@ bool Environment::CheckEnd(Data &gdata)
 		RunTimeExit = true;
 	}
 
-	if(RunTimeExit) {cout <<"Hit Exceeded\n";
+	if(RunTimeExit) {
 		return Finalize(gdata, static_cast<string>("Runtime exceeded"));
 	}
 
@@ -196,7 +196,7 @@ bool Environment::CheckEnd(Data &gdata)
 		Completed = true;
 	}
 
-	if(Completed) {cout <<"Hit Completed\n";
+	if(Completed) {
 		return Finalize(gdata, static_cast<string>("Time integration completed"));
 	}
 
@@ -658,7 +658,6 @@ void Environment::Output(Data &gdata, bool isfloat, bool terminate)
 		cout << " triggered at time: " << gdata.time << endl; 
 	}
 
-
 	string filename;
 	char dirname[255];
 
@@ -751,7 +750,7 @@ void Environment::Output(Data &gdata, bool isfloat, bool terminate)
 	if(gdata.rank == 0 && Problem->checkout(2)){
 		cout << "......................................................" << endl;
 	}
-  
+
 	if(isfloat) {
 		numflt_done++;
 	} else {

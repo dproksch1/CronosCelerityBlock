@@ -890,7 +890,133 @@ void gridFunc::boundary_old(Data &gdata, ProblemType &Problem,
 
 }
 
+void gridFunc::boundary(Queue &queue, Data &gdata, ProblemType &Problem,
+                        NumMatrix<double,3> &omb, int rim, int q, int iFluid)
+{
 
+	//-----------------------------------------------------------
+	// x-direction
+	//-----------------------------------------------------------
+
+	cout << "q_bctype: " << q << " " << bc_Type[q] << endl;
+
+	bc_Periodic(queue, gdata, Problem, omb, 0, q, rim);
+
+	if(bc_Type[0] > 1) {
+		if (bc_Type[0] == 2) {
+			bc_Extrapolate(queue, gdata, Problem, omb,0,0,q,rim);
+		} else if (bc_Type[0] == 3) {
+			bc_Outflow(queue, gdata, Problem, omb,0,0,q,rim);
+		} else if (bc_Type[0] == 4) {
+			Problem.bc_User(queue, gdata, omb,0,0,q,rim);
+		} else if (bc_Type[0] == 5) {
+			cerr << " Not implemented" << endl;
+		} else if (bc_Type[0] == 6) {
+			cerr << " Not implemented" << endl;
+		} else if (bc_Type[0] == 7) {
+			cerr << " Not implemented" << endl;
+		} else {
+			cerr << " No such boundary condition 1 " << endl;
+		}
+	}
+
+	// Right:
+	if(bc_Type[1] > 1) {
+		if (bc_Type[1] == 2){
+			bc_Extrapolate(queue, gdata, Problem, omb,0,1,q,rim);
+		} else if (bc_Type[1] == 3) {
+			bc_Outflow(queue, gdata, Problem, omb,0,1,q,rim);
+		} else if (bc_Type[1] == 4) {
+			Problem.bc_User(queue, gdata, omb,0,1,q,rim);
+		} else if (bc_Type[1] == 5) {
+			cerr << " Not implemented" << endl;
+		} else if (bc_Type[1] == 7) {
+			cerr << " Not implemented" << endl;
+		} else {
+			cerr << " No such boundary condition 2 " << endl;
+		}
+	}
+
+	//-----------------------------------------------------------
+	// y-direction
+	//-----------------------------------------------------------
+
+	bc_Periodic(queue, gdata, Problem, omb, 1, q, rim);
+
+	if(bc_Type[2] > 1) {
+		if(bc_Type[2] == 2) {
+			bc_Extrapolate(queue, gdata, Problem, omb,1,0,q,rim);
+		} else if(bc_Type[2] == 3) {
+			bc_Outflow(queue, gdata, Problem, omb,1,0,q,rim);
+		} else if(bc_Type[2] == 4) {
+			Problem.bc_User(queue, gdata, omb,1,0,q,rim);
+		} else if(bc_Type[2] == 5) {
+			cerr << " Not implemented" << endl;
+		} else if (bc_Type[2] == 6) {
+			cerr << " Not implemented" << endl;
+		} else if (bc_Type[2] == 7) {
+			cerr << " Not implemented" << endl;
+		} else {
+			cerr << " No such boundary condition 3 " << " " << bc_Type[1]<< endl;
+		}
+	}
+
+	if(bc_Type[3] > 1) {
+		if(bc_Type[3] == 2) {
+			bc_Extrapolate(queue, gdata, Problem, omb,1,1,q,rim);
+		} else if(bc_Type[3] == 3) {
+			bc_Outflow(queue, gdata, Problem, omb,1,1,q,rim);
+		} else if(bc_Type[3] == 4) {
+			Problem.bc_User(queue, gdata, omb,1,1,q,rim);
+		} else if(bc_Type[3] == 5) {
+			cerr << " Not implemented" << endl;
+		} else if (bc_Type[3] == 6) {
+			cerr << " Not implemented" << endl;
+		} else if (bc_Type[3] == 7) {
+			cerr << " Not implemented" << endl;
+		} else {
+			cerr << " No such boundary condition 4 " << endl;
+		}
+	}
+
+	//-----------------------------------------------------------
+	// z-direction
+	//-----------------------------------------------------------
+
+	bc_Periodic(queue, gdata, Problem, omb, 2, q, rim);
+
+	if(bc_Type[4] > 1) {
+		if (bc_Type[4] == 2) {
+			bc_Extrapolate(queue, gdata, Problem, omb,2,0,q,rim);
+		} else if (bc_Type[4] == 3) {
+			bc_Outflow(queue, gdata, Problem, omb,2,0,q,rim);
+		} else if (bc_Type[4] == 4) {
+			Problem.bc_User(queue, gdata, omb,2,0,q,rim);
+		} else if (bc_Type[4] == 5) {
+			cerr << " Not implemented" << endl;
+		} else if (bc_Type[4] == 7) {
+			cerr << " Not implemented" << endl;
+		} else {
+			cerr << " No such boundary condition 5 " << endl;
+		}
+	}
+
+	if(bc_Type[5] > 1) {
+		if (bc_Type[5] == 2) {
+			bc_Extrapolate(queue, gdata, Problem, omb,2,1,q,rim);
+		} else if (bc_Type[5] == 3) {
+			bc_Outflow(queue, gdata, Problem, omb,2,1,q,rim);
+		} else if (bc_Type[5] == 4) {
+			Problem.bc_User(queue, gdata, omb,2,1,q,rim);
+		} else if (bc_Type[5] == 5) {
+			cerr << " Not implemented" << endl;
+		} else if (bc_Type[5] == 7) {
+			cerr << " Not implemented" << endl;
+		} else {
+			cerr << " No such boundary condition 6 " << endl;
+		}
+	}
+}
 
 void gridFunc::boundary(Data &gdata, ProblemType &Problem,
                         NumMatrix<double,3> &omb, int rim, int q, int iFluid)
@@ -917,7 +1043,6 @@ void gridFunc::boundary(Data &gdata, ProblemType &Problem,
 	if(q>-1) {
 		q = Problem.get_q(omb);
 	}
-
 
 	// Before the boundary conditions at the outer boundary of the domain are
 	// addressed we begin with the periodic boundary conditions - in particularl
@@ -1463,6 +1588,105 @@ void gridFunc::bc_Periodic_old(Data &gdata, ProblemType &Problem,
 		}
 	}
 
+}
+
+void gridFunc::bc_Periodic(Queue &queue, Data &gdata, ProblemType &Problem,
+		NumMatrix<double,3> &omb, int dir, int q, int rim) {
+
+	int shift(0);
+	if(gdata.get_EdgeGridding()) {
+		shift = 1;
+	}
+	auto omRange = gdata.omSYCL[q].get_range();
+	int i_min, i_max;
+
+	if((bc_Type[2*dir] < 2) && (bc_Type[2*dir+1] < 2)) {
+
+		if (dir == 0) {
+
+			get_bcBuffRange(gdata, i_min, i_max, 0, 1, q, rim);
+			auto left_to_right = Range<3>(i_max + 1 - i_min, omRange.get(1), omRange.get(2));
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{(size_t) gdata.mx[0] + 2*rim + 1,1,1}, celerity::read_write};
+				cgh.parallel_for<class Periodic_Dir1_Left_to_Right>(left_to_right, [=, &gdata](celerity::item<3> item){
+					size_t ix = item.get_id(0) + i_min;
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					om_acc[gdata.mx[0]+rim+ix][iy][iz] = om_acc[ix+rim-shift][iy][iz];
+				});
+			});
+
+			get_bcBuffRange(gdata, i_min, i_max, 0, 0, q, rim);
+			auto right_to_left = Range<3>(-(i_min + 1) - i_max, omRange.get(1), omRange.get(2));
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{(size_t) gdata.mx[0] + 2*rim + 1,1,1}, celerity::read_write};
+				cgh.parallel_for<class Periodic_Dir1_Right_to_Left>(right_to_left, [=, &gdata](celerity::item<3> item){
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					om_acc[ix][iy][iz] = om_acc[gdata.mx[0]+rim+ix+shift][iy][iz];
+				});
+			});
+
+		} else if (dir == 2) {
+
+			get_bcBuffRange(gdata, i_min, i_max, 1, 1, q, rim);
+			auto left_to_right = Range<3>(omRange.get(0), i_max + 1 - i_min, omRange.get(2));
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,(size_t) gdata.mx[1] + 2*rim + 1,1}, celerity::read_write};
+				cgh.parallel_for<class Periodic_Dir1_Left_to_Right>(left_to_right, [=, &gdata](celerity::item<3> item){
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1) + i_min;
+					size_t iz = item.get_id(2);
+
+					om_acc[ix][gdata.mx[1]+rim+iy][iz] = om_acc[ix][iy+rim-shift][iz];
+				});
+			});
+
+			get_bcBuffRange(gdata, i_min, i_max, 1, 0, q, rim);
+			auto right_to_left = Range<3>(omRange.get(0), -(i_min + 1) - i_max, omRange.get(2));
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,(size_t) gdata.mx[1] + 2*rim + 1,1}, celerity::read_write};
+				cgh.parallel_for<class Periodic_Dir1_Right_to_Left>(right_to_left, [=, &gdata](celerity::item<3> item){
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					om_acc[ix][iy][iz] = om_acc[ix][gdata.mx[1]+rim+iy+shift][iz];
+				});
+			});
+
+		} else if (dir == 3) {
+
+			get_bcBuffRange(gdata, i_min, i_max, 2, 1, q, rim);
+			auto left_to_right = Range<3>(omRange.get(0), omRange.get(1), i_max + 1 - i_min);
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,1,(size_t) gdata.mx[2] + 2*rim + 1}, celerity::read_write};
+				cgh.parallel_for<class Periodic_Dir1_Left_to_Right>(left_to_right, [=, &gdata](celerity::item<3> item){
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2) + i_min;
+
+					om_acc[ix][iy][gdata.mx[2]+rim+iz] = om_acc[ix][iy][iz+rim-shift];
+				});
+			});
+
+			get_bcBuffRange(gdata, i_min, i_max, 2, 0, q, rim);
+			auto right_to_left = Range<3>(omRange.get(0), omRange.get(1), -(i_min + 1) - i_max);
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,1,(size_t) gdata.mx[2] + 2*rim + 1}, celerity::read_write};
+				cgh.parallel_for<class Periodic_Dir1_Right_to_Left>(right_to_left, [=, &gdata](celerity::item<3> item){
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					om_acc[ix][iy][iz] = om_acc[ix][iy][gdata.mx[2]+rim+iz+shift];
+				});
+			});
+		}
+	} 
 }
 
 
@@ -2241,7 +2465,148 @@ void gridFunc::do_AxisValCorrectionSph(Data &gdata, ProblemType &Problem, bool t
 //#endif
 }
 
+void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem, 
+                              NumMatrix<double,3> &omb,
+                              int dir, int above, int q, int rim)
+{
 
+	int mx[3] = {gdata.mx[0], gdata.mx[1], gdata.mx[2]};
+
+	if(dir == 0) {
+		if(above == 0) {
+			int ixmin = 0;
+
+			auto omRange = gdata.omSYCL[q].get_range();
+			auto range = Range<3>(rim + ixmin, omRange.get(1), omRange.get(2));
+
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{(size_t) rim+1,1,1}, celerity::read_write};
+
+				cgh.parallel_for<class IntegrationKernel>(range, [=](celerity::item<3> item){
+
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					om_acc[ix][iy][iz] = - om_acc[ix + 1][iy][iz];
+
+				});
+			});
+
+		} else if (above == 1) {
+			int ixmin = 1;
+
+			auto omRange = gdata.omSYCL[q].get_range();
+			auto range = Range<3>(rim + ixmin, omRange.get(1), omRange.get(2));
+
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{(size_t) rim+1,1,1}, celerity::read_write};
+
+				cgh.parallel_for<class IntegrationKernel>(range, [=](celerity::item<3> item){
+
+					size_t ix = item.get_id(0) + ixmin;
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					om_acc[mx[0]+rim+ix][iy][iz] = - om_acc[mx[0]+rim+ix-1][iy][iz];
+
+				});
+			});
+		}
+	}
+
+	if(dir == 1) {
+		if(above == 0) {
+			int iymin = 0;
+
+			auto omRange = gdata.omSYCL[q].get_range();
+			auto range = Range<3>(omRange.get(0), rim + iymin, omRange.get(2));
+
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,(size_t) rim+1,1}, celerity::read_write};
+
+				cgh.parallel_for<class IntegrationKernel>(range, [=](celerity::item<3> item){
+
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					om_acc[ix][iy][iz] = - om_acc[ix][iy + 1][iz];
+
+				});
+			});
+
+		} else if (above == 1) {
+			int iymin = 1;
+
+			auto omRange = gdata.omSYCL[q].get_range();
+			auto range = Range<3>(omRange.get(0), rim + iymin, omRange.get(2));
+
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,(size_t) rim+1,1}, celerity::read_write};
+
+				cgh.parallel_for<class IntegrationKernel>(range, [=](celerity::item<3> item){
+
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1) + iymin;
+					size_t iz = item.get_id(2);
+
+					om_acc[ix][mx[1]+rim+iy][iz] = - om_acc[ix][mx[1]+rim+iy-1][iz];
+
+				});
+			});
+		}
+	}
+
+	if(dir == 1) {
+		if(above == 0) {
+			int izmin = 0;
+
+			auto omRange = gdata.omSYCL[q].get_range();
+			auto range = Range<3>(omRange.get(0), omRange.get(1), rim + izmin);
+
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,1,(size_t) rim+1}, celerity::read_write};
+
+				cgh.parallel_for<class IntegrationKernel>(range, [=](celerity::item<3> item){
+
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					om_acc[ix][iy][iz] = - om_acc[ix][iy][iz + 1];
+
+				});
+			});
+
+		} else if (above == 1) {
+			int izmin = 1;
+
+			auto omRange = gdata.omSYCL[q].get_range();
+			auto range = Range<3>(omRange.get(0), omRange.get(1), rim + izmin);
+
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,1,(size_t) rim+1}, celerity::read_write};
+
+				cgh.parallel_for<class IntegrationKernel>(range, [=](celerity::item<3> item){
+
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2) + izmin;
+
+					om_acc[ix][iy][mx[2]+rim+iz] = - om_acc[ix][iy][mx[2]+rim+iz-1];
+
+				});
+			});
+		}
+	}
+}
 
 void gridFunc::bc_Extrapolate(Data &gdata, ProblemType &Problem, 
                               NumMatrix<double,3> &omb,
@@ -2356,6 +2721,191 @@ void gridFunc::bc_Extrapolate(Data &gdata, ProblemType &Problem,
 	}
 }
 
+
+void gridFunc::bc_Outflow(Queue &queue, Data &gdata, ProblemType &pr,
+                          NumMatrix<double,3> &omb,
+                          int dir, int above, int q, int rim)
+
+{
+	if(dir == 0) {
+		if(above == 0) {
+			
+			auto omRange = gdata.omSYCL[q].get_range();
+			auto range = Range<3>(rim, omRange.get(1), omRange.get(2));
+
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{(size_t) rim,1,1}, celerity::read_write};
+				celerity::accessor om_sx_acc{gdata.omSYCL[1], cgh, celerity::access::one_to_one{}, celerity::read_only};
+
+				cgh.parallel_for<class BCOutflowKernel>(range, [=](celerity::item<3> item){
+
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					if (om_sx_acc[rim][iy][iz] < 0.) {
+						om_acc[ix][iy][iz] = om_acc[ix + 1][iy][iz];
+					} else {
+						if (q == 1) {
+							om_acc[ix][iy][iz] = - om_acc[rim - ix - 1][iy][iz];
+						} else {
+							om_acc[ix][iy][iz] = om_acc[rim - ix - 1][iy][iz];
+						}
+					}
+
+				});
+			});
+		} else {
+			auto omRange = gdata.omSYCL[q].get_range();
+			auto range = Range<3>(rim, omRange.get(1), omRange.get(2));
+
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{(size_t) rim,1,1}, celerity::read_write};
+				celerity::accessor om_sx_acc{gdata.omSYCL[1], cgh, celerity::access::one_to_one{}, celerity::read_only};
+
+				cgh.parallel_for<class BCOutflowKernel>(range, [=, &gdata](celerity::item<3> item){
+
+					size_t ix = item.get_id(0) + 1;
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					if (om_sx_acc[gdata.mx[0] + rim][iy][iz] > 0.) {
+						om_acc[gdata.mx[0] + rim + ix][iy][iz] = om_acc[gdata.mx[0] + rim + ix - 1][iy][iz];
+					} else {
+						if (q == 1) {
+							om_acc[gdata.mx[0] + rim + ix][iy][iz] = - om_acc[gdata.mx[0] + rim - ix + 1][iy][iz];
+						} else {
+							om_acc[gdata.mx[0] + rim + ix][iy][iz] = om_acc[gdata.mx[0] + rim - ix + 1][iy][iz];
+						}
+					}
+
+				});
+			});
+		}
+	}
+
+	if(dir == 1) {
+		if(above == 0) {
+			
+			auto omRange = gdata.omSYCL[q].get_range();
+			auto range = Range<3>(omRange.get(0), rim, omRange.get(2));
+
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,(size_t) rim,1}, celerity::read_write};
+				celerity::accessor om_sy_acc{gdata.omSYCL[2], cgh, celerity::access::one_to_one{}, celerity::read_only};
+
+				cgh.parallel_for<class BCOutflowKernel>(range, [=](celerity::item<3> item){
+
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					if (om_sy_acc[ix][rim][iz] < 0.) {
+						om_acc[ix][iy][iz] = om_acc[ix][iy + 1][iz];
+					} else {
+						if (q == 2) {
+							om_acc[ix][iy][iz] = - om_acc[ix][rim - iy - 1][iz];
+						} else {
+							om_acc[ix][iy][iz] = om_acc[ix][rim - iy - 1][iz];
+						}
+					}
+
+				});
+			});
+		} else {
+			auto omRange = gdata.omSYCL[q].get_range();
+			auto range = Range<3>(omRange.get(0), rim, omRange.get(2));
+
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,(size_t) rim,1}, celerity::read_write};
+				celerity::accessor om_sy_acc{gdata.omSYCL[2], cgh, celerity::access::one_to_one{}, celerity::read_only};
+
+				cgh.parallel_for<class BCOutflowKernel>(range, [=, &gdata](celerity::item<3> item){
+
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1) + 1;
+					size_t iz = item.get_id(2);
+
+					if (om_sy_acc[ix][gdata.mx[1] + rim][iz] > 0.) {
+						om_acc[ix][gdata.mx[1] + rim + iy][iz] = om_acc[ix][gdata.mx[1] + rim + iy - 1][iz];
+					} else {
+						if (q == 2) {
+							om_acc[ix][gdata.mx[1] + rim + iy][iz] = - om_acc[ix][gdata.mx[1] + rim - iy + 1][iz];
+						} else {
+							om_acc[ix][gdata.mx[1] + rim + iy][iz] = om_acc[ix][gdata.mx[1] + rim - iy + 1][iz];
+						}
+					}
+
+				});
+			});
+		}
+	}
+
+	if(dir == 2) {
+		if(above == 0) {
+			
+			auto omRange = gdata.omSYCL[q].get_range();
+			auto range = Range<3>(omRange.get(0), omRange.get(1), rim);
+
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,1,(size_t) rim}, celerity::read_write};
+				celerity::accessor om_sz_acc{gdata.omSYCL[3], cgh, celerity::access::one_to_one{}, celerity::read_only};
+
+				cgh.parallel_for<class BCOutflowKernel>(range, [=](celerity::item<3> item){
+
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					if (om_sz_acc[ix][iy][rim] < 0.) {
+						om_acc[ix][iy][iz] = om_acc[ix][iy][iz + 1];
+					} else {
+						if (q == 2) {
+							om_acc[ix][iy][iz] = - om_acc[ix][iy][rim - iz - 1];
+						} else {
+							om_acc[ix][iy][iz] = om_acc[ix][iy][rim - iz - 1];
+						}
+					}
+
+				});
+			});
+		} else {
+			auto omRange = gdata.omSYCL[q].get_range();
+			auto range = Range<3>(omRange.get(0), omRange.get(1), rim);
+
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,1,(size_t) rim}, celerity::read_write};
+				celerity::accessor om_sz_acc{gdata.omSYCL[3], cgh, celerity::access::one_to_one{}, celerity::read_only};
+
+				cgh.parallel_for<class BCOutflowKernel>(range, [=, &gdata](celerity::item<3> item){
+
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2) + 1;
+
+					if (om_sz_acc[ix][iy][gdata.mx[2] + rim] > 0.) {
+						om_acc[ix][iy][gdata.mx[2] + rim + iz] = om_acc[ix][iy][gdata.mx[2] + rim + iz - 1];
+					} else {
+						if (q == 3) {
+							om_acc[ix][iy][gdata.mx[2] + rim + iz] = - om_acc[ix][iy][gdata.mx[2] + rim - iz + 1];
+						} else {
+							om_acc[ix][iy][gdata.mx[2] + rim + iz] = om_acc[ix][iy][gdata.mx[2] + rim - iz + 1];
+						}
+					}
+
+				});
+			});
+		}
+	}
+
+
+}
 
 
 

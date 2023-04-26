@@ -139,12 +139,14 @@ public:
 	double TransEth2E(double, double, double, double) const;
 	double TransT2E(const ProblemType &, double, double, double, double) const;
 
-	/*void TransPrim2Cons(Data &gdata, gridFunc &gfunc, ProblemType &Problem, Queue &);
+	void TransPrim2Cons(Data &gdata, gridFunc &gfunc, ProblemType &Problem, Queue &);
+	void TransCons2Prim(Data &gdata, gridFunc &gfunc, ProblemType &Problem, Queue &);
 	void TransVel2Momen(Data &, gridFunc &, ProblemType &, Queue &);
-	void TransE2Eth(Data &, gridFunc &, ProblemType &, Queue &) const;
+	void TransMomen2Vel(Data &, gridFunc &, ProblemType &, Queue &);
+	void TransE2Eth(Data &, gridFunc &, ProblemType &, Queue &, int, bool);
 	void TransEth2E(const Data &gdata, gridFunc &gfunc, ProblemType &Problem, Queue &queue) const;
 	void TransT2Eth(const Data &, gridFunc &, ProblemType &, Queue &) const;
-	void TransT2E(const Data &, gridFunc &, ProblemType &, Queue &) const;*/
+	void TransT2E(const Data &, gridFunc &, ProblemType &, Queue &) const;
 
 #if (USE_COROTATION == CRONOS_ON)
 	void TransCorotToInert(Data &, gridFunc &, ProblemType &);

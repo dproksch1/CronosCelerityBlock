@@ -385,6 +385,18 @@ void ProblemType::bc_User(Data &gdata, NumMatrix<double,3> &omb,
 
 }
 
+void ProblemType::bc_User(Queue &queue, Data &gdata, NumMatrix<double,3> &omb,
+                          int dir, int top, int q, int rim) {
+	cerr << " Error: User boundaries at: " << endl;
+	cerr << "  direction: " << dir << " top: " << top << endl;
+	cerr << " set in cat file - but not defined in mod-file " << endl;
+	cerr << " EXITING " << endl;;
+
+    exit(-33);
+	
+}
+
+
 int ProblemType::checkConvergence(Data &gdata) {
 	//! Method can be used to check whether convergence has been reached
 	return 0;
