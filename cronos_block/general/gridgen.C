@@ -506,26 +506,27 @@ int Environment::integrate(Data &gdata, Queue& queue)
 	}
     
 	try{
-		pdestep(gdata, queue);
+		pdestep(gdata, queue);cout << "reached 2.1" << endl;
 	} catch (CException exep) {
 		Abort(gdata, exep);
 	}
 
 	gdata.tstep++;
-
+cout << "reached 2.2" << endl;
 	CheckOut(gdata);
-
+cout << "reached 2.3" << endl;
 	try {
 		compute_dt(gdata);
 	} catch (CException exep) {
 		Abort(gdata, exep);
 	}
-
+cout << "reached 2.4" << endl;
 	// Check if possible user-defined ending condition has been reached
 	EndProgram = CheckEnd_User(gdata);
 
 	// Check if ending condition is reached:
 	if(EndProgram==0) {
+
 		EndProgram = CheckEnd(gdata);
 	}
 
@@ -647,7 +648,6 @@ void Environment::Output(Data &gdata, bool isfloat, bool terminate)
 	  Routine to write a hdf5 output file for double data -- can be used
 	  for restart
 	*/
-
 	if(gdata.rank == 0 && Problem->checkout(2)) {
 		cout << "......................................................" << endl;
 		if(isfloat) {
@@ -679,7 +679,7 @@ void Environment::Output(Data &gdata, bool isfloat, bool terminate)
 	filename = dirname;
 	filename += "/";
 	filename += MakeFilename(gdata.coords, gdata.tstep, terminate, isfloat);
-
+std::cout << "output trigger: " << filename << std::endl;
 #if(FLUID_TYPE == CRONOS_MULTIFLUID)
 	int n_Omega = gdata.fluids->get_N_OMEGA();
 	int n_omIntUser = gdata.fluids->get_N_OMINT_USER();

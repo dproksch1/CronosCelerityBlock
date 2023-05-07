@@ -951,7 +951,7 @@ void gridFunc::boundary(Queue &queue, Data &gdata, ProblemType &Problem,
 		} else if(bc_Type[2] == 4) {
 			Problem.bc_User(queue, gdata, omb,1,0,q,rim);
 		} else if(bc_Type[2] == 5) {
-			cerr << " Not implemented" << endl;
+			bc_Reflecting(queue, gdata, Problem, omb,0,0,q,rim);
 		} else if (bc_Type[2] == 6) {
 			cerr << " Not implemented" << endl;
 		} else if (bc_Type[2] == 7) {
@@ -969,7 +969,7 @@ void gridFunc::boundary(Queue &queue, Data &gdata, ProblemType &Problem,
 		} else if(bc_Type[3] == 4) {
 			Problem.bc_User(queue, gdata, omb,1,1,q,rim);
 		} else if(bc_Type[3] == 5) {
-			cerr << " Not implemented" << endl;
+			bc_Reflecting(queue, gdata, Problem, omb,0,0,q,rim);
 		} else if (bc_Type[3] == 6) {
 			cerr << " Not implemented" << endl;
 		} else if (bc_Type[3] == 7) {
@@ -993,7 +993,7 @@ void gridFunc::boundary(Queue &queue, Data &gdata, ProblemType &Problem,
 		} else if (bc_Type[4] == 4) {
 			Problem.bc_User(queue, gdata, omb,2,0,q,rim);
 		} else if (bc_Type[4] == 5) {
-			cerr << " Not implemented" << endl;
+			bc_Reflecting(queue, gdata, Problem, omb,0,0,q,rim);
 		} else if (bc_Type[4] == 7) {
 			cerr << " Not implemented" << endl;
 		} else {
@@ -1003,13 +1003,15 @@ void gridFunc::boundary(Queue &queue, Data &gdata, ProblemType &Problem,
 
 	if(bc_Type[5] > 1) {
 		if (bc_Type[5] == 2) {
+			
+			
 			bc_Extrapolate(queue, gdata, Problem, omb,2,1,q,rim);
 		} else if (bc_Type[5] == 3) {
 			bc_Outflow(queue, gdata, Problem, omb,2,1,q,rim);
 		} else if (bc_Type[5] == 4) {
 			Problem.bc_User(queue, gdata, omb,2,1,q,rim);
 		} else if (bc_Type[5] == 5) {
-			cerr << " Not implemented" << endl;
+			bc_Reflecting(queue, gdata, Problem, omb,0,0,q,rim);
 		} else if (bc_Type[5] == 7) {
 			cerr << " Not implemented" << endl;
 		} else {
@@ -2489,7 +2491,7 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 					size_t iy = item.get_id(1);
 					size_t iz = item.get_id(2);
 
-					om_acc[ix][iy][iz] = - om_acc[ix + 1][iy][iz];
+					om_acc[ix][iy][iz] = om_acc[ix + 1][iy][iz];
 
 				});
 			});
@@ -2510,7 +2512,7 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 					size_t iy = item.get_id(1);
 					size_t iz = item.get_id(2);
 
-					om_acc[mx[0]+rim+ix][iy][iz] = - om_acc[mx[0]+rim+ix-1][iy][iz];
+					om_acc[mx[0]+rim+ix][iy][iz] = om_acc[mx[0]+rim+ix-1][iy][iz];
 
 				});
 			});
@@ -2534,7 +2536,7 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 					size_t iy = item.get_id(1);
 					size_t iz = item.get_id(2);
 
-					om_acc[ix][iy][iz] = - om_acc[ix][iy + 1][iz];
+					om_acc[ix][iy][iz] = om_acc[ix][iy + 1][iz];
 
 				});
 			});
@@ -2555,7 +2557,7 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 					size_t iy = item.get_id(1) + iymin;
 					size_t iz = item.get_id(2);
 
-					om_acc[ix][mx[1]+rim+iy][iz] = - om_acc[ix][mx[1]+rim+iy-1][iz];
+					om_acc[ix][mx[1]+rim+iy][iz] = om_acc[ix][mx[1]+rim+iy-1][iz];
 
 				});
 			});
@@ -2579,7 +2581,7 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 					size_t iy = item.get_id(1);
 					size_t iz = item.get_id(2);
 
-					om_acc[ix][iy][iz] = - om_acc[ix][iy][iz + 1];
+					om_acc[ix][iy][iz] = om_acc[ix][iy][iz + 1];
 
 				});
 			});
@@ -2600,7 +2602,7 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 					size_t iy = item.get_id(1);
 					size_t iz = item.get_id(2) + izmin;
 
-					om_acc[ix][iy][mx[2]+rim+iz] = - om_acc[ix][iy][mx[2]+rim+iz-1];
+					om_acc[ix][iy][mx[2]+rim+iz] = om_acc[ix][iy][mx[2]+rim+iz-1];
 
 				});
 			});
@@ -3098,6 +3100,181 @@ void gridFunc::bc_Outflow(Data &gdata, ProblemType &pr,
 }
 
 
+void gridFunc::bc_Reflecting(Queue &queue, Data &gdata, ProblemType &pr,
+                             NumMatrix<double,3> &omb,
+                             int dir, int above, int q, int rim)
+{
+	/*
+	  Reflecting boundaries: inversion of velocity at the
+	  boundaries. All other quantities are extrapolated via zero
+	  gradient.
+	*/
+
+	string qname = omb.getName();
+	bool is_sx = false;
+	if(qname=="s_x") {
+		is_sx = true;
+	}
+	bool is_sy = false;
+	if(qname=="s_y") {
+		is_sy = true;
+	}
+	bool is_sz = false;
+	if(qname=="s_z") {
+		is_sz = true;
+	}
+
+	if(dir == 0) {
+		if(above == 0) {
+			auto omRange = gdata.omSYCL[q].get_range();
+			auto range = Range<3>(rim, omRange.get(1), omRange.get(2));
+
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{(size_t) rim,1,1}, celerity::read_write};
+
+				cgh.parallel_for<class IntegrationKernel>(range, [=](celerity::item<3> item){
+
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					if (is_sx) {
+						om_acc[ix][iy][iz] = - om_acc[2*rim - ix - 1][iy][iz];
+					} else {
+						om_acc[ix][iy][iz] = - om_acc[ix + 1][iy][iz];
+					}
+
+				});
+			});
+		} else if (above == 1) {
+			auto omRange = gdata.omSYCL[q].get_range();
+			auto range = Range<3>(rim, omRange.get(1), omRange.get(2));
+
+			int mxx = gdata.mx[0];
+
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{(size_t) rim,1,1}, celerity::read_write};
+
+				cgh.parallel_for<class IntegrationKernel>(range, [=](celerity::item<3> item){
+
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					if (is_sx) {
+						om_acc[mxx + rim + ix + 1][iy][iz] = - om_acc[mxx + rim - ix][iy][iz];
+					} else {
+						om_acc[mxx + rim + ix + 1][iy][iz] = - om_acc[mxx + rim + ix][iy][iz];
+					}
+
+				});
+			});
+		}
+	}
+
+	if(dir == 1) {
+		if(above == 0) {
+			auto omRange = gdata.omSYCL[q].get_range();
+			auto range = Range<3>(omRange.get(0), rim, omRange.get(2));
+
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,(size_t)rim,1}, celerity::read_write};
+
+				cgh.parallel_for<class IntegrationKernel>(range, [=](celerity::item<3> item){
+
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					if (is_sy) {
+						om_acc[ix][iy][iz] = - om_acc[ix][2*rim - iy - 1][iz];
+					} else {
+						om_acc[ix][iy][iz] = - om_acc[ix][iy + 1][iz];
+					}
+
+				});
+			});
+		} else if(above == 1) {
+			auto omRange = gdata.omSYCL[q].get_range();
+			auto range = Range<3>(omRange.get(0), rim, omRange.get(2));
+
+			int mxy = gdata.mx[1];
+
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,(size_t)rim,1}, celerity::read_write};
+
+				cgh.parallel_for<class IntegrationKernel>(range, [=](celerity::item<3> item){
+
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					if (is_sy) {
+						om_acc[ix][mxy + rim + iy + 1][iz] = - om_acc[ix][mxy + rim - iy][iz];
+					} else {
+						om_acc[ix][mxy + rim + iy + 1][iz] = - om_acc[ix][mxy + rim + iy][iz];
+					}
+
+				});
+			});
+		}
+	}
+
+	if(dir == 2) {
+		if(above == 0) {
+			auto omRange = gdata.omSYCL[q].get_range();
+			auto range = Range<3>(omRange.get(0), omRange.get(1), rim);
+
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,1,(size_t)rim}, celerity::read_write};
+
+				cgh.parallel_for<class IntegrationKernel>(range, [=](celerity::item<3> item){
+
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					if (is_sy) {
+						om_acc[ix][iy][iz] = - om_acc[ix][iy][2*rim - iz - 1];
+					} else {
+						om_acc[ix][iy][iz] = - om_acc[ix][iy][iz + 1];
+					}
+
+				});
+			});
+		} else if(above == 1) {
+			auto omRange = gdata.omSYCL[q].get_range();
+			auto range = Range<3>(omRange.get(0), omRange.get(1), rim);
+
+			int mxz = gdata.mx[1];
+
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,1,(size_t)rim}, celerity::read_write};
+
+				cgh.parallel_for<class IntegrationKernel>(range, [=](celerity::item<3> item){
+
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					if (is_sy) {
+						om_acc[ix][iy][mxz + rim + iz + 1] = - om_acc[ix][iy][mxz + rim - iz];
+					} else {
+						om_acc[ix][iy][mxz + rim + iz + 1] = - om_acc[ix][iy][mxz + rim + iz];
+					}
+
+				});
+			});
+		}
+	}
+}
+
 
 
 void gridFunc::bc_Reflecting(Data &gdata, ProblemType &pr,
@@ -3482,6 +3659,8 @@ void gridFunc::dataout(Data &gdata,  Hdf5Stream &h5out, ProblemType & Problem,
 			qout = q+N_ADD;
 		}
 
+ 	
+
 		/*
 		if(gdata.mag || (qout <4 || qout>6)) {
 		*/
@@ -3502,6 +3681,8 @@ void gridFunc::dataout(Data &gdata,  Hdf5Stream &h5out, ProblemType & Problem,
 			// directly)
 
 			h5out.Write3DMatrix(dsetName, data, xmin, gdata.dx, group);
+
+			// printf("------+ %d- %d,%d,%d: %f \n",q,61,61,61,data(58,58,58));
 
 			// if possible add unit to field
 			if(Problem.TrafoNorm != NULL) {

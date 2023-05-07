@@ -159,6 +159,9 @@
         "reconst_block.H": "cpp",
         "transformations.H": "cpp",
         "changes.H": "cpp",
-        "timewrapper.H": "cpp"
+        "timewrapper.H": "cpp",
+        "singlestep_block copy.C": "cpp",
+        "singlestep_block copy 2.C": "cpp",
+        "singlestep_block2.C": "cpp"
     }
 }

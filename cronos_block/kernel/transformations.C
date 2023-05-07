@@ -121,19 +121,19 @@ void Transformations::TransCons2Prim(Data &gdata, gridFunc &gfunc,
 void Transformations::TransMomen2Vel(Data &gdata, gridFunc &gfunc,
                                      ProblemType &Problem)
 {
-	if(gdata.om[q_sx].getName() == "v_x" || 
-	   gdata.om[q_sy].getName() == "v_y" ||
-	   gdata.om[q_sz].getName() == "v_z") {
-		throw CException(" Velocity instead of momentum ");
-	}
+	// if(gdata.om[q_sx].getName() == "v_x" || 
+	//    gdata.om[q_sy].getName() == "v_y" ||
+	//    gdata.om[q_sz].getName() == "v_z") {
+	// 	throw CException(" Velocity instead of momentum ");
+	// }
 
 	for (int q = q_sx; q <= q_sz; ++q) {
 		gdata.om[q] /= gdata.om[q_rho];
 	}
 
-	gdata.om[q_sx].rename("v_x");
-	gdata.om[q_sy].rename("v_y");
-	gdata.om[q_sz].rename("v_z");
+	// gdata.om[q_sx].rename("v_x");
+	// gdata.om[q_sy].rename("v_y");
+	// gdata.om[q_sz].rename("v_z");
 }
 
 
@@ -909,11 +909,11 @@ void Transformations::TransCons2Prim(Data &gdata, gridFunc &gfunc,
 void Transformations::TransMomen2Vel(Data &gdata, gridFunc &gfunc,
                                      ProblemType &Problem, Queue &queue)
 {
-	if(gdata.om[q_sx].getName() == "v_x" || 
-	   gdata.om[q_sy].getName() == "v_y" ||
-	   gdata.om[q_sz].getName() == "v_z") {
-		throw CException(" Velocity instead of momentum ");
-	}
+	// if(gdata.om[q_sx].getName() == "v_x" || 
+	//    gdata.om[q_sy].getName() == "v_y" ||
+	//    gdata.om[q_sz].getName() == "v_z") {
+	// 	throw CException(" Velocity instead of momentum ");
+	// }
 
 	auto range = gdata.omSYCL[q_rho].get_range();
 
@@ -1031,15 +1031,38 @@ void Transformations::TransE2Eth(Data &gdata, gridFunc &gfunc, ProblemType &Prob
 {
 	if(Problem.gamma < 1.0000000001) {
 		throw CException(" Must not be isothermal ");
-	}
+	}	
+	
+	#if(CRSWITCH_DUAL_ENERGY == CRONOS_OFF)
+		DualEnergy = false;
+	#endif
 
 	int n_omIntAll = N_OMINT;
 
+	// // Saving overall energy:
+	// if(ENERGETICS == FULL && DualEnergy) {
+
+	// 	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+	// 		celerity::accessor om_save_acc{gdata.omSYCL_save[0], cgh, celerity::access::one_to_one{}, celerity::read_write};
+	// 		celerity::accessor om_Eges_acc{gdata.omSYCL[4], cgh, celerity::access::one_to_one{}, celerity::read_only};
+	// 		cgh.parallel_for<class IntegrationKernel>(gdata.omSYCL_save[0].get_range(), [=](celerity::item<3> item){
+
+	// 			size_t ix = item.get_id(0);
+	// 			size_t iy = item.get_id(1);
+	// 			size_t iz = item.get_id(2);
+
+	// 			om_save_acc[ix][iy][iz] = om_Eges_acc[ix][iy][iz];
+	// 		});
+	// 	});
+
+	// 	gdata.om[n_omIntAll].rename(gdata.om[q_Eges].getName());
+	// }
+
 	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-		celerity::accessor om_rho_acc{gdata.omSYCL[0], cgh, celerity::access::one_to_one{}, celerity::read_write};
-		celerity::accessor om_sx_acc{gdata.omSYCL[1], cgh, celerity::access::one_to_one{}, celerity::read_write};
-		celerity::accessor om_sy_acc{gdata.omSYCL[2], cgh, celerity::access::one_to_one{}, celerity::read_write};
-		celerity::accessor om_sz_acc{gdata.omSYCL[3], cgh, celerity::access::one_to_one{}, celerity::read_write};
+		celerity::accessor om_rho_acc{gdata.omSYCL[0], cgh, celerity::access::one_to_one{}, celerity::read_only};
+		celerity::accessor om_sx_acc{gdata.omSYCL[1], cgh, celerity::access::one_to_one{}, celerity::read_only};
+		celerity::accessor om_sy_acc{gdata.omSYCL[2], cgh, celerity::access::one_to_one{}, celerity::read_only};
+		celerity::accessor om_sz_acc{gdata.omSYCL[3], cgh, celerity::access::one_to_one{}, celerity::read_only};
 		celerity::accessor om_Eges_acc{gdata.omSYCL[4], cgh, celerity::access::one_to_one{}, celerity::read_write};
 		cgh.parallel_for<class IntegrationKernel>(gdata.omSYCL[0].get_range(), [=](celerity::item<3> item){
 

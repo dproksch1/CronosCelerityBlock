@@ -2,6 +2,8 @@
 
 #include "gridgen.H"
 
+#define CR_CELERITY CELERITY_OFF
+
 void Environment::init_solvers(Data &gdata)
 {
 	// Specified user class
@@ -40,7 +42,6 @@ void Environment::pdestep(Data &gdata, Queue& queue)
 
 	auto omRange = gdata.omSYCL[0].get_range();
 	size_t nom_max[3] = {omRange.get(0), omRange.get(1), omRange.get(2)};
-
 	for (int q = 0; q < N_OMINT; q++) {
 
 		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
@@ -56,7 +57,6 @@ void Environment::pdestep(Data &gdata, Queue& queue)
 			});
 		});
 	}
-
 	queue.slow_full_sync();
 
 #endif

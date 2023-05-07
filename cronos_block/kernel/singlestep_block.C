@@ -106,7 +106,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	auto omRange = gdata.omSYCL[0].get_range();
 	size_t nom_max[3] = {omRange.get(0), omRange.get(1), omRange.get(2)};
 
-	if (gdata.tstep <= 1) {
+	if (gdata.tstep <= 1 && n == 0) {
 		for (int q = 0; q < N_OMINT; q++) {
 
 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
@@ -122,7 +122,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 				});
 			});
 		}
-	}
+	}	
 
 // ---------------------------------------------------------------	      
 //      Trafo of variables to conservative form
@@ -139,14 +139,14 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	Trafo->TransCorotToInert(gdata, gfunc, Problem);
 #endif
 
-	// Trafo->TransPrim2Cons(gdata, gfunc, Problem);
+// 	Trafo->TransPrim2Cons(gdata, gfunc, Problem);
 
-	// // User defined transform
-	// Problem.TransPrim2Cons(gdata);
+// 	// User defined transform
+// 	Problem.TransPrim2Cons(gdata);
 
-// ---------------------------------------------------------------	      
-//      Saving old variables for Runge-Kutta (conservative form)
-//----------------------------------------------------------------
+// // ---------------------------------------------------------------	      
+// //      Saving old variables for Runge-Kutta (conservative form)
+// //----------------------------------------------------------------
 
 // 	if (n == 0) {
 // 		for (int q = 0; q < n_omInt; ++q){
@@ -170,22 +170,22 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 // 	}
 
-// ---------------------------------------------------------------	      
-//      Trafo primitive variables for reconstruction
-//----------------------------------------------------------------
+// // ---------------------------------------------------------------	      
+// //      Trafo primitive variables for reconstruction
+// //----------------------------------------------------------------
 
-	// Trafo->TransCons2Prim(gdata, gfunc, Problem);
+// 	Trafo->TransCons2Prim(gdata, gfunc, Problem);
 
-	// // User defined transform
-	// Problem.TransCons2Prim(gdata);
+// 	// User defined transform
+// 	Problem.TransCons2Prim(gdata);
 
-	// // Check for nans in primitive variables
-	// gdata.CheckNan(1);
+// 	// Check for nans in primitive variables
+// 	gdata.CheckNan(1);
 
-	// // Compute the carbuncle-flag if necessary
-	// if(gdata.use_carbuncleFlag) {
-	// 	Riemann[DirX]->compute_carbuncleFlag(gdata);
-	// }
+// 	// Compute the carbuncle-flag if necessary
+// 	if(gdata.use_carbuncleFlag) {
+// 		Riemann[DirX]->compute_carbuncleFlag(gdata);
+// 	}
 
 // ---------------------------------------------------------------	      
 //      Buffer and Constant Initialization
@@ -209,22 +209,10 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	const int iyEnd = gdata.mx[1] + n_ghost[1] - 1;
 	const int ixStart = -n_ghost[0] + 1;
 	const int ixEnd = gdata.mx[0] + n_ghost[0] - 1;
-	
+
 	//buffers	
 	celerity::buffer<double, 1> max_buf{celerity::range{1}};
 	CelerityBuffer<nom_t, 3> nomSYCL {celerity::range<3>(omRange.get(0), omRange.get(1), omRange.get(2))};
-	// CelerityBuffer<uPri_t, 3> uPriSYCL{celerity::range<3>(omRange.get(0), omRange.get(1), omRange.get(2))};
-
-	// queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-	// 	celerity::accessor uPri_acc{uPriSYCL, cgh, celerity::access::all{}, celerity::write_only, celerity::no_init};
-	// 	cgh.parallel_for<class PointwiseReconstructionKernel>(uPriSYCL.get_range(), [=](celerity::item<3> item) {
-	// 		for (int f = 0; f < gpu::FaceMax; f++) {
-	// 			for (int d = 0; d < N_OMINT; d++) {
-	// 				uPri_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)].mat[f][d] = 0;
-	// 			}
-	// 		}
-	// 	});
-	// });
 
 	queue.submit([=](celerity::handler& cgh) {
 		celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
@@ -482,13 +470,12 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 // ----------------------------------------------------------------
 	
 	TimeIntegratorGeneric[0]->Substep(queue, gdata, omRange, nomSYCL, gdata.dt, n, nom_max);
-	
+
 	// for (int q = 0; q < n_omInt; ++q) {
 
 	// 	// TimeIntegratorGeneric[q]->Substep(queue, gdata, omRange, nomSYCL, gdata.om, n, nom_max);
 	// 	TimeIntegratorGeneric[q]->Substep(gdata, Problem, gdata.nom[q], gdata.om, n);
 	// }
-	// queue.slow_full_sync();
 
 #if (OMS_USER == TRUE)
 
@@ -500,6 +487,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	}
 
 #endif
+
 
 //	delete [] nom;
 //#if (OMS_USER == TRUE)
@@ -526,12 +514,37 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 //   Transformation to primitive variables and apply bcs
 // ----------------------------------------------------------------
 
-	gettimeofday(&tock2, 0);
+// 	gettimeofday(&tock2, 0);
 // #if (USE_ANGULAR_MOMENTUM == TRUE)
 // 	Trafo->TransAngMom2Vel(gdata, gfunc, Problem);
 // #else
 // 	Trafo->TransMomen2Vel(gdata, gfunc, Problem);
 // #endif
+
+// queue.slow_full_sync();
+// 	cout << "comp_output: " << endl;
+// 	for (int q = 0; q < 5; q++) {
+
+// 		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+// 			celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::write_only_host_task};
+// 			cgh.host_task(celerity::on_master_node, [=, &gdata]{
+// 				for (int i = 0; i < nom_max[0]; i++) {
+// 					for (int j = 0; j < nom_max[1]; j++) {
+// 						for (int k = 0; k < nom_max[2]; k++) {
+// 							double diff = gdata.om[q](i-3,j-3,k-3) - omSYCL_acc[i][j][k];
+// 							if (diff > 0.000000000001 || diff < -0.000000000001) {
+// 								printf("%d-%d,%d,%d: %f, %f, %fx10^6\n",q,i,j,k,gdata.om[q](i-3,j-3,k-3),omSYCL_acc[i][j][k],diff*100000);
+// 							}
+// 							//if (gdata.om[q](i-3,j-3,k-3) > 1.000000000001 || gdata.om[q](i-3,j-3,k-3) < (1.0 - 0.000000000001)) {
+// 								// printf("%d,%d,%d: %f\n",i,j,k,gdata.om[q](i-3,j-3,k-3));
+// 							//}
+// 						}
+// 					}
+// 				}
+// 			});
+// 		});
+// 	}
+// 	queue.slow_full_sync();
 
 #if (FLUID_TYPE == CRONOS_MHD)
 	if(IntegrateA) {
@@ -552,8 +565,8 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 	// Boundary conditions
 	for(int q=0; q<q_max; ++q) {
-		gfunc.boundary(gdata, Problem, gdata.om[q],B,q);
-		//gfunc.boundary(queue,gdata, Problem, gdata.om[q],B,q);
+		// gfunc.boundary(gdata, Problem, gdata.om[q],B,q);
+		gfunc.boundary(queue,gdata, Problem, gdata.om[q],B,q);
 	}
 
 	if(ENERGETICS == FULL) {
@@ -639,7 +652,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	Trafo->TransCorotToInert(gdata, gfunc, Problem);
 #endif
 
-	//phystest(gdata, gfunc, Problem, n);
+	// phystest(gdata, gfunc, Problem, n);
 
 #if (USE_COROTATION == CRONOS_ON)
 	// Transform back to co-rotating frame

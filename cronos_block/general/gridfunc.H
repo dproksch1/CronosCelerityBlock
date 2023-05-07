@@ -119,6 +119,8 @@ private:
 	                int, int, int, int);
 	void bc_Extrapolate(Queue &queue, Data &, ProblemType &, NumMatrix<double,3> &,
 	                    int, int, int, int);
+	void bc_Reflecting(Queue &queue, Data &, ProblemType &, NumMatrix<double,3> &,
+	                   int, int, int, int);
 
 	/**
 	 * Adapt resolution of input data to version of cat file
