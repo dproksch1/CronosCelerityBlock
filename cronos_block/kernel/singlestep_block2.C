@@ -578,8 +578,8 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 	// Boundary conditions
 	for(int q=0; q<q_max; ++q) {
-		//gfunc.boundary(gdata, Problem, gdata.om[q],B,q);
-		gfunc.boundary(queue,gdata, Problem, gdata.om[q],B,q);
+		gfunc.boundary(gdata, Problem, gdata.om[q],B,q);
+		// gfunc.boundary(queue,gdata, Problem, gdata.om[q],B,q);
 	}
 
 	if(ENERGETICS == FULL) {

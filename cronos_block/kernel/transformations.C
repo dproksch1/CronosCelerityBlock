@@ -121,19 +121,19 @@ void Transformations::TransCons2Prim(Data &gdata, gridFunc &gfunc,
 void Transformations::TransMomen2Vel(Data &gdata, gridFunc &gfunc,
                                      ProblemType &Problem)
 {
-	// if(gdata.om[q_sx].getName() == "v_x" || 
-	//    gdata.om[q_sy].getName() == "v_y" ||
-	//    gdata.om[q_sz].getName() == "v_z") {
-	// 	throw CException(" Velocity instead of momentum ");
-	// }
+	if(gdata.om[q_sx].getName() == "v_x" || 
+	   gdata.om[q_sy].getName() == "v_y" ||
+	   gdata.om[q_sz].getName() == "v_z") {
+		throw CException(" Velocity instead of momentum ");
+	}
 
 	for (int q = q_sx; q <= q_sz; ++q) {
 		gdata.om[q] /= gdata.om[q_rho];
 	}
 
-	// gdata.om[q_sx].rename("v_x");
-	// gdata.om[q_sy].rename("v_y");
-	// gdata.om[q_sz].rename("v_z");
+	gdata.om[q_sx].rename("v_x");
+	gdata.om[q_sy].rename("v_y");
+	gdata.om[q_sz].rename("v_z");
 }
 
 
@@ -909,11 +909,11 @@ void Transformations::TransCons2Prim(Data &gdata, gridFunc &gfunc,
 void Transformations::TransMomen2Vel(Data &gdata, gridFunc &gfunc,
                                      ProblemType &Problem, Queue &queue)
 {
-	// if(gdata.om[q_sx].getName() == "v_x" || 
-	//    gdata.om[q_sy].getName() == "v_y" ||
-	//    gdata.om[q_sz].getName() == "v_z") {
-	// 	throw CException(" Velocity instead of momentum ");
-	// }
+	if(gdata.om[q_sx].getName() == "v_x" || 
+	   gdata.om[q_sy].getName() == "v_y" ||
+	   gdata.om[q_sz].getName() == "v_z") {
+		throw CException(" Velocity instead of momentum ");
+	}
 
 	auto range = gdata.omSYCL[q_rho].get_range();
 

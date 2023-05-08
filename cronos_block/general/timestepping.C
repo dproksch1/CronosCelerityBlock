@@ -298,7 +298,7 @@ void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
 	if (substep == 0) { // First Runge Kutta step
 
 		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-			celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor nomSYCL_acc{gdata.nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_write};
 			celerity::accessor om_rho_acc{gdata.omSYCL[0], cgh, celerity::access::one_to_one{}, celerity::read_write};
 			celerity::accessor om_sx_acc{gdata.omSYCL[1], cgh, celerity::access::one_to_one{}, celerity::read_write};
 			celerity::accessor om_sy_acc{gdata.omSYCL[2], cgh, celerity::access::one_to_one{}, celerity::read_write};
@@ -334,13 +334,17 @@ void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
 				om_Eges_acc[ix][iy][iz] -= dt * nomSYCL_acc[ix][iy][iz].mat[4];
 
 
+				for (int d = 0; d < N_OMINT; d++) {
+					nomSYCL_acc[ix][iy][iz].mat[d] = 0;
+				}
+
 			});
 		});
 
 	} else if (substep == 1) { // Second Runge Kutta step
 
 		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-			celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor nomSYCL_acc{gdata.nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_write};
 			celerity::accessor om_rho_acc{gdata.omSYCL[0], cgh, celerity::access::one_to_one{}, celerity::read_write};
 			celerity::accessor om_sx_acc{gdata.omSYCL[1], cgh, celerity::access::one_to_one{}, celerity::read_write};
 			celerity::accessor om_sy_acc{gdata.omSYCL[2], cgh, celerity::access::one_to_one{}, celerity::read_write};
@@ -375,6 +379,10 @@ void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
 
 				om_Eges_acc[ix][iy][iz] = (0.5*om_save_Eges_acc[ix][iy][iz] + 0.5*om_Eges_acc[ix][iy][iz] 
 										- 0.5 * dt * nomSYCL_acc[ix][iy][iz].mat[4]);// - dt * nomSYCL_acc[ix][iy][iz].mat[4] - E_kin;
+
+				for (int d = 0; d < N_OMINT; d++) {
+					nomSYCL_acc[ix][iy][iz].mat[d] = 0;
+				}
 
 			});
 		});

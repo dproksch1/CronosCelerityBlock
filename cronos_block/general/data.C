@@ -140,7 +140,7 @@ double Pot::get_min()
 	return minimum;
 }
 
-Data::Data()
+Data::Data() : cflSYCL(CelerityBuffer<double, 1>(celerity::range{1})), nomSYCL(CelerityBuffer<nom_t, 3>(celerity::range<3>(mx[0]+6 +1, mx[1]+6+1, mx[2]+6+1)))
 {
 
 	// Start runtime timer

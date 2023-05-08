@@ -210,19 +210,6 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	const int ixStart = -n_ghost[0] + 1;
 	const int ixEnd = gdata.mx[0] + n_ghost[0] - 1;
 
-	//buffers	
-	celerity::buffer<double, 1> max_buf{celerity::range{1}};
-	CelerityBuffer<nom_t, 3> nomSYCL {celerity::range<3>(omRange.get(0), omRange.get(1), omRange.get(2))};
-
-	queue.submit([=](celerity::handler& cgh) {
-		celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
-		cgh.parallel_for<class BufferInitializationKernel>(nomSYCL.get_range(), [=](celerity::item<3> item) {
-			for (int d = 0; d < N_OMINT; d++) {
-				nomSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)].mat[d] = 0;
-			}
-		});
-	});
-
 	int fluidConst[] {gdata.fluid.get_q_rho(), gdata.fluid.get_q_sx(), gdata.fluid.get_q_sy(), gdata.fluid.get_q_sz(),
 						gdata.fluid.get_q_Eges(), gdata.fluid.get_q_Eadd(), gdata.fluid.get_q_Bx(), gdata.fluid.get_q_By(),
 						gdata.fluid.get_q_Bz()};
@@ -249,9 +236,9 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 
-		auto rd = celerity::reduction(max_buf, cgh, cl::sycl::maximum<double>{},
+		auto rd = celerity::reduction(gdata.cflSYCL, cgh, cl::sycl::maximum<double>{},
 								cl::sycl::property::reduction::initialize_to_identity{});
-		celerity::accessor nom_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_write};
+		celerity::accessor nom_acc{gdata.nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_write};
 		// celerity::accessor uPri_acc{uPriSYCL, cgh, celerity::access::neighborhood{2,2,2}, celerity::read_only};
 		celerity::accessor om_rho_acc{gdata.omSYCL[0], cgh, celerity::access::neighborhood{2,2,2}, celerity::read_only};
 		celerity::accessor om_sx_acc{gdata.omSYCL[1], cgh, celerity::access::neighborhood{2,2,2}, celerity::read_only};
@@ -301,10 +288,10 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 	queue.slow_full_sync();
 
-	queue.submit(celerity::allow_by_ref, [=, &cfl_lin](celerity::handler& cgh) {
-		celerity::accessor max_buf_acc{max_buf, cgh, celerity::access::all{}, celerity::read_only_host_task};
+	queue.submit(celerity::allow_by_ref, [=, &cfl_lin, &gdata](celerity::handler& cgh) {
+		celerity::accessor cflSYCL_acc{gdata.cflSYCL, cgh, celerity::access::all{}, celerity::read_only_host_task};
 		cgh.host_task(celerity::on_master_node, [=, &cfl_lin]{
-			cfl_lin = max_buf_acc[0];
+			cfl_lin = cflSYCL_acc[0];
 		});
 	});
 	
@@ -469,7 +456,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 //   Determine domain to be integrated and apply changes:
 // ----------------------------------------------------------------
 	
-	TimeIntegratorGeneric[0]->Substep(queue, gdata, omRange, nomSYCL, gdata.dt, n, nom_max);
+	TimeIntegratorGeneric[0]->Substep(queue, gdata, omRange, gdata.nomSYCL, gdata.dt, n, nom_max);
 
 	// for (int q = 0; q < n_omInt; ++q) {
 
