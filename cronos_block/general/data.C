@@ -638,6 +638,24 @@ bool Data::is_userField(NumMatrix<double,3> &omField) {
 
 }
 
+void Data::set_cfl(Queue &queue) {
+
+	double cfl_lin(0.);
+
+	queue.submit(celerity::allow_by_ref, [=, &cfl_lin](celerity::handler& cgh) {
+		celerity::accessor cflSYCL_acc{this->cflSYCL, cgh, celerity::access::all{}, celerity::read_only_host_task};
+		cgh.host_task(celerity::on_master_node, [=, &cfl_lin]{
+			cfl_lin = cl::sycl::max(cflSYCL_acc[0], 0.);
+		});
+	});
+
+	//swap out vs experimental fence
+	queue.slow_full_sync();
+
+	cfl = std::max(cfl_lin, cfl);
+
+}
+
 
 
 id_handler::id_handler() {

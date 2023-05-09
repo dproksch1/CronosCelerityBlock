@@ -93,7 +93,7 @@ int main(int argc, char* argv[])
 		} catch (CException exep) {
 			solver.Abort(gdata, exep);
 		}
-		solver.InitOutput(gdata);
+		solver.InitOutput(gdata, queue);
 	}
 
 	// for (;;) {

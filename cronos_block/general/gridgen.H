@@ -34,16 +34,16 @@ public:
 	Environment(Data &);
 	~Environment();
 	void setType(Data &);
-	int integrate(Data &, Queue &); //used
+	int integrate(Data &, Queue &);
 	void singlestep(Data &);
-	void compute_dt(Data &, double scale=1.); //used
-	void LoadData(Data &); //not used regularily, still leave in
+	void compute_dt(Data &, double scale=1.);
+	void LoadData(Data &);
 #if(FLUID_TYPE != CRONOS_MULTIFLUID)
-	void LoadData_flt(Data &, int); //not used atm
+	void LoadData_flt(Data &, int);
 #endif
-	void InitOutput(Data &); //used
-	void Abort(Data &, CException); //not used regularily, still leave in
-	int Finalize(Data &, string); //used
+	void InitOutput(Data &, Queue &);
+	void Abort(Data &, CException);
+	int Finalize(Data &, Queue &, string);
 	unique_ptr<rksolver> RKSolver;
 //	rksolver *RKSolver;
 	/**vector of Euler solvers*/
@@ -54,7 +54,7 @@ public:
 	std::unique_ptr<ProblemType> Problem;
 	std::unique_ptr<gridFunc> gfunc;
 private:
-	void setup(Data &); //used
+	void setup(Data &);
 	void init_solvers(Data &);
 	//   void set_MovieOut(Data &, int);
 #if (CRONOS_MOVIE == CRONOS_ON)
@@ -62,15 +62,16 @@ private:
 	Movie mov;
 #endif
 	void pdestep(Data &, Queue &);
-	bool CheckEnd(Data &); //used
-	bool CheckEnd_User(Data &); //used
-	void CheckOut(Data &); //used
+	bool CheckEnd(Data &, Queue &);
+	bool CheckEnd_User(Data &, Queue &);
+	void CheckOut(Data &, Queue &);
 	//	void Finalize(Data &, string);
-	void WriteDivB(Data &gdata); //not used atm
-	void Output(Data &, bool, bool); //used
-	string MakeFilename(const int [DIM], int, bool, bool); //used
-	void AddParallelFileNameStuff(string &filename, const int [DIM]); //not used
-	void getCoords(const Data &, string, int [DIM], int [DIM]); //part of loadData
+	void WriteDivB(Data &gdata);
+	void Output(Data &, bool, bool);
+	void PerformBufferFetch(Queue &, Data &);
+	string MakeFilename(const int [DIM], int, bool, bool);
+	void AddParallelFileNameStuff(string &filename, const int [DIM]); 
+	void getCoords(const Data &, string, int [DIM], int [DIM]);
 	timeval tick,tock;
 	int numdbl_out, numdbl_done, numdbl_pass;
 	int numflt_out, numflt_done, numflt_pass;

@@ -323,13 +323,9 @@ void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
 				om_save_Eges_acc[ix][iy][iz] = om_Eges_acc[ix][iy][iz];
 
 				om_rho_acc[ix][iy][iz] -= dt * nomSYCL_acc[ix][iy][iz].mat[0];
-				om_sx_acc[ix][iy][iz] = (om_sx_acc[ix][iy][iz] - dt * nomSYCL_acc[ix][iy][iz].mat[1]) / om_rho_acc[ix][iy][iz];;
+				om_sx_acc[ix][iy][iz] = (om_sx_acc[ix][iy][iz] - dt * nomSYCL_acc[ix][iy][iz].mat[1]) / om_rho_acc[ix][iy][iz];
 				om_sy_acc[ix][iy][iz] = (om_sy_acc[ix][iy][iz] - dt * nomSYCL_acc[ix][iy][iz].mat[2]) / om_rho_acc[ix][iy][iz];
 				om_sz_acc[ix][iy][iz] = (om_sz_acc[ix][iy][iz] - dt * nomSYCL_acc[ix][iy][iz].mat[3]) / om_rho_acc[ix][iy][iz];
-				
-				// double E_kin = 0.5*(sqr(om_sx_acc[ix][iy][iz]) +
-				// 	                  sqr(om_sy_acc[ix][iy][iz]) +
-				// 	                  sqr(om_sz_acc[ix][iy][iz]))*om_rho_acc[ix][iy][iz];				
 
 				om_Eges_acc[ix][iy][iz] -= dt * nomSYCL_acc[ix][iy][iz].mat[4];
 
@@ -373,12 +369,8 @@ void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
 				om_sz_acc[ix][iy][iz] = (0.5*om_save_sz_acc[ix][iy][iz] + 0.5*om_sz_acc[ix][iy][iz] 
 										- 0.5 * dt * nomSYCL_acc[ix][iy][iz].mat[3]) / om_rho_acc[ix][iy][iz];
 
-				// double E_kin = 0.5*(sqr(om_sx_acc[ix][iy][iz]) +
-				// 	                  sqr(om_sy_acc[ix][iy][iz]) +
-				// 	                  sqr(om_sz_acc[ix][iy][iz]))*om_rho_acc[ix][iy][iz];
-
 				om_Eges_acc[ix][iy][iz] = (0.5*om_save_Eges_acc[ix][iy][iz] + 0.5*om_Eges_acc[ix][iy][iz] 
-										- 0.5 * dt * nomSYCL_acc[ix][iy][iz].mat[4]);// - dt * nomSYCL_acc[ix][iy][iz].mat[4] - E_kin;
+										- 0.5 * dt * nomSYCL_acc[ix][iy][iz].mat[4]);
 
 				for (int d = 0; d < N_OMINT; d++) {
 					nomSYCL_acc[ix][iy][iz].mat[d] = 0;

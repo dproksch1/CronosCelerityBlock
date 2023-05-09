@@ -71,6 +71,7 @@ public:
 	double getMin(int [], int);
 	double getMax(int);
 	double getMax(int [], int);
+	void set_cfl(Queue &);
 
 	void set_fieldIds();
 	bool is_userField(NumMatrix<double,3> &omField);

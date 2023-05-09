@@ -286,16 +286,16 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		});
 	});
 
-	queue.slow_full_sync();
+	// queue.slow_full_sync();
 
-	queue.submit(celerity::allow_by_ref, [=, &cfl_lin, &gdata](celerity::handler& cgh) {
-		celerity::accessor cflSYCL_acc{gdata.cflSYCL, cgh, celerity::access::all{}, celerity::read_only_host_task};
-		cgh.host_task(celerity::on_master_node, [=, &cfl_lin]{
-			cfl_lin = cflSYCL_acc[0];
-		});
-	});
+	// queue.submit(celerity::allow_by_ref, [=, &cfl_lin, &gdata](celerity::handler& cgh) {
+	// 	celerity::accessor cflSYCL_acc{gdata.cflSYCL, cgh, celerity::access::all{}, celerity::read_only_host_task};
+	// 	cgh.host_task(celerity::on_master_node, [=, &cfl_lin]{
+	// 		cfl_lin = cflSYCL_acc[0];
+	// 	});
+	// });
 	
-	queue.slow_full_sync();
+	// queue.slow_full_sync();
 
 // ---------------------------------------------------------------	      
 //      Former Kernel for Non-Parallel Execution
@@ -396,13 +396,6 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	// 	CheckNan(gdata.nom[q],q, 0, 1,"nom");
 	// }
 
-// ----------------------------------------------------------------
-//   Compute Courant number
-// ----------------------------------------------------------------
-
-	double cfl = compute_cfl(gdata, Problem, cfl_eta, cfl_lin, n);
-	cout << "cfl: " << cfl << endl;
-	//double cfl = 0.0;
 // ----------------------------------------------------------------
 //   Geometrical source terms:
 // ----------------------------------------------------------------
@@ -651,6 +644,20 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		compute_divB(gdata, gfunc, Problem);
 	}
 
-	return cfl;
+	
+
+// ----------------------------------------------------------------
+//   Compute Courant number
+// ----------------------------------------------------------------
+
+
+	gdata.set_cfl(queue);
+
+	// double cfl = compute_cfl(gdata, Problem, cfl_eta, cfl_lin, n);
+	// cout << "cfl: " << cfl << endl;
+
+	// return cfl;
+
+	return 0;
 
 }

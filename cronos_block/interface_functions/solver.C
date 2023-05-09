@@ -31,33 +31,34 @@ void Environment::pdestep(Data &gdata, Queue& queue)
 			cout << "  RKSTEP = " << n+1 << endl;
 		}
 		try {
-			gdata.cfl = (std::max(RKSolver->singlestep(gdata, *gfunc, *Problem, n, queue), gdata.cfl));
+			// gdata.cfl = (std::max(RKSolver->singlestep(gdata, *gfunc, *Problem, n, queue), gdata.cfl));
+			RKSolver->singlestep(gdata, *gfunc, *Problem, n, queue);
 		} catch (CException exep) {
 
 			Abort(gdata, exep);
 		}
 	}
 
-	queue.slow_full_sync();
+	// queue.slow_full_sync();
 
-	auto omRange = gdata.omSYCL[0].get_range();
-	size_t nom_max[3] = {omRange.get(0), omRange.get(1), omRange.get(2)};
-	for (int q = 0; q < N_OMINT; q++) {
+	// auto omRange = gdata.omSYCL[0].get_range();
+	// size_t nom_max[3] = {omRange.get(0), omRange.get(1), omRange.get(2)};
+	// for (int q = 0; q < N_OMINT; q++) {
 
-		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-			celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::read_only_host_task};
-			cgh.host_task(celerity::on_master_node, [=, &gdata]{
-				for (int i = 0; i < nom_max[0]; i++) {
-					for (int j = 0; j < nom_max[1]; j++) {
-						for (int k = 0; k < nom_max[2]; k++) {
-							gdata.om[q](i-3,j-3,k-3) = omSYCL_acc[i][j][k];
-						}
-					}
-				}
-			});
-		});
-	}
-	queue.slow_full_sync();
+	// 	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+	// 		celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::read_only_host_task};
+	// 		cgh.host_task(celerity::on_master_node, [=, &gdata]{
+	// 			for (int i = 0; i < nom_max[0]; i++) {
+	// 				for (int j = 0; j < nom_max[1]; j++) {
+	// 					for (int k = 0; k < nom_max[2]; k++) {
+	// 						gdata.om[q](i-3,j-3,k-3) = omSYCL_acc[i][j][k];
+	// 					}
+	// 				}
+	// 			}
+	// 		});
+	// 	});
+	// }
+	// queue.slow_full_sync();
 
 #endif
 
