@@ -99,7 +99,7 @@ int main(int argc, char* argv[])
 	// for (;;) {
 	while (EndProgram == 0) {
 		EndProgram = solver.integrate(gdata, queue);
-	//	// EndProgram = solver.Finalize(gdata, static_cast<string>("Stopping for gdm"));
+	//	// EndProgram = solver.Finalize(gdata, queue, static_cast<string>("Stopping for gdm"));
 
 	}
 

@@ -31,7 +31,8 @@ void Environment::pdestep(Data &gdata, Queue& queue)
 			cout << "  RKSTEP = " << n+1 << endl;
 		}
 		try {
-			gdata.cfl = (std::max(RKSolver->singlestep(gdata, *gfunc, *Problem, n, queue), gdata.cfl));
+			RKSolver->singlestep(gdata, *gfunc, *Problem, n, queue);
+			// gdata.cfl = (std::max(RKSolver->singlestep(gdata, *gfunc, *Problem, n, queue), gdata.cfl));
 		} catch (CException exep) {
 
 			Abort(gdata, exep);

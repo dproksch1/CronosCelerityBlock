@@ -14,6 +14,7 @@
 #include "fluid.H"
 #include "constants.H"
 #include "queue.H"
+#include "utils.H"
 
 #ifndef DATA_TYPE
 #define DATA_TYPE double
@@ -70,6 +71,7 @@ public:
 	double getMin(int [], int);
 	double getMax(int);
 	double getMax(int [], int);
+	void fetch_cfl(Queue &queue);
 
 	void set_fieldIds();
 	bool is_userField(NumMatrix<double,3> &omField);
@@ -79,6 +81,8 @@ public:
 
 	Pot *om;
 	std::vector<CelerityBuffer<double, 3>> omSYCL;
+	celerity::buffer<double, 1> cflSYCL;
+	CelerityBuffer<nom_t, 3> nomSYCL;
 	NumMatrix<double,3> *nom;
 //	Pot om[N_OM+N_P];
 //	Pot om[31];

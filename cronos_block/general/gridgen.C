@@ -173,7 +173,7 @@ void Environment::InitOutput(Data &gdata)
 
 
 
-bool Environment::CheckEnd(Data &gdata)
+bool Environment::CheckEnd(Data &gdata, Queue &queue)
 {
 	// Check if runtime exceeded
 	gettimeofday(&tock, 0);
@@ -187,7 +187,7 @@ bool Environment::CheckEnd(Data &gdata)
 	}
 
 	if(RunTimeExit) {
-		return Finalize(gdata, static_cast<string>("Runtime exceeded"));
+		return Finalize(gdata, queue, static_cast<string>("Runtime exceeded"));
 	}
 
 	// Check if time-integration is completed
@@ -197,7 +197,7 @@ bool Environment::CheckEnd(Data &gdata)
 	}
 
 	if(Completed) {
-		return Finalize(gdata, static_cast<string>("Time integration completed"));
+		return Finalize(gdata, queue, static_cast<string>("Time integration completed"));
 	}
 
 	return false;
@@ -205,11 +205,11 @@ bool Environment::CheckEnd(Data &gdata)
 
 
 
-bool Environment::CheckEnd_User(Data &gdata) {
+bool Environment::CheckEnd_User(Data &gdata, Queue &queue) {
 	bool EndProgram_User = Problem->checkConvergence(gdata);
 
 	if(EndProgram_User) {
-		return Finalize(gdata, static_cast<string>("User defined stopping criterion reached "));
+		return Finalize(gdata, queue, static_cast<string>("User defined stopping criterion reached "));
 	}
 
 	return false;
@@ -308,9 +308,10 @@ void Environment::compute_dt(Data &gdata, double factor)
 }
 
 
-void Environment::CheckOut(Data &gdata)
+void Environment::CheckOut(Data &gdata, Queue &queue)
 {
 	int outputflag[5] = {0, 0, 0, 0, 0};
+	bool buffer_fetch_necessary = false;
 
 	numdbl_pass++;
 	numflt_pass++;
@@ -341,6 +342,7 @@ void Environment::CheckOut(Data &gdata)
 		if(((dt_dbl > 0) && (tmod <= 10*dt_eps)) || numdbl_pass >= numdbl_out){
 			outputflag[0] = 1;
 			t_last_dbl = gdata.time;
+			buffer_fetch_necessary = true;
 		}
 
 
@@ -351,6 +353,7 @@ void Environment::CheckOut(Data &gdata)
 		if(((dt_flt > 0) && (tmod <= 10*dt_eps)) || numflt_done >= numflt_out){
 			outputflag[1] = 1;
 			t_last_flt = gdata.time;
+			buffer_fetch_necessary = true;
 		}
 
 
@@ -359,6 +362,7 @@ void Environment::CheckOut(Data &gdata)
 
 		if(((dt_ascii > 0) && (tmod <= 10*dt_eps)) || numascii_done >= numascii_out){
 			outputflag[2] = 1;
+			buffer_fetch_necessary = true;
 		}
 
 
@@ -367,6 +371,7 @@ void Environment::CheckOut(Data &gdata)
 
 		if(((dt_info > 0) && (tmod <= 10*dt_eps)) || numinfo_done >= numinfo_out){
 			outputflag[3] = 1;
+			buffer_fetch_necessary = true;
 		}
 
 
@@ -376,6 +381,7 @@ void Environment::CheckOut(Data &gdata)
 
 		if((dt_mov > 0) && (tmod <= 10*dt_eps)) {
 			outputflag[4] = 1;
+			buffer_fetch_necessary = true;
 		}
 	}
 #endif
@@ -390,6 +396,7 @@ void Environment::CheckOut(Data &gdata)
 
 		if(dtnext_dbl < dt_eps || numdbl_pass >= numdbl_out) {
 			outputflag[0] = 1;
+			buffer_fetch_necessary = true;
 		}
 
     
@@ -399,6 +406,7 @@ void Environment::CheckOut(Data &gdata)
 
 		if(dtnext_flt < dt_eps || numflt_pass >= numflt_out) {
 			outputflag[1] = 1;
+			buffer_fetch_necessary = true;
 		}
 
 
@@ -408,6 +416,7 @@ void Environment::CheckOut(Data &gdata)
 
 		if(dtnext_ascii < dt_eps || numascii_pass >= numascii_out) {
 			outputflag[2] = 1;
+			buffer_fetch_necessary = true;
 		}
 
 
@@ -417,6 +426,7 @@ void Environment::CheckOut(Data &gdata)
 
 		if(dtnext_info< dt_eps || numinfo_pass >= numinfo_out) {
 			outputflag[3] = 1;
+			buffer_fetch_necessary = true;
 		}
 
 
@@ -427,6 +437,7 @@ void Environment::CheckOut(Data &gdata)
 
 		if(dtnext_mov < dt_eps) {
 			outputflag[4] = 1;
+			buffer_fetch_necessary = true;
 		}
 #endif
 
@@ -434,6 +445,10 @@ void Environment::CheckOut(Data &gdata)
 	// }
   
 #endif
+
+	if (buffer_fetch_necessary) {
+		FetchDataBuffer(gdata, queue);
+	}
   
 	// doing double output
 	if(outputflag[0] == 1) {
@@ -474,6 +489,31 @@ void Environment::CheckOut(Data &gdata)
 }
 
 
+void Environment::FetchDataBuffer(Data &gdata, Queue &queue)
+{
+	// queue.slow_full_sync();
+
+	auto omRange = gdata.omSYCL[0].get_range();
+	size_t nom_max[3] = {omRange.get(0), omRange.get(1), omRange.get(2)};
+	for (int q = 0; q < N_OMINT; q++) {
+
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::read_only_host_task};
+			cgh.host_task(celerity::on_master_node, [=, &gdata]{
+				for (int i = 0; i < nom_max[0]; i++) {
+					for (int j = 0; j < nom_max[1]; j++) {
+						for (int k = 0; k < nom_max[2]; k++) {
+							gdata.om[q](i-3,j-3,k-3) = omSYCL_acc[i][j][k];
+						}
+					}
+				}
+			});
+		});
+	}
+	// queue.slow_full_sync();
+}
+
+
 #if (CRONOS_MOVIE == CRONOS_ON)
 void Environment::WriteMovies(Data &gdata)
 {
@@ -506,35 +546,35 @@ int Environment::integrate(Data &gdata, Queue& queue)
 	}
     
 	try{
-		pdestep(gdata, queue);cout << "reached 2.1" << endl;
+		pdestep(gdata, queue);
 	} catch (CException exep) {
 		Abort(gdata, exep);
 	}
 
 	gdata.tstep++;
-cout << "reached 2.2" << endl;
-	CheckOut(gdata);
-cout << "reached 2.3" << endl;
+
+	CheckOut(gdata, queue);
+
 	try {
 		compute_dt(gdata);
 	} catch (CException exep) {
 		Abort(gdata, exep);
 	}
-cout << "reached 2.4" << endl;
+
 	// Check if possible user-defined ending condition has been reached
-	EndProgram = CheckEnd_User(gdata);
+	EndProgram = CheckEnd_User(gdata, queue);
 
 	// Check if ending condition is reached:
 	if(EndProgram==0) {
 
-		EndProgram = CheckEnd(gdata);
+		EndProgram = CheckEnd(gdata, queue);
 	}
 
 	// step++;
 	// gdata.tstep++;
 
 	//if(gdata.tstep==1) {
-	//	EndProgram = Finalize(gdata, "stopping for valgrind");
+	//	EndProgram = Finalize(gdata, queue, "stopping for valgrind");
 	//}
 
 	return EndProgram;
@@ -542,12 +582,14 @@ cout << "reached 2.4" << endl;
 
 
 
-int Environment::Finalize(Data &gdata, string message)
+int Environment::Finalize(Data &gdata, Queue &queue, string message)
 {
 	if(gdata.rank == 0) {
 		cout << " Program exiting normally: " << endl;
 		cout << " ------ " << message << " ------ " << endl;
 	}
+
+	FetchDataBuffer(gdata, queue);
 
 	Output(gdata, true, false);
 
@@ -758,9 +800,6 @@ std::cout << "output trigger: " << filename << std::endl;
 	}
 
 }
-
-
-
 
 
 void Environment::LoadData(Data &gdata)

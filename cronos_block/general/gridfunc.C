@@ -898,8 +898,6 @@ void gridFunc::boundary(Queue &queue, Data &gdata, ProblemType &Problem,
 	// x-direction
 	//-----------------------------------------------------------
 
-	cout << "q_bctype: " << q << " " << bc_Type[q] << endl;
-
 	bc_Periodic(queue, gdata, Problem, omb, 0, q, rim);
 
 	if(bc_Type[0] > 1) {

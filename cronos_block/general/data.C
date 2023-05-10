@@ -140,7 +140,7 @@ double Pot::get_min()
 	return minimum;
 }
 
-Data::Data()
+Data::Data() : cflSYCL (celerity::buffer<double,1>(celerity::range{1})), nomSYCL (CelerityBuffer<nom_t, 3>(celerity::range<3>(mx[0]+6 +1, mx[1]+6+1, mx[2]+6+1)))
 {
 
 	// Start runtime timer
@@ -635,6 +635,27 @@ bool Data::is_userField(NumMatrix<double,3> &omField) {
 	} else {
 		return false;
 	}
+
+}
+
+void Data::fetch_cfl(Queue &queue) {
+
+	double cfl_lin(0.);
+
+	// queue.slow_full_sync();
+	
+	queue.submit(celerity::allow_by_ref, [=, &cfl_lin](celerity::handler& cgh) {
+		celerity::accessor cflSYCL_acc{this->cflSYCL, cgh, celerity::access::all{}, celerity::read_only_host_task};
+		cgh.host_task(celerity::on_master_node, [=, &cfl_lin]{
+			if (cflSYCL_acc[0] > 0.) {
+				cfl_lin = cflSYCL_acc[0];
+			}
+		});
+	});
+	
+	queue.slow_full_sync();
+	
+	this->cfl = std::max(cfl_lin, this->cfl);
 
 }
 
