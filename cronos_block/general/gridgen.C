@@ -510,7 +510,7 @@ void Environment::FetchDataBuffer(Data &gdata, Queue &queue)
 			});
 		});
 	}
-	// queue.slow_full_sync();
+	queue.slow_full_sync();
 }
 
 
