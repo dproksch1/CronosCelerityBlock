@@ -448,6 +448,9 @@ void Environment::CheckOut(Data &gdata, Queue &queue)
 
 	if (buffer_fetch_necessary) {
 		FetchDataBuffer(gdata, queue);
+		// for (int i = 0; i < 5; i++) {
+		// 	outputflag[i] = 0;
+		// }
 	}
   
 	// doing double output
@@ -544,7 +547,7 @@ int Environment::integrate(Data &gdata, Queue& queue)
 		cout << " at step " << gdata.tstep;
 		cout << endl;
 	}
-    
+
 	try{
 		pdestep(gdata, queue);
 	} catch (CException exep) {

@@ -44,6 +44,8 @@ const int N_P = 0;
 
 #include "cronos_config.H"
 
+#define CUDA_PROFILING TRUE
+
 #endif
 
 

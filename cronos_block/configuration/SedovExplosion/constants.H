@@ -41,6 +41,8 @@ const int N_ADD = 2;      // Used for div(B)
 
 const int N_P = 0;
 
+#define CUDA_PROFILING TRUE
+
 #include "cronos_config.H"
 
 #endif

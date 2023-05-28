@@ -23,6 +23,12 @@
 #include "queue.H"
 #endif
 
+#ifdef CUDA_PROFILING 
+	#if(CUDA_PROFILING == TRUE)
+		#include <cuda_profiler_api.h>
+	#endif
+#endif
+
 using namespace std;
 
 double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
@@ -80,24 +86,24 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 //		}
 //}
 //#endif
-	for (int q = 0; q < n_omInt; ++q) {
-		gdata.nom[q].clear();
-	}
+// 	for (int q = 0; q < n_omInt; ++q) {
+// 		gdata.nom[q].clear();
+// 	}
 
-	// Prepare user fields if necessary
-	#if (OMS_USER == TRUE)
+// 	// Prepare user fields if necessary
+// 	#if (OMS_USER == TRUE)
 
-//	nom_user = new NumMatrix<double,3> [n_omIntUser];
-//	for (int q = 0; q < n_omIntUser; ++q) {
-//		nom_user[q].resize(Index::set(0,0,0),
-//		                   Index::set(gdata.mx[0],gdata.mx[1],gdata.mx[2]));
-//		nom_user[q].clear();
-//	}
-	for (int q = 0; q < n_omIntUser; ++q) {
-		gdata.nom_user[q].clear();
-	}
+// //	nom_user = new NumMatrix<double,3> [n_omIntUser];
+// //	for (int q = 0; q < n_omIntUser; ++q) {
+// //		nom_user[q].resize(Index::set(0,0,0),
+// //		                   Index::set(gdata.mx[0],gdata.mx[1],gdata.mx[2]));
+// //		nom_user[q].clear();
+// //	}
+// 	for (int q = 0; q < n_omIntUser; ++q) {
+// 		gdata.nom_user[q].clear();
+// 	}
 
-#endif
+// #endif
 
 // ----------------------------------------------------------------
 //      Setup Buffer for RK-Step
@@ -199,7 +205,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 			n_ghost[dir] = 3;
 	}
 
-	Reconstruction_Block reconst(gdata, 0, gdata.fluid);
+	// Reconstruction_Block reconst(gdata, 0, gdata.fluid);
 
 	int n_omInt = gdata.fluid.get_N_OMINT();
 
@@ -233,7 +239,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	const double half_beta = (Problem.mag ? value((char*)"Plasma_beta")/2. : 1);
 	const int fluidType = gdata.fluid.get_fluid_type();
 	const bool thermal = Trafo->get_thermal();
-	
+
 	double idx[DIM];
 	for (int i = 0; i < DIM; i++) {
 		idx[i] = gdata.idx[i];
@@ -246,6 +252,12 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 // ---------------------------------------------------------------	      
 //      Reduction Kernel
 //----------------------------------------------------------------
+
+	#ifdef CUDA_PROFILING 
+		#if(CUDA_PROFILING == TRUE)
+			cudaProfilerStart();
+		#endif
+	#endif
 
 	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 
@@ -298,6 +310,12 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 			
 		});
 	});
+
+	#ifdef CUDA_PROFILING 
+		#if(CUDA_PROFILING == TRUE)
+			cudaProfilerStop();
+		#endif
+	#endif
 
 	// queue.slow_full_sync();
 
@@ -464,14 +482,14 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 // ----------------------------------------------------------------
 
 	// Trafo->TransPrim2Cons(gdata, gfunc, Problem);
-	// Problem.TransPrim2Cons(gdata);
+	// Problem.TransPrim2Cons(gdata);	
 	Trafo->TransPrim2Cons(gdata, gfunc, Problem, queue);
-	Problem.TransPrim2Cons(queue, gdata);
+	Problem.TransPrim2Cons(queue, gdata);	
 
 // ----------------------------------------------------------------
 //   Determine domain to be integrated and apply changes:
 // ----------------------------------------------------------------
-	
+
 	TimeIntegratorGeneric[0]->Substep(queue, gdata, omRange, gdata.nomSYCL, gdata.dt, n, nom_max);
 
 	// for (int q = 0; q < n_omInt; ++q) {

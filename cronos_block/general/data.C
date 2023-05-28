@@ -652,7 +652,7 @@ void Data::fetch_cfl(Queue &queue) {
 			}
 		});
 	});
-	
+
 	queue.slow_full_sync();
 	
 	this->cfl = std::max(cfl_lin, this->cfl);

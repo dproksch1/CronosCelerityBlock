@@ -103,6 +103,7 @@ int main(int argc, char* argv[])
 
 	}
 
+// queue.slow_full_sync();
 	if (EndProgram == 1) {
 		// Everything is fine -> exit normally
 		return 0;
