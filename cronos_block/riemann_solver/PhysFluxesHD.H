@@ -29,7 +29,7 @@ namespace gpu {
 		for(int q = fluidConst[fluidConst_q_sx]; q <= fluidConst[fluidConst_q_sz]; ++q) {
 			if(q == dir+1) {
 				//causes error for RK_STEP 2 for some reason
-				//dprokschTODO: readd after rependencies are fixed
+				//dprokschTODO: read after dependencies are fixed
 				physFlux[q] += ((uPri[q] * uCon[q]) + ptherm);
 			} else {
 				physFlux[q] = (uCon[q] * uPri[dir + fluidConst[fluidConst_q_sx]]);
@@ -58,7 +58,7 @@ namespace gpu {
 #endif
 
 #if (USE_ANGULAR_MOMENTUM == TRUE)
-		// not yet implemented
+		// TODO not yet implemented
 #endif
 
 	}

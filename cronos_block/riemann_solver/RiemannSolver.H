@@ -42,6 +42,7 @@ public:
 		return Fluid_Type;
 	}
 	void compute_carbuncleFlag(Data &gdata);
+	void compute_carbuncleFlag(Queue &queue, Data &gdata);
 	void set_verbosity(int _verb);
 	
 protected:

@@ -188,10 +188,10 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 // 	// Check for nans in primitive variables
 // 	gdata.CheckNan(1);
 
-// 	// Compute the carbuncle-flag if necessary
-// 	if(gdata.use_carbuncleFlag) {
-// 		Riemann[DirX]->compute_carbuncleFlag(gdata);
-// 	}
+	// Compute the carbuncle-flag if necessary
+	if(gdata.use_carbuncleFlag) {
+		Riemann[DirX]->compute_carbuncleFlag(queue, gdata);
+	}
 
 // ---------------------------------------------------------------	      
 //      Buffer and Constant Initialization
@@ -216,19 +216,6 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	const int ixStart = -n_ghost[0] + 1;
 	const int ixEnd = gdata.mx[0] + n_ghost[0] - 1;
 
-	//buffers	
-	// celerity::buffer<double, 1> cflSYCL{celerity::range{1}};
-	// CelerityBuffer<nom_t, 3> nomSYCL {celerity::range<3>(omRange.get(0), omRange.get(1), omRange.get(2))};
-
-	// queue.submit([=](celerity::handler& cgh) {
-	// 	celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
-	// 	cgh.parallel_for<class BufferInitializationKernel>(nomSYCL.get_range(), [=](celerity::item<3> item) {
-	// 		for (int d = 0; d < N_OMINT; d++) {
-	// 			nomSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)].mat[d] = 0;
-	// 		}
-	// 	});
-	// });
-
 	int fluidConst[] {gdata.fluid.get_q_rho(), gdata.fluid.get_q_sx(), gdata.fluid.get_q_sy(), gdata.fluid.get_q_sz(),
 						gdata.fluid.get_q_Eges(), gdata.fluid.get_q_Eadd(), gdata.fluid.get_q_Bx(), gdata.fluid.get_q_By(),
 						gdata.fluid.get_q_Bz()};
@@ -239,6 +226,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	const double half_beta = (Problem.mag ? value((char*)"Plasma_beta")/2. : 1);
 	const int fluidType = gdata.fluid.get_fluid_type();
 	const bool thermal = Trafo->get_thermal();
+	const bool use_carbuncle = gdata.use_carbuncleFlag;
 
 	double idx[DIM];
 	for (int i = 0; i < DIM; i++) {
@@ -250,28 +238,22 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 
 // ---------------------------------------------------------------	      
-//      Reduction Kernel
+//      Compute Kernel
 //----------------------------------------------------------------
-
-	#ifdef CUDA_PROFILING 
-		#if(CUDA_PROFILING == TRUE)
-			cudaProfilerStart();
-		#endif
-	#endif
 
 	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 
 		auto rd = celerity::reduction(gdata.cflSYCL, cgh, cl::sycl::maximum<double>{},
 								cl::sycl::property::reduction::initialize_to_identity{});
 		celerity::accessor nom_acc{gdata.nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_write};
-		// celerity::accessor uPri_acc{uPriSYCL, cgh, celerity::access::neighborhood{2,2,2}, celerity::read_only};
 		celerity::accessor om_rho_acc{gdata.omSYCL[0], cgh, celerity::access::neighborhood{2,2,2}, celerity::read_only};
 		celerity::accessor om_sx_acc{gdata.omSYCL[1], cgh, celerity::access::neighborhood{2,2,2}, celerity::read_only};
 		celerity::accessor om_sy_acc{gdata.omSYCL[2], cgh, celerity::access::neighborhood{2,2,2}, celerity::read_only};
 		celerity::accessor om_sz_acc{gdata.omSYCL[3], cgh, celerity::access::neighborhood{2,2,2}, celerity::read_only};
 		celerity::accessor om_Eges_acc{gdata.omSYCL[4], cgh, celerity::access::neighborhood{2,2,2}, celerity::read_only};
+		celerity::accessor carbuncle_flag{gdata.carbuncleFlagSYCL[0], cgh, celerity::access::neighborhood{2,2,2}, celerity::read_only};
 
-		cgh.parallel_for<class ReductionKernel>(range, rd, [=](celerity::item<3> item, auto& max_cfl_lin) {
+		cgh.parallel_for<class ComputeKernel>(range, rd, [=](celerity::item<3> item, auto& max_cfl_lin) {
 
 			size_t ix = item.get_id(0);
 			size_t iy = item.get_id(1);
@@ -284,24 +266,24 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 				double num_ptotal[DirMax] = {};
 
 				size_t ixyz = (ix * range.get(1) + iy) * range.get(2) + iz;
-				gpu::computeStep(om_rho_acc, om_sx_acc, om_sy_acc, om_sz_acc, om_Eges_acc, ix, iy, iz, ixyz, &cfl_lin, numFlux, num_ptotal, thermal, problem_gamma, problem_cs2,
-													denominator, half_beta, fluidType, idx, fluidConst);
+				gpu::computeStep(om_rho_acc, om_sx_acc, om_sy_acc, om_sz_acc, om_Eges_acc, ix, iy, iz, ixyz, &cfl_lin, numFlux, num_ptotal, carbuncle_flag, thermal, problem_gamma, problem_cs2,
+													denominator, half_beta, fluidType, use_carbuncle, idx, fluidConst);
 
 				double numFlux_Dir[DirMax][N_OMINT] = {};
 				double num_ptotal_Dir[DirMax] = {};
 
 				gpu::computeStep(om_rho_acc, om_sx_acc, om_sy_acc, om_sz_acc, om_Eges_acc, ix + 1, iy, iz, ixyz + range.get(1) * range.get(2), &cfl_lin, numFlux_Dir, num_ptotal_Dir,
-													thermal, problem_gamma, problem_cs2, denominator, half_beta, fluidType, idx, fluidConst);
+													carbuncle_flag, thermal, problem_gamma, problem_cs2, denominator, half_beta, fluidType, use_carbuncle, idx, fluidConst);
 				gpu::get_Changes(nom_acc, ix, iy, iz, DirX, numFlux[DirX], num_ptotal[DirX], numFlux_Dir[DirX], num_ptotal_Dir[DirX],
 										N_OMINT, nom_max[2], idx);
 
-				gpu::computeStep(om_rho_acc, om_sx_acc, om_sy_acc, om_sz_acc, om_Eges_acc,  ix, iy + 1, iz, ixyz + range.get(2), &cfl_lin, numFlux_Dir, num_ptotal_Dir, thermal, problem_gamma, problem_cs2,
-													denominator, half_beta, fluidType, idx, fluidConst);
+				gpu::computeStep(om_rho_acc, om_sx_acc, om_sy_acc, om_sz_acc, om_Eges_acc,  ix, iy + 1, iz, ixyz + range.get(2), &cfl_lin, numFlux_Dir, num_ptotal_Dir, carbuncle_flag, thermal, problem_gamma, problem_cs2,
+													denominator, half_beta, fluidType, use_carbuncle, idx, fluidConst);
 				gpu::get_Changes(nom_acc, ix, iy, iz, DirY, numFlux[DirY], num_ptotal[DirY], numFlux_Dir[DirY], num_ptotal_Dir[DirY],
 										N_OMINT, nom_max[2], idx);
 
-				gpu::computeStep(om_rho_acc, om_sx_acc, om_sy_acc, om_sz_acc, om_Eges_acc, ix, iy, iz + 1, ixyz + 1, &cfl_lin, numFlux_Dir, num_ptotal_Dir, thermal, problem_gamma, problem_cs2,
-													denominator, half_beta, fluidType, idx, fluidConst);
+				gpu::computeStep(om_rho_acc, om_sx_acc, om_sy_acc, om_sz_acc, om_Eges_acc, ix, iy, iz + 1, ixyz + 1, &cfl_lin, numFlux_Dir, num_ptotal_Dir, carbuncle_flag, thermal, problem_gamma, problem_cs2,
+													denominator, half_beta, fluidType, use_carbuncle, idx, fluidConst);
 				gpu::get_Changes(nom_acc, ix, iy, iz, DirZ, numFlux[DirZ], num_ptotal[DirZ], numFlux_Dir[DirZ], num_ptotal_Dir[DirZ],
 										N_OMINT, nom_max[2], idx);
 			}
@@ -310,12 +292,6 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 			
 		});
 	});
-
-	#ifdef CUDA_PROFILING 
-		#if(CUDA_PROFILING == TRUE)
-			cudaProfilerStop();
-		#endif
-	#endif
 
 	// queue.slow_full_sync();
 

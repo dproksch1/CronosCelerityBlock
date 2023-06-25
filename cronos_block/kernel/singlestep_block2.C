@@ -214,18 +214,6 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	//buffers	
 	celerity::buffer<double, 1> max_buf{celerity::range{1}};
 	CelerityBuffer<nom_t, 3> nomSYCL {celerity::range<3>(omRange.get(0), omRange.get(1), omRange.get(2))};
-	// CelerityBuffer<uPri_t, 3> uPriSYCL{celerity::range<3>(omRange.get(0), omRange.get(1), omRange.get(2))};
-
-	// queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-	// 	celerity::accessor uPri_acc{uPriSYCL, cgh, celerity::access::all{}, celerity::write_only, celerity::no_init};
-	// 	cgh.parallel_for<class PointwiseReconstructionKernel>(uPriSYCL.get_range(), [=](celerity::item<3> item) {
-	// 		for (int f = 0; f < gpu::FaceMax; f++) {
-	// 			for (int d = 0; d < N_OMINT; d++) {
-	// 				uPri_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)].mat[f][d] = 0;
-	// 			}
-	// 		}
-	// 	});
-	// });
 
 	queue.submit([=](celerity::handler& cgh) {
 		celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};

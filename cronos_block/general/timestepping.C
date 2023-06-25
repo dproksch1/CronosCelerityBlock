@@ -310,7 +310,7 @@ void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
 			celerity::accessor om_save_sz_acc{this->omSYCL_save[3], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
 			celerity::accessor om_save_Eges_acc{this->omSYCL_save[4], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
 
-			cgh.parallel_for<class IntegrationKernel>(nomSYCL.get_range(), [=](celerity::item<3> item){
+			cgh.parallel_for<class IntegrationKernel_0>(nomSYCL.get_range(), [=](celerity::item<3> item){
 
 				size_t ix = item.get_id(0);
 				size_t iy = item.get_id(1);
@@ -353,7 +353,7 @@ void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
 			celerity::accessor om_save_sy_acc{this->omSYCL_save[2], cgh, celerity::access::one_to_one{}, celerity::read_only};
 			celerity::accessor om_save_sz_acc{this->omSYCL_save[3], cgh, celerity::access::one_to_one{}, celerity::read_only};
 			celerity::accessor om_save_Eges_acc{this->omSYCL_save[4], cgh, celerity::access::one_to_one{}, celerity::read_only};
-			cgh.parallel_for<class IntegrationKernel>(nomSYCL.get_range(), [=](celerity::item<3> item){
+			cgh.parallel_for<class IntegrationKernel_1>(nomSYCL.get_range(), [=](celerity::item<3> item){
 
 				size_t ix = item.get_id(0);
 				size_t iy = item.get_id(1);

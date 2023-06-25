@@ -2483,7 +2483,7 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{(size_t) rim+1,1,1}, celerity::read_write};
 
-				cgh.parallel_for<class IntegrationKernel>(range, [=](celerity::item<3> item){
+				cgh.parallel_for<class BCExtrapolateKernel_0_0>(range, [=](celerity::item<3> item){
 
 					size_t ix = item.get_id(0);
 					size_t iy = item.get_id(1);
@@ -2504,7 +2504,7 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{(size_t) rim+1,1,1}, celerity::read_write};
 
-				cgh.parallel_for<class IntegrationKernel>(range, [=](celerity::item<3> item){
+				cgh.parallel_for<class BCExtrapolateKernel_0_1>(range, [=](celerity::item<3> item){
 
 					size_t ix = item.get_id(0) + ixmin;
 					size_t iy = item.get_id(1);
@@ -2528,7 +2528,7 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,(size_t) rim+1,1}, celerity::read_write};
 
-				cgh.parallel_for<class IntegrationKernel>(range, [=](celerity::item<3> item){
+				cgh.parallel_for<class BCExtrapolateKernel_1_0>(range, [=](celerity::item<3> item){
 
 					size_t ix = item.get_id(0);
 					size_t iy = item.get_id(1);
@@ -2549,7 +2549,7 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,(size_t) rim+1,1}, celerity::read_write};
 
-				cgh.parallel_for<class IntegrationKernel>(range, [=](celerity::item<3> item){
+				cgh.parallel_for<class BCExtrapolateKernel_1_1>(range, [=](celerity::item<3> item){
 
 					size_t ix = item.get_id(0);
 					size_t iy = item.get_id(1) + iymin;
@@ -2562,7 +2562,7 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 		}
 	}
 
-	if(dir == 1) {
+	if(dir == 2) {
 		if(above == 0) {
 			int izmin = 0;
 
@@ -2573,7 +2573,7 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,1,(size_t) rim+1}, celerity::read_write};
 
-				cgh.parallel_for<class IntegrationKernel>(range, [=](celerity::item<3> item){
+				cgh.parallel_for<class BCExtrapolateKernel_2_0>(range, [=](celerity::item<3> item){
 
 					size_t ix = item.get_id(0);
 					size_t iy = item.get_id(1);
@@ -2594,7 +2594,7 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,1,(size_t) rim+1}, celerity::read_write};
 
-				cgh.parallel_for<class IntegrationKernel>(range, [=](celerity::item<3> item){
+				cgh.parallel_for<class BCExtrapolateKernel_2_1>(range, [=](celerity::item<3> item){
 
 					size_t ix = item.get_id(0);
 					size_t iy = item.get_id(1);
@@ -2738,7 +2738,7 @@ void gridFunc::bc_Outflow(Queue &queue, Data &gdata, ProblemType &pr,
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{(size_t) rim,1,1}, celerity::read_write};
 				celerity::accessor om_sx_acc{gdata.omSYCL[1], cgh, celerity::access::one_to_one{}, celerity::read_only};
 
-				cgh.parallel_for<class BCOutflowKernel>(range, [=](celerity::item<3> item){
+				cgh.parallel_for<class BCOutflowKernel_0_0>(range, [=](celerity::item<3> item){
 
 					size_t ix = item.get_id(0);
 					size_t iy = item.get_id(1);
@@ -2765,7 +2765,7 @@ void gridFunc::bc_Outflow(Queue &queue, Data &gdata, ProblemType &pr,
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{(size_t) rim,1,1}, celerity::read_write};
 				celerity::accessor om_sx_acc{gdata.omSYCL[1], cgh, celerity::access::one_to_one{}, celerity::read_only};
 
-				cgh.parallel_for<class BCOutflowKernel>(range, [=, &gdata](celerity::item<3> item){
+				cgh.parallel_for<class BCOutflowKernel_0_1>(range, [=, &gdata](celerity::item<3> item){
 
 					size_t ix = item.get_id(0) + 1;
 					size_t iy = item.get_id(1);
@@ -2797,7 +2797,7 @@ void gridFunc::bc_Outflow(Queue &queue, Data &gdata, ProblemType &pr,
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,(size_t) rim,1}, celerity::read_write};
 				celerity::accessor om_sy_acc{gdata.omSYCL[2], cgh, celerity::access::one_to_one{}, celerity::read_only};
 
-				cgh.parallel_for<class BCOutflowKernel>(range, [=](celerity::item<3> item){
+				cgh.parallel_for<class BCOutflowKernel_1_0>(range, [=](celerity::item<3> item){
 
 					size_t ix = item.get_id(0);
 					size_t iy = item.get_id(1);
@@ -2824,7 +2824,7 @@ void gridFunc::bc_Outflow(Queue &queue, Data &gdata, ProblemType &pr,
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,(size_t) rim,1}, celerity::read_write};
 				celerity::accessor om_sy_acc{gdata.omSYCL[2], cgh, celerity::access::one_to_one{}, celerity::read_only};
 
-				cgh.parallel_for<class BCOutflowKernel>(range, [=, &gdata](celerity::item<3> item){
+				cgh.parallel_for<class BCOutflowKernel_1_1>(range, [=, &gdata](celerity::item<3> item){
 
 					size_t ix = item.get_id(0);
 					size_t iy = item.get_id(1) + 1;
@@ -2856,7 +2856,7 @@ void gridFunc::bc_Outflow(Queue &queue, Data &gdata, ProblemType &pr,
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,1,(size_t) rim}, celerity::read_write};
 				celerity::accessor om_sz_acc{gdata.omSYCL[3], cgh, celerity::access::one_to_one{}, celerity::read_only};
 
-				cgh.parallel_for<class BCOutflowKernel>(range, [=](celerity::item<3> item){
+				cgh.parallel_for<class BCOutflowKernel_2_0>(range, [=](celerity::item<3> item){
 
 					size_t ix = item.get_id(0);
 					size_t iy = item.get_id(1);
@@ -2883,7 +2883,7 @@ void gridFunc::bc_Outflow(Queue &queue, Data &gdata, ProblemType &pr,
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,1,(size_t) rim}, celerity::read_write};
 				celerity::accessor om_sz_acc{gdata.omSYCL[3], cgh, celerity::access::one_to_one{}, celerity::read_only};
 
-				cgh.parallel_for<class BCOutflowKernel>(range, [=, &gdata](celerity::item<3> item){
+				cgh.parallel_for<class BCOutflowKernel_2_1>(range, [=, &gdata](celerity::item<3> item){
 
 					size_t ix = item.get_id(0);
 					size_t iy = item.get_id(1);
@@ -3131,7 +3131,7 @@ void gridFunc::bc_Reflecting(Queue &queue, Data &gdata, ProblemType &pr,
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{(size_t) rim,1,1}, celerity::read_write};
 
-				cgh.parallel_for<class IntegrationKernel>(range, [=](celerity::item<3> item){
+				cgh.parallel_for<class BCReflectingKernel_0_0>(range, [=](celerity::item<3> item){
 
 					size_t ix = item.get_id(0);
 					size_t iy = item.get_id(1);
@@ -3155,7 +3155,7 @@ void gridFunc::bc_Reflecting(Queue &queue, Data &gdata, ProblemType &pr,
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{(size_t) rim,1,1}, celerity::read_write};
 
-				cgh.parallel_for<class IntegrationKernel>(range, [=](celerity::item<3> item){
+				cgh.parallel_for<class BCReflectingKernel_0_1>(range, [=](celerity::item<3> item){
 
 					size_t ix = item.get_id(0);
 					size_t iy = item.get_id(1);
@@ -3181,7 +3181,7 @@ void gridFunc::bc_Reflecting(Queue &queue, Data &gdata, ProblemType &pr,
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,(size_t)rim,1}, celerity::read_write};
 
-				cgh.parallel_for<class IntegrationKernel>(range, [=](celerity::item<3> item){
+				cgh.parallel_for<class BCReflectingKernel_1_0>(range, [=](celerity::item<3> item){
 
 					size_t ix = item.get_id(0);
 					size_t iy = item.get_id(1);
@@ -3205,7 +3205,7 @@ void gridFunc::bc_Reflecting(Queue &queue, Data &gdata, ProblemType &pr,
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,(size_t)rim,1}, celerity::read_write};
 
-				cgh.parallel_for<class IntegrationKernel>(range, [=](celerity::item<3> item){
+				cgh.parallel_for<class BCReflectingKernel_1_1>(range, [=](celerity::item<3> item){
 
 					size_t ix = item.get_id(0);
 					size_t iy = item.get_id(1);
@@ -3231,7 +3231,7 @@ void gridFunc::bc_Reflecting(Queue &queue, Data &gdata, ProblemType &pr,
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,1,(size_t)rim}, celerity::read_write};
 
-				cgh.parallel_for<class IntegrationKernel>(range, [=](celerity::item<3> item){
+				cgh.parallel_for<class BCReflectingKernel_2_0>(range, [=](celerity::item<3> item){
 
 					size_t ix = item.get_id(0);
 					size_t iy = item.get_id(1);
@@ -3255,7 +3255,7 @@ void gridFunc::bc_Reflecting(Queue &queue, Data &gdata, ProblemType &pr,
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,1,(size_t)rim}, celerity::read_write};
 
-				cgh.parallel_for<class IntegrationKernel>(range, [=](celerity::item<3> item){
+				cgh.parallel_for<class BCReflectingKernel_2_1>(range, [=](celerity::item<3> item){
 
 					size_t ix = item.get_id(0);
 					size_t iy = item.get_id(1);
@@ -3679,8 +3679,6 @@ void gridFunc::dataout(Data &gdata,  Hdf5Stream &h5out, ProblemType & Problem,
 			// directly)
 
 			h5out.Write3DMatrix(dsetName, data, xmin, gdata.dx, group);
-
-			// printf("------+ %d- %d,%d,%d: %f \n",q,61,61,61,data(58,58,58));
 
 			// if possible add unit to field
 			if(Problem.TrafoNorm != NULL) {

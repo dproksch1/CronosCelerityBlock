@@ -2,6 +2,7 @@ small_run 0 0
 small_compare 0 0
 medium_run 0 0
 small_compare 0 0
+small_compare 0 0
 ---
 small_run
 medium_run

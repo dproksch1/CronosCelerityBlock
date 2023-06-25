@@ -1,4 +1,4 @@
-Start testing: May 25 17:27 CEST
+Start testing: Jun 23 18:44 CEST
 ----------------------------------------------------------
 Unable to find executable: /home/dproksch/master_thesis/CronosCelerityBlock/proj
 1/4 Testing: small_run
@@ -12,7 +12,7 @@ Output:
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"small_run" end time: May 25 17:27 CEST
+"small_run" end time: Jun 23 18:44 CEST
 "small_run" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -28,7 +28,7 @@ Output:
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"medium_run" end time: May 25 17:27 CEST
+"medium_run" end time: Jun 23 18:44 CEST
 "medium_run" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -44,7 +44,7 @@ Output:
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"small_compare" end time: May 25 17:27 CEST
+"small_compare" end time: Jun 23 18:44 CEST
 "small_compare" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -60,8 +60,8 @@ Output:
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"small_compare" end time: May 25 17:27 CEST
+"small_compare" end time: Jun 23 18:44 CEST
 "small_compare" time elapsed: 00:00:00
 ----------------------------------------------------------
 
-End testing: May 25 17:27 CEST
+End testing: Jun 23 18:44 CEST

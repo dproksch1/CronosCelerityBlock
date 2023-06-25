@@ -48,32 +48,26 @@ namespace gpu {
 	#if  (NON_LINEAR_GRID == CRONOS_OFF)
 		double cfl_loc = vmax * idx[dir];
 	#else
-		//dproksch TODO implement
+		//dproksch TODO implement case for non_linear grid
 		//double cfl_loc = vmax*gdata.getCen_idx(dir, iPos[dir]);
 		double cfl_loc = vmax*idx[dir];
 	#endif
-//dproksch TODO implement
+
 	#ifdef GEOM
 	#if GEOM != CARTESIAN
-		/*if(dir==0) {
-			cfl_loc /= gdata.h0(ix, iy, iz, shift_vec[0],shift_vec[1],shift_vec[2]);
-		} else if (dir==1) {
-			cfl_loc /= gdata.h1(ix, iy, iz, shift_vec[0],shift_vec[1],shift_vec[2]);
-		} else {
-			cfl_loc /= gdata.h2(ix, iy, iz, shift_vec[0],shift_vec[1],shift_vec[2]);
-		}*/
+		//Non-Cartesian Case not implemented
 	#endif
 	#endif
 		
 		return cfl_loc;
 	}
 
-	template<typename UPriAccessorType, typename UConAccessorType, typename PhysFluxAccessorType, typename SinglePthermAccessorType, typename SinglePtotalAccessorType, typename NumFluxAccessorType, typename NumValsAccessorType, typename FluidConstType>
+	template<typename UPriAccessorType, typename UConAccessorType, typename PhysFluxAccessorType, typename SinglePthermAccessorType, typename SinglePtotalAccessorType, typename CFlagAccessorType, typename NumFluxAccessorType, typename NumValsAccessorType, typename FluidConstType>
 	double get_NumFlux(const UPriAccessorType &pfM_uPri, const UConAccessorType &pfM_uCon, const PhysFluxAccessorType& pfM_flux,
-				const SinglePthermAccessorType pfM_ptherm, const SinglePtotalAccessorType& pfM_ptotal, const UPriAccessorType &pfP_uPri,
-				const UConAccessorType &pfP_uCon, const PhysFluxAccessorType& pfP_flux, const SinglePthermAccessorType pfP_ptherm,
-				const SinglePtotalAccessorType& pfP_ptotal, NumFluxAccessorType& numFlux, const NumValsAccessorType numVals, int dir,
-				const double gamma, FluidConstType fluidConst) {
+				const SinglePthermAccessorType pfM_ptherm, const SinglePtotalAccessorType& pfM_ptotal, const CFlagAccessorType pfM_cflag,
+				const UPriAccessorType &pfP_uPri, const UConAccessorType &pfP_uCon, const PhysFluxAccessorType& pfP_flux,
+				const SinglePthermAccessorType pfP_ptherm, const SinglePtotalAccessorType& pfP_ptotal, const CFlagAccessorType pfP_cflag,
+				NumFluxAccessorType& numFlux, const NumValsAccessorType numVals, bool use_carbuncle, int dir, const double gamma, FluidConstType fluidConst) {
 		//! Compute numerical flux from phys fluxes using hllc solver
 		/*
 		* @PARAM pfM variables and fluxes on left-hand side of interface
@@ -110,12 +104,7 @@ namespace gpu {
 				numFlux[q] = pfM_flux[q];
 			}
 			
-			//num_ptotal = pfM_ptotal;
-			if (dir == 0) {
-				num_ptotal = 70.0;
-			} else {
-				num_ptotal = pfM_ptotal;
-			}
+			num_ptotal = pfM_ptotal;
 
 		} else if (numVals[NumV_ch_p] <= 0.) { // Riemann fan going left
 
@@ -123,12 +112,7 @@ namespace gpu {
 				numFlux[q] = pfP_flux[q];
 			}
 
-			//num_ptotal = pfP_ptotal;
-			if (dir == 0) {
-				num_ptotal = pfP_flux[4];
-			} else {
-				num_ptotal = pfP_ptotal;
-			}
+			num_ptotal = pfP_ptotal;
 
 		} else {
 
@@ -155,6 +139,20 @@ namespace gpu {
 			}*/
 
 
+
+			if(use_carbuncle) {
+				// if both cells are flagged -> use hll for all variables instead
+				if(pfM_cflag*pfP_cflag > 0) {
+					for(int q=0; q < N_OMINT; ++q) {
+						double fac = 1./(numVals[NumV_ch_p] + numVals[NumV_ch_m] + HLLCSOLVER_HYDRO_VEPS);
+
+						numFlux[q] = (numVals[NumV_ch_m]*pfP_flux[q] +
+								numVals[NumV_ch_p]*pfM_flux[q] -
+								numVals[NumV_ch_m]*numVals[NumV_ch_p]*(pfP_uCon[q] - pfM_uCon[q]))*fac;
+					}
+					return 0;
+				}
+			}
 
 			double uConL[N_OMINT], uConR[N_OMINT];
 			//std::vector<double> uConL(n_omInt);

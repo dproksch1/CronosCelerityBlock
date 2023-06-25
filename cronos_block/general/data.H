@@ -102,6 +102,8 @@ public:
 
 	NumMatrix<double,3> pTherm; // can store thermal pressure
 	NumMatrix<int,3> carbuncleFlag; // flag, where carbuncle problem might occur
+	std::vector<CelerityBuffer<double, 3>> pThermSYCL;
+	std::vector<CelerityBuffer<int, 3>> carbuncleFlagSYCL;
 
 	double time, dt, t_end;
 	double cfl;
