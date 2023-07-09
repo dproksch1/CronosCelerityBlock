@@ -227,6 +227,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	const int fluidType = gdata.fluid.get_fluid_type();
 	const bool thermal = Trafo->get_thermal();
 	const bool use_carbuncle = gdata.use_carbuncleFlag;
+	const double Theta = value_exists((char*)"Theta") ? value((char*)"Theta") : 1;
 
 	double idx[DIM];
 	for (int i = 0; i < DIM; i++) {
@@ -267,23 +268,23 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 				size_t ixyz = (ix * range.get(1) + iy) * range.get(2) + iz;
 				gpu::computeStep(om_rho_acc, om_sx_acc, om_sy_acc, om_sz_acc, om_Eges_acc, ix, iy, iz, ixyz, &cfl_lin, numFlux, num_ptotal, carbuncle_flag, thermal, problem_gamma, problem_cs2,
-													denominator, half_beta, fluidType, use_carbuncle, idx, fluidConst);
+													denominator, half_beta, fluidType, Theta, use_carbuncle, idx, fluidConst);
 
 				double numFlux_Dir[DirMax][N_OMINT] = {};
 				double num_ptotal_Dir[DirMax] = {};
 
 				gpu::computeStep(om_rho_acc, om_sx_acc, om_sy_acc, om_sz_acc, om_Eges_acc, ix + 1, iy, iz, ixyz + range.get(1) * range.get(2), &cfl_lin, numFlux_Dir, num_ptotal_Dir,
-													carbuncle_flag, thermal, problem_gamma, problem_cs2, denominator, half_beta, fluidType, use_carbuncle, idx, fluidConst);
+													carbuncle_flag, thermal, problem_gamma, problem_cs2, denominator, half_beta, fluidType, Theta, use_carbuncle, idx, fluidConst);
 				gpu::get_Changes(nom_acc, ix, iy, iz, DirX, numFlux[DirX], num_ptotal[DirX], numFlux_Dir[DirX], num_ptotal_Dir[DirX],
 										N_OMINT, nom_max[2], idx);
 
 				gpu::computeStep(om_rho_acc, om_sx_acc, om_sy_acc, om_sz_acc, om_Eges_acc,  ix, iy + 1, iz, ixyz + range.get(2), &cfl_lin, numFlux_Dir, num_ptotal_Dir, carbuncle_flag, thermal, problem_gamma, problem_cs2,
-													denominator, half_beta, fluidType, use_carbuncle, idx, fluidConst);
+													denominator, half_beta, fluidType, Theta, use_carbuncle, idx, fluidConst);
 				gpu::get_Changes(nom_acc, ix, iy, iz, DirY, numFlux[DirY], num_ptotal[DirY], numFlux_Dir[DirY], num_ptotal_Dir[DirY],
 										N_OMINT, nom_max[2], idx);
 
 				gpu::computeStep(om_rho_acc, om_sx_acc, om_sy_acc, om_sz_acc, om_Eges_acc, ix, iy, iz + 1, ixyz + 1, &cfl_lin, numFlux_Dir, num_ptotal_Dir, carbuncle_flag, thermal, problem_gamma, problem_cs2,
-													denominator, half_beta, fluidType, use_carbuncle, idx, fluidConst);
+													denominator, half_beta, fluidType, Theta, use_carbuncle, idx, fluidConst);
 				gpu::get_Changes(nom_acc, ix, iy, iz, DirZ, numFlux[DirZ], num_ptotal[DirZ], numFlux_Dir[DirZ], num_ptotal_Dir[DirZ],
 										N_OMINT, nom_max[2], idx);
 			}
@@ -292,17 +293,6 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 			
 		});
 	});
-
-	// queue.slow_full_sync();
-
-	// queue.submit(celerity::allow_by_ref, [=, &gdata, &cfl_lin](celerity::handler& cgh) {
-	// 	celerity::accessor cflSYCL_acc{gdata.cflSYCL, cgh, celerity::access::all{}, celerity::read_only_host_task};
-	// 	cgh.host_task(celerity::on_master_node, [=, &cfl_lin]{
-	// 		cfl_lin = cflSYCL_acc[0];
-	// 	});
-	// });
-	
-	// queue.slow_full_sync();
 
 	gdata.fetch_cfl(queue);
 	cfl_lin = gdata.cfl;
@@ -517,31 +507,6 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 // #else
 // 	Trafo->TransMomen2Vel(gdata, gfunc, Problem);
 // #endif
-
-// queue.slow_full_sync();
-// 	cout << "comp_output: " << endl;
-// 	for (int q = 0; q < 5; q++) {
-
-// 		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-// 			celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::write_only_host_task};
-// 			cgh.host_task(celerity::on_master_node, [=, &gdata]{
-// 				for (int i = 0; i < nom_max[0]; i++) {
-// 					for (int j = 0; j < nom_max[1]; j++) {
-// 						for (int k = 0; k < nom_max[2]; k++) {
-// 							double diff = gdata.om[q](i-3,j-3,k-3) - omSYCL_acc[i][j][k];
-// 							if (diff > 0.000000000001 || diff < -0.000000000001) {
-// 								printf("%d-%d,%d,%d: %f, %f, %fx10^6\n",q,i,j,k,gdata.om[q](i-3,j-3,k-3),omSYCL_acc[i][j][k],diff*100000);
-// 							}
-// 							//if (gdata.om[q](i-3,j-3,k-3) > 1.000000000001 || gdata.om[q](i-3,j-3,k-3) < (1.0 - 0.000000000001)) {
-// 								// printf("%d,%d,%d: %f\n",i,j,k,gdata.om[q](i-3,j-3,k-3));
-// 							//}
-// 						}
-// 					}
-// 				}
-// 			});
-// 		});
-// 	}
-// 	queue.slow_full_sync();
 
 #if (FLUID_TYPE == CRONOS_MHD)
 	if(IntegrateA) {

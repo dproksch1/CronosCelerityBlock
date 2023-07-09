@@ -12,7 +12,7 @@ namespace gpu {
     template<typename uPriAccessorType, typename NumFluxAccessorType, typename NumPtotalAccessorType, typename CFlagAccessorType, typename IdxConstType, typename FluidConstType>
     void computeStep(const uPriAccessorType& uPri_acc, size_t ix, size_t iy, size_t iz, size_t ixyz, double* cfl_lin, NumFluxAccessorType& numFlux,
                     NumPtotalAccessorType& num_ptotal, const CFlagAccessorType& carbuncle_flag, const bool thermal, const double gamma, const double problem_cs2, const double denominator,
-                    const double half_beta, const int fluidType, bool use_carbuncle, IdxConstType idx, FluidConstType fluidConst) {
+                    const double half_beta, const int fluidType, const double Theta, bool use_carbuncle, IdxConstType idx, FluidConstType fluidConst) {
 
         //no vector in device code
         double uPri[gpu::FaceMax][N_OMINT] = {};
@@ -69,7 +69,7 @@ namespace gpu {
     void computeStep(const omAccessorType& om_rho_acc, const omAccessorType& om_sx_acc, const omAccessorType& om_sy_acc, const omAccessorType& om_sz_acc, const omAccessorType& om_Eges_acc,
                     size_t ix, size_t iy, size_t iz, size_t ixyz, double* cfl_lin, NumFluxAccessorType& numFlux,
                     NumPtotalAccessorType& num_ptotal, const CFlagAccessorType& carbuncle_flag, const bool thermal, const double gamma, const double problem_cs2, const double denominator,
-                    const double half_beta, const int fluidType, bool use_carbuncle, IdxConstType idx, FluidConstType fluidConst) {
+                    const double half_beta, const int fluidType, const double Theta, bool use_carbuncle, IdxConstType idx, FluidConstType fluidConst) {
 
         //no vector in device code
         double uPri[gpu::FaceMax][N_OMINT] = {};
@@ -80,8 +80,8 @@ namespace gpu {
         int cflag[gpu::FaceMax] = {};
 
         {
-            auto [uPriWest0, uPriSouth0, uPriBottom0] = gpu::computeWSB(om_rho_acc, ix, iy, iz);
-            auto [uPriEast0, uPriNorth0, uPriTop0] = gpu::computeENT(om_rho_acc, ix, iy, iz);
+            auto [uPriWest0, uPriSouth0, uPriBottom0] = gpu::computeWSB(om_rho_acc, Theta, ix, iy, iz);
+            auto [uPriEast0, uPriNorth0, uPriTop0] = gpu::computeENT(om_rho_acc, Theta, ix, iy, iz);
             uPri[gpu::FaceWest][0] = uPriWest0;
             uPri[gpu::FaceEast][0] = uPriEast0;
             uPri[gpu::FaceSouth][0] = uPriSouth0;
@@ -89,8 +89,8 @@ namespace gpu {
             uPri[gpu::FaceBottom][0] = uPriBottom0;
             uPri[gpu::FaceTop][0] = uPriTop0;
 
-            auto [uPriWest1, uPriSouth1, uPriBottom1] = gpu::computeWSB(om_sx_acc, ix, iy, iz);
-            auto [uPriEast1, uPriNorth1, uPriTop1] = gpu::computeENT(om_sx_acc, ix, iy, iz);
+            auto [uPriWest1, uPriSouth1, uPriBottom1] = gpu::computeWSB(om_sx_acc, Theta, ix, iy, iz);
+            auto [uPriEast1, uPriNorth1, uPriTop1] = gpu::computeENT(om_sx_acc, Theta, ix, iy, iz);
             uPri[gpu::FaceWest][1] = uPriWest1;
             uPri[gpu::FaceEast][1]= uPriEast1;
             uPri[gpu::FaceNorth][1] = uPriNorth1;
@@ -98,8 +98,8 @@ namespace gpu {
             uPri[gpu::FaceBottom][1] = uPriBottom1;
             uPri[gpu::FaceTop][1] = uPriTop1;
 
-            auto [uPriWest2, uPriSouth2, uPriBottom2] = gpu::computeWSB(om_sy_acc, ix, iy, iz);
-            auto [uPriEast2, uPriNorth2, uPriTop2] = gpu::computeENT(om_sy_acc, ix, iy, iz);
+            auto [uPriWest2, uPriSouth2, uPriBottom2] = gpu::computeWSB(om_sy_acc, Theta, ix, iy, iz);
+            auto [uPriEast2, uPriNorth2, uPriTop2] = gpu::computeENT(om_sy_acc, Theta, ix, iy, iz);
             uPri[gpu::FaceWest][2] = uPriWest2;
             uPri[gpu::FaceEast][2] = uPriEast2;
             uPri[gpu::FaceNorth][2] = uPriNorth2;
@@ -107,8 +107,8 @@ namespace gpu {
             uPri[gpu::FaceBottom][2] = uPriBottom2;
             uPri[gpu::FaceTop][2] = uPriTop2;
 
-            auto [uPriWest3, uPriSouth3, uPriBottom3] = gpu::computeWSB(om_sz_acc, ix, iy, iz);
-            auto [uPriEast3, uPriNorth3, uPriTop3] = gpu::computeENT(om_sz_acc, ix, iy, iz);
+            auto [uPriWest3, uPriSouth3, uPriBottom3] = gpu::computeWSB(om_sz_acc, Theta, ix, iy, iz);
+            auto [uPriEast3, uPriNorth3, uPriTop3] = gpu::computeENT(om_sz_acc, Theta, ix, iy, iz);
             uPri[gpu::FaceWest][3] = uPriWest3;
             uPri[gpu::FaceEast][3] = uPriEast3;
             uPri[gpu::FaceNorth][3] = uPriNorth3;
@@ -116,8 +116,8 @@ namespace gpu {
             uPri[gpu::FaceBottom][3] = uPriBottom3;
             uPri[gpu::FaceTop][3] = uPriTop3;
 
-            auto [uPriWest4, uPriSouth4, uPriBottom4] = gpu::computeWSB(om_Eges_acc, ix, iy, iz);
-            auto [uPriEast4, uPriNorth4, uPriTop4] = gpu::computeENT(om_Eges_acc, ix, iy, iz);
+            auto [uPriWest4, uPriSouth4, uPriBottom4] = gpu::computeWSB(om_Eges_acc, Theta, ix, iy, iz);
+            auto [uPriEast4, uPriNorth4, uPriTop4] = gpu::computeENT(om_Eges_acc, Theta, ix, iy, iz);
             uPri[gpu::FaceWest][4] = uPriWest4;
             uPri[gpu::FaceEast][4] = uPriEast4;
             uPri[gpu::FaceNorth][4] = uPriNorth4;

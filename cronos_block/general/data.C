@@ -653,13 +653,18 @@ void Data::fetch_cfl(Queue &queue) {
 	
 	queue.submit(celerity::allow_by_ref, [=, &cfl_lin](celerity::handler& cgh) {
 		celerity::accessor cflSYCL_acc{this->cflSYCL, cgh, celerity::access::all{}, celerity::read_only_host_task};
-		cgh.host_task(celerity::on_master_node, [=, &cfl_lin]{
+		cgh.host_task(celerity::experimental::collective, 
+				[=, &cfl_lin](celerity::experimental::collective_partition /*part*/){	
+			std::this_thread::sleep_for(std::chrono::milliseconds(100));
+			// MPI_Comm comm = part.get_collective_mpi_comm();
+        	// MPI_Barrier(comm);
 			if (cflSYCL_acc[0] > 0.) {
 				cfl_lin = cflSYCL_acc[0];
 			}
 		});
 	});
 
+	// <- this fails right now on multiple nodes with a CUDA:700 Error
 	queue.slow_full_sync();
 	
 	this->cfl = std::max(cfl_lin, this->cfl);

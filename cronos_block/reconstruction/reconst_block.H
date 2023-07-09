@@ -22,7 +22,7 @@ namespace gpu {
 		double _p;
 	};
 	
-	inline double minmodCompute(double Theta, double& up, double& uc, double& um) {
+	inline double minmodCompute(const double Theta, double& up, double& uc, double& um) {
 		up *= Theta;
 		um *= Theta;
 		if (up * um > 0.) {
@@ -61,12 +61,9 @@ namespace gpu {
 	}
 	
 	template<typename AccessorType>
-	auto prepareDerivs(AccessorType& omAcc, size_t ix, size_t iy, size_t iz) {
+	auto prepareDerivs(AccessorType& omAcc, const double Theta, size_t ix, size_t iy, size_t iz) {
 
 		auto [dudx, dudy, dudz] = getDerivs(omAcc, ix, iy, iz);
-
-		//dproksch TODO: read from project parameters
-		double Theta = 1;
 
 		double deriv_x = minmodCompute(Theta, dudx._p, dudx._0, dudx._m);
 		double deriv_y = minmodCompute(Theta, dudy._p, dudy._0, dudy._m);
@@ -76,7 +73,7 @@ namespace gpu {
 	}
 	
 	template<typename AccessorType>
-	auto prepareDerivsOffset(AccessorType& omAcc, size_t ix, size_t iy, size_t iz) {
+	auto prepareDerivsOffset(AccessorType& omAcc, const double Theta, size_t ix, size_t iy, size_t iz) {
 
 		Dud x;
 		Dud y;
@@ -93,9 +90,6 @@ namespace gpu {
 		z._m = omAcc[ix][iy][iz - 1] - omAcc[ix][iy][iz - 2];
 		z._p = omAcc[ix][iy][iz] - omAcc[ix][iy][iz - 1];
 		z._0 = 0.5 * (z._m + z._p);
-
-		//dproksch TODO: read from project parameters
-		double Theta = 1;
 
 		double deriv_x = minmodCompute(Theta, x._p, x._0, x._m);
 		double deriv_y = minmodCompute(Theta, y._p, y._0, y._m);
@@ -126,9 +120,9 @@ namespace gpu {
 	}
 	
 	template<typename AccessorType>
-	void compute(AccessorType& omAcc, double physValsAcc[][N_OMINT], size_t ix, size_t iy, size_t iz, int q, Direction dir) {
+	void compute(AccessorType& omAcc, double physValsAcc[][N_OMINT], const double Theta, size_t ix, size_t iy, size_t iz, int q, Direction dir) {
 
-		auto [deriv_x, deriv_y, deriv_z] = prepareDerivs(omAcc, ix, iy, iz);
+		auto [deriv_x, deriv_y, deriv_z] = prepareDerivs(omAcc, Theta, ix, iy, iz);
 		
 		if (dir == DirAll || dir == DirX) {
 			get_Vals_EW(omAcc, physValsAcc, ix, iy, iz, q, deriv_x);
@@ -145,9 +139,9 @@ namespace gpu {
 	}
 
 	template<typename AccessorType>
-	auto computeWSB(AccessorType& omAcc, size_t ix, size_t iy, size_t iz) {
+	auto computeWSB(AccessorType& omAcc, const double Theta, size_t ix, size_t iy, size_t iz) {
 
-		auto [deriv_x, deriv_y, deriv_z] = prepareDerivs(omAcc, ix, iy, iz);
+		auto [deriv_x, deriv_y, deriv_z] = prepareDerivs(omAcc, Theta, ix, iy, iz);
 		double shift(0.);
 
 		double uPriWest = omAcc[ix][iy][iz] - (0.5 + shift) * deriv_x;
@@ -158,9 +152,9 @@ namespace gpu {
 	}
 	
 	template<typename AccessorType>
-	auto computeENT(AccessorType& omAcc, size_t ix, size_t iy, size_t iz) {
+	auto computeENT(AccessorType& omAcc, const double Theta, size_t ix, size_t iy, size_t iz) {
 
-		auto [deriv_x, deriv_y, deriv_z] = prepareDerivsOffset(omAcc, ix, iy, iz);
+		auto [deriv_x, deriv_y, deriv_z] = prepareDerivsOffset(omAcc, Theta, ix, iy, iz);
 		double shift(0.);
 
 		double uPriEast = omAcc[ix - 1][iy][iz] + (0.5 - shift) * deriv_x;

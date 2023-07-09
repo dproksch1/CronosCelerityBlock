@@ -688,7 +688,7 @@ void Environment::Abort(Data &gdata, CException exep)
 
 
 void Environment::Output(Data &gdata, bool isfloat, bool terminate)
-{
+{ // <- rewrite to distributed
 	/*
 	  Routine to write a hdf5 output file for double data -- can be used
 	  for restart

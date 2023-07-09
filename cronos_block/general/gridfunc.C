@@ -2502,7 +2502,7 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 
 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 
-				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{(size_t) rim+1,1,1}, celerity::read_write};
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::slice<3>(0), celerity::read_write};
 
 				cgh.parallel_for<class BCExtrapolateKernel_0_1>(range, [=](celerity::item<3> item){
 
@@ -2547,7 +2547,7 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 
 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 
-				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,(size_t) rim+1,1}, celerity::read_write};
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::slice<3>(1), celerity::read_write};
 
 				cgh.parallel_for<class BCExtrapolateKernel_1_1>(range, [=](celerity::item<3> item){
 
@@ -2592,7 +2592,7 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 
 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 
-				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,1,(size_t) rim+1}, celerity::read_write};
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::slice<3>(2), celerity::read_write};
 
 				cgh.parallel_for<class BCExtrapolateKernel_2_1>(range, [=](celerity::item<3> item){
 
