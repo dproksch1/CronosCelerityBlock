@@ -3,8 +3,9 @@ small_compare 0 0
 medium_run 0 0
 small_compare 0 0
 small_compare 0 0
+medium_compare 0 0
 ---
 small_run
+small_compare
 medium_run
-small_compare
-small_compare
+medium_compare

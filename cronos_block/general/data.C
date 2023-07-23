@@ -157,19 +157,24 @@ Data::Data() : cflSYCL (celerity::buffer<double,1>(celerity::range{1})), nomSYCL
 	int n_omUser = fluid.get_N_OM_USER();
 //	N_OM = 8;
 
+	this->rim = B;
 	constexpr int numElements = 12;
 	om = new Pot[numElements];
 	//om = new Pot[N_OM+N_P]; //necessary for MHD
 
 	for (int i = 0; i < numElements; i++) {
-		std::cout << "creating omSYCL buffer size " << mx[0] + 6 + 1 << ", " << mx[1] + 6 + 1 << ", " << mx[2] + 6 + 1 << std::endl << std::flush;
 		omSYCL.push_back(CelerityBuffer<double, 3>(Range<3>(mx[0]+6 +1, mx[1]+6+1, mx[2]+6+1)));
+		omSYCL_out.push_back(CelerityBuffer<double, 3>(Range<3>(mx[0]+2 +1, mx[1]+2+1, mx[2]+2+1)));
+		omSYCL_out_flt.push_back(CelerityBuffer<float, 3>(Range<3>(mx[0]+1, mx[1]+1, mx[2]+1)));
 	}
 
 	for (int i = 0; i < 1; i++) {
 		pThermSYCL.push_back(CelerityBuffer<double, 3>(Range<3>(mx[0]+6, mx[1]+6, mx[2]+6)));
 		carbuncleFlagSYCL.push_back(CelerityBuffer<int, 3>(Range<3>(mx[0]+6, mx[1]+6, mx[2]+6)));
 	}
+
+	outputInfoSYCL.push_back(CelerityBuffer<double, 1>(Range<1>(3)));
+	outputInfoSYCL.push_back(CelerityBuffer<double, 1>(Range<1>(3)));
 
 	nom = new NumMatrix<double,3> [n_omInt];
 
@@ -282,8 +287,11 @@ Data::~Data() {
 	delete [] om;
 	delete [] nom;
 	omSYCL.clear();
+	omSYCL_out.clear();
+	omSYCL_out_flt.clear();
 	pThermSYCL.clear();
 	carbuncleFlagSYCL.clear();
+	outputInfoSYCL.clear();
 #if (OMS_USER == TRUE)
 	delete [] om_user;
 	delete [] nom_user;

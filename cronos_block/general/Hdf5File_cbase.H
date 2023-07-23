@@ -8,6 +8,7 @@
 #include "cronos_switches.H"
 #include "hdf5.h"
 #include "matrix.H"
+#include "queue.H"
 
 // template<typename T> hid_t get_hdf5_data_type();
 
@@ -26,7 +27,7 @@ using DisableIf = EnableIf<::negation<Condition>>;
 
 // Here the user can choose if a parallel IO to a single hdf5 file is
 // desired:
-//#define HDF_PARALLEL_IO CRONOS_ON
+#define HDF_PARALLEL_IO CRONOS_ON
 
 class Hdf5Stream {
  public:
@@ -34,6 +35,7 @@ class Hdf5Stream {
   ~Hdf5Stream();
   bool close();
   void Reopen();
+  void Initialize(MPI_Comm comm);
 
   template_noPointer bool ChangeGlobalAttr(const std::string &AttrName, T AttrData);
   template_noPointer bool ChangeGlobalAttr(const std::string &AttrName, T AttrData, hid_t my_group);
@@ -87,19 +89,53 @@ class Hdf5Stream {
                                             const NumMatrix<T, 3> &data, const double *xb,
                                             const double *dx);
 
+
+#if (HDF_PARALLEL_IO == CRONOS_ON)
+  template_noPointer bool WriteNumArray_withMPI_IO(const std::string &ArrayName,
+                                                   const NumArray<T> &data, bool with_data);
+  template_noPointer bool WriteNumArray_withMPI_IO2(const std::string &ArrayName,
+                                                    const NumArray<T> &data, bool with_data);
+
+
+  template_noPointer bool Write3DMatrix_withMPI_IO(
+      const std::string &ArrayName, const NumMatrix<T, 3> &data, const NumArray<int> &mx_global,
+      const NumArray<int> &mx_local, const NumArray<int> &rank_shift,
+      // NumArray<int> &rank_pos,
+      const NumArray<float> &xb, const NumArray<float> &dx);
+  template_noPointer bool Write3DMatrix_withMPI_IO(
+      const std::string &ArrayName, const NumMatrix<T, 3> &data, const NumArray<int> &mx_global,
+      const NumArray<int> &mx_local, const NumArray<int> &rank_shift,
+      // NumArray<int> &rank_pos,
+      const NumArray<float> &xb, const NumArray<float> &dx, hid_t my_group, int q_index = -1,
+      bool with_opendxinfo = true);
+
+  template_noPointer bool Write2DMatrix_withMPI_IO(
+      const std::string &ArrayName, const NumMatrix<T, 2> &data, const NumArray<int> &mx_global,
+      const NumArray<int> &mx_local, const NumArray<int> &rank_shift, const NumArray<float> &xb,
+      const NumArray<float> &dx, hid_t my_group, bool with_opendxinfo = true);
+
+  template_noPointer bool Write2DMatrix_withMPI_IO(
+      const std::string &ArrayName, const NumMatrix<T, 2> &data, const NumArray<int> &mx_global,
+      const NumArray<int> &mx_local, const NumArray<int> &rank_shift, const NumArray<float> &xb,
+      const NumArray<float> &dx);
+#endif
+
+
   hid_t AddGroup(std::string);
   void CloseGroup(hid_t group);
   hid_t get_defaultGroup();
   /*! Check whether attribute is available in the file*/
   bool doesAttrExist(hid_t, std::string) const;
+  bool AddDatasetName(const std::string &, hid_t group);
+  bool AddDatasetName(const std::string &);
+  void increase_num();
 
  private:
   bool AddToEntries();
   bool AddToEntries(hid_t group);
   //	template <typename T>
   //	bool AddAttrToArrSingle(std::string, hid_t &, hid_t, const std::string &, T);
-  bool AddDatasetName(const std::string &, hid_t group);
-  bool AddDatasetName(const std::string &);
+
   hid_t hdf5file;
   hid_t group;
   hid_t plist_file_id, plist_dset_id;
@@ -138,6 +174,21 @@ class Hdf5iStream {
   template_noPointer bool Read3DMatrix(std::string GroupName, const std::string &ArrayName,
                                        NumMatrix<T, 3> &data, double *xb, double *dx);
 
+
+  /*!
+   * Read data from 3D double file using MPIIO
+   * */
+  template_noPointer int Read3DMatrix_parallel(std::string GroupName, const std::string &ArrayName,
+                                               const NumArray<int> &mx_local,
+                                               const NumArray<int> &rank_shift, NumMatrix<T, 3> &);
+  /*!
+   * Same as above, but for generic group
+   * */
+  template_noPointer int Read3DMatrix_parallel(const std::string &ArrayName,
+                                               const NumArray<int> &mx_local,
+                                               const NumArray<int> &rank_shift, NumMatrix<T, 3> &);
+
+
   template_noPointer T ReadPointFrom3DMatrix(const std::string &ArrayName, int ix, int iy, int iz);
   template_noPointer int ReadNumArray(const std::string &ArrayName, NumArray<T> &data);
   template_noPointer int ReadNumArray(const std::string &ArrayName, NumArray<T> &data,
@@ -173,6 +224,20 @@ class Hdf5iStream {
 
   hid_t get_defaultGroup();
   std::string get_defaultGroupName();
+
+
+#if (HDF_PARALLEL_IO == CRONOS_ON)
+  template_noPointer bool Read3DMatrix_withMPI_IO(const std::string &ArrayName,
+                                                  NumMatrix<T, 3> &data, NumArray<int> &mx_local,
+                                                  NumArray<int> &rank_shift);
+  template_noPointer bool Read3DMatrix_withMPI_IO(const std::string &ArrayName,
+                                                  NumMatrix<T, 3> &data, NumArray<int> &mx_local,
+                                                  NumArray<int> &rank_shift, std::string GroupName);
+  template_noPointer bool Read3DMatrix_withMPI_IO(const std::string &ArrayName,
+                                                  NumMatrix<T, 3> &data, NumArray<int> &mx_local,
+                                                  NumArray<int> &rank_shift, hid_t my_group);
+#endif
+
 
  protected:
   hid_t OpenGroup(std::string);

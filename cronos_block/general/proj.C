@@ -28,6 +28,7 @@ cronos_ostream ccerr(std::cerr, 0);
 
 int main(int argc, char* argv[])
 {
+
 	/*
 	  Additional arguments:
 	  (a) Programm name
@@ -93,7 +94,7 @@ int main(int argc, char* argv[])
 		} catch (CException exep) {
 			solver.Abort(gdata, exep);
 		}
-		solver.InitOutput(gdata);
+		solver.InitOutput(queue, gdata);
 	}
 
 	// for (;;) {
@@ -103,7 +104,6 @@ int main(int argc, char* argv[])
 
 	}
 
-// queue.slow_full_sync();
 	if (EndProgram == 1) {
 		// Everything is fine -> exit normally
 		return 0;

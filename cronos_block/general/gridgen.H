@@ -14,7 +14,7 @@ typedef long long Long;
 #include <sys/stat.h>
 #include "matrix.H"
 #include "data.H"
-#include "gridfunc.H"
+// #include "gridfunc.H"
 #include "Hdf5File_cbase.H"
 #if (CRONOS_MOVIE == CRONOS_ON)
 #include "movie.H"
@@ -41,7 +41,7 @@ public:
 #if(FLUID_TYPE != CRONOS_MULTIFLUID)
 	void LoadData_flt(Data &, int);
 #endif
-	void InitOutput(Data &);
+	void InitOutput(Queue &, Data &);
 	void Abort(Data &, CException);
 	int Finalize(Data &, Queue &, string);
 	unique_ptr<rksolver> RKSolver;
@@ -68,6 +68,7 @@ private:
 	//	void Finalize(Data &, string);
 	void WriteDivB(Data &gdata);
 	void Output(Data &, bool, bool);
+	void Output_Distributed(Queue &, Data &, bool, bool);
 	void FetchDataBuffer(Data &gdata, Queue &queue);
 	string MakeFilename(const int [DIM], int, bool, bool);
 	void AddParallelFileNameStuff(string &filename, const int [DIM]);

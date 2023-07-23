@@ -9,6 +9,7 @@
 #include <utime.h>
 #endif
 #include <stdlib.h>
+#include <mpi.h>
 #include <iostream>
 #include <fstream>
 #include <filesystem>
@@ -58,6 +59,8 @@ Grid Grid::newInDomainGrid(const NumArray<double>& _xb, const  NumArray<double>&
     grid.global_xe[dir] = grid.xe[dir];
   }
 
+
+//   grid.GetMpi();
   grid.rank = 0;
   for (int i = 0; i < DIM; ++i) {
     grid.coords[i] = 0;
@@ -1310,6 +1313,361 @@ void Grid::CheckScale(NumArray<double>& xb, NumArray<double>& xe) {
 		ScaleGrid(xb, xe, 2, exp(1.));
 	}
 }
+
+// void Grid::GetMpi()
+// {
+
+// 	// Determine rank of CPU
+// 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+// 	// Test for number of processes -- get ntasks from MPI:
+// 	int ntasks;
+// 	MPI_Comm_size(MPI_COMM_WORLD, &ntasks);
+// 	this->ntasks = ntasks;
+
+// 	// comm3d,coords,left,right,front,back,bottom,top
+// 	// Here the periodicity of the grid is set (1 = true)
+// 	// int periods[3] = {bool(value((char*)"periodx")),
+// 	//                   bool(value((char*)"periody")),
+// 	//                   bool(value((char*)"periodz"))};
+
+// 	int bc_Type[6];
+// 	bc_Type[0] = int(value((char*)"bc_x_bot"));
+// 	bc_Type[1] = int(value((char*)"bc_x_top"));
+// 	bc_Type[2] = int(value((char*)"bc_y_bot"));
+// 	bc_Type[3] = int(value((char*)"bc_y_top"));
+// 	bc_Type[4] = int(value((char*)"bc_z_bot"));
+// 	bc_Type[5] = int(value((char*)"bc_z_top"));
+
+// 	MPI_periods[0] = false;
+// 	MPI_periods[1] = false;
+// 	MPI_periods[2] = false;
+// 	if (bc_Type[0] < 2 && bc_Type[1] < 2) MPI_periods[0] = true;
+// 	if (bc_Type[2] < 2 && bc_Type[3] < 2) MPI_periods[1] = true;
+// 	if (bc_Type[4] < 2 && bc_Type[5] < 2) MPI_periods[2] = true;
+
+// 	int reorder = int(value((char*)"reorder"));
+
+// 	// get distribution
+// 	if (reorder) {
+// 		nproc[0] = 0;
+// 		nproc[1] = 0;
+// 		nproc[2] = 0;
+// 		//   Let MPI propose for the number of processes in each direction:
+// 		MPI_Dims_create(ntasks, DIM, nproc);
+// 	}
+// 	else {
+// 		nproc[0] = int(value((char*)"nprocx"));
+// 		nproc[1] = int(value((char*)"nprocy"));
+// 		nproc[2] = int(value((char*)"nprocz"));
+// 		if (ntasks != nproc[0] * nproc[1] * nproc[2]) {
+// 			cerr << " Wrong number of processes " << endl;
+// 			cout << ntasks << " " << nproc[0] * nproc[1] * nproc[2] << endl;
+// 			cout << nproc[0] << " " << nproc[1] << " " << nproc[2] << endl;
+// 			exit(-5);
+// 		}
+// 	}
+
+// 	// Check if grid can be subdevided in a simple way
+// 	for (int dd = 0; dd < DIM; ++dd) {
+// 		if (numCellsEff[dd] < nproc[dd] && nproc[dd] > 1) {
+// 			if (rank == 0) {
+// 				cerr << " Wrong grid topology for dimension " << dd << endl;
+// 				cerr << "  mx[" << dd << "]:" << mx[dd] << endl;
+// 				cerr << " nproc[" << dd << "]:" << nproc[dd] << endl;
+// 			}
+// 			exit(-54);
+// 		}
+// 	}
+
+
+// 	// If all is okay: Create new communicator "comm3d"  
+// 	MPI_Cart_create(MPI_COMM_WORLD, DIM, nproc, MPI_periods, reorder, &comm3d);
+// 	// Retrieve the cartesian topology
+// 	if (rank == 0) {
+// 		int TopoType;
+// 		cout << " Cart topology:  ";
+// 		MPI_Topo_test(comm3d, &TopoType);
+// 		switch (TopoType) {
+// 		case MPI_UNDEFINED: cout << " MPI_UNDEFINED " << endl; break;
+// 		case MPI_GRAPH: cout << "MPI_GRAPH" << endl; break;
+// 		case MPI_CART: cout << "MPI_CART" << endl; break;
+// 		}
+// 	}
+
+// 	//   Determine rank again for cartesian communicator -> overwrite rank
+// 	MPI_Comm_rank(comm3d, &rank);
+// 	/* translate rank -> coordinates */
+// 	MPI_Cart_coords(comm3d, rank, DIM, coords);
+// 	/* translate back, coordinates -> rank */
+// 	int TranslateRank;
+// 	MPI_Cart_rank(comm3d, coords, &TranslateRank);
+
+// 	// Syntax: comm3d, shift direction, displacement, source, destination
+// 	MPI_Cart_shift(comm3d, 0, 1, &left, &right);
+// 	MPI_Cart_shift(comm3d, 1, 1, &front, &back);
+// 	MPI_Cart_shift(comm3d, 2, 1, &bottom, &top);
+
+
+// // 	// Determine ranks of neighbour processes:
+// // 	int shiftcoord[DIM];
+// // 	int lbound[DIM], ubound[DIM];
+// // 	for (int dim = 0; dim < DIM; dim++) {
+// // 		lbound[dim] = -1;
+// // 		ubound[dim] = 1;
+// // 	}
+// // 	Neighbour.resize(lbound, ubound);
+// // 	Neighbour.clear();
+// // 	for (int dim0 = -1; dim0 <= 1; dim0++) {
+// // 		shiftcoord[0] = (coords[0] + dim0) % nproc[0];
+// // 		if (shiftcoord[0] < 0) shiftcoord[0] += nproc[0];
+// // 		for (int dim1 = -1; dim1 <= 1; dim1++) {
+// // 			shiftcoord[1] = (coords[1] + dim1) % nproc[1];
+// // 			if (shiftcoord[1] < 0) shiftcoord[1] += nproc[1];
+// // 			for (int dim2 = -1; dim2 <= 1; dim2++) {
+// // 				shiftcoord[2] = (coords[2] + dim2) % nproc[2];
+// // 				if (shiftcoord[2] < 0) shiftcoord[2] += nproc[2];
+// // 				MPI_Cart_rank(comm3d, shiftcoord, &Neighbour(dim0, dim1, dim2));
+// // 			}
+// // 		}
+// // 	}
+
+
+// // 	// Determine absolute position of any rank:
+// // 	rankpos.resize(Index::set(0, 0, 0),
+// // 		Index::set(nproc[0] - 1, nproc[1] - 1, nproc[2] - 1));
+
+// // 	for (int dim0 = 0; dim0 < nproc[0]; ++dim0) {
+// // 		for (int dim1 = 0; dim1 < nproc[1]; ++dim1) {
+// // 			for (int dim2 = 0; dim2 < nproc[2]; ++dim2) {
+// // 				int coord[3] = { dim0, dim1, dim2 };
+// // 				MPI_Cart_rank(comm3d, coord, &rankpos(dim0, dim1, dim2));
+// // 			}
+// // 		}
+// // 	}
+
+
+// // 	// Set global quantities for number of cells and boundaries
+// // 	if (rank == 0) {
+// // 		for (int dir = 0; dir < DIM; ++dir) {
+// // 			// global_mx[d] = mx[d];
+// // // #if (NON_LINEAR_GRID == CRONOS_OFF)
+// // 			// Destinguish between two different grid philosophies
+// // 			if (EdgeGridding) {
+// // 				numCells[dir] /= nproc[dir];
+// // 				numCellsEff[dir] = numCells[dir];
+// // 				mx[dir] = numCells[dir] - 1;
+// // 			}
+// // 			else {
+// // 				mx[dir] /= nproc[dir];
+// // 				numCellsEff[dir] = mx[dir];
+// // 				numCells[dir] = mx[dir] + 1;
+// // 			}
+// // 			// #endif
+// // 		}
+// // 	}
+
+
+// // 	// Send values to all other ranks
+// // //	MPI_Barrier(comm3d);
+// // 	// MPI_Bcast(xb, 3, MPI_DOUBLE, 0, comm3d);
+// // 	// MPI_Bcast(xe, 3, MPI_DOUBLE, 0, comm3d);
+// // 	MPI_Bcast(global_xb, 3, MPI_DOUBLE, 0, comm3d);
+// // 	MPI_Bcast(global_xe, 3, MPI_DOUBLE, 0, comm3d);
+// // 	//	MPI_Bcast(dx, 3, MPI_DOUBLE, 0, comm3d);
+// // 	MPI_Bcast(mx, 3, MPI_INT, 0, comm3d);
+// // 	MPI_Bcast(numCells, 3, MPI_INT, 0, comm3d);
+// // 	MPI_Bcast(numCellsEff, 3, MPI_INT, 0, comm3d);
+// // 	MPI_Bcast(global_mx, 3, MPI_INT, 0, comm3d);
+// // 	// MPI_Bcast(&t_end, 1, MPI_DOUBLE, 0, comm3d);
+// // 	// MPI_Bcast(&dt, 1, MPI_DOUBLE, 0, comm3d);
+// // 	// MPI_Bcast(&cfl, 1, MPI_DOUBLE, 0, comm3d);
+// // //	MPI_Barrier(comm3d);
+
+
+// // 	// Check if mx = 2^nprox*mx_loc
+// // 	for (int dir = 0; dir < DIM; ++dir) {
+// // 		if (EdgeGridding) {
+// // 			if (numCells[dir] * nproc[dir] != global_numCells[dir]) {
+// // 				cerr << " ERROR: Grid must be given as Nx = nproc*Nx_loc ";
+// // 				cerr << endl;
+// // 				exit(-12);
+// // 			}
+// // 		}
+// // 		else {
+// // 			// 			[alt]:  if(mx[dir]*nproc[dir] != global_mx[dir]) {
+// // 			// [neu]:  if( (mx[dir]+1)*nproc[dir] != global_mx[dir]+1) {
+
+// // 			if (mx[dir] * nproc[dir] != global_mx[dir]) {
+// // 				cerr << " ERROR: Grid must be given as mx = nproc*mx_loc ";
+// // 				cerr << endl;
+// // 				cerr << " mx[" << dir << "]:" << global_mx[dir] << " ";
+// // 				cerr << " -- nproc*mxloc: " << mx[dir] * nproc[dir] << endl;
+// // 				exit(-12);
+// // 			}
+// // 		}
+// // 	}
+
+
+
+
+
+// // #if (NON_LINEAR_GRID == CRONOS_OFF)
+// // 	// Only necessary / useful for a linear grid...
+// // 	double LxLoc[DIM];
+// // 	for (int dir = 0; dir < DIM; ++dir) {
+// // 		LxLoc[dir] = Lx[dir] / nproc[dir];
+// // 		xb[dir] = xb[dir] + LxLoc[dir] * coords[dir];
+// // 		xe[dir] = xb[dir] + LxLoc[dir];
+// // 		// if(EdgeGridding) {
+// // 		// 	x0[dir] = xb[dir] + 0.5*dx[dir];
+// // 		// } else {
+// // 		// 	x0[dir] = xb[dir];
+// // 		// }
+// // 	}
+
+// // #endif
+
+// // 	// // Make new mpi-groups pertaining to constant z-planes
+// // 	// int MyXPos=coords[0]; // get x-position of current rank
+// // 	// int MyZPos=coords[2]; // get z-position of current rank
+
+// // 	int count(0);
+// // 	// Get number of ranks in single z-plane:
+// // 	int num_xy = nproc[0] * nproc[1];
+// // 	int num_yz = nproc[1] * nproc[2];
+// // 	//NumMatrix<int,1> x_ranks[nproc0];
+// // 	std::vector<NumMatrix<int, 1>> x_ranks(nproc[0]);
+// // 	//NumMatrix<int,1> z_ranks[nproc2];
+// // 	std::vector<NumMatrix<int, 1>> z_ranks(nproc[2]);
+
+
+// // 	// Walk trough x-axis
+// // 	for(int irx=0; irx<nproc[0]; irx++) {
+// // 		count = 0;
+// // 		x_ranks[irx].resize(Index::set(0), Index::set(num_yz));
+// // 		for(int iry=0; iry<nproc[1]; iry++) {
+// // 			for(int irz=0; irz<nproc[2]; irz++) {
+// // 				x_ranks[irx](count) = rankpos(irx,iry,irz);
+// // 				count++;
+// // 			}
+// // 		}
+// // 	}
+
+// // 	count = 0;
+// // 	// Walk trough z-axis
+// // 	for(int irz=0; irz<nproc[2]; irz++) {
+// // 		count = 0;
+// // 		z_ranks[irz].resize(Index::set(0), Index::set(num_xy));
+// // 		for(int irx=0; irx<nproc[0]; irx++) {
+// // 			for(int iry=0; iry<nproc[1]; iry++) {
+// // 				z_ranks[irz](count) = rankpos(irx,iry,irz);
+// // 				count++;
+// // 			}
+// // 		}
+// // 	}
+
+// // 	// // Build local communicator:
+// // 	// MPI_Group group_all, group_constz, group_constx;
+// // 	// // Get standard group handle:
+// // 	// cout << " all " << endl;
+// // 	// MPI_Comm_group(comm3d, &group_all);
+
+
+// // 	// // Devide tasks into groups based on x-position
+// // 	// MPI_Group_incl(group_all, num_yz, x_ranks[coords[0]], &group_constx);
+
+// // 	// // Devide tasks into groups based on z-position
+// // 	// MPI_Group_incl(group_all, num_xy, z_ranks[coords[2]], &group_constz);
+
+// // 	// // Make corresponding communicators:
+// // 	// cout << " x " << endl;
+// // 	// MPI_Comm_create(comm3d, group_constx, &comm_constx); // const x
+
+// // 	// MPI_Comm_create(comm3d, group_constz, &comm_constz); // const z
+// // 	// cout << " done " << endl;
+
+// // 	// Make new comms of lower dimension:
+// // 	int remain_dims[3];
+
+
+// // 	// constant x -> y-z plane
+// // 	remain_dims[0] = 0;
+// // 	remain_dims[1] = 1;
+// // 	remain_dims[2] = 1;
+// // 	MPI_Cart_sub(comm3d, remain_dims, &comm_constx);
+// // 	// Get corresponding rang
+// // 	MPI_Comm_rank(comm_constx, &rank_constx);
+
+// // 	// Now get local rank distribution:
+// // 	// Determine absolute position of any rank:
+// // 	rankpos_x.resize(Index::set(0,0),
+// // 	                 Index::set(nproc[1]-1,nproc[2]-1));
+
+// // 	for(int dim1=0; dim1<nproc[1]; ++dim1) {
+// // 		for(int dim2=0; dim2<nproc[2]; ++dim2) {
+// // 			int coord[2] = {dim1, dim2};
+// // 			MPI_Cart_rank(comm_constx, coord, &rankpos_x(dim1, dim2));
+// // 		}
+// // 	}
+
+
+
+// // 	// constant z -> x-y plane
+// // 	remain_dims[0] = 1;
+// // 	remain_dims[1] = 1;
+// // 	remain_dims[2] = 0;
+// // 	MPI_Cart_sub(comm3d, remain_dims, &comm_constz);
+// // 	// Get corresponding rang
+// // 	MPI_Comm_rank(comm_constz, &rank_constz);
+
+
+// // 	// Now get local rank distribution:
+// // 	// Determine absolute position of any rank:
+// // 	rankpos_z.resize(Index::set(0,0),
+// // 	                 Index::set(nproc[0]-1,nproc[1]-1));
+
+// // 	for(int dim0=0; dim0<nproc[0]; ++dim0) {
+// // 		for(int dim1=0; dim1<nproc[1]; ++dim1) {
+// // 			int coord[2] = {dim0, dim1};
+// // 			MPI_Cart_rank(comm_constz, coord, &rankpos_z(dim0, dim1));
+// // 		}
+// // 	}
+
+
+// // 	// constant xy -> line along z
+// // 	remain_dims[0] = 0;
+// // 	remain_dims[1] = 0;
+// // 	remain_dims[2] = 1;
+// // 	MPI_Cart_sub(comm3d, remain_dims, &comm_constxy);
+// // 	// Get corresponding rang
+// // 	MPI_Comm_rank(comm_constxy, &rank_constxy);
+
+
+// // 	// Now get local rank distribution:
+// // 	// Determine absolute position of any rank:
+// // 	rankpos_xy.resize(Index::set(0),
+// // 	                  Index::set(nproc[2]-1));
+
+// // 	for(int dim2=0; dim2<nproc[2]; ++dim2) {
+// // 		int coord[1] = {dim2};
+// // 		MPI_Cart_rank(comm_constxy, coord, &rankpos_xy(dim2));
+// // 	}
+
+// 	// // Test of new communicator:
+// 	// int variable = rank;
+//     // int variableGlobal = variable;
+//     // MPI_Reduce(&variable, &variableGlobal, 1, MPI_INT,
+//     //            MPI_SUM, 0, comm_constz);
+//     // if(rank_constz==0) {
+// 	//     cout << " My z-pos " << coords[2] << " my val: ";
+// 	//     cout << variableGlobal << endl;
+//     // }
+
+//     // MPI_Finalize();
+//     //	exit(2);
+
+// }
 
 void Grid::MakeGridDir() {
 

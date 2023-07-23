@@ -9,7 +9,6 @@
 #include <time.h>
 #endif
 
-#include "Hdf5File_cbase.H"
 #include "grid.H"
 #include "fluid.H"
 #include "constants.H"
@@ -95,6 +94,10 @@ public:
 	// This is set to NULL for OMS_USER == false (has to exist due to design decisions)
 	NumMatrix<double,3> *nom_user;
 
+	//output buffer
+	std::vector<CelerityBuffer<double, 3>> omSYCL_out;
+	std::vector<CelerityBuffer<float, 3>> omSYCL_out_flt;
+
 #if (GEOM == SPHERICAL)
 	NumMatrix<double,1> massFlux;
 	double radialArea;
@@ -104,10 +107,12 @@ public:
 	NumMatrix<int,3> carbuncleFlag; // flag, where carbuncle problem might occur
 	std::vector<CelerityBuffer<double, 3>> pThermSYCL;
 	std::vector<CelerityBuffer<int, 3>> carbuncleFlagSYCL;
+	std::vector<CelerityBuffer<double, 1>> outputInfoSYCL;
 
 	double time, dt, t_end;
 	double cfl;
 	int tstep;
+	int rim;
 
 	bool mag, storePressure, use_carbuncleFlag;
 

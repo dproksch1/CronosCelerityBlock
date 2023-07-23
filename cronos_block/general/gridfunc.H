@@ -3,6 +3,470 @@
 
 #include "data.H"
 #include "problem.H"
+#include "Hdf5File_cbase_typemap.H"
+
+namespace distr_io {
+
+	template <typename T>
+	std::pair<hid_t, hid_t> allocation_window_to_dataspace(const celerity::buffer_allocation_window<T, 3>& layout)
+	{
+		hsize_t file_size[3], file_start[3];
+		hsize_t allocation_size[3], allocation_start[3];
+		hsize_t count[3];
+		for(int d = 0; d < 3; ++d) {
+			file_size[d] = layout.get_buffer_range()[d];
+			file_start[d] = layout.get_window_offset_in_buffer()[d];
+			allocation_size[d] = layout.get_allocation_range()[d];
+			allocation_start[d] = layout.get_window_offset_in_allocation()[d];
+			count[d] = layout.get_window_range()[d];
+		}
+
+		auto file_space = H5Screate_simple(3, file_size, nullptr);
+		H5Sselect_hyperslab(file_space, H5S_SELECT_SET, file_start, nullptr, count, nullptr);
+		auto allocation_space = H5Screate_simple(3, allocation_size, nullptr);
+		H5Sselect_hyperslab(allocation_space, H5S_SELECT_SET, allocation_start, nullptr, count, nullptr);
+
+		return {file_space, allocation_space};
+	}
+
+	template<typename AttributeAccessorType, typename DataAccessorType>
+	bool Write3DMatrix(Hdf5Stream &h5out, const std::string &ArrayName, const DataAccessorType& data_acc, 
+											const NumArray<int> &mx_global, int rim, const AttributeAccessorType xmin, 
+											const AttributeAccessorType dx, hid_t my_group, 
+											celerity::experimental::collective_partition part, int q_index,
+											bool with_opendxinfo, bool is_float) 
+	{
+
+		h5out.AddDatasetName(ArrayName, my_group);
+		h5out.increase_num();
+
+		int dim = 3;
+		hid_t datatype;
+		if (is_float) {
+		  	datatype = get_hdf5_data_type<float>();
+		} else {
+			datatype = get_hdf5_data_type<double>();
+		}
+		H5Tset_order(datatype, H5T_ORDER_LE);
+
+		hsize_t DimsData[dim];
+		DimsData[0] = mx_global[2] + 1 + 2 * rim;
+		DimsData[1] = mx_global[1] + 1 + 2 * rim;
+		DimsData[2] = mx_global[0] + 1 + 2 * rim;
+
+		hid_t dataspace = H5Screate_simple(dim, DimsData, NULL);
+
+		// Supplying additional attributes for opendx input
+
+		hid_t datatypefloat = get_hdf5_data_type<double>();
+		H5Tset_order(datatypefloat, H5T_ORDER_LE);
+
+		// Create dataspace for attribute
+		hsize_t DimsAttr = 3;
+		hid_t attrspace = H5Screate_simple(1, &DimsAttr, NULL);
+		float Origin[3];
+		float Delta[3];
+		// float Test_Attr[3];
+
+		if (with_opendxinfo) {
+			for (int q = 0; q < 3; ++q) {
+				Origin[q] = 0.;
+				Delta[q] = 0.;
+				// Test_Attr[q] = 1.11*(q+1);
+			}
+		}
+
+		// Create dataset
+		hid_t dataset_id = H5Dcreate2(my_group, ArrayName.c_str(), datatype, dataspace, H5P_DEFAULT,
+										H5P_DEFAULT, H5P_DEFAULT);
+
+		if (with_opendxinfo) {
+			// Create attributes
+			hid_t origin =
+				H5Acreate2(dataset_id, "origin", datatypefloat, attrspace, H5P_DEFAULT, H5P_DEFAULT);
+			hid_t delta =
+				H5Acreate2(dataset_id, "delta", datatypefloat, attrspace, H5P_DEFAULT, H5P_DEFAULT);
+
+			// hid_t test_attr =
+			// 	H5Acreate2(dataset_id, "test_attr", datatypefloat, attrspace, H5P_DEFAULT, H5P_DEFAULT);
+
+			// Write attributes
+			H5Awrite(origin, datatypefloat, &xmin);
+			H5Awrite(delta, datatypefloat, &dx);
+			// H5Aread(delta, datatypefloat, &Delta);
+			// cout << "Delta0: " << Delta[0] << endl;
+			// cout << "Delta1: " << Delta[1] << endl;
+			// H5Awrite(test_attr, datatypefloat, &Test_Attr);
+
+			// Close attributes
+			H5Aclose(origin);
+			H5Aclose(delta);
+			// H5Aclose(test_attr);
+			H5Sclose(attrspace);
+		}
+
+		if (q_index > 0) {
+			// Create dataspace
+			hid_t info_id = H5Screate(H5S_SCALAR);
+			// Create Attribute
+			hid_t info =
+				H5Acreate2(dataset_id, "q_index", H5T_NATIVE_INT, info_id, H5P_DEFAULT, H5P_DEFAULT);
+			H5Awrite(info, H5T_NATIVE_INT, &q_index);
+			H5Aclose(info);
+			H5Sclose(info_id);
+		}
+
+		auto plist = H5Pcreate(H5P_DATASET_XFER);
+			H5Pset_dxpl_mpio(plist, H5FD_MPIO_COLLECTIVE);
+
+		auto allocation_window = data_acc.get_allocation_window(part);
+		auto [file_space, allocation_space] = allocation_window_to_dataspace(allocation_window);
+		bool success = H5Dwrite(dataset_id, datatype, allocation_space, dataspace, plist, allocation_window.get_allocation());
+		cout << ArrayName.c_str() << " output reached -> " << success << endl;
+
+		H5Sclose(dataspace);
+
+		// Close the dataset:
+		H5Dclose(dataset_id);
+		H5Sclose(allocation_space);
+		H5Sclose(file_space);
+		H5Pclose(plist);
+
+
+		return true;
+	}
+
+	template<typename AttributeAccessorType, typename DataAccessorType>
+	void dataout(Data &gdata,  Hdf5Stream &h5out, celerity::experimental::collective_partition part,
+						ProblemType & Problem, const AttributeAccessorType origin_acc, const AttributeAccessorType dx_acc,
+						int numout, bool isfloat, const DataAccessorType& om_rho_acc,
+					   const DataAccessorType& om_sx_acc, const DataAccessorType& om_sy_acc, 
+					   const DataAccessorType& om_sz_acc, const DataAccessorType& om_Eges_acc)
+	{
+		Problem.WriteToH5(h5out);
+
+		int rim(0);
+		if(isfloat) {
+			rim = BOUT_FLT;
+		} else {
+			rim = BOUT_DBL;
+		}
+
+		NumArray<int> mx_global(3);
+		NumArray<float> xmin_global(3), delx(3);
+		for (int dir = 0; dir < 3; dir++) {
+			mx_global(dir) = gdata.global_mx[dir];
+			xmin_global(dir) = gdata.get_pos_global(dir, rim, 0);
+			delx(dir) = gdata.dx[dir];
+		}
+
+
+		double xmin[3];
+		xmin[0] = gdata.getCen_x(-rim);
+		xmin[1] = gdata.getCen_y(-rim);
+		xmin[2] = gdata.getCen_z(-rim);
+	
+		int itime = static_cast<int>(gdata.time/gdata.dt);
+
+		int nproc[3] = {1,1,1};
+		int coords[3] = {0,0,0};
+		h5out.AddGlobalAttr("procs",nproc,3);
+		h5out.AddGlobalAttr("coords",coords,3);
+		h5out.AddGlobalAttr("rank",gdata.rank);
+		h5out.AddGlobalAttr("fluid_type", "hydro");
+
+		h5out.AddGlobalAttr("geometry",GEOM);
+		h5out.AddGlobalAttr("itime",itime);
+		h5out.AddGlobalAttr("timestep",gdata.tstep);
+		h5out.AddGlobalAttr("time",gdata.time);
+		h5out.AddGlobalAttr("rim",rim);
+		h5out.AddGlobalAttr("dt",gdata.dt);
+		h5out.AddGlobalAttr("xmin",xmin,3);
+	#if (NON_LINEAR_GRID == _CRONOS_ON)
+		h5out.AddGlobalAttr("dx",gdata.dx,3);
+	#endif
+		h5out.AddGlobalAttr("CflNumber",gdata.cfl);
+
+	#if(CRONOS_OUTPUT_COMPATIBILITY == CRONOS_ON)
+		hid_t group = h5out.get_defaultGroup();
+	#else
+		string groupName = gdata.fluid.get_Name();
+		hid_t group = h5out.AddGroup(groupName);
+	#endif
+
+		// if (isfloat) {
+
+		// } else {
+			Write3DMatrix(h5out, gdata.om[0].getName(), om_rho_acc, mx_global, rim,
+						origin_acc, dx_acc, group, part, 0, true, isfloat);
+			Write3DMatrix(h5out, gdata.om[1].getName(), om_sz_acc, mx_global, rim,
+						origin_acc, dx_acc, group, part, 1, true, isfloat);
+			Write3DMatrix(h5out, gdata.om[2].getName(), om_sy_acc, mx_global, rim,
+						origin_acc, dx_acc, group, part, 2, true, isfloat);
+			Write3DMatrix(h5out, gdata.om[3].getName(), om_sx_acc, mx_global, rim,
+						origin_acc, dx_acc, group, part, 3, true, isfloat);
+			Write3DMatrix(h5out, gdata.om[4].getName(), om_Eges_acc, mx_global, rim,
+						origin_acc, dx_acc, group, part, 4, true, isfloat);
+		// }
+
+	#if(CRONOS_OUTPUT_COMPATIBILITY != CRONOS_ON)
+		h5out.CloseGroup(group);
+	#endif
+
+	}
+	
+	template <typename T, typename DataAccessorType>
+	bool Write3DMatrix2(Hdf5Stream &h5out, const std::string &ArrayName, const NumMatrix<T, 3> &data,
+                               const double *xb, const double *dx, hid_t my_group, int q_index,
+                               bool with_opendxinfo, const DataAccessorType& data_acc, bool data1, celerity::experimental::collective_partition part) {
+		/* Routine to write NumMatrix data in wrong ordering to hdf5 file.
+
+			Remarks:
+
+			On reading the hdf data the swapped dimensions have to be taken
+			into account
+
+		*/
+		int mx[3];
+		mx[0] = data.getHigh(2) - data.getLow(2) + 1;
+		mx[1] = data.getHigh(1) - data.getLow(1) + 1;
+		mx[2] = data.getHigh(0) - data.getLow(0) + 1;
+
+		// // Add name of dataset to group
+		// if (my_group != h5out.group) {
+			h5out.AddDatasetName(ArrayName, my_group);
+		// }
+		// // Add name globally (deprecated)
+		// h5out.AddDatasetName(ArrayName);
+		h5out.increase_num();
+
+		const int dim = 3;
+		// Choose double, little endian of size 1
+		hid_t datatype = get_hdf5_data_type<T>();
+		H5Tset_order(datatype, H5T_ORDER_LE);
+
+		hsize_t DimsData[dim];
+		for (int q = 0; q < dim; ++q) {
+			DimsData[q] = mx[q];
+		}
+		hid_t dataspace = H5Screate_simple(dim, DimsData, NULL);
+		// Supplying additional attributes for opendx input
+		// Datatype: double, little endian of size 1
+		hid_t datatypefloat = get_hdf5_data_type<double>();
+		H5Tset_order(datatypefloat, H5T_ORDER_LE);
+
+		// Create dataspace for attribute
+		hsize_t DimsAttr = 3;
+		hid_t attrspace = H5Screate_simple(1, &DimsAttr, NULL);
+
+		double Origin[3];
+		double Delta[3];
+		if (with_opendxinfo) {
+			for (int q = 0; q < 3; ++q) {
+			Origin[q] = float(xb[q]);
+			Delta[q] = float(dx[q]);
+			}
+		}
+
+		// Create dataset
+		hid_t dataset = H5Dcreate2(my_group, ArrayName.c_str(), datatype, dataspace, H5P_DEFAULT,
+									H5P_DEFAULT, H5P_DEFAULT);
+
+		if (with_opendxinfo) {
+			// Create attributes
+			hid_t origin =
+				H5Acreate2(dataset, "origin", datatypefloat, attrspace, H5P_DEFAULT, H5P_DEFAULT);
+			hid_t delta = H5Acreate2(dataset, "delta", datatypefloat, attrspace, H5P_DEFAULT, H5P_DEFAULT);
+
+			// Write attributes
+			H5Awrite(origin, datatypefloat, &Origin);
+			H5Awrite(delta, datatypefloat, &Delta);
+			// Close attributes
+			H5Aclose(origin);
+			H5Aclose(delta);
+			H5Sclose(attrspace);
+		}
+
+		if (q_index > 0) {
+			// Create dataspace
+			hid_t info_id = H5Screate(H5S_SCALAR);
+			// Create Attribute
+			hid_t info = H5Acreate2(dataset, "q_index", H5T_NATIVE_INT, info_id, H5P_DEFAULT, H5P_DEFAULT);
+			H5Awrite(info, H5T_NATIVE_INT, &q_index);
+			H5Aclose(info);
+			H5Sclose(info_id);
+		}
+
+		auto plist = H5Pcreate(H5P_DATASET_XFER);
+			H5Pset_dxpl_mpio(plist, H5FD_MPIO_COLLECTIVE);
+
+		auto allocation_window = data_acc.get_allocation_window(part);
+		auto [file_space, allocation_space] = allocation_window_to_dataspace(allocation_window);
+		bool success = H5Dwrite(dataset, datatype, allocation_space, dataspace, plist, allocation_window.get_allocation());
+
+		H5Dclose(dataset);
+
+		H5Sclose(dataspace);
+		H5Sclose(allocation_space);
+		H5Sclose(file_space);
+		H5Pclose(plist);
+
+		return true;
+	}
+	
+	template<typename DataAccessorType>
+	void dataout2(Data &gdata,  Hdf5Stream &h5out, ProblemType & Problem, celerity::experimental::collective_partition part, 
+						int n_omInt, int n_omIntUser,
+						int numout, bool isfloat, bool is_collective, const DataAccessorType& om_rho_acc,
+					   const DataAccessorType& om_sx_acc, const DataAccessorType& om_sy_acc, 
+					   const DataAccessorType& om_sz_acc, const DataAccessorType& om_Eges_acc)
+	{
+
+		// Hdf5Stream h5out(filename, numout, gdata.rank);
+	
+		Problem.WriteToH5(h5out);
+
+		int rim(0);
+		if(isfloat) {
+			rim = BOUT_FLT;
+		} else {
+			rim = BOUT_DBL;
+		}
+
+		// Correction for boundary points if such are taken into account
+		double xmin[3];
+		// xmin[0] = gdata.xb[0]-rim*gdata.dx[0];
+		// xmin[1] = gdata.xb[1]-rim*gdata.dx[1];
+		// xmin[2] = gdata.xb[2]-rim*gdata.dx[2];
+		xmin[0] = gdata.getCen_x(-rim);
+		xmin[1] = gdata.getCen_y(-rim);
+		xmin[2] = gdata.getCen_z(-rim);
+	
+		int itime = static_cast<int>(gdata.time/gdata.dt);
+		
+		int nproc[3] = {1,1,1};
+		int coords[3] = {0,0,0};
+		h5out.AddGlobalAttr("procs",nproc,3);
+		h5out.AddGlobalAttr("coords",coords,3);
+		h5out.AddGlobalAttr("rank",gdata.rank);
+
+	#if (FLUID_TYPE == CRONOS_HYDRO)
+		h5out.AddGlobalAttr("fluid_type", "hydro");
+	#elif (FLUID_TYPE == CRONOS_MHD)
+		h5out.AddGlobalAttr("fluid_type", "mhd");
+	#elif (FLUID_TYPE == CRONOS_RHD)
+		h5out.AddGlobalAttr("fluid_type", "rhd");
+	#else
+		h5out.AddGlobalAttr("fluid_type", "N/A");
+	#endif
+
+		h5out.AddGlobalAttr("geometry",GEOM);
+		h5out.AddGlobalAttr("itime",itime);
+		h5out.AddGlobalAttr("timestep",gdata.tstep);
+		h5out.AddGlobalAttr("time",gdata.time);
+		h5out.AddGlobalAttr("rim",rim);
+		h5out.AddGlobalAttr("dt",gdata.dt);
+		h5out.AddGlobalAttr("xmin",xmin,3);
+	#if (NON_LINEAR_GRID == _CRONOS_ON)
+		h5out.AddGlobalAttr("dx",gdata.dx,3);
+	#endif
+		h5out.AddGlobalAttr("CflNumber",gdata.cfl);
+
+		// Prepare mx and so on for parallel output if necessary
+
+		// In case of multifluid simulation do separate output for individual fluids
+	#if(CRONOS_OUTPUT_COMPATIBILITY == CRONOS_ON)
+		hid_t group = h5out.get_defaultGroup();
+	#else
+		string groupName = gdata.fluid.get_Name();
+		hid_t group = h5out.AddGroup(groupName);
+	#endif
+		int qmin = 0;
+		int qmax = numout-n_omIntUser;
+
+		int qmin_user = 0;
+		int qmax_user = n_omIntUser;
+
+		int q_index = -1;
+
+		for (int q = qmin; q < qmax; ++q) {
+		
+			int qout = q;
+			
+			string dsetName = gdata.om[qout].getName();
+
+			if(isfloat) {cout << "is float" << endl;
+				NumMatrix<float,3> data(Index::set(-rim,-rim,-rim),
+										Index::set(gdata.mx[0]+rim,gdata.mx[1]+rim,
+												gdata.mx[2]+rim));
+				data = gdata.float_data(qout,rim,true);
+				// Possibility of parallel IO into one file so far only
+				// for float data (because only those are analysed
+				// directly)
+				switch(q) {
+					case 0: Write3DMatrix2(h5out, dsetName, data, xmin, gdata.dx, group,q_index, true, om_rho_acc, true, part);break;
+					case 1: Write3DMatrix2(h5out, dsetName, data, xmin, gdata.dx, group,q_index, true, om_sx_acc, true, part);break;
+					case 2: Write3DMatrix2(h5out, dsetName, data, xmin, gdata.dx, group,q_index, true, om_sy_acc, true, part);break;
+					case 3: Write3DMatrix2(h5out, dsetName, data, xmin, gdata.dx, group,q_index, true, om_sz_acc, true, part);break;
+					case 4: Write3DMatrix2(h5out, dsetName, data, xmin, gdata.dx, group,q_index, true, om_Eges_acc, true, part);break;
+					default: Write3DMatrix2(h5out, dsetName, data, xmin, gdata.dx, group,q_index, true, om_rho_acc, true, part);break;
+				}
+
+				// if possible add unit to field
+				if(Problem.TrafoNorm != NULL) {
+
+					string fieldName;
+					if(qout < gdata.fluid.get_N_OMINT()) {
+						fieldName = gdata.fluid.get_fieldName(qout);
+						fieldName = gdata.om[qout].getName();
+					} else {
+						fieldName = dsetName;
+					}
+
+					h5out.AddAttributeToArray(dsetName, "NormFactor",
+							Problem.TrafoNorm->get_normConst(fieldName), group);
+					h5out.AddAttributeToArray(dsetName, "NormUnit",
+							Problem.TrafoNorm->get_unitNormConst(fieldName), group);
+					if(gdata.rank==0 && false) {
+						cout << " Setting Norm: " << Problem.TrafoNorm->get_normConst(fieldName) << " ";
+						cout << Problem.TrafoNorm->get_unitNormConst(fieldName) << " for field: ";
+						cout << fieldName << endl;
+					}
+				}
+
+			} else {cout << "not float" << endl;
+				NumMatrix<double,3> data(Index::set(-rim,-rim,-rim),
+										Index::set(gdata.mx[0]+rim, gdata.mx[1]+rim,
+													gdata.mx[2]+rim));
+
+				for (int k = -rim; k <= gdata.mx[2]+rim; k++) {
+					for (int j = -rim; j <= gdata.mx[1]+rim; j++) {
+						for (int i = -rim; i <= gdata.mx[0]+rim; i++) {
+							data(i,j,k) = gdata.om[qout](i,j,k);
+						}
+					}
+				}
+				
+				switch(q) {
+					case 0: Write3DMatrix2(h5out, dsetName, data, xmin, gdata.dx, group,q_index, true, om_rho_acc, true, part);break;
+					case 1: Write3DMatrix2(h5out, dsetName, data, xmin, gdata.dx, group,q_index, true, om_sx_acc, true, part);break;
+					case 2: Write3DMatrix2(h5out, dsetName, data, xmin, gdata.dx, group,q_index, true, om_sy_acc, true, part);break;
+					case 3: Write3DMatrix2(h5out, dsetName, data, xmin, gdata.dx, group,q_index, true, om_sz_acc, true, part);break;
+					case 4: Write3DMatrix2(h5out, dsetName, data, xmin, gdata.dx, group,q_index, true, om_Eges_acc, true, part);break;
+					default: Write3DMatrix2(h5out, dsetName, data, xmin, gdata.dx, group,q_index, true, om_rho_acc, true, part);break;
+				}
+			}
+
+		}
+
+	#if(CRONOS_OUTPUT_COMPATIBILITY != CRONOS_ON)
+		h5out.CloseGroup(group);
+	#endif
+
+	}
+}
+
+
 
 
 class gridFunc {
@@ -29,6 +493,7 @@ public:
 			int rim, int q, int iFluid=0);
 
 	// void dataout(Data &, string &, ProblemType &, int, bool);
+
 	void dataout(Data &, Hdf5Stream &, ProblemType &, int, bool, bool is_collective);
 	void datain(Data &, Hdf5iStream &, string &, ProblemType &);
 	void datain_old(Data &, Hdf5iStream &, string &, ProblemType &);

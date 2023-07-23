@@ -162,6 +162,9 @@
         "timewrapper.H": "cpp",
         "singlestep_block copy.C": "cpp",
         "singlestep_block copy 2.C": "cpp",
-        "singlestep_block2.C": "cpp"
+        "singlestep_block2.C": "cpp",
+        "Hdf5File_cbase2.C": "cpp",
+        "Hdf5File_cbase2 copy.C": "cpp",
+        "Hdf5File_cbase copy.C": "cpp"
     }
 }

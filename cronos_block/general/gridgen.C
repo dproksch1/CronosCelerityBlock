@@ -153,7 +153,7 @@ void Environment::setup(Data &gdata)
 
 
 
-void Environment::InitOutput(Data &gdata)
+void Environment::InitOutput(Queue &queue, Data &gdata)
 {
 	// Initial output
 
@@ -164,7 +164,8 @@ void Environment::InitOutput(Data &gdata)
 #endif
 		
 		// Output of gdata data:
-		Output(gdata, true, false);
+		Output_Distributed(queue, gdata, true, false);
+		// Output(gdata, true, false);
 //		// Output of gdata data:
 //		Output(gdata, false, false);
 	}
@@ -199,7 +200,6 @@ bool Environment::CheckEnd(Data &gdata, Queue &queue)
 	if(Completed) {
 		return Finalize(gdata, queue, static_cast<string>("Time integration completed"));
 	}
-
 	return false;
 }
 
@@ -455,13 +455,15 @@ void Environment::CheckOut(Data &gdata, Queue &queue)
   
 	// doing double output
 	if(outputflag[0] == 1) {
-		Output(gdata, false, false);
+		Output_Distributed(queue, gdata, false, false);
+		// Output(gdata, false, false);
 		numdbl_pass = 0;
 	}
 
 	// doing float output
 	if(outputflag[1] == 1) {
-		Output(gdata, true, false);
+		Output_Distributed(queue, gdata, true, false);
+		// Output(gdata, true, false);
 		numflt_pass = 0;
 	}
 
@@ -494,26 +496,46 @@ void Environment::CheckOut(Data &gdata, Queue &queue)
 
 void Environment::FetchDataBuffer(Data &gdata, Queue &queue)
 {
-	// queue.slow_full_sync();
-
-	auto omRange = gdata.omSYCL[0].get_range();
-	size_t nom_max[3] = {omRange.get(0), omRange.get(1), omRange.get(2)};
-	for (int q = 0; q < N_OMINT; q++) {
-
-		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-			celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::read_only_host_task};
-			cgh.host_task(celerity::on_master_node, [=, &gdata]{
-				for (int i = 0; i < nom_max[0]; i++) {
-					for (int j = 0; j < nom_max[1]; j++) {
-						for (int k = 0; k < nom_max[2]; k++) {
-							gdata.om[q](i-3,j-3,k-3) = omSYCL_acc[i][j][k];
-						}
-					}
-				}
-			});
+	int q_track = 0;
+	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+		celerity::accessor om_acc{gdata.omSYCL[q_track], cgh, celerity::access::all{}, celerity::read_only_host_task};
+		cgh.host_task(celerity::experimental::collective, [=,&gdata](celerity::experimental::collective_partition) {
+			// int i = 64;
+			// int j = 64;
+			// int k = 60;
+			// printf("om_{%d}_acc[%d][%d][%d]: %f\n",q_track,i,j,k,om_acc[i+3][j+3][k+3]);
+			printf("dx: %f %f %f\n", gdata.dx[0], gdata.dx[1], gdata.dx[2]);
+			printf("origin: %f %f %f\n", gdata.get_pos_global(0, 0, 0), gdata.get_pos_global(1, 0, 0), gdata.get_pos_global(2, 0, 0));
 		});
-	}
+	});
 	queue.slow_full_sync();
+
+	// auto omRange = gdata.omSYCL[0].get_range();
+	// size_t nom_max[3] = {omRange.get(0), omRange.get(1), omRange.get(2)};
+	// for (int q = 0; q < N_OMINT; q++) {
+
+	// 	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+	// 		celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::read_only_host_task};
+	// 		cgh.host_task(celerity::on_master_node, [=, &gdata]{
+	// 			for (int i = 0; i < nom_max[0]; i++) {
+	// 				for (int j = 0; j < nom_max[1]; j++) {
+	// 					for (int k = 0; k < nom_max[2]; k++) {
+	// 						// gdata.om[q](i-3,j-3,k-3) = omSYCL_acc[i][j][k];
+	// 						gdata.om[q](i-3,j-3,k-3) = omSYCL_acc[i][j][k];
+	// 					}
+	// 				}
+	// 			}
+	// 		});
+	// 	});
+	// }
+	// queue.slow_full_sync();
+	// 	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+	// 	celerity::accessor om_Eges_acc{gdata.omSYCL[4], cgh, celerity::access::all{}, celerity::read_only_host_task};
+	// 	cgh.host_task(celerity::experimental::collective, [=, &gdata](celerity::experimental::collective_partition) {
+	// 		printf("om_Eges_acc[59][63][65]: %f %f\n",om_Eges_acc[59+3][63+3][65+3], gdata.om[4](59,63,65));
+	// 	});
+	// });
+	// queue.slow_full_sync();
 }
 
 
@@ -594,11 +616,14 @@ int Environment::Finalize(Data &gdata, Queue &queue, string message)
 
 	FetchDataBuffer(gdata, queue);
 
-	Output(gdata, true, false);
+	Output_Distributed(queue, gdata, true, false);
+	// Output(gdata, true, false);
 
 	if(false) {
 		WriteDivB(gdata);
 	}
+
+	queue.slow_full_sync();
 
 	return 1; // Indicate normal end of program
 	
@@ -685,7 +710,168 @@ void Environment::Abort(Data &gdata, CException exep)
 	exit(errorcode);
 }
 
+void Environment::Output_Distributed(Queue &queue, Data &gdata, bool isfloat, bool terminate)
+{
+	/*
+	  Routine to write a hdf5 output file for double data -- can be used
+	  for restart
+	*/
 
+	if(gdata.rank == 0 && Problem->checkout(2)) {
+		cout << "......................................................" << endl;
+		if(isfloat) {
+			cout << "   Output (flt) ";
+		} else {
+			cout << "   Output (dbl) ";
+		}
+		cout << " triggered at time: " << gdata.time << endl; 
+	}
+
+	// Get the number of processes and current rank
+    int size, rank;
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+	string filename;
+	char dirname[255];
+
+	if(isfloat) {
+		sprintf(dirname, "%s/%s_float", getenv("poub"),getenv("pname"));
+	} else {
+		sprintf(dirname, "%s/%s_double", getenv("poub"),getenv("pname"));
+	}
+	for (char *tmp=dirname+strlen(dirname)-1; *tmp=='0'; tmp--) *tmp=0;
+
+	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+		celerity::accessor origin_acc{gdata.outputInfoSYCL[0], cgh, celerity::access::all{}, celerity::write_only_host_task};
+		celerity::accessor dx_acc{gdata.outputInfoSYCL[1], cgh, celerity::access::all{}, celerity::write_only_host_task};
+		cgh.host_task(celerity::experimental::collective, 
+				[=, &gdata](celerity::experimental::collective_partition part){
+			MPI_Comm comm = part.get_collective_mpi_comm();
+        	MPI_Barrier(comm);
+			for (int i = 0; i < 3; i++) {
+				origin_acc[i] = gdata.mx[i];
+				dx_acc[i] = gdata.dx[i];
+			}
+		});
+	});
+
+	queue.submit([=](celerity::handler& cgh) {
+		cgh.host_task(celerity::on_master_node, [=] {
+			filesystem::create_directory(dirname);
+			filesystem::permissions(dirname, filesystem::perms::owner_read | filesystem::perms::owner_exec | filesystem::perms::owner_write | filesystem::perms::group_exec | filesystem::perms::others_exec);
+			auto ftime = filesystem::last_write_time(dirname);
+			filesystem::file_time_type currentTime(decltype(ftime)::clock::now());
+			filesystem::last_write_time(dirname, currentTime);
+		});
+	});
+
+	filename = dirname;
+	filename += "/";
+	filename += MakeFilename(gdata.coords, gdata.tstep, terminate, isfloat);
+
+	int n_Omega = N_OMEGA;
+	int n_omIntUser = N_OMINT_USER;
+	int n_omIntAll = N_OMINT_ALL;
+
+	int numout(n_omIntAll);
+	if(terminate) {
+		numout = n_Omega+ n_omIntAll -N_ADD;
+	}
+
+	if(!isfloat) {
+		numout = n_omIntAll + N_SUBS;
+	}
+
+	Hdf5Stream *h5out;
+	h5out = new Hdf5Stream(filename, numout, gdata.rank, true);
+
+	if (!isfloat) {
+		for (int q = 0; q < gdata.omSYCL.size(); q++) {
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+				celerity::accessor omSYCL_out_acc{gdata.omSYCL_out[q], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+				celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{6,6,6}, celerity::read_only};
+				cgh.parallel_for<class BufferInitializationKernel>(gdata.omSYCL_out[q].get_range(), [=](celerity::item<3> item) {
+					omSYCL_out_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = omSYCL_acc[item.get_id(0) + 3][item.get_id(1) + 3][item.get_id(2) + 3];
+				});
+			});
+		}
+
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			celerity::accessor om_rho_acc{gdata.omSYCL_out[0], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
+			celerity::accessor om_sx_acc{gdata.omSYCL_out[1], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
+			celerity::accessor om_sy_acc{gdata.omSYCL_out[2], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
+			celerity::accessor om_sz_acc{gdata.omSYCL_out[3], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
+			celerity::accessor om_Eges_acc{gdata.omSYCL_out[4], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
+			celerity::accessor origin_acc{gdata.outputInfoSYCL[0], cgh, celerity::access::all{}, celerity::read_only_host_task};
+			celerity::accessor dx_acc{gdata.outputInfoSYCL[1], cgh, celerity::access::all{}, celerity::read_only_host_task};
+			cgh.host_task(celerity::experimental::collective, [=, &gdata](celerity::experimental::collective_partition part) {
+
+				auto comm = part.get_collective_mpi_comm();
+				h5out->Initialize(comm);
+
+				distr_io::dataout(gdata, *h5out, part, *Problem, origin_acc, dx_acc, numout, isfloat, om_rho_acc,
+											om_sx_acc, om_sy_acc, om_sz_acc, om_Eges_acc);
+
+				delete h5out;
+			});
+		});
+
+	} else {
+		for (int q = 0; q < gdata.omSYCL.size(); q++) {
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+				celerity::accessor omSYCL_out_flt_acc{gdata.omSYCL_out_flt[q], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+				celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{6,6,6}, celerity::read_only};
+				cgh.parallel_for<class BufferInitializationKernel>(gdata.omSYCL_out_flt[q].get_range(), [=](celerity::item<3> item) {
+					omSYCL_out_flt_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = (q < 0) ? 0. : static_cast<float>(omSYCL_acc[item.get_id(0) + 3][item.get_id(1) + 3][item.get_id(2) + 3]);
+				});
+			});
+		}
+
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			celerity::accessor om_rho_acc{gdata.omSYCL_out_flt[0], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
+			celerity::accessor om_sx_acc{gdata.omSYCL_out_flt[1], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
+			celerity::accessor om_sy_acc{gdata.omSYCL_out_flt[2], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
+			celerity::accessor om_sz_acc{gdata.omSYCL_out_flt[3], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
+			celerity::accessor om_Eges_acc{gdata.omSYCL_out_flt[4], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
+			celerity::accessor origin_acc{gdata.outputInfoSYCL[0], cgh, celerity::access::all{}, celerity::read_only_host_task};
+			celerity::accessor dx_acc{gdata.outputInfoSYCL[1], cgh, celerity::access::all{}, celerity::read_only_host_task};
+			cgh.host_task(celerity::experimental::collective, [=, &gdata](celerity::experimental::collective_partition part) {
+
+				auto comm = part.get_collective_mpi_comm();
+				h5out->Initialize(comm);
+
+				// distr_io::dataout(gdata, *h5out, part, *Problem, origin_acc, dx_acc, numout, isfloat, om_rho_acc,
+				// 							om_sx_acc, om_sy_acc, om_sz_acc, om_Eges_acc);
+
+				distr_io::dataout2(gdata, *h5out, *Problem, part, N_OMINT, N_OMINT_USER, numout, isfloat, true, om_rho_acc,
+											om_sx_acc, om_sy_acc, om_sz_acc, om_Eges_acc);
+
+				delete h5out;
+			});
+		});
+	}
+
+	if(!isfloat) {
+		char OldChar[255] = {};
+		OldName.copy(OldChar,255);
+		OldName.clear();
+		//    cout << " Removing: " << OldChar << endl;
+		remove(OldChar);
+		OldName = filename;
+	}
+	if(gdata.rank == 0 && Problem->checkout(2)){
+		cout << "......................................................" << endl;
+	}
+
+	if(isfloat) {
+		numflt_done++;
+	} else {
+		numdbl_done++;
+	}
+
+
+}
 
 void Environment::Output(Data &gdata, bool isfloat, bool terminate)
 { // <- rewrite to distributed
@@ -724,7 +910,7 @@ void Environment::Output(Data &gdata, bool isfloat, bool terminate)
 	filename = dirname;
 	filename += "/";
 	filename += MakeFilename(gdata.coords, gdata.tstep, terminate, isfloat);
-std::cout << "output trigger: " << filename << std::endl;
+
 #if(FLUID_TYPE == CRONOS_MULTIFLUID)
 	int n_Omega = gdata.fluids->get_N_OMEGA();
 	int n_omIntUser = gdata.fluids->get_N_OMINT_USER();
@@ -749,7 +935,12 @@ std::cout << "output trigger: " << filename << std::endl;
 	//	Hdf5Stream h5out(filename, numout, gdata.rank);
 	
 	Hdf5Stream *h5out;
+
+#if(HDF_PARALLEL_IO == CRONOS_ON)
+	h5out = new Hdf5Stream(filename, numout, gdata.rank, true);
+#else // New Output version
 	h5out = new Hdf5Stream(filename, numout, gdata.rank);
+#endif
 
 	// // Apply possible user-change to fields
 	// if(isfloat) {

@@ -112,7 +112,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	auto omRange = gdata.omSYCL[0].get_range();
 	size_t nom_max[3] = {omRange.get(0), omRange.get(1), omRange.get(2)};
 
-	if (gdata.tstep <= 1 && n == 0) {
+	if (gdata.tstep <= 0 && n == 0) {
 		for (int q = 0; q < N_OMINT; q++) {
 
 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {

@@ -122,6 +122,14 @@ public:
 	int rank_constxy = 0;
 	static constexpr short phi_dir = GEOM-1; // phi dir: 1 for cyl, 2 for sph
 
+	// int ntasks = 0;
+	// int MPI_periods[DIM] = { 0 };
+	// int nproc[DIM] = { 0 };
+	// int left = 0, right = 0;
+	// int front = 0,back = 0;
+	// int top = 0,bottom = 0;
+	// MPI_Comm comm3d;
+
 protected:
 	int numCellsEff[DIM] = { 0 };
 private:
@@ -137,6 +145,7 @@ private:
 	bool WriteGridStructure();
 	int Shift_Rank(int, int) const;
 	void MakeGridDir();
+	// void GetMpi();
 
 #if (NON_LINEAR_GRID == CRONOS_ON)
 	NumMatrix<double,1> cellCentres[DIM], global_cellCentres[DIM];

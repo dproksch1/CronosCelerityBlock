@@ -1,6 +1,5 @@
 #include "transformations.H"
 #include "physical_constants.H"
-#include "gridfunc.H"
 #include <stdlib.h>
 
 

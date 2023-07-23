@@ -50,12 +50,89 @@ bool Hdf5Stream::AddAttrToArrSingle(const std::string &ArrayName, hid_t my_group
 // -----------------------------------------------------------
 // Begin Hdf5Stream:: Stuff
 
-Hdf5Stream::Hdf5Stream(std::string filename, int NumEntries, int rank, bool use_MPI_IO) {
+Hdf5Stream::Hdf5Stream(std::string filename, int NumEntries, int rank, bool use_MPI_IO)  {
   this->filename = filename;
   this->rank = rank;
+  this->use_MPI_IO = use_MPI_IO;
+  this->NumEntries = NumEntries;
+
+#if (HDF_PARALLEL_IO == CRONOS_ON)
+  // Set specific property lists:
+  plist_file_id = H5Pcreate(H5P_FILE_ACCESS);
+  plist_dset_id = H5Pcreate(H5P_DATASET_XFER);
+#else
   this->use_MPI_IO = false;
+#endif
 
   if (!this->use_MPI_IO) {
+    plist_file_id = H5P_DEFAULT;
+    plist_dset_id = H5P_DEFAULT;
+  
+
+    hdf5file = H5Fcreate(filename.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, plist_file_id);
+
+    group = H5Gcreate2(hdf5file, "/Data", H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+
+    // Create dataspace
+    hid_t info_id = H5Screate(H5S_SCALAR);
+    //
+    //	// Create Attribute
+    //	hid_t info = H5Acreate2(group, "Entries", H5T_NATIVE_INT, info_id,
+    //	                        H5P_DEFAULT, H5P_DEFAULT);
+    //	// hid_t info = H5Acreate2(group, "Entries", H5T_NATIVE_INT, H5S_SCALAR,
+    //	//                         H5P_DEFAULT, H5P_DEFAULT);
+    //	// Write Attribute
+    //	cout << " Entries set to " << NumEntries << endl;
+    //	H5Awrite(info, H5T_NATIVE_INT, &NumEntries);
+    //	// Close Attribute
+    //	H5Aclose(info);
+
+    // DataSpace infospace( 1, &DimsInfo);
+    // datatype.setOrder( H5T_ORDER_LE ); // Little endian
+    // Attribute* Info = new Attribute(group->createAttribute("Entries", datatype, infospace));
+    // Info->write( PredType::NATIVE_INT, &NumEntries);
+
+    // Indicate new version of hdf5 output:
+    // Create Attribute
+    hid_t info = H5Acreate2(group, "using_cbase", H5T_NATIVE_INT, info_id, H5P_DEFAULT, H5P_DEFAULT);
+    int cbase_val = 1;
+    // Write Attribute
+    H5Awrite(info, H5T_NATIVE_INT, &cbase_val);
+    // Close Attribute
+    H5Aclose(info);
+
+    // Close dataspace
+    H5Sclose(info_id);
+
+    this->NumEntries = NumEntries;
+    this->num = 0;
+    this->open = true;
+
+    // Write version and build information
+    hid_t version_group = AddGroup("/Data/version");
+    AddGlobalAttr("CRONOS_GIT_VERSION", CronosGitVersion(), version_group);
+    AddGlobalAttr("CRONOS_GIT_COMMIT", CronosGitCommit(), version_group);
+    AddGlobalAttr("APP_GIT_REPO", ApplicationGitRepo(), version_group);
+    AddGlobalAttr("APP_GIT_VERSION", ApplicationGitVersion(), version_group);
+    AddGlobalAttr("APP_GIT_COMMIT", ApplicationGitCommit(), version_group);
+    AddGlobalAttr("BUILD_DATE", BuildDate(), version_group);
+printf("close stream_init\n");
+    CloseGroup(version_group);
+  }
+}
+
+void Hdf5Stream::Initialize(MPI_Comm comm) {
+  if (use_MPI_IO) {
+    // Create file access property list for parallel I/O
+
+    MPI_Info info_mpi = MPI_INFO_NULL;
+    // Bug fix for gcc > 6
+    //		H5Pset_fapl_mpio(plist_file_id, comm, info_mpi);
+    H5Pset_fapl_mpio(plist_file_id, comm, info_mpi);
+
+    // property list for dataset access
+    H5Pset_dxpl_mpio(plist_dset_id, H5FD_MPIO_COLLECTIVE);
+  } else  {
     plist_file_id = H5P_DEFAULT;
     plist_dset_id = H5P_DEFAULT;
   }
@@ -95,7 +172,6 @@ Hdf5Stream::Hdf5Stream(std::string filename, int NumEntries, int rank, bool use_
   // Close dataspace
   H5Sclose(info_id);
 
-  this->NumEntries = NumEntries;
   this->num = 0;
   this->open = true;
 
@@ -109,6 +185,10 @@ Hdf5Stream::Hdf5Stream(std::string filename, int NumEntries, int rank, bool use_
   AddGlobalAttr("BUILD_DATE", BuildDate(), version_group);
 
   CloseGroup(version_group);
+}
+
+void Hdf5Stream::increase_num() {
+  num++;
 }
 
 void Hdf5Stream::Reopen() {
@@ -212,7 +292,26 @@ Hdf5iStream::Hdf5iStream(std::string filename, int rank, bool use_MPI_IO) {
   // fname[len] = '\0';
 
   // Open File
+
+#if (HDF_PARALLEL_IO == CRONOS_ON)
+  this->use_MPI_IO = use_MPI_IO;
+
+  if (this->use_MPI_IO) {
+    // Create file access property list for parallel I/O
+    plist_file_id = H5Pcreate(H5P_FILE_ACCESS);
+    MPI_Info info_mpi = MPI_INFO_NULL;
+    // Bug fix for gcc > 6
+    //    H5Pset_fapl_mpio(plist_file_id, comm, info_mpi);
+    H5Pset_fapl_mpio(plist_file_id, MPI_COMM_WORLD, info_mpi);
+
+    // property list for dataset access
+    plist_dset_id = H5Pcreate(H5P_DATASET_XFER);
+    H5Pset_dxpl_mpio(plist_dset_id, H5FD_MPIO_COLLECTIVE);
+  }
+
+#else
   this->use_MPI_IO = false;
+#endif
 
   if (!this->use_MPI_IO) {
     plist_file_id = H5P_DEFAULT;
@@ -369,10 +468,148 @@ std::string Hdf5iStream::GetDatasetName(std::string GroupName, int num) {
   return DatasetName;
 }
 
-std::string Hdf5iStream::GetDatasetName(int num)
-{ 
-  return GetDatasetName("Data", num);
+std::string Hdf5iStream::GetDatasetName(int num) { return GetDatasetName("Data", num); }
+
+// std::string Hdf5iStream::GetDatasetName(int num) {
+//
+//	char cnum[255];
+//	sprintf(cnum,"%2.2d",num);
+//	const std::string &AttrName = "Name_om";
+//	AttrName += cnum;
+//
+//
+//	// Open Attribute
+//	hid_t Info = H5Aopen(group, AttrName.c_str(), H5P_DEFAULT);
+//	hid_t ftype = H5Aget_type(Info);
+//	hid_t type = H5Tget_native_type(ftype, H5T_DIR_ASCEND);
+//
+//	htri_t size_var;
+//	std::string DatasetName;
+//
+//	if((size_var = H5Tis_variable_str(ftype)) == 1) {
+//		char *string_attr;
+//		H5Aread(Info, type, &string_attr);
+//		DatasetName = string_attr;
+//	} else {
+//		char string_out[255];
+//		H5Aread(Info, type, string_out);
+//		DatasetName = string_out;
+//	}
+//	H5Aclose(Info);
+//
+//	return DatasetName;
+//}
+
+#if (HDF_PARALLEL_IO == CRONOS_ON)
+template <typename T, typename>
+bool Hdf5Stream::WriteNumArray_withMPI_IO(const std::string &ArrayName, const NumArray<T> &data,
+                                          bool with_data) {
+  /* Routine to write NumMatrix data in wrong ordering to hdf5 file.
+
+  */
+  int mx = data.getLength();
+
+  num += 1;
+
+  int DIM = 1;
+
+  // Choose float, little endian of size 1
+  hid_t datatype = get_hdf5_data_type<T>();
+  return_val = H5Tset_order(datatype, H5T_ORDER_LE);
+
+  // Create dataspace
+  hsize_t DimsData = mx;
+  hid_t dataspace = H5Screate_simple(DIM, &DimsData, NULL);
+
+  // Create dataset
+  hid_t dataset = H5Dcreate(group, ArrayName.c_str(), datatype, dataspace, H5P_DEFAULT, H5P_DEFAULT,
+                            H5P_DEFAULT);
+  H5Sclose(dataspace);
+
+  hid_t memspace = H5Screate_simple(DIM, &DimsData, NULL);
+  if (!with_data) {
+    H5Sselect_none(memspace);
+  }
+
+  hid_t groupspace = H5Dget_space(dataset);
+
+  hsize_t offset[1] = {0};
+  H5Sselect_hyperslab(groupspace, H5S_SELECT_SET, offset, NULL, &DimsData, NULL);
+  if (!with_data) {
+    H5Sselect_none(groupspace);
+  }
+
+  // Prepare mpi-stuff
+  hid_t plist_id = H5Pcreate(H5P_DATASET_XFER);
+  H5Pset_dxpl_mpio(plist_id, H5FD_MPIO_COLLECTIVE);
+
+  // Write data
+  //	if(with_data) {
+  return_val = H5Dwrite(dataset, datatype, memspace, groupspace, plist_id, data);
+  //	}
+
+  H5Dclose(dataset);
+  H5Pclose(plist_id);
+  H5Sclose(memspace);
+  H5Sclose(groupspace);
+
+  return true;
 }
+
+template <typename T, typename>
+bool Hdf5Stream::WriteNumArray_withMPI_IO2(const std::string &ArrayName, const NumArray<T> &data,
+                                           bool with_data) {
+  /* Routine to write NumMatrix data in wrong ordering to hdf5 file.
+
+  */
+  int mx = data.getLength();
+
+  num += 1;
+
+  int DIM = 1;
+
+  // Choose float, little endian of size 1
+  hid_t datatype = get_hdf5_data_type<T>();
+  return_val = H5Tset_order(datatype, H5T_ORDER_LE);
+
+  // Create dataspace
+  hsize_t DimsData = mx;
+  hid_t dataspace = H5Screate_simple(DIM, &DimsData, NULL);
+
+  hid_t memspace = H5Screate_simple(DIM, &DimsData, NULL);
+  if (!with_data) {
+    H5Sselect_none(memspace);
+  }
+
+  hsize_t offset[1] = {0};
+  H5Sselect_hyperslab(dataspace, H5S_SELECT_SET, offset, NULL, &DimsData, NULL);
+  if (!with_data) {
+    H5Sselect_none(dataspace);
+  }
+
+  // Create dataset
+  hid_t dataset = H5Dcreate2(group, ArrayName.c_str(), datatype, dataspace, H5P_DEFAULT,
+                             H5P_DEFAULT, H5P_DEFAULT);
+
+  // Prepare mpi-stuff
+  hid_t plist_id = H5Pcreate(H5P_DATASET_XFER);
+  H5Pset_dxpl_mpio(plist_id, H5FD_MPIO_COLLECTIVE);
+
+  // Write data
+  //	if(with_data) {
+  return_val = H5Dwrite(dataset, datatype, H5S_ALL, H5S_ALL, plist_id, data);
+  //	}
+  H5Pclose(plist_id);
+
+  cout << " Writing float " << endl;
+
+  H5Dclose(dataset);
+  H5Sclose(dataspace);
+  H5Sclose(memspace);
+  return true;
+}
+
+#endif
 
 int Hdf5iStream::GetDatasetDimension(std::string DataSetName) {
   hid_t dataset = H5Dopen2(group, DataSetName.c_str(), H5P_DEFAULT);
@@ -512,6 +749,315 @@ void Hdf5iStream::getSize(const std::string &ArrayName, int mx[], int DIM) {
   H5Dclose(dataset);
 }
 
+#if (HDF_PARALLEL_IO == CRONOS_ON)
+
+template <typename T, typename>
+bool Hdf5Stream::Write3DMatrix_withMPI_IO(const std::string &ArrayName, const NumMatrix<T, 3> &data,
+                                          const NumArray<int> &mx_global,
+                                          const NumArray<int> &mx_local,
+                                          const NumArray<int> &rank_shift,
+                                          // NumArray<int> &rank_pos,
+                                          const NumArray<float> &xb, const NumArray<float> &dx) {
+  return Write3DMatrix_withMPI_IO(ArrayName, data, mx_global, mx_local, rank_shift, xb, dx, group, true);
+}
+
+template <typename T, typename>
+bool Hdf5Stream::Write3DMatrix_withMPI_IO(const std::string &ArrayName, const NumMatrix<T, 3> &data,
+                                          const NumArray<int> &mx_global,
+                                          const NumArray<int> &mx_local,
+                                          const NumArray<int> &rank_shift,
+                                          // NumArray<int> &rank_pos,
+                                          const NumArray<float> &xb, const NumArray<float> &dx,
+                                          hid_t my_group, int q_index, bool with_opendxinfo) {
+  /* Routine to write NumMatrix data in wrong ordering to hdf5 file. MPI
+     parallel form of the routine that writes all data to a single file.
+
+     Remarks:
+
+     On reading the hdf data the swapped dimensions have to be taken
+     into account
+
+     rim can be computed from mx_local.
+
+  */
+
+  // Determine rim of data
+  int rim = 0;
+  if (data.getLow(0) < 0) {
+    rim = -data.getLow(0);
+  }
+
+  int mx[3];
+  mx[0] = data.getHigh(2) - data.getLow(2) + 1;
+  mx[1] = data.getHigh(1) - data.getLow(2) + 1;
+  mx[2] = data.getHigh(0) - data.getLow(2) + 1;
+
+  AddDatasetName(ArrayName, my_group);
+  num += 1;
+
+  int DIM = 3;
+  hid_t datatype = get_hdf5_data_type<T>();
+  H5Tset_order(datatype, H5T_ORDER_LE);
+
+  hsize_t DimsData[DIM];
+  DimsData[0] = mx_global[2] + 1 + 2 * rim;
+  DimsData[1] = mx_global[1] + 1 + 2 * rim;
+  DimsData[2] = mx_global[0] + 1 + 2 * rim;
+
+  hid_t dataspace = H5Screate_simple(DIM, DimsData, NULL);
+
+  // Supplying additional attributes for opendx input
+
+  hid_t datatypefloat = get_hdf5_data_type<float>();
+  H5Tset_order(datatypefloat, H5T_ORDER_LE);
+
+  // Create dataspace for attribute
+  hsize_t DimsAttr = 3;
+  hid_t attrspace = H5Screate_simple(1, &DimsAttr, NULL);
+  float Origin[3];
+  float Delta[3];
+  if (with_opendxinfo) {
+    for (int q = 0; q < 3; ++q) {
+      Origin[q] = xb[q];
+      Delta[q] = dx[q];
+    }
+  }
+
+  // Create dataset
+  hid_t dataset_id = H5Dcreate2(my_group, ArrayName.c_str(), datatype, dataspace, H5P_DEFAULT,
+                                H5P_DEFAULT, H5P_DEFAULT);
+  if (with_opendxinfo) {
+    // Create attributes
+    hid_t origin =
+        H5Acreate2(dataset_id, "origin", datatypefloat, attrspace, H5P_DEFAULT, H5P_DEFAULT);
+    hid_t delta =
+        H5Acreate2(dataset_id, "delta", datatypefloat, attrspace, H5P_DEFAULT, H5P_DEFAULT);
+
+    // Write attributes
+    H5Awrite(origin, datatypefloat, &Origin);
+    H5Awrite(delta, datatypefloat, &Delta);
+
+    // Close attributes
+    H5Aclose(origin);
+    H5Aclose(delta);
+    H5Sclose(attrspace);
+  }
+
+  if (q_index > 0) {
+    // Create dataspace
+    hid_t info_id = H5Screate(H5S_SCALAR);
+    // Create Attribute
+    hid_t info =
+        H5Acreate2(dataset_id, "q_index", H5T_NATIVE_INT, info_id, H5P_DEFAULT, H5P_DEFAULT);
+    H5Awrite(info, H5T_NATIVE_INT, &q_index);
+    H5Aclose(info);
+    H5Sclose(info_id);
+  }
+
+  // Now make distinguis local from global data via hyperslabs:
+  hsize_t sizeLocal[DIM];
+  sizeLocal[0] = mx_local[2] + 1 + 2 * rim;
+  sizeLocal[1] = mx_local[1] + 1 + 2 * rim;
+  sizeLocal[2] = mx_local[0] + 1 + 2 * rim;
+
+  hsize_t offset[DIM];
+  // offset[0] = rank_pos[2]*rank_shift[2];
+  // offset[1] = rank_pos[1]*rank_shift[1];
+  // offset[2] = rank_pos[0]*rank_shift[0];
+  offset[0] = rank_shift[2];
+  offset[1] = rank_shift[1];
+  offset[2] = rank_shift[0];
+
+  hid_t dataspaceLocal = H5Screate_simple(DIM, sizeLocal, NULL);
+
+  // Select local data as hyperslab in dataset
+  H5Sselect_hyperslab(dataspace, H5S_SELECT_SET, offset, NULL, sizeLocal, NULL);
+
+  // Write data
+  hid_t plist_id = H5Pcreate(H5P_DATASET_XFER);
+  H5Pset_dxpl_mpio(plist_id, H5FD_MPIO_COLLECTIVE);
+  H5Dwrite(dataset_id, datatype, dataspaceLocal, dataspace, plist_id, data);
+  H5Pclose(plist_id);
+
+  H5Sclose(dataspaceLocal);
+  H5Sclose(dataspace);
+
+  // Close the dataset:
+  H5Dclose(dataset_id);
+
+  //	if(rank==0) {
+  //		AddToEntries(my_group);
+  //	}
+
+  return true;
+}
+
+template <typename T, typename>
+bool Hdf5Stream::Write2DMatrix_withMPI_IO(const std::string &ArrayName, const NumMatrix<T, 2> &data,
+                                          const NumArray<int> &mx_global,
+                                          const NumArray<int> &mx_local,
+                                          const NumArray<int> &rank_shift,
+                                          const NumArray<float> &xb, const NumArray<float> &dx) {
+  return Write2DMatrix_withMPI_IO(ArrayName, data, mx_global, mx_local, rank_shift, xb, dx, group,
+                                  true);
+}
+
+template <typename T, typename>
+bool Hdf5Stream::Write2DMatrix_withMPI_IO(const std::string &ArrayName, const NumMatrix<T, 2> &data,
+                                          const NumArray<int> &mx_global,
+                                          const NumArray<int> &mx_local,
+                                          const NumArray<int> &rank_shift,
+                                          const NumArray<float> &xb, const NumArray<float> &dx,
+                                          hid_t my_group, bool with_opendxinfo) {
+  /* Routine to write NumMatrix data in wrong ordering to hdf5 file. MPI
+     parallel form of the routine that writes all data to a single file.
+
+     Remarks:
+
+     On reading the hdf data the swapped dimensions have to be taken
+     into account
+
+     rim can be computed from mx_local.
+
+  */
+
+  // Determine rim of data
+  int rim = 0;
+  if (data.getLow(0) < 0) {
+    rim = -data.getLow(0);
+  }
+
+  AddDatasetName(ArrayName, my_group);
+  num += 1;
+
+  int DIM = 2;
+  hid_t datatype = get_hdf5_data_type<T>();
+  H5Tset_order(datatype, H5T_ORDER_LE);
+
+  hsize_t DimsData[DIM];
+  DimsData[0] = mx_global[1] + 1 + 2 * rim;
+  DimsData[1] = mx_global[0] + 1 + 2 * rim;
+
+  hid_t dataspace = H5Screate_simple(DIM, DimsData, NULL);
+
+  // Supplying additional attributes for opendx input
+
+  hid_t datatypefloat = get_hdf5_data_type<float>();
+  H5Tset_order(datatypefloat, H5T_ORDER_LE);
+
+  // Create dataspace for attribute
+  hsize_t DimsAttr = 2;
+  hid_t attrspace = H5Screate_simple(1, &DimsAttr, NULL);
+  float Origin[2];
+  float Delta[2];
+  if (with_opendxinfo) {
+    for (int q = 0; q < 2; ++q) {
+      Origin[q] = xb[q];
+      Delta[q] = dx[q];
+    }
+  }
+
+  // Create dataset
+  hid_t dataset_id = H5Dcreate2(my_group, ArrayName.c_str(), datatype, dataspace, H5P_DEFAULT,
+                                H5P_DEFAULT, H5P_DEFAULT);
+  if (with_opendxinfo) {
+    // Create attributes
+    hid_t origin =
+        H5Acreate2(dataset_id, "origin", datatypefloat, attrspace, H5P_DEFAULT, H5P_DEFAULT);
+    hid_t delta =
+        H5Acreate2(dataset_id, "delta", datatypefloat, attrspace, H5P_DEFAULT, H5P_DEFAULT);
+
+    // Write attributes
+    H5Awrite(origin, datatypefloat, &Origin);
+    H5Awrite(delta, datatypefloat, &Delta);
+
+    // Close attributes
+    H5Aclose(origin);
+    H5Aclose(delta);
+    H5Sclose(attrspace);
+  }
+
+  // Now make distinguis local from global data via hyperslabs:
+  hsize_t sizeLocal[DIM];
+  sizeLocal[0] = mx_local[1] + 1 + 2 * rim;
+  sizeLocal[1] = mx_local[0] + 1 + 2 * rim;
+
+  hsize_t offset[DIM];
+  offset[0] = rank_shift[1];
+  offset[1] = rank_shift[0];
+
+  hid_t dataspaceLocal = H5Screate_simple(DIM, sizeLocal, NULL);
+
+  // Select local data as hyperslab in dataset
+  H5Sselect_hyperslab(dataspace, H5S_SELECT_SET, offset, NULL, sizeLocal, NULL);
+
+  // Write data
+  hid_t plist_id = H5Pcreate(H5P_DATASET_XFER);
+  H5Pset_dxpl_mpio(plist_id, H5FD_MPIO_COLLECTIVE);
+  H5Dwrite(dataset_id, datatype, dataspaceLocal, dataspace, plist_id, data);
+  H5Pclose(plist_id);
+
+  H5Sclose(dataspaceLocal);
+  H5Sclose(dataspace);
+
+  // Close the dataset:
+  H5Dclose(dataset_id);
+
+  //	if(rank==0) {
+  //		AddToEntries(my_group);
+  //	}
+
+  return true;
+}
+
+#endif
+
+// bool Hdf5iStream::Read3DMatrix(const std::string &ArrayName, NumMatrix<float,3> &data)
+//{
+//	/* Routine to write NumMatrix data in wrong ordering to hdf5 file.
+//
+//	   Remarks:
+//
+//	   On reading the hdf data the swapped dimensions have to be taken
+//	   into account
+//
+//	*/
+//
+//	int DIM = 3;
+//	int lbound[3], ubound[3];
+//
+//	hid_t dataset = H5Dopen2(group, ArrayName.c_str(), H5P_DEFAULT);
+//
+//	// Get dataspace handler
+//	hid_t dataspace = H5Dget_space(dataset);
+//
+//	int  dimhdf = H5Sget_simple_extent_ndims(dataspace);
+//	if(dimhdf != DIM){
+//		cerr << " Wrong dimensionality of input data: " << endl;
+//		cerr << dimhdf << " " << DIM << endl;
+//		exit(-2);
+//	}
+//	hsize_t dims_out[DIM];
+//	int ndims = H5Sget_simple_extent_dims(dataspace, dims_out, NULL);
+//
+//	if(ndims != DIM) {
+//		cerr << " Wrong number of dimensions " << ndims << " - " << DIM << endl;
+//		exit(-22);
+//	}
+//
+//	for(int i=0;i<3;i++){
+//		lbound[i]=0;
+//		ubound[i]=int(dims_out[DIM-(i+1)])-1;
+//	}
+//	data.resize(lbound,ubound);
+//
+//	H5Dread(dataset, H5T_NATIVE_FLOAT, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
+//	// Close the dataset:
+//	H5Dclose(dataset);
+//
+//	return true;
+//}
+
 bool Hdf5Stream::close() {
   //	// Reopen attribute
   //	hid_t Info = H5Aopen(group, "Entries", H5P_DEFAULT);
@@ -535,12 +1081,12 @@ bool Hdf5iStream::close() {
 }
 
 Hdf5Stream::~Hdf5Stream() {
+  if (this->use_MPI_IO) {
+    H5Pclose( plist_file_id );
+    H5Pclose( plist_dset_id );
+  }
   if (open) {
     close();
-  }
-  if (this->use_MPI_IO) {
-    // H5Pclose( plist_file_id );
-    // H5Pclose( plist_dset_id );
   }
 }
 
@@ -792,7 +1338,14 @@ bool Hdf5Stream::Write1DMatrix(const std::string &ArrayName, const NumMatrix<T, 
   H5Aclose(delta);
 
   // Write data only if rank 0
-  H5Dwrite(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
+
+#if (HDF_PARALLEL_IO == CRONOS_ON)
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  if (rank == 0)
+#endif
+
+    H5Dwrite(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
 
   // Close dataset
   H5Dclose(dataset);
@@ -833,7 +1386,14 @@ bool Hdf5Stream::Write1DMatrix(const std::string &ArrayName, const NumMatrix<T, 
                              H5P_DEFAULT, H5P_DEFAULT);
 
   // Write data only if rank 0
-  H5Dwrite(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
+
+#if (HDF_PARALLEL_IO == CRONOS_ON)
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  if (rank == 0)
+#endif
+
+    H5Dwrite(dataset, datatype, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
 
   // Close dataset
   H5Dclose(dataset);
@@ -959,7 +1519,6 @@ bool Hdf5Stream::Write3DMatrix(const std::string &ArrayName, const NumMatrix<T, 
     // Write attributes
     H5Awrite(origin, datatypefloat, &Origin);
     H5Awrite(delta, datatypefloat, &Delta);
-
     // Close attributes
     H5Aclose(origin);
     H5Aclose(delta);
@@ -1794,6 +2353,206 @@ T Hdf5iStream::ReadDatasetAttr(std::string DataSetName, const std::string &AttrN
   return value;
 }
 
+template <typename T, typename>
+int Hdf5iStream::Read3DMatrix_parallel(const std::string &ArrayName, const NumArray<int> &mx_local,
+                                       const NumArray<int> &rank_shift, NumMatrix<T, 3> &data) {
+  return Read3DMatrix_parallel("Data", ArrayName, mx_local, rank_shift, data);
+}
+
+template <typename T, typename>
+int Hdf5iStream::Read3DMatrix_parallel(std::string GroupName, const std::string &ArrayName,
+                                       const NumArray<int> &mx_local,
+                                       const NumArray<int> &rank_shift, NumMatrix<T, 3> &data) {
+  /* Routine to write NumMatrix data in wrong ordering to hdf5 file.
+
+     Remarks:
+
+     On reading the hdf data the swapped dimensions have to be taken
+     into account
+
+  */
+  hid_t loc_group;
+  if (GroupName != "Data") {
+    loc_group = H5Gopen2(hdf5file, GroupName.c_str(), H5P_DEFAULT);
+  } else {
+    loc_group = group;
+  }
+
+  // Determine rim of data
+  int rim = 0;
+  if (data.getLow(0) < 0) {
+    rim = -data.getLow(0);
+  }
+
+  const int DIM = 3;
+  int mx[3];
+  mx[0] = data.getHigh(2) - data.getLow(2) - 2 * rim;
+  mx[1] = data.getHigh(1) - data.getLow(1) - 2 * rim;
+  mx[2] = data.getHigh(0) - data.getLow(0) - 2 * rim;
+
+  hid_t dataset_id = H5Dopen2(loc_group, ArrayName.c_str(), H5P_DEFAULT);
+
+  // Get dataspace handler
+  hid_t dataspace_id = H5Dget_space(dataset_id); /* dataspace handle */
+
+  cout << " Trying to read " << ArrayName << endl;
+
+  int dimhdf = H5Sget_simple_extent_ndims(dataspace_id);
+  if (dimhdf != DIM) {
+    cerr << " Wrong dimensionality of input data: " << endl;
+    cerr << dimhdf << " " << DIM << endl;
+    exit(-2);
+  }
+  hsize_t dims_out[DIM];
+  // Get dims
+  int ndims = H5Sget_simple_extent_dims(dataspace_id, dims_out, NULL);
+  if (ndims != DIM) {
+    cerr << " Wrong number of dimensions " << ndims << " - " << DIM << endl;
+    exit(-22);
+  }
+  // Here, we only have to check that sufficient data is available
+  for (int i = 0; i < DIM; ++i) {
+    if (mx[i] > (int(dims_out[i]))) {
+      cerr << " Wrong size of dimension " << i << ":" << endl;
+      cerr << int(dims_out[i]) << " " << mx[i] << endl;
+    }
+  }
+
+  // Check if mx_local is compatible with mx
+  for (int dir = 0; dir < DIM; ++dir) {
+    if (mx[DIM - dir - 1] != mx_local[dir]) {
+      cerr << " Wrong size of dimension " << dir << ":" << endl;
+      cerr << int(dims_out[dir]) << " " << mx[dir] << endl;
+      exit(3);
+    }
+  }
+
+  // Compute shift of local dataset w.r.t. data in file
+  hsize_t offset[DIM];
+  hsize_t count_local[DIM];
+  for (int i_dir = 0; i_dir < DIM; ++i_dir) {
+    offset[i_dir] = rank_shift(DIM - i_dir - 1);
+    count_local[i_dir] = mx_local(DIM - i_dir - 1) + 1 + 2 * rim;
+  }
+
+  // Create local dataspace
+  hid_t dataspaceLocal = H5Screate_simple(dimhdf, count_local, NULL);
+
+  // Select local data as hyperslab in dataset
+  H5Sselect_hyperslab(dataspace_id, H5S_SELECT_SET, offset, NULL, count_local, NULL);
+
+  int q_index = -1;
+  if (H5Aexists(dataset_id, "q_index")) {
+    hid_t attr = H5Aopen(dataset_id, "q_index", H5P_DEFAULT);
+    H5Aread(attr, H5T_NATIVE_INT, &q_index);
+    H5Aclose(attr);
+  }
+  // Read data to local array
+  hid_t plist_id = H5Pcreate(H5P_DATASET_XFER);
+  //H5Pset_dxpl_mpio(plist_id, H5FD_MPIO_COLLECTIVE);
+  hid_t return_val =
+      H5Dread(dataset_id, get_hdf5_data_type<T>(), dataspaceLocal, dataspace_id, plist_id, data);
+
+  // Close property list
+  H5Pclose(plist_id);
+
+  // Close local dataspace
+  H5Sclose(dataspaceLocal);
+
+  // close dataset
+  H5Dclose(dataset_id);
+
+  if (GroupName != "Data") {
+    // Close group
+    H5Gclose(loc_group);
+  }
+
+  return q_index;
+}
+
+#if (HDF_PARALLEL_IO == CRONOS_ON)
+template <typename T, typename>
+bool Hdf5iStream::Read3DMatrix_withMPI_IO(const std::string &ArrayName, NumMatrix<T, 3> &data,
+                                          NumArray<int> &mx_local, NumArray<int> &rank_shift) {
+  return Read3DMatrix_withMPI_IO(ArrayName, data, mx_local, rank_shift, group);
+}
+
+template <typename T, typename>
+bool Hdf5iStream::Read3DMatrix_withMPI_IO(const std::string &ArrayName, NumMatrix<T, 3> &data,
+                                          NumArray<int> &mx_local, NumArray<int> &rank_shift,
+                                          std::string GroupName) {
+  hid_t my_group = OpenGroup(GroupName);
+  bool ret = Read3DMatrix_withMPI_IO(ArrayName, data, mx_local, rank_shift, my_group);
+  CloseGroup(my_group);
+  return ret;
+}
+
+template <typename T, typename>
+bool Hdf5iStream::Read3DMatrix_withMPI_IO(const std::string &ArrayName, NumMatrix<T, 3> &data,
+                                          NumArray<int> &mx_local, NumArray<int> &rank_shift,
+                                          hid_t my_group) {
+  /* Routine to read NumMatrix data in wrong ordering to hdf5 file. MPI
+     parallel form of the routine that reads all data from a single file.
+
+     Remarks:
+
+     On reading the hdf data the swapped dimensions have to be taken
+     into account
+
+     rim can be computed from mx_local.
+
+  */
+
+  int DIM = 3;
+  float dummy[3];
+
+  // Determine rim of data
+  int rim = 0;
+  if (data.getLow(0) < 0) {
+    rim = -data.getLow(0);
+  }
+
+  int mx[3];
+  mx[0] = data.getHigh(2) - data.getLow(2) + 1;
+  mx[1] = data.getHigh(1) - data.getLow(2) + 1;
+  mx[2] = data.getHigh(0) - data.getLow(2) + 1;
+
+  // open the dataset
+  hid_t dataset = H5Dopen2(my_group, ArrayName.c_str(), H5P_DEFAULT);
+
+  hid_t datatype = get_hdf5_data_type<T>();
+  H5Tset_order(datatype, H5T_ORDER_LE);
+
+  hid_t dataspace = H5Dget_space(dataset);
+
+  // Now make distinguis local from global data via hyperslabs:
+  hsize_t sizeLocal[DIM];
+  sizeLocal[0] = mx_local[2] + 1 + 2 * rim;
+  sizeLocal[1] = mx_local[1] + 1 + 2 * rim;
+  sizeLocal[2] = mx_local[0] + 1 + 2 * rim;
+
+  hsize_t offset[DIM];
+  offset[0] = rank_shift[2];
+  offset[1] = rank_shift[1];
+  offset[2] = rank_shift[0];
+
+  hid_t dataspaceLocal = H5Screate_simple(DIM, sizeLocal, NULL);
+
+  // Select local data as hyperslab in dataset
+  H5Sselect_hyperslab(dataspace, H5S_SELECT_SET, offset, NULL, sizeLocal, NULL);
+
+  // Read data
+  H5Dread(dataset, datatype, dataspaceLocal, dataspace, H5P_DEFAULT, data);
+
+  H5Sclose(dataspaceLocal);
+  H5Sclose(dataspace);
+  H5Dclose(dataset);
+
+  return true;
+}
+#endif
+
+
 // End Hdf5iStream Templates
 // -----------------------------------------------------------
 
@@ -1946,6 +2705,43 @@ template bool Hdf5Stream::Write3DMatrixSwap(const std::string &ArrayName,
                                             const NumMatrix<double, 3> &data, const double *xb,
                                             const double *dx);
 
+
+#if (HDF_PARALLEL_IO == CRONOS_ON)
+template bool Hdf5Stream::WriteNumArray_withMPI_IO(const std::string &ArrayName,
+                                                   const NumArray<float> &data, bool with_data);
+template bool Hdf5Stream::WriteNumArray_withMPI_IO(const std::string &ArrayName,
+                                                   const NumArray<double> &data, bool with_data);
+template bool Hdf5Stream::WriteNumArray_withMPI_IO2(const std::string &ArrayName,
+                                                    const NumArray<float> &data, bool with_data);
+template bool Hdf5Stream::Write3DMatrix_withMPI_IO(
+    const std::string &ArrayName, const NumMatrix<float, 3> &data, const NumArray<int> &mx_global,
+    const NumArray<int> &mx_local, const NumArray<int> &rank_shift, const NumArray<float> &xb,
+    const NumArray<float> &dx);
+template bool Hdf5Stream::Write3DMatrix_withMPI_IO(
+    const std::string &ArrayName, const NumMatrix<float, 3> &data, const NumArray<int> &mx_global,
+    const NumArray<int> &mx_local, const NumArray<int> &rank_shift,
+    // NumArray<int> &rank_pos,
+    const NumArray<float> &xb, const NumArray<float> &dx, hid_t my_group, int q_index,
+    bool with_opendxinfo);
+template bool Hdf5Stream::Write3DMatrix_withMPI_IO(
+    const std::string &ArrayName, const NumMatrix<double, 3> &data, const NumArray<int> &mx_global,
+    const NumArray<int> &mx_local, const NumArray<int> &rank_shift,
+    // NumArray<int> &rank_pos,
+    const NumArray<float> &xb, const NumArray<float> &dx, hid_t my_group, int q_index,
+    bool with_opendxinfo);
+
+template bool Hdf5Stream::Write2DMatrix_withMPI_IO(
+    const std::string &ArrayName, const NumMatrix<double, 2> &data, const NumArray<int> &mx_global,
+    const NumArray<int> &mx_local, const NumArray<int> &rank_shift, const NumArray<float> &xb,
+    const NumArray<float> &dx, hid_t my_group, bool);
+
+template bool Hdf5Stream::Write2DMatrix_withMPI_IO(
+    const std::string &ArrayName, const NumMatrix<double, 2> &data, const NumArray<int> &mx_global,
+    const NumArray<int> &mx_local, const NumArray<int> &rank_shift, const NumArray<float> &xb,
+    const NumArray<float> &dx);
+#endif
+
+
 // ----------------------------------------------------------------------------------------
 
 template int Hdf5iStream::ReadNumArray(const std::string &ArrayName, NumArray<int> &data);
@@ -2039,3 +2835,52 @@ template float Hdf5iStream::ReadPointFrom3DMatrix(const std::string &ArrayName, 
                                                   int iz);
 
 template float Hdf5iStream::ReadDatasetAttr(std::string DataSetName, const std::string &AttrName);
+
+template int Hdf5iStream::Read3DMatrix_parallel(const std::string &ArrayName,
+                                                const NumArray<int> &mx_local,
+                                                const NumArray<int> &rank_shift,
+                                                NumMatrix<int, 3> &);
+template int Hdf5iStream::Read3DMatrix_parallel(const std::string &ArrayName,
+                                                const NumArray<int> &mx_local,
+                                                const NumArray<int> &rank_shift,
+                                                NumMatrix<float, 3> &);
+template int Hdf5iStream::Read3DMatrix_parallel(const std::string &ArrayName,
+                                                const NumArray<int> &mx_local,
+                                                const NumArray<int> &rank_shift,
+                                                NumMatrix<double, 3> &);
+
+template int Hdf5iStream::Read3DMatrix_parallel(std::string GroupName, const std::string &ArrayName,
+                                                const NumArray<int> &mx_local,
+                                                const NumArray<int> &rank_shift,
+                                                NumMatrix<int, 3> &);
+template int Hdf5iStream::Read3DMatrix_parallel(std::string GroupName, const std::string &ArrayName,
+                                                const NumArray<int> &mx_local,
+                                                const NumArray<int> &rank_shift,
+                                                NumMatrix<float, 3> &);
+template int Hdf5iStream::Read3DMatrix_parallel(std::string GroupName, const std::string &ArrayName,
+                                                const NumArray<int> &mx_local,
+                                                const NumArray<int> &rank_shift,
+                                                NumMatrix<double, 3> &);
+
+#if (HDF_PARALLEL_IO == CRONOS_ON)
+template bool Hdf5iStream::Read3DMatrix_withMPI_IO(const std::string &ArrayName,
+                                                   NumMatrix<float, 3> &data,
+                                                   NumArray<int> &mx_local,
+                                                   NumArray<int> &rank_shift);
+template bool Hdf5iStream::Read3DMatrix_withMPI_IO(const std::string &ArrayName,
+                                                   NumMatrix<double, 3> &data,
+                                                   NumArray<int> &mx_local,
+                                                   NumArray<int> &rank_shift);
+
+template bool Hdf5iStream::Read3DMatrix_withMPI_IO(const std::string &ArrayName,
+                                                   NumMatrix<float, 3> &data,
+                                                   NumArray<int> &mx_local,
+                                                   NumArray<int> &rank_shift,
+                                                   std::string GroupName);
+template bool Hdf5iStream::Read3DMatrix_withMPI_IO(const std::string &ArrayName,
+                                                   NumMatrix<double, 3> &data,
+                                                   NumArray<int> &mx_local,
+                                                   NumArray<int> &rank_shift,
+                                                   std::string GroupName);
+#endif
+
