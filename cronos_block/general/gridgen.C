@@ -810,8 +810,11 @@ void Environment::Output_Distributed(Queue &queue, Data &gdata, bool isfloat, bo
 				auto comm = part.get_collective_mpi_comm();
 				h5out->Initialize(comm);
 
-				distr_io::dataout(gdata, *h5out, part, *Problem, origin_acc, dx_acc, numout, isfloat, om_rho_acc,
+				distr_io::dataout(gdata, *h5out, *Problem, part, N_OMINT, N_OMINT_USER, numout, isfloat, true, om_rho_acc,
 											om_sx_acc, om_sy_acc, om_sz_acc, om_Eges_acc);
+
+				
+				RKSolver->addConstants_toH5(gdata, *h5out);
 
 				delete h5out;
 			});
@@ -841,11 +844,11 @@ void Environment::Output_Distributed(Queue &queue, Data &gdata, bool isfloat, bo
 				auto comm = part.get_collective_mpi_comm();
 				h5out->Initialize(comm);
 
-				// distr_io::dataout(gdata, *h5out, part, *Problem, origin_acc, dx_acc, numout, isfloat, om_rho_acc,
-				// 							om_sx_acc, om_sy_acc, om_sz_acc, om_Eges_acc);
-
-				distr_io::dataout2(gdata, *h5out, *Problem, part, N_OMINT, N_OMINT_USER, numout, isfloat, true, om_rho_acc,
+				distr_io::dataout(gdata, *h5out, *Problem, part, N_OMINT, N_OMINT_USER, numout, isfloat, true, om_rho_acc,
 											om_sx_acc, om_sy_acc, om_sz_acc, om_Eges_acc);
+
+				
+				RKSolver->addConstants_toH5(gdata, *h5out);
 
 				delete h5out;
 			});
