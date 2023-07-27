@@ -742,20 +742,6 @@ void Environment::Output_Distributed(Queue &queue, Data &gdata, bool isfloat, bo
 	}
 	for (char *tmp=dirname+strlen(dirname)-1; *tmp=='0'; tmp--) *tmp=0;
 
-	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-		celerity::accessor origin_acc{gdata.outputInfoSYCL[0], cgh, celerity::access::all{}, celerity::write_only_host_task};
-		celerity::accessor dx_acc{gdata.outputInfoSYCL[1], cgh, celerity::access::all{}, celerity::write_only_host_task};
-		cgh.host_task(celerity::experimental::collective, 
-				[=, &gdata](celerity::experimental::collective_partition part){
-			MPI_Comm comm = part.get_collective_mpi_comm();
-        	MPI_Barrier(comm);
-			for (int i = 0; i < 3; i++) {
-				origin_acc[i] = gdata.mx[i];
-				dx_acc[i] = gdata.dx[i];
-			}
-		});
-	});
-
 	queue.submit([=](celerity::handler& cgh) {
 		cgh.host_task(celerity::on_master_node, [=] {
 			filesystem::create_directory(dirname);
@@ -803,16 +789,13 @@ void Environment::Output_Distributed(Queue &queue, Data &gdata, bool isfloat, bo
 			celerity::accessor om_sy_acc{gdata.omSYCL_out[2], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
 			celerity::accessor om_sz_acc{gdata.omSYCL_out[3], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
 			celerity::accessor om_Eges_acc{gdata.omSYCL_out[4], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
-			celerity::accessor origin_acc{gdata.outputInfoSYCL[0], cgh, celerity::access::all{}, celerity::read_only_host_task};
-			celerity::accessor dx_acc{gdata.outputInfoSYCL[1], cgh, celerity::access::all{}, celerity::read_only_host_task};
 			cgh.host_task(celerity::experimental::collective, [=, &gdata](celerity::experimental::collective_partition part) {
 
 				auto comm = part.get_collective_mpi_comm();
 				h5out->Initialize(comm);
 
-				distr_io::dataout(gdata, *h5out, *Problem, part, N_OMINT, N_OMINT_USER, numout, isfloat, true, om_rho_acc,
+				distr_io::dataout(gdata, *h5out, part, *Problem, numout, isfloat, om_rho_acc,
 											om_sx_acc, om_sy_acc, om_sz_acc, om_Eges_acc);
-
 				
 				RKSolver->addConstants_toH5(gdata, *h5out);
 
@@ -837,16 +820,13 @@ void Environment::Output_Distributed(Queue &queue, Data &gdata, bool isfloat, bo
 			celerity::accessor om_sy_acc{gdata.omSYCL_out_flt[2], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
 			celerity::accessor om_sz_acc{gdata.omSYCL_out_flt[3], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
 			celerity::accessor om_Eges_acc{gdata.omSYCL_out_flt[4], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
-			celerity::accessor origin_acc{gdata.outputInfoSYCL[0], cgh, celerity::access::all{}, celerity::read_only_host_task};
-			celerity::accessor dx_acc{gdata.outputInfoSYCL[1], cgh, celerity::access::all{}, celerity::read_only_host_task};
 			cgh.host_task(celerity::experimental::collective, [=, &gdata](celerity::experimental::collective_partition part) {
 
 				auto comm = part.get_collective_mpi_comm();
 				h5out->Initialize(comm);
 
-				distr_io::dataout(gdata, *h5out, *Problem, part, N_OMINT, N_OMINT_USER, numout, isfloat, true, om_rho_acc,
+				distr_io::dataout(gdata, *h5out, part, *Problem, numout, isfloat, om_rho_acc,
 											om_sx_acc, om_sy_acc, om_sz_acc, om_Eges_acc);
-
 				
 				RKSolver->addConstants_toH5(gdata, *h5out);
 

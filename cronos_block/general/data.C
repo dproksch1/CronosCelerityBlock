@@ -173,9 +173,6 @@ Data::Data() : cflSYCL (celerity::buffer<double,1>(celerity::range{1})), nomSYCL
 		carbuncleFlagSYCL.push_back(CelerityBuffer<int, 3>(Range<3>(mx[0]+6, mx[1]+6, mx[2]+6)));
 	}
 
-	outputInfoSYCL.push_back(CelerityBuffer<double, 1>(Range<1>(3)));
-	outputInfoSYCL.push_back(CelerityBuffer<double, 1>(Range<1>(3)));
-
 	nom = new NumMatrix<double,3> [n_omInt];
 
 	for (int q = 0; q < n_omInt; ++q) {
@@ -291,7 +288,7 @@ Data::~Data() {
 	omSYCL_out_flt.clear();
 	pThermSYCL.clear();
 	carbuncleFlagSYCL.clear();
-	outputInfoSYCL.clear();
+
 #if (OMS_USER == TRUE)
 	delete [] om_user;
 	delete [] nom_user;
