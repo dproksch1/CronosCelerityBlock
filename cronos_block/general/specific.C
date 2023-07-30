@@ -355,7 +355,7 @@ void HyperbolicSolver::init_general(Data &gdata, gridFunc &gfunc,
 		Trafo->TransCorotToInert(gdata, gfunc, Problem);
 #endif
 
-	phystest(gdata, gfunc, Problem, -1);
+	//phystest(gdata, gfunc, Problem, -1);
 
 #if (USE_COROTATION == CRONOS_ON)
 	// Transform back to co-rotating frame

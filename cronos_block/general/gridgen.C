@@ -446,12 +446,9 @@ void Environment::CheckOut(Data &gdata, Queue &queue)
   
 #endif
 
-	if (buffer_fetch_necessary) {
-		FetchDataBuffer(gdata, queue);
-		// for (int i = 0; i < 5; i++) {
-		// 	outputflag[i] = 0;
-		// }
-	}
+	// if (buffer_fetch_necessary) {
+	// 	FetchDataBuffer(gdata, queue);
+	// }
   
 	// doing double output
 	if(outputflag[0] == 1) {
@@ -496,46 +493,23 @@ void Environment::CheckOut(Data &gdata, Queue &queue)
 
 void Environment::FetchDataBuffer(Data &gdata, Queue &queue)
 {
-	int q_track = 0;
-	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-		celerity::accessor om_acc{gdata.omSYCL[q_track], cgh, celerity::access::all{}, celerity::read_only_host_task};
-		cgh.host_task(celerity::experimental::collective, [=,&gdata](celerity::experimental::collective_partition) {
-			// int i = 64;
-			// int j = 64;
-			// int k = 60;
-			// printf("om_{%d}_acc[%d][%d][%d]: %f\n",q_track,i,j,k,om_acc[i+3][j+3][k+3]);
-			printf("dx: %f %f %f\n", gdata.dx[0], gdata.dx[1], gdata.dx[2]);
-			printf("origin: %f %f %f\n", gdata.get_pos_global(0, 0, 0), gdata.get_pos_global(1, 0, 0), gdata.get_pos_global(2, 0, 0));
+	auto omRange = gdata.omSYCL[0].get_range();
+	size_t nom_max[3] = {omRange.get(0), omRange.get(1), omRange.get(2)};
+	for (int q = 0; q < N_OMINT; q++) {
+
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::read_only_host_task};
+			cgh.host_task(celerity::on_master_node, [=, &gdata]{
+				for (int i = 0; i < nom_max[0]; i++) {
+					for (int j = 0; j < nom_max[1]; j++) {
+						for (int k = 0; k < nom_max[2]; k++) {
+							gdata.om[q](i-3,j-3,k-3) = omSYCL_acc[i][j][k];
+						}
+					}
+				}
+			});
 		});
-	});
-	queue.slow_full_sync();
-
-	// auto omRange = gdata.omSYCL[0].get_range();
-	// size_t nom_max[3] = {omRange.get(0), omRange.get(1), omRange.get(2)};
-	// for (int q = 0; q < N_OMINT; q++) {
-
-	// 	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-	// 		celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::read_only_host_task};
-	// 		cgh.host_task(celerity::on_master_node, [=, &gdata]{
-	// 			for (int i = 0; i < nom_max[0]; i++) {
-	// 				for (int j = 0; j < nom_max[1]; j++) {
-	// 					for (int k = 0; k < nom_max[2]; k++) {
-	// 						// gdata.om[q](i-3,j-3,k-3) = omSYCL_acc[i][j][k];
-	// 						gdata.om[q](i-3,j-3,k-3) = omSYCL_acc[i][j][k];
-	// 					}
-	// 				}
-	// 			}
-	// 		});
-	// 	});
-	// }
-	// queue.slow_full_sync();
-	// 	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-	// 	celerity::accessor om_Eges_acc{gdata.omSYCL[4], cgh, celerity::access::all{}, celerity::read_only_host_task};
-	// 	cgh.host_task(celerity::experimental::collective, [=, &gdata](celerity::experimental::collective_partition) {
-	// 		printf("om_Eges_acc[59][63][65]: %f %f\n",om_Eges_acc[59+3][63+3][65+3], gdata.om[4](59,63,65));
-	// 	});
-	// });
-	// queue.slow_full_sync();
+	}
 }
 
 
@@ -614,7 +588,7 @@ int Environment::Finalize(Data &gdata, Queue &queue, string message)
 		cout << " ------ " << message << " ------ " << endl;
 	}
 
-	FetchDataBuffer(gdata, queue);
+	// FetchDataBuffer(gdata, queue);
 
 	Output_Distributed(queue, gdata, true, false);
 	// Output(gdata, true, false);

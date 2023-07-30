@@ -169,8 +169,8 @@ Data::Data() : cflSYCL (celerity::buffer<double,1>(celerity::range{1})), nomSYCL
 	}
 
 	for (int i = 0; i < 1; i++) {
-		pThermSYCL.push_back(CelerityBuffer<double, 3>(Range<3>(mx[0]+6, mx[1]+6, mx[2]+6)));
-		carbuncleFlagSYCL.push_back(CelerityBuffer<int, 3>(Range<3>(mx[0]+6, mx[1]+6, mx[2]+6)));
+		pThermSYCL.push_back(CelerityBuffer<double, 3>(Range<3>(mx[0]+6+1, mx[1]+6+1, mx[2]+6+1)));
+		carbuncleFlagSYCL.push_back(CelerityBuffer<int, 3>(Range<3>(mx[0]+6+1, mx[1]+6+1, mx[2]+6+1)));
 	}
 
 	nom = new NumMatrix<double,3> [n_omInt];

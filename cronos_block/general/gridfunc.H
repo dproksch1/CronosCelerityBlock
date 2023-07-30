@@ -114,8 +114,7 @@ namespace distr_io {
 
 		auto allocation_window = data_acc.get_allocation_window(part);
 		auto [file_space, allocation_space] = allocation_window_to_dataspace(allocation_window);
-		bool success = H5Dwrite(dataset_id, datatype, allocation_space, file_space, plist, allocation_window.get_allocation());
-		cout << ArrayName.c_str() << " output reached -> " << success << endl;
+		H5Dwrite(dataset_id, datatype, allocation_space, file_space, plist, allocation_window.get_allocation());
 
 		H5Sclose(dataspace);
 

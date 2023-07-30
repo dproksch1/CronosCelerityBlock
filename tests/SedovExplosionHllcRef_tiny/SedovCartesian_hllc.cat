@@ -12,7 +12,7 @@ cfl_threshold = 0.4
 N_OMINT = 8
 ------------------- Timing ---------------
 runtime     = 1440000
-t_end       = 0.000001 0.0000026 0.00001
+t_end       = 0.0001 0.00026 0.001
 dt          = 0.000001
 dt_bin      = 3. -> Restart Schritt
 num_bin     = 2000 
@@ -24,9 +24,9 @@ dt_info     = 100. -> Datei der Bildschirmausgabe
 num_info    = 3
 dt_mov      = 0.0002  0.5  50.0  Movie output time
 ------------------- Spatial resolution ---
-Nx = 128 512 256 128 
-Ny = 128 64 
-Nz = 128 100 64 
+Nx = 256 512 256 128 
+Ny = 256 64 
+Nz = 256 100 64 
 xb = -0.5
 xe =  0.5
 yb = -0.5
