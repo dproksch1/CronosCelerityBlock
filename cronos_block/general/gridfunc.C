@@ -2497,43 +2497,43 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 		} else if (above == 1) {
 			int ixmin = 1;
 
-			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(rim + ixmin, omRange.get(1), omRange.get(2));
-
-			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-
-				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::slice<3>(0), celerity::read_write};
-
-				cgh.parallel_for<class BCExtrapolateKernel_0_1>(range, [=](celerity::item<3> item){
-
-					size_t ix = item.get_id(0) + ixmin;
-					size_t iy = item.get_id(1);
-					size_t iz = item.get_id(2);
-
-					om_acc[mx[0]+rim+ix][iy][iz] = om_acc[mx[0]+rim+ix-1][iy][iz];
-
-				});
-			});
-			
 			// auto omRange = gdata.omSYCL[q].get_range();
-			// auto range = Range<3>(omRange.get(0), omRange.get(1), omRange.get(2));
+			// auto range = Range<3>(rim + ixmin, omRange.get(1), omRange.get(2));
 
 			// queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 
-			// 	celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,0,0}, celerity::read_write};
+			// 	celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::slice<3>(0), celerity::read_write};
 
 			// 	cgh.parallel_for<class BCExtrapolateKernel_0_1>(range, [=](celerity::item<3> item){
 
-			// 		size_t ix = item.get_id(0);
+			// 		size_t ix = item.get_id(0) + ixmin;
 			// 		size_t iy = item.get_id(1);
 			// 		size_t iz = item.get_id(2);
 
-			// 		if(ix >= mx[0] + ixmin + rim && ix < mx[0] + 2*ixmin + 2*rim) {
-			// 			om_acc[ix][iy][iz] = om_acc[ix-1][iy][iz];
-			// 		}
+			// 		om_acc[mx[0]+rim+ix][iy][iz] = om_acc[mx[0]+rim+ix-1][iy][iz];
 
 			// 	});
 			// });
+			
+			auto omRange = gdata.omSYCL[q].get_range();
+			auto range = Range<3>(omRange.get(0), omRange.get(1), omRange.get(2));
+
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+
+				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,0,0}, celerity::read_write};
+
+				cgh.parallel_for<class BCExtrapolateKernel_0_1>(range, [=](celerity::item<3> item){
+
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					if(ix >= mx[0] + ixmin + rim && ix < mx[0] + 2*ixmin + 2*rim) {
+						om_acc[ix][iy][iz] = om_acc[ix-1][iy][iz];
+					}
+
+				});
+			});
 		}
 	}
 

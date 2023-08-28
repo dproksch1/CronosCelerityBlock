@@ -29,10 +29,9 @@ namespace distr_io {
 		return {file_space, allocation_space};
 	}
 
-	template<typename DataAccessorType>
-	bool Write3DMatrix(Hdf5Stream &h5out, const std::string &ArrayName, const DataAccessorType& data_acc, 
-											const NumArray<int> &mx_global, int rim, const double *xb, const double *dx, hid_t my_group, 
-											celerity::experimental::collective_partition part, int q_index,
+	template<typename DataT>
+	bool Write3DMatrix(Hdf5Stream &h5out, const std::string &ArrayName, celerity::buffer_allocation_window<DataT, 3> allocation_window, 
+											const NumArray<int> &mx_global, int rim, const double *xb, const double *dx, hid_t my_group, int q_index,
 											bool with_opendxinfo, bool is_float) 
 	{
 
@@ -112,7 +111,7 @@ namespace distr_io {
 		auto plist = H5Pcreate(H5P_DATASET_XFER);
 			H5Pset_dxpl_mpio(plist, H5FD_MPIO_COLLECTIVE);
 
-		auto allocation_window = data_acc.get_allocation_window(part);
+		// auto allocation_window = data_acc.get_allocation_window(part);
 		auto [file_space, allocation_space] = allocation_window_to_dataspace(allocation_window);
 		H5Dwrite(dataset_id, datatype, allocation_space, file_space, plist, allocation_window.get_allocation());
 
@@ -128,11 +127,11 @@ namespace distr_io {
 		return true;
 	}
 
-	template<typename DataAccessorType>
-	void dataout(Data &gdata,  Hdf5Stream &h5out, celerity::experimental::collective_partition part,
-						ProblemType & Problem, int numout, bool isfloat, const DataAccessorType& om_rho_acc,
-					   const DataAccessorType& om_sx_acc, const DataAccessorType& om_sy_acc, 
-					   const DataAccessorType& om_sz_acc, const DataAccessorType& om_Eges_acc)
+	template<typename DataT>
+	void dataout(Data &gdata,  Hdf5Stream &h5out,
+						ProblemType & Problem, int numout, bool isfloat, celerity::buffer_allocation_window<DataT, 3> om_rho_acc,
+					   celerity::buffer_allocation_window<DataT, 3> om_sx_acc, celerity::buffer_allocation_window<DataT, 3> om_sy_acc, 
+					   celerity::buffer_allocation_window<DataT, 3> om_sz_acc, celerity::buffer_allocation_window<DataT, 3> om_Eges_acc)
 	{
 		Problem.WriteToH5(h5out);
 
@@ -189,15 +188,15 @@ namespace distr_io {
 
 		// } else {
 			Write3DMatrix(h5out, gdata.om[0].getName(), om_rho_acc, mx_global, rim,
-						xmin, gdata.dx, group, part, 0, true, isfloat);
+						xmin, gdata.dx, group, 0, true, isfloat);
 			Write3DMatrix(h5out, gdata.om[1].getName(), om_sz_acc, mx_global, rim,
-						xmin, gdata.dx, group, part, 1, true, isfloat);
+						xmin, gdata.dx, group, 1, true, isfloat);
 			Write3DMatrix(h5out, gdata.om[2].getName(), om_sy_acc, mx_global, rim,
-						xmin, gdata.dx, group, part, 2, true, isfloat);
+						xmin, gdata.dx, group, 2, true, isfloat);
 			Write3DMatrix(h5out, gdata.om[3].getName(), om_sx_acc, mx_global, rim,
-						xmin, gdata.dx, group, part, 3, true, isfloat);
+						xmin, gdata.dx, group, 3, true, isfloat);
 			Write3DMatrix(h5out, gdata.om[4].getName(), om_Eges_acc, mx_global, rim,
-						xmin, gdata.dx, group, part, 4, true, isfloat);
+						xmin, gdata.dx, group, 4, true, isfloat);
 		// }
 
 	#if(CRONOS_OUTPUT_COMPATIBILITY != CRONOS_ON)

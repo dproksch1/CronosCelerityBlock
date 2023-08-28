@@ -1,9 +1,9 @@
-Start testing: Jul 09 18:02 CEST
+Start testing: Jul 30 20:04 CEST
 ----------------------------------------------------------
-Unable to find executable: /home/dproksch/master_thesis/CronosCelerityBlock/proj
+Unable to find executable: mpirun -n 2
 1/4 Testing: small_run
 1/4 Test: small_run
-Command: "" "/home/dproksch/master_thesis/CronosCelerityBlock/tests/SedovExplosionHllcRef_small" "SedovCartesian_hllc"
+Command: "" "/home/dproksch/master_thesis/CronosCelerityBlock/proj" "/home/dproksch/master_thesis/CronosCelerityBlock/tests/SedovExplosionHllcRef_small" "SedovCartesian_hllc"
 Directory: /home/dproksch/master_thesis/CronosCelerityBlock
 "small_run" start time: 
 Output:
@@ -12,7 +12,7 @@ Output:
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"small_run" end time: Jul 09 18:02 CEST
+"small_run" end time: Jul 30 20:04 CEST
 "small_run" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -28,14 +28,14 @@ Output:
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"small_compare" end time: Jul 09 18:02 CEST
+"small_compare" end time: Jul 30 20:04 CEST
 "small_compare" time elapsed: 00:00:00
 ----------------------------------------------------------
 
-Unable to find executable: /home/dproksch/master_thesis/CronosCelerityBlock/proj
+Unable to find executable: mpirun -n 2
 3/4 Testing: medium_run
 3/4 Test: medium_run
-Command: "" "/home/dproksch/master_thesis/CronosCelerityBlock/tests/SedovExplosionHllcRef_medium" "SedovCartesian_hllc"
+Command: "" "/home/dproksch/master_thesis/CronosCelerityBlock/proj" "/home/dproksch/master_thesis/CronosCelerityBlock/tests/SedovExplosionHllcRef_medium" "SedovCartesian_hllc"
 Directory: /home/dproksch/master_thesis/CronosCelerityBlock
 "medium_run" start time: 
 Output:
@@ -44,7 +44,7 @@ Output:
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"medium_run" end time: Jul 09 18:02 CEST
+"medium_run" end time: Jul 30 20:04 CEST
 "medium_run" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -60,8 +60,8 @@ Output:
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"medium_compare" end time: Jul 09 18:02 CEST
+"medium_compare" end time: Jul 30 20:04 CEST
 "medium_compare" time elapsed: 00:00:00
 ----------------------------------------------------------
 
-End testing: Jul 09 18:02 CEST
+End testing: Jul 30 20:04 CEST
