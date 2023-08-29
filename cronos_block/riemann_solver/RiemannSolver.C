@@ -59,7 +59,7 @@ void RiemannSolver::compute_carbuncleFlag(Queue &queue, Data &gdata) {
 		double alpha_c = alpha_carbuncle;
 		auto range = gdata.omSYCL[0].get_range();
 
-		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+		queue.submit([=, &gdata](celerity::handler& cgh) {
 
 			celerity::accessor ptherm_acc{gdata.pThermSYCL[0], cgh, celerity::access::neighborhood{2,2,2}, celerity::read_only};	
 			celerity::accessor carbuncleFlag_acc{gdata.carbuncleFlagSYCL[0], cgh, celerity::access::neighborhood{2,2,2}, celerity::write_only};

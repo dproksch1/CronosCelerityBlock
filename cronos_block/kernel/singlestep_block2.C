@@ -109,7 +109,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	// if (gdata.tstep <= 1 && n == 0) {
 	// 	for (int q = 0; q < N_OMINT; q++) {
 
-	// 		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+	// 		queue.submit([=, &gdata](celerity::handler& cgh) {
 	// 			celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::write_only_host_task};
 	// 			cgh.host_task(celerity::on_master_node, [=, &gdata]{
 	// 				for (int i = 0; i < nom_max[0]; i++) {
@@ -248,7 +248,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 //      Reduction Kernel
 //----------------------------------------------------------------
 
-	// queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+	// queue.submit([=, &gdata](celerity::handler& cgh) {
 
 	// 	auto rd = celerity::reduction(max_buf, cgh, cl::sycl::maximum<double>{},
 	// 							cl::sycl::property::reduction::initialize_to_identity{});
@@ -302,7 +302,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 	// queue.slow_full_sync();
 
-	// queue.submit(celerity::allow_by_ref, [=, &cfl_lin](celerity::handler& cgh) {
+	// queue.submit([=, &cfl_lin](celerity::handler& cgh) {
 	// 	celerity::accessor max_buf_acc{max_buf, cgh, celerity::access::all{}, celerity::read_only_host_task};
 	// 	cgh.host_task(celerity::on_master_node, [=, &cfl_lin]{
 	// 		cfl_lin = max_buf_acc[0];
@@ -406,7 +406,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	// 	if (gdata.tstep <= 1) {
 	// 		for (int q = 1; q < 5; q++) {
 
-	// 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+	// 			queue.submit([=, &gdata](celerity::handler& cgh) {
 	// 				celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::write_only_host_task};
 	// 				cgh.host_task(celerity::on_master_node, [=, &gdata]{
 	// 					for (int i = 61; i < 62; i++) {

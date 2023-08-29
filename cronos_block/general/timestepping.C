@@ -185,7 +185,7 @@ void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
 
 #if  (RK_STEPS == 3)
 	double nom_temp[nom_max[0]][nom_max[1]][nom_max[2]];
-	queue.submit(celerity::allow_by_ref, [=, &nom_temp](celerity::handler& cgh) {
+	queue.submit([=, &nom_temp](celerity::handler& cgh) {
 		celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::all{}, celerity::read_only_host_task};
 		cgh.host_task(celerity::on_master_node, [=, &nom_temp]{
 			for (int i = -B; i < nom_max[0]+B; i++) {
@@ -248,7 +248,7 @@ void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
 
 		save_data(om, 0);
 
-		queue.submit(celerity::allow_by_ref, [=, &om](celerity::handler& cgh) {
+		queue.submit([=, &om](celerity::handler& cgh) {
 			celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::all{}, celerity::read_only_host_task};
 			cgh.host_task(celerity::on_master_node, [=, &om]{
 				for (int i = -B; i < nom_max[0]+B; i++) {
@@ -263,7 +263,7 @@ void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
 
 	} else if (substep == 1) { // Second Runge Kutta step
 
-		queue.submit(celerity::allow_by_ref, [=, &om](celerity::handler& cgh) {
+		queue.submit([=, &om](celerity::handler& cgh) {
 			celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::all{}, celerity::read_only_host_task};
 			cgh.host_task(celerity::on_master_node, [=, &om]{
 				for (int i = -B; i < nom_max[0]+B; i++) {
@@ -297,7 +297,7 @@ void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
 
 	if (substep == 0) { // First Runge Kutta step
 
-		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+		queue.submit([=, &gdata](celerity::handler& cgh) {
 			celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_write};
 			celerity::accessor om_rho_acc{gdata.omSYCL[0], cgh, celerity::access::one_to_one{}, celerity::read_write};
 			celerity::accessor om_sx_acc{gdata.omSYCL[1], cgh, celerity::access::one_to_one{}, celerity::read_write};
@@ -341,7 +341,7 @@ void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
 
 	} else if (substep == 1) { // Second Runge Kutta step
 
-		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+		queue.submit([=, &gdata](celerity::handler& cgh) {
 			celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_write};
 			celerity::accessor om_rho_acc{gdata.omSYCL[0], cgh, celerity::access::one_to_one{}, celerity::read_write};
 			celerity::accessor om_sx_acc{gdata.omSYCL[1], cgh, celerity::access::one_to_one{}, celerity::read_write};

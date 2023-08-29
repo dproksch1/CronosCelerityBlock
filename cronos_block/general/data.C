@@ -163,14 +163,14 @@ Data::Data() : cflSYCL (celerity::buffer<double,1>(celerity::range{1})), nomSYCL
 	//om = new Pot[N_OM+N_P]; //necessary for MHD
 
 	for (int i = 0; i < numElements; i++) {
-		omSYCL.push_back(CelerityBuffer<double, 3>(Range<3>(mx[0]+6 +1, mx[1]+6+1, mx[2]+6+1)));
-		omSYCL_out.push_back(CelerityBuffer<double, 3>(Range<3>(mx[0]+2 +1, mx[1]+2+1, mx[2]+2+1)));
-		omSYCL_out_flt.push_back(CelerityBuffer<float, 3>(Range<3>(mx[0]+1, mx[1]+1, mx[2]+1)));
+		omSYCL.push_back(CelerityBuffer<double, 3>(CelerityRange<3>(mx[0]+6 +1, mx[1]+6+1, mx[2]+6+1)));
+		// omSYCL_out.push_back(CelerityBuffer<double, 3>(CelerityRange<3>(mx[0]+2 +1, mx[1]+2+1, mx[2]+2+1)));
+		// omSYCL_out_flt.push_back(CelerityBuffer<float, 3>(CelerityRange<3>(mx[0]+1, mx[1]+1, mx[2]+1)));
 	}
 
 	for (int i = 0; i < 1; i++) {
-		pThermSYCL.push_back(CelerityBuffer<double, 3>(Range<3>(mx[0]+6+1, mx[1]+6+1, mx[2]+6+1)));
-		carbuncleFlagSYCL.push_back(CelerityBuffer<int, 3>(Range<3>(mx[0]+6+1, mx[1]+6+1, mx[2]+6+1)));
+		pThermSYCL.push_back(CelerityBuffer<double, 3>(CelerityRange<3>(mx[0]+6+1, mx[1]+6+1, mx[2]+6+1)));
+		carbuncleFlagSYCL.push_back(CelerityBuffer<int, 3>(CelerityRange<3>(mx[0]+6+1, mx[1]+6+1, mx[2]+6+1)));
 	}
 
 	nom = new NumMatrix<double,3> [n_omInt];
@@ -284,8 +284,8 @@ Data::~Data() {
 	delete [] om;
 	delete [] nom;
 	omSYCL.clear();
-	omSYCL_out.clear();
-	omSYCL_out_flt.clear();
+	// omSYCL_out.clear();
+	// omSYCL_out_flt.clear();
 	pThermSYCL.clear();
 	carbuncleFlagSYCL.clear();
 
@@ -656,7 +656,7 @@ void Data::fetch_cfl(Queue &queue) {
 
 	// queue.slow_full_sync();
 	
-	queue.submit(celerity::allow_by_ref, [=, &cfl_lin](celerity::handler& cgh) {
+	queue.submit([=, &cfl_lin](celerity::handler& cgh) {
 		celerity::accessor cflSYCL_acc{this->cflSYCL, cgh, celerity::access::all{}, celerity::read_only_host_task};
 		cgh.host_task(celerity::experimental::collective, 
 				[=, &cfl_lin](celerity::experimental::collective_partition /*part*/){	

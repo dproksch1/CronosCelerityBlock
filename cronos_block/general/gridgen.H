@@ -86,6 +86,10 @@ private:
 	double t_last_dbl, t_last_flt;
 	double cfl_set, cfl_min, cfl_max;
 	string OldName;
+
+	//output buffer
+	std::vector<CelerityBuffer<double, 3>> omSYCL_out;
+	std::vector<CelerityBuffer<float, 3>> omSYCL_out_flt;
 };
 
 

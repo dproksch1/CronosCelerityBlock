@@ -1605,8 +1605,8 @@ void gridFunc::bc_Periodic(Queue &queue, Data &gdata, ProblemType &Problem,
 		if (dir == 0) {
 
 			get_bcBuffRange(gdata, i_min, i_max, 0, 1, q, rim);
-			auto left_to_right = Range<3>(i_max + 1 - i_min, omRange.get(1), omRange.get(2));
-			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			auto left_to_right = CelerityRange<3>(i_max + 1 - i_min, omRange.get(1), omRange.get(2));
+			queue.submit([=, &gdata](celerity::handler& cgh) {
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{(size_t) gdata.mx[0] + 2*rim + 1,1,1}, celerity::read_write};
 				cgh.parallel_for<class Periodic_Dir1_Left_to_Right>(left_to_right, [=, &gdata](celerity::item<3> item){
 					size_t ix = item.get_id(0) + i_min;
@@ -1618,8 +1618,8 @@ void gridFunc::bc_Periodic(Queue &queue, Data &gdata, ProblemType &Problem,
 			});
 
 			get_bcBuffRange(gdata, i_min, i_max, 0, 0, q, rim);
-			auto right_to_left = Range<3>(-(i_min + 1) - i_max, omRange.get(1), omRange.get(2));
-			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			auto right_to_left = CelerityRange<3>(-(i_min + 1) - i_max, omRange.get(1), omRange.get(2));
+			queue.submit([=, &gdata](celerity::handler& cgh) {
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{(size_t) gdata.mx[0] + 2*rim + 1,1,1}, celerity::read_write};
 				cgh.parallel_for<class Periodic_Dir1_Right_to_Left>(right_to_left, [=, &gdata](celerity::item<3> item){
 					size_t ix = item.get_id(0);
@@ -1633,8 +1633,8 @@ void gridFunc::bc_Periodic(Queue &queue, Data &gdata, ProblemType &Problem,
 		} else if (dir == 2) {
 
 			get_bcBuffRange(gdata, i_min, i_max, 1, 1, q, rim);
-			auto left_to_right = Range<3>(omRange.get(0), i_max + 1 - i_min, omRange.get(2));
-			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			auto left_to_right = CelerityRange<3>(omRange.get(0), i_max + 1 - i_min, omRange.get(2));
+			queue.submit([=, &gdata](celerity::handler& cgh) {
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,(size_t) gdata.mx[1] + 2*rim + 1,1}, celerity::read_write};
 				cgh.parallel_for<class Periodic_Dir1_Left_to_Right>(left_to_right, [=, &gdata](celerity::item<3> item){
 					size_t ix = item.get_id(0);
@@ -1646,8 +1646,8 @@ void gridFunc::bc_Periodic(Queue &queue, Data &gdata, ProblemType &Problem,
 			});
 
 			get_bcBuffRange(gdata, i_min, i_max, 1, 0, q, rim);
-			auto right_to_left = Range<3>(omRange.get(0), -(i_min + 1) - i_max, omRange.get(2));
-			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			auto right_to_left = CelerityRange<3>(omRange.get(0), -(i_min + 1) - i_max, omRange.get(2));
+			queue.submit([=, &gdata](celerity::handler& cgh) {
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,(size_t) gdata.mx[1] + 2*rim + 1,1}, celerity::read_write};
 				cgh.parallel_for<class Periodic_Dir1_Right_to_Left>(right_to_left, [=, &gdata](celerity::item<3> item){
 					size_t ix = item.get_id(0);
@@ -1661,8 +1661,8 @@ void gridFunc::bc_Periodic(Queue &queue, Data &gdata, ProblemType &Problem,
 		} else if (dir == 3) {
 
 			get_bcBuffRange(gdata, i_min, i_max, 2, 1, q, rim);
-			auto left_to_right = Range<3>(omRange.get(0), omRange.get(1), i_max + 1 - i_min);
-			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			auto left_to_right = CelerityRange<3>(omRange.get(0), omRange.get(1), i_max + 1 - i_min);
+			queue.submit([=, &gdata](celerity::handler& cgh) {
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,1,(size_t) gdata.mx[2] + 2*rim + 1}, celerity::read_write};
 				cgh.parallel_for<class Periodic_Dir1_Left_to_Right>(left_to_right, [=, &gdata](celerity::item<3> item){
 					size_t ix = item.get_id(0);
@@ -1674,8 +1674,8 @@ void gridFunc::bc_Periodic(Queue &queue, Data &gdata, ProblemType &Problem,
 			});
 
 			get_bcBuffRange(gdata, i_min, i_max, 2, 0, q, rim);
-			auto right_to_left = Range<3>(omRange.get(0), omRange.get(1), -(i_min + 1) - i_max);
-			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			auto right_to_left = CelerityRange<3>(omRange.get(0), omRange.get(1), -(i_min + 1) - i_max);
+			queue.submit([=, &gdata](celerity::handler& cgh) {
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,1,(size_t) gdata.mx[2] + 2*rim + 1}, celerity::read_write};
 				cgh.parallel_for<class Periodic_Dir1_Right_to_Left>(right_to_left, [=, &gdata](celerity::item<3> item){
 					size_t ix = item.get_id(0);
@@ -2477,9 +2477,9 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 			int ixmin = 0;
 
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(rim + ixmin, omRange.get(1), omRange.get(2));
+			auto range = CelerityRange<3>(rim + ixmin, omRange.get(1), omRange.get(2));
 
-			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			queue.submit([=, &gdata](celerity::handler& cgh) {
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{(size_t) rim+1,1,1}, celerity::read_write};
 
@@ -2498,9 +2498,9 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 			int ixmin = 1;
 
 			// auto omRange = gdata.omSYCL[q].get_range();
-			// auto range = Range<3>(rim + ixmin, omRange.get(1), omRange.get(2));
+			// auto range = CelerityRange<3>(rim + ixmin, omRange.get(1), omRange.get(2));
 
-			// queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			// queue.submit([=, &gdata](celerity::handler& cgh) {
 
 			// 	celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::slice<3>(0), celerity::read_write};
 
@@ -2516,9 +2516,9 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 			// });
 			
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(omRange.get(0), omRange.get(1), omRange.get(2));
+			auto range = CelerityRange<3>(omRange.get(0), omRange.get(1), omRange.get(2));
 
-			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			queue.submit([=, &gdata](celerity::handler& cgh) {
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,0,0}, celerity::read_write};
 
@@ -2542,9 +2542,9 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 			int iymin = 0;
 
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(omRange.get(0), rim + iymin, omRange.get(2));
+			auto range = CelerityRange<3>(omRange.get(0), rim + iymin, omRange.get(2));
 
-			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			queue.submit([=, &gdata](celerity::handler& cgh) {
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,(size_t) rim+1,1}, celerity::read_write};
 
@@ -2563,9 +2563,9 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 			int iymin = 1;
 
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(omRange.get(0), rim + iymin, omRange.get(2));
+			auto range = CelerityRange<3>(omRange.get(0), rim + iymin, omRange.get(2));
 
-			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			queue.submit([=, &gdata](celerity::handler& cgh) {
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::slice<3>(1), celerity::read_write};
 
@@ -2581,9 +2581,9 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 			});
 
 			// auto omRange = gdata.omSYCL[q].get_range();
-			// auto range = Range<3>(omRange.get(0), omRange.get(1), omRange.get(2));
+			// auto range = CelerityRange<3>(omRange.get(0), omRange.get(1), omRange.get(2));
 
-			// queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			// queue.submit([=, &gdata](celerity::handler& cgh) {
 
 			// 	celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{0,1,0}, celerity::read_write};
 
@@ -2607,9 +2607,9 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 			int izmin = 0;
 
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(omRange.get(0), omRange.get(1), rim + izmin);
+			auto range = CelerityRange<3>(omRange.get(0), omRange.get(1), rim + izmin);
 
-			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			queue.submit([=, &gdata](celerity::handler& cgh) {
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,1,(size_t) rim+1}, celerity::read_write};
 
@@ -2628,9 +2628,9 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 			int izmin = 1;
 
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(omRange.get(0), omRange.get(1), rim + izmin);
+			auto range = CelerityRange<3>(omRange.get(0), omRange.get(1), rim + izmin);
 
-			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			queue.submit([=, &gdata](celerity::handler& cgh) {
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::slice<3>(2), celerity::read_write};
 
@@ -2646,9 +2646,9 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 			});
 
 			// auto omRange = gdata.omSYCL[q].get_range();
-			// auto range = Range<3>(omRange.get(0), omRange.get(1), omRange.get(2));
+			// auto range = CelerityRange<3>(omRange.get(0), omRange.get(1), omRange.get(2));
 
-			// queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			// queue.submit([=, &gdata](celerity::handler& cgh) {
 
 			// 	celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{0,0,1}, celerity::read_write};
 
@@ -2791,9 +2791,9 @@ void gridFunc::bc_Outflow(Queue &queue, Data &gdata, ProblemType &pr,
 		if(above == 0) {
 			
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(rim, omRange.get(1), omRange.get(2));
+			auto range = CelerityRange<3>(rim, omRange.get(1), omRange.get(2));
 
-			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			queue.submit([=, &gdata](celerity::handler& cgh) {
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{(size_t) rim,1,1}, celerity::read_write};
 				celerity::accessor om_sx_acc{gdata.omSYCL[1], cgh, celerity::access::one_to_one{}, celerity::read_only};
@@ -2818,9 +2818,9 @@ void gridFunc::bc_Outflow(Queue &queue, Data &gdata, ProblemType &pr,
 			});
 		} else {
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(rim, omRange.get(1), omRange.get(2));
+			auto range = CelerityRange<3>(rim, omRange.get(1), omRange.get(2));
 
-			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			queue.submit([=, &gdata](celerity::handler& cgh) {
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{(size_t) rim,1,1}, celerity::read_write};
 				celerity::accessor om_sx_acc{gdata.omSYCL[1], cgh, celerity::access::one_to_one{}, celerity::read_only};
@@ -2850,9 +2850,9 @@ void gridFunc::bc_Outflow(Queue &queue, Data &gdata, ProblemType &pr,
 		if(above == 0) {
 			
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(omRange.get(0), rim, omRange.get(2));
+			auto range = CelerityRange<3>(omRange.get(0), rim, omRange.get(2));
 
-			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			queue.submit([=, &gdata](celerity::handler& cgh) {
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,(size_t) rim,1}, celerity::read_write};
 				celerity::accessor om_sy_acc{gdata.omSYCL[2], cgh, celerity::access::one_to_one{}, celerity::read_only};
@@ -2877,9 +2877,9 @@ void gridFunc::bc_Outflow(Queue &queue, Data &gdata, ProblemType &pr,
 			});
 		} else {
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(omRange.get(0), rim, omRange.get(2));
+			auto range = CelerityRange<3>(omRange.get(0), rim, omRange.get(2));
 
-			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			queue.submit([=, &gdata](celerity::handler& cgh) {
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,(size_t) rim,1}, celerity::read_write};
 				celerity::accessor om_sy_acc{gdata.omSYCL[2], cgh, celerity::access::one_to_one{}, celerity::read_only};
@@ -2909,9 +2909,9 @@ void gridFunc::bc_Outflow(Queue &queue, Data &gdata, ProblemType &pr,
 		if(above == 0) {
 			
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(omRange.get(0), omRange.get(1), rim);
+			auto range = CelerityRange<3>(omRange.get(0), omRange.get(1), rim);
 
-			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			queue.submit([=, &gdata](celerity::handler& cgh) {
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,1,(size_t) rim}, celerity::read_write};
 				celerity::accessor om_sz_acc{gdata.omSYCL[3], cgh, celerity::access::one_to_one{}, celerity::read_only};
@@ -2936,9 +2936,9 @@ void gridFunc::bc_Outflow(Queue &queue, Data &gdata, ProblemType &pr,
 			});
 		} else {
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(omRange.get(0), omRange.get(1), rim);
+			auto range = CelerityRange<3>(omRange.get(0), omRange.get(1), rim);
 
-			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			queue.submit([=, &gdata](celerity::handler& cgh) {
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,1,(size_t) rim}, celerity::read_write};
 				celerity::accessor om_sz_acc{gdata.omSYCL[3], cgh, celerity::access::one_to_one{}, celerity::read_only};
@@ -3185,9 +3185,9 @@ void gridFunc::bc_Reflecting(Queue &queue, Data &gdata, ProblemType &pr,
 	if(dir == 0) {
 		if(above == 0) {
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(rim, omRange.get(1), omRange.get(2));
+			auto range = CelerityRange<3>(rim, omRange.get(1), omRange.get(2));
 
-			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			queue.submit([=, &gdata](celerity::handler& cgh) {
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{(size_t) rim,1,1}, celerity::read_write};
 
@@ -3207,11 +3207,11 @@ void gridFunc::bc_Reflecting(Queue &queue, Data &gdata, ProblemType &pr,
 			});
 		} else if (above == 1) {
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(rim, omRange.get(1), omRange.get(2));
+			auto range = CelerityRange<3>(rim, omRange.get(1), omRange.get(2));
 
 			int mxx = gdata.mx[0];
 
-			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			queue.submit([=, &gdata](celerity::handler& cgh) {
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{(size_t) rim,1,1}, celerity::read_write};
 
@@ -3235,9 +3235,9 @@ void gridFunc::bc_Reflecting(Queue &queue, Data &gdata, ProblemType &pr,
 	if(dir == 1) {
 		if(above == 0) {
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(omRange.get(0), rim, omRange.get(2));
+			auto range = CelerityRange<3>(omRange.get(0), rim, omRange.get(2));
 
-			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			queue.submit([=, &gdata](celerity::handler& cgh) {
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,(size_t)rim,1}, celerity::read_write};
 
@@ -3257,11 +3257,11 @@ void gridFunc::bc_Reflecting(Queue &queue, Data &gdata, ProblemType &pr,
 			});
 		} else if(above == 1) {
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(omRange.get(0), rim, omRange.get(2));
+			auto range = CelerityRange<3>(omRange.get(0), rim, omRange.get(2));
 
 			int mxy = gdata.mx[1];
 
-			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			queue.submit([=, &gdata](celerity::handler& cgh) {
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,(size_t)rim,1}, celerity::read_write};
 
@@ -3285,9 +3285,9 @@ void gridFunc::bc_Reflecting(Queue &queue, Data &gdata, ProblemType &pr,
 	if(dir == 2) {
 		if(above == 0) {
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(omRange.get(0), omRange.get(1), rim);
+			auto range = CelerityRange<3>(omRange.get(0), omRange.get(1), rim);
 
-			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			queue.submit([=, &gdata](celerity::handler& cgh) {
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,1,(size_t)rim}, celerity::read_write};
 
@@ -3307,11 +3307,11 @@ void gridFunc::bc_Reflecting(Queue &queue, Data &gdata, ProblemType &pr,
 			});
 		} else if(above == 1) {
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(omRange.get(0), omRange.get(1), rim);
+			auto range = CelerityRange<3>(omRange.get(0), omRange.get(1), rim);
 
 			int mxz = gdata.mx[1];
 
-			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			queue.submit([=, &gdata](celerity::handler& cgh) {
 
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,1,(size_t)rim}, celerity::read_write};
 

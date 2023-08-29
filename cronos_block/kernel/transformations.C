@@ -918,7 +918,7 @@ void Transformations::TransMomen2Vel(Data &gdata, gridFunc &gfunc,
 
 	for (int q = q_sx; q <= q_sz; ++q) {
 		//pointwise kernel including ghost cells
-		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+		queue.submit([=, &gdata](celerity::handler& cgh) {
 			celerity::accessor omSYCL_rho{gdata.omSYCL[q_rho], cgh, celerity::access::one_to_one{}, celerity::read_only};
 			celerity::accessor omSYCL_q{gdata.omSYCL[q], cgh, celerity::access::one_to_one{}, celerity::read_write};
 
@@ -946,7 +946,7 @@ void Transformations::TransVel2Momen(Data &gdata, gridFunc &gfunc,
 
 	for (int q = q_sx; q <= q_sz; ++q) {
 		//pointwise kernel including ghost cells
-		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+		queue.submit([=, &gdata](celerity::handler& cgh) {
 			celerity::accessor omSYCL_rho{gdata.omSYCL[q_rho], cgh, celerity::access::one_to_one{}, celerity::read_only};
 			celerity::accessor omSYCL_q{gdata.omSYCL[q], cgh, celerity::access::one_to_one{}, celerity::read_write};
 
@@ -981,7 +981,7 @@ void Transformations::TransEth2E(const Data &gdata, gridFunc &gfunc,
 		
 		//pointwise kernel including ghost cells
 		//     (non-parallel function starts at -B+1 for some reason)
-		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+		queue.submit([&](celerity::handler& cgh) {
 
 			celerity::accessor omSYCL_Eges{gdata.omSYCL[q_Eges], cgh, celerity::access::one_to_one{}, celerity::read_write};	
 			celerity::accessor omSYCL_sx{gdata.omSYCL[q_sx], cgh, celerity::access::one_to_one{}, celerity::read_only};
@@ -1003,7 +1003,7 @@ void Transformations::TransEth2E(const Data &gdata, gridFunc &gfunc,
 
 	} else {
 
-		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+		queue.submit([=, &gdata](celerity::handler& cgh) {
 
 			celerity::accessor omSYCL_Eges{gdata.omSYCL[q_Eges], cgh, celerity::access::one_to_one{}, celerity::read_write};	
 			celerity::accessor omSYCL_sx{gdata.omSYCL[q_sx], cgh, celerity::access::one_to_one{}, celerity::read_only};
@@ -1041,7 +1041,7 @@ void Transformations::TransE2Eth(Data &gdata, gridFunc &gfunc, ProblemType &Prob
 	// // Saving overall energy:
 	// if(ENERGETICS == FULL && DualEnergy) {
 
-	// 	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+	// 	queue.submit([=, &gdata](celerity::handler& cgh) {
 	// 		celerity::accessor om_save_acc{gdata.omSYCL_save[0], cgh, celerity::access::one_to_one{}, celerity::read_write};
 	// 		celerity::accessor om_Eges_acc{gdata.omSYCL[4], cgh, celerity::access::one_to_one{}, celerity::read_only};
 	// 		cgh.parallel_for<class IntegrationKernel>(gdata.omSYCL_save[0].get_range(), [=](celerity::item<3> item){
@@ -1057,7 +1057,7 @@ void Transformations::TransE2Eth(Data &gdata, gridFunc &gfunc, ProblemType &Prob
 	// 	gdata.om[n_omIntAll].rename(gdata.om[q_Eges].getName());
 	// }
 
-	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+	queue.submit([=, &gdata](celerity::handler& cgh) {
 		celerity::accessor om_rho_acc{gdata.omSYCL[0], cgh, celerity::access::one_to_one{}, celerity::read_only};
 		celerity::accessor om_sx_acc{gdata.omSYCL[1], cgh, celerity::access::one_to_one{}, celerity::read_only};
 		celerity::accessor om_sy_acc{gdata.omSYCL[2], cgh, celerity::access::one_to_one{}, celerity::read_only};
@@ -1103,7 +1103,7 @@ void Transformations::TransE2Eth(Data &gdata, gridFunc &gfunc, ProblemType &Prob
 		
 // 		//pointwise kernel including ghost cells
 // 		//     (non-parallel function starts at -B+1 for some reason)
-// 		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+// 		queue.submit([=, &gdata](celerity::handler& cgh) {
 
 // 			celerity::accessor omSYCL_Eges{gdata.omSYCL[q_Eges], cgh, celerity::access::one_to_one{}, celerity::read_write};	
 // 			celerity::accessor omSYCL_sx{gdata.omSYCL[q_sx], cgh, celerity::access::one_to_one{}, celerity::read_only};
@@ -1172,7 +1172,7 @@ void Transformations::TransE2Eth(Data &gdata, gridFunc &gfunc, ProblemType &Prob
 
 // 		auto range = Range<3>(izEnd, iyEnd, ixEnd);
 
-// 		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+// 		queue.submit([=, &gdata](celerity::handler& cgh) {
 
 // 			celerity::accessor omSYCL_Eges{gdata.omSYCL[q_Eges], cgh, celerity::access::one_to_one{}, celerity::read_write};	
 // 			celerity::accessor omSYCL_sx{gdata.omSYCL[q_sx], cgh, celerity::access::one_to_one{}, celerity::read_only};
@@ -1238,7 +1238,7 @@ void Transformations::TransT2Eth(const Data &gdata, gridFunc &gfunc,
 	auto range = gdata.omSYCL[q_rho].get_range();
 	
 	//pointwise kernel including ghost cells
-	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+	queue.submit([=, &gdata](celerity::handler& cgh) {
 
 		celerity::accessor omSYCL_Eges{gdata.omSYCL[q_Eges], cgh, celerity::access::one_to_one{}, celerity::read_write};	
 		celerity::accessor omSYCL_rho{gdata.omSYCL[q_rho], cgh, celerity::access::one_to_one{}, celerity::read_only};

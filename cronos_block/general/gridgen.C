@@ -91,6 +91,11 @@ Environment::Environment(Data &gdata)
 		fout.close();
 	}
 
+	for (int i = 0; i < gdata.fluid.get_N_OMINT(); i++) {
+		omSYCL_out.push_back(CelerityBuffer<double, 3>(CelerityRange<3>(gdata.mx[0]+2 +1, gdata.mx[1]+2+1, gdata.mx[2]+2+1)));
+		omSYCL_out_flt.push_back(CelerityBuffer<float, 3>(CelerityRange<3>(gdata.mx[0]+1, gdata.mx[1]+1, gdata.mx[2]+1)));
+	}
+
 	gettimeofday(&tick, 0);
 
 #ifdef DTCOMP_OLD
@@ -114,7 +119,8 @@ Environment::~Environment() {
 
 	// Delete all new objects:
 // 	delete gfunc;
-
+	omSYCL_out.clear();
+	omSYCL_out_flt.clear();
 }
 
 
@@ -497,7 +503,7 @@ void Environment::FetchDataBuffer(Data &gdata, Queue &queue)
 	size_t nom_max[3] = {omRange.get(0), omRange.get(1), omRange.get(2)};
 	for (int q = 0; q < N_OMINT; q++) {
 
-		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+		queue.submit([=, &gdata](celerity::handler& cgh) {
 			celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::read_only_host_task};
 			cgh.host_task(celerity::on_master_node, [=, &gdata]{
 				for (int i = 0; i < nom_max[0]; i++) {
@@ -748,21 +754,21 @@ if (!isfloat) {
 }
 	if (!isfloat) {
 		for (int q = 0; q < gdata.omSYCL.size(); q++) {
-			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-				celerity::accessor omSYCL_out_acc{gdata.omSYCL_out[q], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+			queue.submit([=, &gdata](celerity::handler& cgh) {
+				celerity::accessor omSYCL_out_acc{omSYCL_out[q], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
 				celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{6,6,6}, celerity::read_only};
-				cgh.parallel_for<class BufferInitializationKernel>(gdata.omSYCL_out[q].get_range(), [=](celerity::item<3> item) {
+				cgh.parallel_for<class BufferInitializationKernel>(omSYCL_out[q].get_range(), [=](celerity::item<3> item) {
 					omSYCL_out_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = omSYCL_acc[item.get_id(0) + 3][item.get_id(1) + 3][item.get_id(2) + 3];
 				});
 			});
 		}
-
-		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-			celerity::accessor om_rho_acc{gdata.omSYCL_out[0], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
-			celerity::accessor om_sx_acc{gdata.omSYCL_out[1], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
-			celerity::accessor om_sy_acc{gdata.omSYCL_out[2], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
-			celerity::accessor om_sz_acc{gdata.omSYCL_out[3], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
-			celerity::accessor om_Eges_acc{gdata.omSYCL_out[4], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
+		
+		queue.submit([=, &gdata](celerity::handler& cgh) {
+			celerity::accessor om_rho_acc{omSYCL_out[0], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
+			celerity::accessor om_sx_acc{omSYCL_out[1], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
+			celerity::accessor om_sy_acc{omSYCL_out[2], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
+			celerity::accessor om_sz_acc{omSYCL_out[3], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
+			celerity::accessor om_Eges_acc{omSYCL_out[4], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
 			cgh.host_task(celerity::experimental::collective, [=, &gdata](celerity::experimental::collective_partition part) {
 
 				auto comm = part.get_collective_mpi_comm();
@@ -783,19 +789,19 @@ if (!isfloat) {
 			});
 		});
 
-	} else {
+	} else {auto omSYCL_ptr = &(gdata.omSYCL);
 		for (int q = 0; q < gdata.omSYCL.size(); q++) {
-			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-				celerity::accessor omSYCL_out_flt_acc{gdata.omSYCL_out_flt[q], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+			queue.submit([&](celerity::handler& cgh) {
+				celerity::accessor omSYCL_out_flt_acc{omSYCL_out_flt[q], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
 				celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{6,6,6}, celerity::read_only};
-				cgh.parallel_for<class BufferInitializationKernel>(gdata.omSYCL_out_flt[q].get_range(), [=](celerity::item<3> item) {
+				cgh.parallel_for<class BufferInitializationKernel>(omSYCL_out_flt[q].get_range(), [=](celerity::item<3> item) {
 					omSYCL_out_flt_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = (q < 0) ? 0. : static_cast<float>(omSYCL_acc[item.get_id(0) + 3][item.get_id(1) + 3][item.get_id(2) + 3]);
 				});
 			});
 		}
 cout << "debug-1"<<endl;
 
-		// queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+		// queue.submit([=, &gdata](celerity::handler& cgh) {
 		// 	celerity::accessor om_rho_acc{gdata.omSYCL_out_flt[0], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
 		// 	celerity::accessor om_sx_acc{gdata.omSYCL_out_flt[1], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
 		// 	celerity::accessor om_sy_acc{gdata.omSYCL_out_flt[2], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
@@ -821,12 +827,12 @@ cout << "debug-1"<<endl;
 		// 	});
 		// });
 
-		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-			celerity::accessor om_rho_acc{gdata.omSYCL_out_flt[0], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
-			celerity::accessor om_sx_acc{gdata.omSYCL_out_flt[1], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
-			celerity::accessor om_sy_acc{gdata.omSYCL_out_flt[2], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
-			celerity::accessor om_sz_acc{gdata.omSYCL_out_flt[3], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
-			celerity::accessor om_Eges_acc{gdata.omSYCL_out_flt[4], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
+		queue.submit([&](celerity::handler& cgh) {
+			celerity::accessor om_rho_acc{omSYCL_out_flt[0], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
+			celerity::accessor om_sx_acc{omSYCL_out_flt[1], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
+			celerity::accessor om_sy_acc{omSYCL_out_flt[2], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
+			celerity::accessor om_sz_acc{omSYCL_out_flt[3], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
+			celerity::accessor om_Eges_acc{omSYCL_out_flt[4], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
 			cgh.host_task(celerity::experimental::collective, [=, &gdata](celerity::experimental::collective_partition part) {
 cout << "debug0"<<endl;
 				auto comm = part.get_collective_mpi_comm();cout << "debug1"<<endl;

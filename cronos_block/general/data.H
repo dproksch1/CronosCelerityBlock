@@ -95,8 +95,8 @@ public:
 	NumMatrix<double,3> *nom_user;
 
 	//output buffer
-	std::vector<CelerityBuffer<double, 3>> omSYCL_out;
-	std::vector<CelerityBuffer<float, 3>> omSYCL_out_flt;
+	// std::vector<CelerityBuffer<double, 3>> omSYCL_out;
+	// std::vector<CelerityBuffer<float, 3>> omSYCL_out_flt;
 
 #if (GEOM == SPHERICAL)
 	NumMatrix<double,1> massFlux;
