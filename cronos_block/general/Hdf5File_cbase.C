@@ -68,9 +68,7 @@ Hdf5Stream::Hdf5Stream(std::string filename, int NumEntries, int rank, bool use_
     plist_file_id = H5P_DEFAULT;
     plist_dset_id = H5P_DEFAULT;
   
-
     hdf5file = H5Fcreate(filename.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, plist_file_id);
-
     group = H5Gcreate2(hdf5file, "/Data", H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 
     // Create dataspace
@@ -116,7 +114,7 @@ Hdf5Stream::Hdf5Stream(std::string filename, int NumEntries, int rank, bool use_
     AddGlobalAttr("APP_GIT_VERSION", ApplicationGitVersion(), version_group);
     AddGlobalAttr("APP_GIT_COMMIT", ApplicationGitCommit(), version_group);
     AddGlobalAttr("BUILD_DATE", BuildDate(), version_group);
-printf("close stream_init\n");
+
     CloseGroup(version_group);
   }
 }
@@ -143,7 +141,7 @@ void Hdf5Stream::Initialize(MPI_Comm comm) {
 
   // Create dataspace
   hid_t info_id = H5Screate(H5S_SCALAR);
-  //
+
   //	// Create Attribute
   //	hid_t info = H5Acreate2(group, "Entries", H5T_NATIVE_INT, info_id,
   //	                        H5P_DEFAULT, H5P_DEFAULT);
@@ -511,7 +509,7 @@ bool Hdf5Stream::WriteNumArray_withMPI_IO(const std::string &ArrayName, const Nu
 
   num += 1;
 
-  int DIM = 1;
+  int dim = 1;
 
   // Choose float, little endian of size 1
   hid_t datatype = get_hdf5_data_type<T>();
@@ -519,14 +517,14 @@ bool Hdf5Stream::WriteNumArray_withMPI_IO(const std::string &ArrayName, const Nu
 
   // Create dataspace
   hsize_t DimsData = mx;
-  hid_t dataspace = H5Screate_simple(DIM, &DimsData, NULL);
+  hid_t dataspace = H5Screate_simple(dim, &DimsData, NULL);
 
   // Create dataset
   hid_t dataset = H5Dcreate(group, ArrayName.c_str(), datatype, dataspace, H5P_DEFAULT, H5P_DEFAULT,
                             H5P_DEFAULT);
   H5Sclose(dataspace);
 
-  hid_t memspace = H5Screate_simple(DIM, &DimsData, NULL);
+  hid_t memspace = H5Screate_simple(dim, &DimsData, NULL);
   if (!with_data) {
     H5Sselect_none(memspace);
   }
@@ -566,7 +564,7 @@ bool Hdf5Stream::WriteNumArray_withMPI_IO2(const std::string &ArrayName, const N
 
   num += 1;
 
-  int DIM = 1;
+  int dim = 1;
 
   // Choose float, little endian of size 1
   hid_t datatype = get_hdf5_data_type<T>();
@@ -574,9 +572,9 @@ bool Hdf5Stream::WriteNumArray_withMPI_IO2(const std::string &ArrayName, const N
 
   // Create dataspace
   hsize_t DimsData = mx;
-  hid_t dataspace = H5Screate_simple(DIM, &DimsData, NULL);
+  hid_t dataspace = H5Screate_simple(dim, &DimsData, NULL);
 
-  hid_t memspace = H5Screate_simple(DIM, &DimsData, NULL);
+  hid_t memspace = H5Screate_simple(dim, &DimsData, NULL);
   if (!with_data) {
     H5Sselect_none(memspace);
   }
@@ -703,7 +701,7 @@ bool Hdf5iStream::ReadDatasetGrid(std::string DataSetName, NumArray<float> &xPos
   return true;
 }
 
-void Hdf5iStream::getSize(std::string GroupName, const std::string &ArrayName, int Nx[], int DIM) {
+void Hdf5iStream::getSize(std::string GroupName, const std::string &ArrayName, int Nx[], int dim) {
   // Open group
   hid_t loc_group = H5Gopen2(hdf5file, GroupName.c_str(), H5P_DEFAULT);
 
@@ -712,16 +710,16 @@ void Hdf5iStream::getSize(std::string GroupName, const std::string &ArrayName, i
   hid_t dataspace = H5Dget_space(dataset);
 
   int dimhdf = H5Sget_simple_extent_ndims(dataspace);
-  if (dimhdf != DIM) {
+  if (dimhdf != dim) {
     cerr << " Wrong dimensionality of input data: " << endl;
-    cerr << dimhdf << " " << DIM << endl;
+    cerr << dimhdf << " " << dim << endl;
     exit(-2);
   }
 
-  std::vector<hsize_t> dims_out(DIM);
+  std::vector<hsize_t> dims_out(dim);
   H5Sget_simple_extent_dims(dataspace, dims_out.data(), NULL);
-  for (int i = 0; i < DIM; ++i) {
-    Nx[DIM - i - 1] = dims_out[i];
+  for (int i = 0; i < dim; ++i) {
+    Nx[dim - i - 1] = dims_out[i];
   }
   H5Dclose(dataset);
 
@@ -729,22 +727,22 @@ void Hdf5iStream::getSize(std::string GroupName, const std::string &ArrayName, i
   H5Gclose(loc_group);
 }
 
-void Hdf5iStream::getSize(const std::string &ArrayName, int mx[], int DIM) {
+void Hdf5iStream::getSize(const std::string &ArrayName, int mx[], int dim) {
   hid_t dataset = H5Dopen2(group, ArrayName.c_str(), H5P_DEFAULT);
   // Get dataspace handler
   hid_t dataspace = H5Dget_space(dataset);
 
   int dimhdf = H5Sget_simple_extent_ndims(dataspace);
-  if (dimhdf != DIM) {
+  if (dimhdf != dim) {
     cerr << " Wrong dimensionality of input data: " << endl;
-    cerr << dimhdf << " " << DIM << endl;
+    cerr << dimhdf << " " << dim << endl;
     exit(-2);
   }
 
-  std::vector<hsize_t> dims_out(DIM);
+  std::vector<hsize_t> dims_out(dim);
   H5Sget_simple_extent_dims(dataspace, dims_out.data(), NULL);
-  for (int i = 0; i < DIM; ++i) {
-    mx[DIM - i - 1] = dims_out[i];
+  for (int i = 0; i < dim; ++i) {
+    mx[dim - i - 1] = dims_out[i];
   }
   H5Dclose(dataset);
 }
@@ -795,16 +793,16 @@ bool Hdf5Stream::Write3DMatrix_withMPI_IO(const std::string &ArrayName, const Nu
   AddDatasetName(ArrayName, my_group);
   num += 1;
 
-  int DIM = 3;
+  int dim = 3;
   hid_t datatype = get_hdf5_data_type<T>();
   H5Tset_order(datatype, H5T_ORDER_LE);
 
-  hsize_t DimsData[DIM];
+  hsize_t DimsData[dim];
   DimsData[0] = mx_global[2] + 1 + 2 * rim;
   DimsData[1] = mx_global[1] + 1 + 2 * rim;
   DimsData[2] = mx_global[0] + 1 + 2 * rim;
 
-  hid_t dataspace = H5Screate_simple(DIM, DimsData, NULL);
+  hid_t dataspace = H5Screate_simple(dim, DimsData, NULL);
 
   // Supplying additional attributes for opendx input
 
@@ -855,12 +853,12 @@ bool Hdf5Stream::Write3DMatrix_withMPI_IO(const std::string &ArrayName, const Nu
   }
 
   // Now make distinguis local from global data via hyperslabs:
-  hsize_t sizeLocal[DIM];
+  hsize_t sizeLocal[dim];
   sizeLocal[0] = mx_local[2] + 1 + 2 * rim;
   sizeLocal[1] = mx_local[1] + 1 + 2 * rim;
   sizeLocal[2] = mx_local[0] + 1 + 2 * rim;
 
-  hsize_t offset[DIM];
+  hsize_t offset[dim];
   // offset[0] = rank_pos[2]*rank_shift[2];
   // offset[1] = rank_pos[1]*rank_shift[1];
   // offset[2] = rank_pos[0]*rank_shift[0];
@@ -868,7 +866,7 @@ bool Hdf5Stream::Write3DMatrix_withMPI_IO(const std::string &ArrayName, const Nu
   offset[1] = rank_shift[1];
   offset[2] = rank_shift[0];
 
-  hid_t dataspaceLocal = H5Screate_simple(DIM, sizeLocal, NULL);
+  hid_t dataspaceLocal = H5Screate_simple(dim, sizeLocal, NULL);
 
   // Select local data as hyperslab in dataset
   H5Sselect_hyperslab(dataspace, H5S_SELECT_SET, offset, NULL, sizeLocal, NULL);
@@ -930,15 +928,15 @@ bool Hdf5Stream::Write2DMatrix_withMPI_IO(const std::string &ArrayName, const Nu
   AddDatasetName(ArrayName, my_group);
   num += 1;
 
-  int DIM = 2;
+  int dim = 2;
   hid_t datatype = get_hdf5_data_type<T>();
   H5Tset_order(datatype, H5T_ORDER_LE);
 
-  hsize_t DimsData[DIM];
+  hsize_t DimsData[dim];
   DimsData[0] = mx_global[1] + 1 + 2 * rim;
   DimsData[1] = mx_global[0] + 1 + 2 * rim;
 
-  hid_t dataspace = H5Screate_simple(DIM, DimsData, NULL);
+  hid_t dataspace = H5Screate_simple(dim, DimsData, NULL);
 
   // Supplying additional attributes for opendx input
 
@@ -978,15 +976,15 @@ bool Hdf5Stream::Write2DMatrix_withMPI_IO(const std::string &ArrayName, const Nu
   }
 
   // Now make distinguis local from global data via hyperslabs:
-  hsize_t sizeLocal[DIM];
+  hsize_t sizeLocal[dim];
   sizeLocal[0] = mx_local[1] + 1 + 2 * rim;
   sizeLocal[1] = mx_local[0] + 1 + 2 * rim;
 
-  hsize_t offset[DIM];
+  hsize_t offset[dim];
   offset[0] = rank_shift[1];
   offset[1] = rank_shift[0];
 
-  hid_t dataspaceLocal = H5Screate_simple(DIM, sizeLocal, NULL);
+  hid_t dataspaceLocal = H5Screate_simple(dim, sizeLocal, NULL);
 
   // Select local data as hyperslab in dataset
   H5Sselect_hyperslab(dataspace, H5S_SELECT_SET, offset, NULL, sizeLocal, NULL);
@@ -1023,7 +1021,7 @@ bool Hdf5Stream::Write2DMatrix_withMPI_IO(const std::string &ArrayName, const Nu
 //
 //	*/
 //
-//	int DIM = 3;
+//	int dim = 3;
 //	int lbound[3], ubound[3];
 //
 //	hid_t dataset = H5Dopen2(group, ArrayName.c_str(), H5P_DEFAULT);
@@ -1032,22 +1030,22 @@ bool Hdf5Stream::Write2DMatrix_withMPI_IO(const std::string &ArrayName, const Nu
 //	hid_t dataspace = H5Dget_space(dataset);
 //
 //	int  dimhdf = H5Sget_simple_extent_ndims(dataspace);
-//	if(dimhdf != DIM){
+//	if(dimhdf != dim){
 //		cerr << " Wrong dimensionality of input data: " << endl;
-//		cerr << dimhdf << " " << DIM << endl;
+//		cerr << dimhdf << " " << dim << endl;
 //		exit(-2);
 //	}
-//	hsize_t dims_out[DIM];
+//	hsize_t dims_out[dim];
 //	int ndims = H5Sget_simple_extent_dims(dataspace, dims_out, NULL);
 //
-//	if(ndims != DIM) {
-//		cerr << " Wrong number of dimensions " << ndims << " - " << DIM << endl;
+//	if(ndims != dim) {
+//		cerr << " Wrong number of dimensions " << ndims << " - " << dim << endl;
 //		exit(-22);
 //	}
 //
 //	for(int i=0;i<3;i++){
 //		lbound[i]=0;
-//		ubound[i]=int(dims_out[DIM-(i+1)])-1;
+//		ubound[i]=int(dims_out[dim-(i+1)])-1;
 //	}
 //	data.resize(lbound,ubound);
 //
@@ -1304,7 +1302,7 @@ bool Hdf5Stream::Write1DMatrix(const std::string &ArrayName, const NumMatrix<T, 
 
   num += 1;
 
-  int DIM = 1;
+  int dim = 1;
 
   // Choose double, little endian of size 1
   hid_t datatype = get_hdf5_data_type<T>();
@@ -1312,7 +1310,7 @@ bool Hdf5Stream::Write1DMatrix(const std::string &ArrayName, const NumMatrix<T, 
 
   // Create dataspace
   hsize_t DimsData = mx;
-  hid_t dataspace = H5Screate_simple(DIM, &DimsData, NULL);
+  hid_t dataspace = H5Screate_simple(dim, &DimsData, NULL);
 
   // Supplying additional attributes for opendx input
 
@@ -1371,7 +1369,7 @@ bool Hdf5Stream::Write1DMatrix(const std::string &ArrayName, const NumMatrix<T, 
 
   num += 1;
 
-  int DIM = 1;
+  int dim = 1;
 
   // Choose float, little endian of size 1
   hid_t datatype = get_hdf5_data_type<T>();
@@ -1379,7 +1377,7 @@ bool Hdf5Stream::Write1DMatrix(const std::string &ArrayName, const NumMatrix<T, 
 
   // Create dataspace
   hsize_t DimsData = mx;
-  hid_t dataspace = H5Screate_simple(DIM, &DimsData, NULL);
+  hid_t dataspace = H5Screate_simple(dim, &DimsData, NULL);
 
   // Create dataset
   hid_t dataset = H5Dcreate2(my_group, ArrayName.c_str(), datatype, dataspace, H5P_DEFAULT,
@@ -1419,7 +1417,7 @@ bool Hdf5Stream::WriteNumArray(const std::string &ArrayName, const NumArray<T> &
 
   num += 1;
 
-  int DIM = 1;
+  int dim = 1;
 
   // Choose float, little endian of size 1
   hid_t datatype = get_hdf5_data_type<T>();
@@ -1427,7 +1425,7 @@ bool Hdf5Stream::WriteNumArray(const std::string &ArrayName, const NumArray<T> &
 
   // Create dataspace
   hsize_t DimsData = mx;
-  hid_t dataspace = H5Screate_simple(DIM, &DimsData, NULL);
+  hid_t dataspace = H5Screate_simple(dim, &DimsData, NULL);
 
   // Create dataset
   hid_t dataset = H5Dcreate2(my_group, ArrayName.c_str(), datatype, dataspace, H5P_DEFAULT,
@@ -1478,16 +1476,16 @@ bool Hdf5Stream::Write3DMatrix(const std::string &ArrayName, const NumMatrix<T, 
   AddDatasetName(ArrayName);
   num += 1;
 
-  const int DIM = 3;
+  const int dim = 3;
   // Choose double, little endian of size 1
   hid_t datatype = get_hdf5_data_type<T>();
   H5Tset_order(datatype, H5T_ORDER_LE);
 
-  hsize_t DimsData[DIM];
-  for (int q = 0; q < DIM; ++q) {
+  hsize_t DimsData[dim];
+  for (int q = 0; q < dim; ++q) {
     DimsData[q] = mx[q];
   }
-  hid_t dataspace = H5Screate_simple(DIM, DimsData, NULL);
+  hid_t dataspace = H5Screate_simple(dim, DimsData, NULL);
   // Supplying additional attributes for opendx input
   // Datatype: double, little endian of size 1
   hid_t datatypefloat = get_hdf5_data_type<double>();
@@ -1606,7 +1604,7 @@ bool Hdf5Stream::Write3DVecMatrix(const std::string &ArrayName, const NumMatrix<
 
   num += 1;
 
-  const int DIM = 3;
+  const int dim = 3;
 
   /*
 * Define array datatype for the data in the file.
@@ -1628,11 +1626,11 @@ bool Hdf5Stream::Write3DVecMatrix(const std::string &ArrayName, const NumMatrix<
   // FloatType datatype( PredType::NATIVE_DOUBLE );
   // datatype.setOrder( H5T_ORDER_LE );
 
-  hsize_t DimsData[DIM];
-  for (int q = 0; q < DIM; ++q) {
+  hsize_t DimsData[dim];
+  for (int q = 0; q < dim; ++q) {
     DimsData[q] = mx[q];
   }
-  hid_t dataspace = H5Screate_simple(DIM, DimsData, NULL);
+  hid_t dataspace = H5Screate_simple(dim, DimsData, NULL);
 
   //float data[mx[0]][mx[1]][mx[2]][3];
   std::vector<std::vector<std::vector<std::vector<float>>>> data(mx[0]);
@@ -1699,18 +1697,18 @@ bool Hdf5Stream::Write2DMatrix(const std::string &ArrayName, const NumMatrix<T, 
 
   num += 1;
 
-  const int DIM = 2;
+  const int dim = 2;
   // Set datatype to float
   hid_t datatype = get_hdf5_data_type<T>();
   // Use little endian
   H5Tset_order(datatype, H5T_ORDER_LE);
 
-  hsize_t DimsData[DIM];
-  for (int q = 0; q < DIM; ++q) {
+  hsize_t DimsData[dim];
+  for (int q = 0; q < dim; ++q) {
     DimsData[q] = mx[q];
   }
   // Make dataspace:
-  hid_t dataspace = H5Screate_simple(DIM, DimsData, NULL);
+  hid_t dataspace = H5Screate_simple(dim, DimsData, NULL);
 
   // Create dataset
   hid_t dataset = H5Dcreate2(group, ArrayName.c_str(), datatype, dataspace, H5P_DEFAULT,
@@ -1723,9 +1721,9 @@ bool Hdf5Stream::Write2DMatrix(const std::string &ArrayName, const NumMatrix<T, 
     hid_t attrspace = H5Screate_simple(1, &DimsAttr, NULL);
     hid_t datatypeAttr = get_hdf5_data_type<double>();
 
-    double Origin[DIM];
-    double Delta[DIM];
-    for (int q = 0; q < DIM; ++q) {
+    double Origin[dim];
+    double Delta[dim];
+    for (int q = 0; q < dim; ++q) {
       Origin[q] = xb[q];
       Delta[q] = dx[q];
     }
@@ -1788,12 +1786,12 @@ bool Hdf5Stream::Write3DMatrixSwap(const std::string &ArrayName, const NumMatrix
   }
   hid_t datatype = get_hdf5_data_type<T>();
   H5Tset_order(datatype, H5T_ORDER_LE);
-  const int DIM = 3;
-  hsize_t DimsData[DIM];
-  for (int q = 0; q < DIM; ++q) {
+  const int dim = 3;
+  hsize_t DimsData[dim];
+  for (int q = 0; q < dim; ++q) {
     DimsData[q] = mx[q];
   }
-  hid_t dataspace = H5Screate_simple(DIM, DimsData, NULL);
+  hid_t dataspace = H5Screate_simple(dim, DimsData, NULL);
 
   // Supplying additional attributes for opendx input
   // Datatype: double, little endian of size 1
@@ -1924,7 +1922,7 @@ bool Hdf5iStream::Read1DMatrix(std::string GroupName, const std::string &ArrayNa
     loc_group = group;
   }
 
-  const int DIM = 1;
+  const int dim = 1;
   int lbound[1], ubound[1];
 
   hid_t dataset = H5Dopen2(loc_group, ArrayName.c_str(), H5P_DEFAULT);
@@ -1933,16 +1931,16 @@ bool Hdf5iStream::Read1DMatrix(std::string GroupName, const std::string &ArrayNa
   hid_t dataspace = H5Dget_space(dataset);
 
   int dimhdf = H5Sget_simple_extent_ndims(dataspace);
-  if (dimhdf != DIM) {
+  if (dimhdf != dim) {
     cerr << " Wrong dimensionality of input data: " << endl;
-    cerr << dimhdf << " " << DIM << endl;
+    cerr << dimhdf << " " << dim << endl;
     exit(-2);
   }
-  hsize_t dims_out[DIM];
+  hsize_t dims_out[dim];
   int ndims = H5Sget_simple_extent_dims(dataspace, dims_out, NULL);
 
-  if (ndims != DIM) {
-    cerr << " Wrong number of dimensions " << ndims << " - " << DIM << endl;
+  if (ndims != dim) {
+    cerr << " Wrong number of dimensions " << ndims << " - " << dim << endl;
     exit(-22);
   }
 
@@ -1966,7 +1964,7 @@ bool Hdf5iStream::Read1DMatrix(std::string GroupName, const std::string &ArrayNa
 
 template <typename T, typename>
 bool Hdf5iStream::Read2DMatrix(const std::string &ArrayName, NumMatrix<T, 2> &data) {
-  const int DIM = 2;
+  const int dim = 2;
   int lbound[2], ubound[2];
 
   hid_t dataset = H5Dopen2(group, ArrayName.c_str(), H5P_DEFAULT);
@@ -1975,22 +1973,22 @@ bool Hdf5iStream::Read2DMatrix(const std::string &ArrayName, NumMatrix<T, 2> &da
   hid_t dataspace = H5Dget_space(dataset);
 
   int dimhdf = H5Sget_simple_extent_ndims(dataspace);
-  if (dimhdf != DIM) {
+  if (dimhdf != dim) {
     cerr << " Wrong dimensionality of input data: " << endl;
-    cerr << dimhdf << " " << DIM << endl;
+    cerr << dimhdf << " " << dim << endl;
     exit(-2);
   }
-  hsize_t dims_out[DIM];
+  hsize_t dims_out[dim];
   int ndims = H5Sget_simple_extent_dims(dataspace, dims_out, NULL);
 
-  if (ndims != DIM) {
-    cerr << " Wrong number of dimensions " << ndims << " - " << DIM << endl;
+  if (ndims != dim) {
+    cerr << " Wrong number of dimensions " << ndims << " - " << dim << endl;
     exit(-22);
   }
 
   for (int i = 0; i < 2; i++) {
     lbound[i] = 0;
-    ubound[i] = int(dims_out[DIM - (i + 1)]) - 1;
+    ubound[i] = int(dims_out[dim - (i + 1)]) - 1;
   }
   data.resize(lbound, ubound);
   // cout << ubound[0] << "	" << ubound[1] << endl;
@@ -2026,7 +2024,7 @@ int Hdf5iStream::Read3DMatrix(std::string GroupName, const std::string &ArrayNam
     loc_group = group;
   }
 
-  const int DIM = 3;
+  const int dim = 3;
   int mx[3];
   if (!load_size) {
     mx[0] = data.getHigh(2) - data.getLow(2) + 1;
@@ -2040,16 +2038,16 @@ int Hdf5iStream::Read3DMatrix(std::string GroupName, const std::string &ArrayNam
   hid_t dataspace = H5Dget_space(dataset); /* dataspace handle */
 
   int dimhdf = H5Sget_simple_extent_ndims(dataspace);
-  if (dimhdf != DIM) {
+  if (dimhdf != dim) {
     cerr << " Wrong dimensionality of input data: " << endl;
-    cerr << dimhdf << " " << DIM << endl;
+    cerr << dimhdf << " " << dim << endl;
     exit(-2);
   }
-  hsize_t dims_out[DIM];
+  hsize_t dims_out[dim];
   // Get dims
   int ndims = H5Sget_simple_extent_dims(dataspace, dims_out, NULL);
-  if (ndims != DIM) {
-    cerr << " Wrong number of dimensions " << ndims << " - " << DIM << endl;
+  if (ndims != dim) {
+    cerr << " Wrong number of dimensions " << ndims << " - " << dim << endl;
     exit(-22);
   }
 
@@ -2059,11 +2057,11 @@ int Hdf5iStream::Read3DMatrix(std::string GroupName, const std::string &ArrayNam
     int lbound[3], ubound[3];
     for (int i = 0; i < 3; i++) {
       lbound[i] = 0;
-      ubound[i] = int(dims_out[DIM - (i + 1)]) - 1;
+      ubound[i] = int(dims_out[dim - (i + 1)]) - 1;
     }
     data.resize(lbound, ubound);
   } else {
-    for (int i = 0; i < DIM; ++i) {
+    for (int i = 0; i < dim; ++i) {
       if ((int(dims_out[i])) != mx[i]) {
         cerr << " Wrong size of dimension " << i << ":" << endl;
         cerr << int(dims_out[i]) << " " << mx[i] << endl;
@@ -2111,16 +2109,16 @@ bool Hdf5iStream::Read2DFrom3DMatrix(std::string GroupName, const std::string &A
   hid_t dataset = H5Dopen2(loc_group, ArrayName.c_str(), H5P_DEFAULT);
 
   // Get dimensions of dataset:
-  const int DIM = 3;
+  const int dim = 3;
 
   hid_t dataspace = H5Dget_space(dataset);
   int dimhdf = H5Sget_simple_extent_ndims(dataspace);
-  if (dimhdf != DIM) {
+  if (dimhdf != dim) {
     cerr << " Wrong dimensionality of input data: " << endl;
-    cerr << dimhdf << " " << DIM << endl;
+    cerr << dimhdf << " " << dim << endl;
     exit(-2);
   }
-  hsize_t dims_out[DIM];
+  hsize_t dims_out[dim];
   int ndims = H5Sget_simple_extent_dims(dataspace, dims_out, NULL);
 
   // Beware - dimensions are swapped
@@ -2221,13 +2219,13 @@ T Hdf5iStream::ReadPointFrom3DMatrix(const std::string &ArrayName, int ix, int i
   hid_t dataset = H5Dopen2(group, ArrayName.c_str(), H5P_DEFAULT);
 
   // Get dimensions of dataset:
-  const int DIM = 3;
+  const int dim = 3;
 
   hid_t dataspace = H5Dget_space(dataset);
   int dimhdf = H5Sget_simple_extent_ndims(dataspace);
-  if (dimhdf != DIM) {
+  if (dimhdf != dim) {
     cerr << " Wrong dimensionality of input data: " << endl;
-    cerr << dimhdf << " " << DIM << endl;
+    cerr << dimhdf << " " << dim << endl;
     exit(-2);
   }
 
@@ -2238,11 +2236,11 @@ T Hdf5iStream::ReadPointFrom3DMatrix(const std::string &ArrayName, int ix, int i
 
   const int numPoints = 1;
   // Set coordinates of a point
-  // hssize_t coord[numPoints][DIM];
+  // hssize_t coord[numPoints][dim];
   // coord[0][0] = iz;
   // coord[0][1] = iy;
   // coord[0][2] = ix;
-  hsize_t coord[DIM];  // = {iz, iy, ix};
+  hsize_t coord[dim];  // = {iz, iy, ix};
   coord[0] = iz;
   coord[1] = iy;
   coord[2] = ix;
@@ -2279,7 +2277,7 @@ bool Hdf5iStream::Read3DMatrix(std::string GroupName, const std::string &ArrayNa
      dx        -> Array to hold grid size
   */
 
-  const int DIM = 3;
+  const int dim = 3;
   int lbound[3], ubound[3];
   float dummy[3];
 
@@ -2307,17 +2305,17 @@ bool Hdf5iStream::Read3DMatrix(std::string GroupName, const std::string &ArrayNa
   hid_t dataspace = H5Dget_space(dataset);
 
   int dimhdf = H5Sget_simple_extent_ndims(dataspace);
-  if (dimhdf != DIM) {
+  if (dimhdf != dim) {
     cerr << " Wrong dimensionality of input data: " << endl;
-    cerr << dimhdf << " " << DIM << endl;
+    cerr << dimhdf << " " << dim << endl;
     exit(-2);
   }
-  hsize_t dims_out[DIM];
+  hsize_t dims_out[dim];
   H5Sget_simple_extent_dims(dataspace, dims_out, NULL);
 
   for (int i = 0; i < 3; i++) {
     lbound[i] = 0;
-    ubound[i] = int(dims_out[DIM - (i + 1)]) - 1;
+    ubound[i] = int(dims_out[dim - (i + 1)]) - 1;
   }
   data.resize(lbound, ubound);
 
@@ -2384,7 +2382,7 @@ int Hdf5iStream::Read3DMatrix_parallel(std::string GroupName, const std::string 
     rim = -data.getLow(0);
   }
 
-  const int DIM = 3;
+  const int dim = 3;
   int mx[3];
   mx[0] = data.getHigh(2) - data.getLow(2) - 2 * rim;
   mx[1] = data.getHigh(1) - data.getLow(1) - 2 * rim;
@@ -2398,20 +2396,20 @@ int Hdf5iStream::Read3DMatrix_parallel(std::string GroupName, const std::string 
   cout << " Trying to read " << ArrayName << endl;
 
   int dimhdf = H5Sget_simple_extent_ndims(dataspace_id);
-  if (dimhdf != DIM) {
+  if (dimhdf != dim) {
     cerr << " Wrong dimensionality of input data: " << endl;
-    cerr << dimhdf << " " << DIM << endl;
+    cerr << dimhdf << " " << dim << endl;
     exit(-2);
   }
-  hsize_t dims_out[DIM];
+  hsize_t dims_out[dim];
   // Get dims
   int ndims = H5Sget_simple_extent_dims(dataspace_id, dims_out, NULL);
-  if (ndims != DIM) {
-    cerr << " Wrong number of dimensions " << ndims << " - " << DIM << endl;
+  if (ndims != dim) {
+    cerr << " Wrong number of dimensions " << ndims << " - " << dim << endl;
     exit(-22);
   }
   // Here, we only have to check that sufficient data is available
-  for (int i = 0; i < DIM; ++i) {
+  for (int i = 0; i < dim; ++i) {
     if (mx[i] > (int(dims_out[i]))) {
       cerr << " Wrong size of dimension " << i << ":" << endl;
       cerr << int(dims_out[i]) << " " << mx[i] << endl;
@@ -2419,8 +2417,8 @@ int Hdf5iStream::Read3DMatrix_parallel(std::string GroupName, const std::string 
   }
 
   // Check if mx_local is compatible with mx
-  for (int dir = 0; dir < DIM; ++dir) {
-    if (mx[DIM - dir - 1] != mx_local[dir]) {
+  for (int dir = 0; dir < dim; ++dir) {
+    if (mx[dim - dir - 1] != mx_local[dir]) {
       cerr << " Wrong size of dimension " << dir << ":" << endl;
       cerr << int(dims_out[dir]) << " " << mx[dir] << endl;
       exit(3);
@@ -2428,11 +2426,11 @@ int Hdf5iStream::Read3DMatrix_parallel(std::string GroupName, const std::string 
   }
 
   // Compute shift of local dataset w.r.t. data in file
-  hsize_t offset[DIM];
-  hsize_t count_local[DIM];
-  for (int i_dir = 0; i_dir < DIM; ++i_dir) {
-    offset[i_dir] = rank_shift(DIM - i_dir - 1);
-    count_local[i_dir] = mx_local(DIM - i_dir - 1) + 1 + 2 * rim;
+  hsize_t offset[dim];
+  hsize_t count_local[dim];
+  for (int i_dir = 0; i_dir < dim; ++i_dir) {
+    offset[i_dir] = rank_shift(dim - i_dir - 1);
+    count_local[i_dir] = mx_local(dim - i_dir - 1) + 1 + 2 * rim;
   }
 
   // Create local dataspace
@@ -2503,7 +2501,7 @@ bool Hdf5iStream::Read3DMatrix_withMPI_IO(const std::string &ArrayName, NumMatri
 
   */
 
-  int DIM = 3;
+  int dim = 3;
   float dummy[3];
 
   // Determine rim of data
@@ -2526,17 +2524,17 @@ bool Hdf5iStream::Read3DMatrix_withMPI_IO(const std::string &ArrayName, NumMatri
   hid_t dataspace = H5Dget_space(dataset);
 
   // Now make distinguis local from global data via hyperslabs:
-  hsize_t sizeLocal[DIM];
+  hsize_t sizeLocal[dim];
   sizeLocal[0] = mx_local[2] + 1 + 2 * rim;
   sizeLocal[1] = mx_local[1] + 1 + 2 * rim;
   sizeLocal[2] = mx_local[0] + 1 + 2 * rim;
 
-  hsize_t offset[DIM];
+  hsize_t offset[dim];
   offset[0] = rank_shift[2];
   offset[1] = rank_shift[1];
   offset[2] = rank_shift[0];
 
-  hid_t dataspaceLocal = H5Screate_simple(DIM, sizeLocal, NULL);
+  hid_t dataspaceLocal = H5Screate_simple(dim, sizeLocal, NULL);
 
   // Select local data as hyperslab in dataset
   H5Sselect_hyperslab(dataspace, H5S_SELECT_SET, offset, NULL, sizeLocal, NULL);

@@ -23,12 +23,6 @@
 #include "queue.H"
 #endif
 
-#ifdef CUDA_PROFILING 
-	#if(CUDA_PROFILING == TRUE)
-		#include <cuda_profiler_api.h>
-	#endif
-#endif
-
 using namespace std;
 
 double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,

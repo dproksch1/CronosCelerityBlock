@@ -38,11 +38,22 @@ void TimeIntegrator::set_IntRange(int ibeg[], int iend[])
 	}
 }
 
-void TimeIntegrator::init_omBuffer(const int mx[])
+void TimeIntegrator::init_omBuffer(Queue &queue, const int mx[])
 {
 	for (int i = 0; i < 5; i++) {
-		omSYCL_save.push_back(CelerityBuffer<double, 3>(Range<3>(mx[0]+6 +1, mx[1]+6+1, mx[2]+6+1)));
+		omSYCL_save.push_back(CelerityBuffer<double, 3>(CelerityRange<3>(mx[0]+6 +1, mx[1]+6+1, mx[2]+6+1)));
 	}
+
+	// auto save_range = omSYCL_save[0].get_range();
+
+	// for (int i = 0; i < 5; i++) {
+	// 	queue.submit([=](celerity::handler& cgh) {
+	// 		celerity::accessor omSYCL_save_acc{this->omSYCL_save[i], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+	// 		cgh.parallel_for<class BufferInitializationKernel>(save_range, [=](celerity::item<3> item) {
+	// 			omSYCL_save_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0.0;
+	// 		});
+	// 	});
+	// }
 }
 
 

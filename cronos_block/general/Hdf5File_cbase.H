@@ -9,6 +9,7 @@
 #include "hdf5.h"
 #include "matrix.H"
 #include "queue.H"
+#include "constants.H"
 
 // template<typename T> hid_t get_hdf5_data_type();
 
@@ -25,9 +26,11 @@ using DisableIf = EnableIf<::negation<Condition>>;
 // Do not deduce from templates for pointers
 #define template_noPointer template <typename T, typename = DisableIf<std::is_pointer<T>>>
 
-// Here the user can choose if a parallel IO to a single hdf5 file is
-// desired:
-#define HDF_PARALLEL_IO CRONOS_ON
+#if (CRONOS_DISTR_OUTPUT == CRONOS_ON)
+	#define HDF_PARALLEL_IO CRONOS_ON
+#else
+	#define HDF_PARALLEL_IO CRONOS_OFF
+#endif
 
 class Hdf5Stream {
  public:

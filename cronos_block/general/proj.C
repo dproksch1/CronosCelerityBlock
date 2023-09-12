@@ -82,14 +82,14 @@ int main(int argc, char* argv[])
 	if (RESTART) {
 		solver.LoadData(gdata);
 		try {
-			solver.RKSolver->restart(gdata, *solver.gfunc, *solver.Problem);
+			solver.RKSolver->restart(queue, gdata, *solver.gfunc, *solver.Problem);
 		} catch (CException exep) {
 			solver.Abort(gdata, exep);
 		}
 	} else {
 		gdata.time = 0.;
 		try {
-			solver.RKSolver->init(gdata, *solver.gfunc, *solver.Problem, queue);
+			solver.RKSolver->init(queue, gdata, *solver.gfunc, *solver.Problem);
 			// solver->EulerSolver->init(gdata, *solver->gfunc, *solver->Problem);
 		} catch (CException exep) {
 			solver.Abort(gdata, exep);

@@ -234,8 +234,8 @@ void HyperbolicSolver::getConstants_fromH5(Data &gdata, Hdf5iStream &h5in)
 }
 
 
-void HyperbolicSolver::init(Data &gdata, gridFunc &gfunc,
-                            ProblemType &Problem, Queue &queue)
+void HyperbolicSolver::init(Queue &queue, Data &gdata, gridFunc &gfunc,
+                            ProblemType &Problem)
 {
 
 	if(gdata.time < 0.1*gdata.dt) {
@@ -282,6 +282,20 @@ void HyperbolicSolver::init(Data &gdata, gridFunc &gfunc,
 				omSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0.0;
 			});
 		});
+
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			celerity::accessor omSYCL_out_acc{gdata.omSYCL_out[q], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+			cgh.parallel_for<class BufferInitializationKernel>(gdata.omSYCL_out[q].get_range(), [=](celerity::item<3> item) {
+				omSYCL_out_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0.0;
+			});
+		});
+
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			celerity::accessor omSYCL_out_flt_acc{gdata.omSYCL_out_flt[q], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+			cgh.parallel_for<class BufferInitializationKernel>(gdata.omSYCL_out_flt[q].get_range(), [=](celerity::item<3> item) {
+				omSYCL_out_flt_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0.0;
+			});
+		});
 	}
 
 	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
@@ -319,11 +333,11 @@ void HyperbolicSolver::init(Data &gdata, gridFunc &gfunc,
 	}*/
 
 
-	init_general(gdata, gfunc, Problem);
+	init_general(queue, gdata, gfunc, Problem);
 }
 
 
-void HyperbolicSolver::init_general(Data &gdata, gridFunc &gfunc,
+void HyperbolicSolver::init_general(Queue &queue, Data &gdata, gridFunc &gfunc,
                                     ProblemType &Problem)
 {
 	// General initialisation procedure
@@ -335,7 +349,7 @@ void HyperbolicSolver::init_general(Data &gdata, gridFunc &gfunc,
 	// for identification (like, e.g., in bcs)
 	gdata.set_fieldIds();
 
-	set_TimeIntegrator(gdata, gfunc);
+	set_TimeIntegrator(queue, gdata, gfunc);
 
 
 	// Check if using thermal energy or temperature as base variable:
@@ -365,7 +379,7 @@ void HyperbolicSolver::init_general(Data &gdata, gridFunc &gfunc,
 }
 
 
-void HyperbolicSolver::set_TimeIntegrator(const Data &gdata,
+void HyperbolicSolver::set_TimeIntegrator(Queue &queue, const Data &gdata,
                                           gridFunc &gfunc) {
 
 	TimeIntegratorGeneric.resize(n_omInt);
@@ -381,7 +395,7 @@ void HyperbolicSolver::set_TimeIntegrator(const Data &gdata,
 #endif
 	}
 
-	TimeIntegratorGeneric[0]->init_omBuffer(gdata.mx);
+	TimeIntegratorGeneric[0]->init_omBuffer(queue, gdata.mx);
 
 	// Normal settings for 
 	for(int q=0; q<n_omInt; ++q) {
@@ -456,12 +470,12 @@ void HyperbolicSolver::set_TimeIntegrator(const Data &gdata,
 }
 
 
-void HyperbolicSolver::restart(Data &gdata, gridFunc &gfunc,
+void HyperbolicSolver::restart(Queue &queue, Data &gdata, gridFunc &gfunc,
                                ProblemType &Problem)
 {
     // Store boundary values for fixed boundary conditions
 	gfunc.prep_boundaries(gdata, Problem);
-	init_general(gdata, gfunc, Problem);
+	init_general(queue, gdata, gfunc, Problem);
 }
 
 

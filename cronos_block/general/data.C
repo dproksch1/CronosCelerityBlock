@@ -669,7 +669,6 @@ void Data::fetch_cfl(Queue &queue) {
 		});
 	});
 
-	// <- this fails right now on multiple nodes with a CUDA:700 Error
 	queue.slow_full_sync();
 	
 	this->cfl = std::max(cfl_lin, this->cfl);

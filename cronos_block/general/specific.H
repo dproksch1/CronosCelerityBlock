@@ -35,13 +35,13 @@ public:
 	virtual void init_constants(Data &);
 	virtual void addConstants_toH5(Data &, Hdf5Stream &h5out);
 	virtual void getConstants_fromH5(Data &, Hdf5iStream &h5in);
-	virtual void init(Data &, gridFunc &, ProblemType &, Queue &);
-	virtual void restart(Data &, gridFunc &, ProblemType &);
+	virtual void init(Queue &, Data &, gridFunc &, ProblemType &);
+	virtual void restart(Queue &, Data &, gridFunc &, ProblemType &);
 	virtual double singlestep(Data &, gridFunc &, ProblemType &, int, Queue&);
 	virtual void phystest(Data &, gridFunc &, ProblemType &, int, int iFluid=0);
 
 private:
-	void init_general(Data &, gridFunc &, ProblemType &);
+	void init_general(Queue &, Data &, gridFunc &, ProblemType &);
 	double compute_cfl(Data &, ProblemType &, double, double, int);
 	void gen_MagBoundValues(Data &, gridFunc &, ProblemType &);
 	/**Compute magnetic field from vector potential
@@ -62,7 +62,7 @@ private:
 	                     const double &, const double &, const double &);
 	void UserEquations(const Data &);
 	void set_UserPde(const Data &);
-	void set_TimeIntegrator(const Data &, gridFunc &);
+	void set_TimeIntegrator(Queue &, const Data &, gridFunc &);
 
 	std::vector<std::unique_ptr<TimeIntegrator>> TimeIntegratorGeneric;
 	std::vector<std::unique_ptr<TimeIntegrator>> TimeIntegratorUser;

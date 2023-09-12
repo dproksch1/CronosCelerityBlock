@@ -3710,7 +3710,7 @@ void gridFunc::dataout(Data &gdata,  Hdf5Stream &h5out, ProblemType & Problem,
 {
 
 	// Hdf5Stream h5out(filename, numout, gdata.rank);
-  
+
 	Problem.WriteToH5(h5out);
 
 	int rim(0);
@@ -3793,7 +3793,7 @@ void gridFunc::dataout(Data &gdata,  Hdf5Stream &h5out, ProblemType & Problem,
 		if(dsetName=="v_z_Corot") dsetName = "v_z";
 #endif
 
-		if(isfloat) {cout << "is float" << endl;
+		if(isfloat) {
 			NumMatrix<float,3> data(Index::set(-rim,-rim,-rim),
 			                        Index::set(gdata.mx[0]+rim,gdata.mx[1]+rim,
 			                                   gdata.mx[2]+rim));
@@ -3826,7 +3826,7 @@ void gridFunc::dataout(Data &gdata,  Hdf5Stream &h5out, ProblemType & Problem,
 				}
 			}
 
-		} else {cout << "not float" << endl;
+		} else {
 			NumMatrix<double,3> data(Index::set(-rim,-rim,-rim),
 			                         Index::set(gdata.mx[0]+rim, gdata.mx[1]+rim,
 			                                    gdata.mx[2]+rim));

@@ -32,7 +32,7 @@ public:
 	TimeIntegrator(const int);
 	virtual ~TimeIntegrator() = 0;
 	void set_IntRange(int [], int []);
-	void init_omBuffer(const int []);
+	void init_omBuffer(Queue &, const int []);
 	void set_corrField(int);
 	void save_data(const Pot om[], const int substep);
 	virtual double get_dt(Data & gdata, const int substep);

@@ -162,9 +162,13 @@ void Environment::InitOutput(Queue &queue, Data &gdata)
 #if (CRONOS_MOVIE == CRONOS_ON)
 		WriteMovies(gdata);
 #endif
-		
+
 		// Output of gdata data:
+#if (CRONOS_DISTR_OUTPUT == CRONOS_ON)
 		Output_Distributed(queue, gdata, true, false);
+#else
+		Output_Master(queue, gdata, true, false);
+#endif
 		// Output(gdata, true, false);
 //		// Output of gdata data:
 //		Output(gdata, false, false);
@@ -446,20 +450,35 @@ void Environment::CheckOut(Data &gdata, Queue &queue)
   
 #endif
 
-	// if (buffer_fetch_necessary) {
-	// 	FetchDataBuffer(gdata, queue);
-	// }
-  
+#if (CRONOS_DISTR_OUTPUT != CRONOS_ON)
+	if (buffer_fetch_necessary) {
+		FetchDataBuffer(gdata, queue);
+	}
+#endif
+
 	// doing double output
 	if(outputflag[0] == 1) {
+#if (CRONOS_DISTR_OUTPUT == CRONOS_ON)
 		Output_Distributed(queue, gdata, false, false);
+#else
+		if(outputflag[1] == 1) {
+			Output_Master(queue, gdata, false, true);
+		} else {
+			Output_Master(queue, gdata, false, false);
+		}
+#endif
+		
 		// Output(gdata, false, false);
 		numdbl_pass = 0;
 	}
 
 	// doing float output
 	if(outputflag[1] == 1) {
+#if (CRONOS_DISTR_OUTPUT == CRONOS_ON)
 		Output_Distributed(queue, gdata, true, false);
+#else
+		Output_Master(queue, gdata, true, false);
+#endif
 		// Output(gdata, true, false);
 		numflt_pass = 0;
 	}
@@ -510,6 +529,7 @@ void Environment::FetchDataBuffer(Data &gdata, Queue &queue)
 			});
 		});
 	}
+	// queue.slow_full_sync();
 }
 
 
@@ -588,9 +608,14 @@ int Environment::Finalize(Data &gdata, Queue &queue, string message)
 		cout << " ------ " << message << " ------ " << endl;
 	}
 
-	// FetchDataBuffer(gdata, queue);
 
-	Output_Distributed(queue, gdata, true, false);
+
+#if (CRONOS_DISTR_OUTPUT == CRONOS_ON)
+		Output_Distributed(queue, gdata, true, false);
+#else	
+		FetchDataBuffer(gdata, queue);
+		Output_Master(queue, gdata, true, false);
+#endif
 	// Output(gdata, true, false);
 
 	if(false) {
@@ -684,6 +709,28 @@ void Environment::Abort(Data &gdata, CException exep)
 	exit(errorcode);
 }
 
+void Environment::Output_Master(Queue &queue, Data &gdata, bool isfloat, bool sync)
+{
+	
+	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+		cgh.host_task(celerity::on_master_node, [=, &gdata] {
+			Output(gdata, isfloat, false, false);
+		});
+	});
+
+	//now adds one pre full completion. Probably not a problem
+	if (isfloat) {
+		numflt_done++;
+	} else {
+		numdbl_done++;
+	}
+
+	if (sync) {
+		queue.slow_full_sync();
+	}
+
+}
+
 void Environment::Output_Distributed(Queue &queue, Data &gdata, bool isfloat, bool terminate)
 {
 	/*
@@ -694,9 +741,9 @@ void Environment::Output_Distributed(Queue &queue, Data &gdata, bool isfloat, bo
 	if(gdata.rank == 0 && Problem->checkout(2)) {
 		cout << "......................................................" << endl;
 		if(isfloat) {
-			cout << "   Output (flt) ";
+			cout << "   Output (flt) [distr_io] ";
 		} else {
-			cout << "   Output (dbl) ";
+			cout << "   Output (dbl) [distr_io] ";
 		}
 		cout << " triggered at time: " << gdata.time << endl; 
 	}
@@ -719,7 +766,8 @@ void Environment::Output_Distributed(Queue &queue, Data &gdata, bool isfloat, bo
 	queue.submit([=](celerity::handler& cgh) {
 		cgh.host_task(celerity::on_master_node, [=] {
 			filesystem::create_directory(dirname);
-			filesystem::permissions(dirname, filesystem::perms::owner_read | filesystem::perms::owner_exec | filesystem::perms::owner_write | filesystem::perms::group_exec | filesystem::perms::others_exec);
+			filesystem::permissions(dirname, filesystem::perms::owner_read | filesystem::perms::owner_exec | filesystem::perms::owner_write | filesystem::perms::group_read |
+					 filesystem::perms::group_exec | filesystem::perms::group_write | filesystem::perms::others_exec);
 			auto ftime = filesystem::last_write_time(dirname);
 			filesystem::file_time_type currentTime(decltype(ftime)::clock::now());
 			filesystem::last_write_time(dirname, currentTime);
@@ -743,9 +791,8 @@ void Environment::Output_Distributed(Queue &queue, Data &gdata, bool isfloat, bo
 		numout = n_omIntAll + N_SUBS;
 	}
 	Hdf5Stream *h5out;
-if (!isfloat) {
 	h5out = new Hdf5Stream(filename, numout, gdata.rank, true);
-}
+
 	if (!isfloat) {
 		for (int q = 0; q < gdata.omSYCL.size(); q++) {
 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
@@ -793,33 +840,6 @@ if (!isfloat) {
 				});
 			});
 		}
-cout << "debug-1"<<endl;
-
-		// queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-		// 	celerity::accessor om_rho_acc{gdata.omSYCL_out_flt[0], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
-		// 	celerity::accessor om_sx_acc{gdata.omSYCL_out_flt[1], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
-		// 	celerity::accessor om_sy_acc{gdata.omSYCL_out_flt[2], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
-		// 	celerity::accessor om_sz_acc{gdata.omSYCL_out_flt[3], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
-		// 	celerity::accessor om_Eges_acc{gdata.omSYCL_out_flt[4], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
-		// 	cgh.host_task(celerity::experimental::collective, [=, &gdata](celerity::experimental::collective_partition part) {
-
-		// 		auto comm = part.get_collective_mpi_comm();
-		// 		h5out->Initialize(comm);
-
-		// 		auto om_rho = om_rho_acc.get_allocation_window(part);
-		// 		auto om_sx = om_sx_acc.get_allocation_window(part);
-		// 		auto om_sy = om_sy_acc.get_allocation_window(part);
-		// 		auto om_sz = om_sz_acc.get_allocation_window(part);
-		// 		auto om_Eges = om_Eges_acc.get_allocation_window(part);
-
-		// 		distr_io::dataout(gdata, *h5out, *Problem, numout, isfloat, om_rho,
-		// 									om_sx, om_sy, om_sz, om_Eges);
-				
-		// 		RKSolver->addConstants_toH5(gdata, *h5out);
-
-		// 		delete h5out;
-		// 	});
-		// });
 
 		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 			celerity::accessor om_rho_acc{gdata.omSYCL_out_flt[0], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
@@ -828,160 +848,26 @@ cout << "debug-1"<<endl;
 			celerity::accessor om_sz_acc{gdata.omSYCL_out_flt[3], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
 			celerity::accessor om_Eges_acc{gdata.omSYCL_out_flt[4], cgh, celerity::experimental::access::even_split<3>{}, celerity::read_only_host_task};
 			cgh.host_task(celerity::experimental::collective, [=, &gdata](celerity::experimental::collective_partition part) {
-cout << "debug0"<<endl;
-				auto comm = part.get_collective_mpi_comm();cout << "debug1"<<endl;
-				//h5out->Initialize(comm);cout << "debug2"<<endl;
 
-				hid_t datatype = get_hdf5_data_type<float>();
+				auto comm = part.get_collective_mpi_comm();
+				h5out->Initialize(comm);
 
-				auto plist = H5Pcreate(H5P_FILE_ACCESS);
-				H5Pset_fapl_mpio(plist, part.get_collective_mpi_comm(), MPI_INFO_NULL);
-				auto file = H5Fcreate(filename.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, plist);
-				H5Pclose(plist);
+				auto om_rho = om_rho_acc.get_allocation_window(part);
+				auto om_sx = om_sx_acc.get_allocation_window(part);
+				auto om_sy = om_sy_acc.get_allocation_window(part);
+				auto om_sz = om_sz_acc.get_allocation_window(part);
+				auto om_Eges = om_Eges_acc.get_allocation_window(part);
 
+				distr_io::dataout(gdata, *h5out, *Problem, numout, isfloat, om_rho,
+											om_sx, om_sy, om_sz, om_Eges);
 				
-				plist = H5Pcreate(H5P_DATASET_XFER);
-				H5Pset_dxpl_mpio(plist, H5FD_MPIO_COLLECTIVE);
-				
-				auto allocation_window = om_rho_acc.get_allocation_window(part);
-				auto [file_space, allocation_space] = distr_io::allocation_window_to_dataspace(allocation_window);
-				auto dataset = H5Dcreate(file, "data", datatype, file_space, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
-				H5Dwrite(dataset, datatype, allocation_space, file_space, plist, allocation_window.get_allocation());
+				RKSolver->addConstants_toH5(gdata, *h5out);
 
-				H5Dclose(dataset);
-				H5Sclose(allocation_space);
-				H5Sclose(file_space);
-				H5Fclose(file);
-				H5Pclose(plist);
-
-				// auto om_rho = om_rho_acc.get_allocation_window(part);cout << "debug3"<<endl;
-				// auto om_sx = om_sx_acc.get_allocation_window(part);
-				// auto om_sy = om_sy_acc.get_allocation_window(part);
-				// auto om_sz = om_sz_acc.get_allocation_window(part);
-				// auto om_Eges = om_Eges_acc.get_allocation_window(part);
-
-				// distr_io::dataout(gdata, *h5out, *Problem, numout, isfloat, om_rho,
-				// 							om_sx, om_sy, om_sz, om_Eges);
-
-
-// 				int rim(0);
-// 				if(isfloat) {
-// 					rim = BOUT_FLT;
-// 				} else {
-// 					rim = BOUT_DBL;
-// 				}
-// cout << "debug4"<<endl;
-// 				double xmin[3];
-// 				xmin[0] = gdata.getCen_x(-rim);
-// 				xmin[1] = gdata.getCen_y(-rim);
-// 				xmin[2] = gdata.getCen_z(-rim);
-// cout << "debug5"<<endl;
-// 				string groupName = gdata.fluid.get_Name();
-// 				hid_t group = h5out->AddGroup(groupName);
-// cout << "debug6"<<endl;
-// 				NumArray<int> mx_global(3);
-// 				for (int dir = 0; dir < 3; dir++) {
-// 					mx_global(dir) = gdata.global_mx[dir];
-// 				}cout << "debug7"<<endl;
-// 				{
-// 					h5out.AddDatasetName(ArrayName, group);
-// 					h5out.AddDatasetName(ArrayName);
-// 					// h5out.increase_num();
-
-// 					int dim = 3;
-// 					hid_t datatype;
-// 					if (is_float) {
-// 						datatype = get_hdf5_data_type<float>();
-// 					} else {
-// 						datatype = get_hdf5_data_type<double>();
-// 					}
-// 					H5Tset_order(datatype, H5T_ORDER_LE);
-
-// 					hsize_t DimsData[dim];
-// 					DimsData[0] = mx_global[2] + 1 + 2 * rim;
-// 					DimsData[1] = mx_global[1] + 1 + 2 * rim;
-// 					DimsData[2] = mx_global[0] + 1 + 2 * rim;
-
-// 					hid_t dataspace = H5Screate_simple(dim, DimsData, NULL);
-
-// 					// Supplying additional attributes for opendx input
-
-// 					hid_t datatypefloat = get_hdf5_data_type<double>();
-// 					H5Tset_order(datatypefloat, H5T_ORDER_LE);
-
-// 					// Create dataspace for attribute
-// 					hsize_t DimsAttr = 3;
-// 					hid_t attrspace = H5Screate_simple(1, &DimsAttr, NULL);
-
-// 					double Origin[3];
-// 					double Delta[3];
-// 					if (with_opendxinfo) {
-// 						for (int q = 0; q < 3; ++q) {
-// 						Origin[q] = float(xb[q]);
-// 						Delta[q] = float(dx[q]);
-// 						}
-// 					}
-
-// 					// Create dataset
-// 					hid_t dataset_id = H5Dcreate2(group, ArrayName.c_str(), datatype, dataspace, H5P_DEFAULT,
-// 													H5P_DEFAULT, H5P_DEFAULT);
-
-// 					if (true) {
-// 						// Create attributes
-// 						hid_t origin =
-// 							H5Acreate2(dataset_id, "origin", datatypefloat, attrspace, H5P_DEFAULT, H5P_DEFAULT);
-// 						hid_t delta =
-// 							H5Acreate2(dataset_id, "delta", datatypefloat, attrspace, H5P_DEFAULT, H5P_DEFAULT);
-
-// 						// hid_t test_attr =
-// 						// 	H5Acreate2(dataset_id, "test_attr", datatypefloat, attrspace, H5P_DEFAULT, H5P_DEFAULT);
-
-// 						// Write attributes
-// 						H5Awrite(origin, datatypefloat, &Origin);
-// 						H5Awrite(delta, datatypefloat, &Delta);
-
-// 						// Close attributes
-// 						H5Aclose(origin);
-// 						H5Aclose(delta);
-// 						H5Sclose(attrspace);
-// 					}
-
-// 					// if (q_index > 0) {
-// 					// 	// Create dataspace
-// 					// 	hid_t info_id = H5Screate(H5S_SCALAR);
-// 					// 	// Create Attribute
-// 					// 	hid_t info =
-// 					// 		H5Acreate2(dataset_id, "q_index", H5T_NATIVE_INT, info_id, H5P_DEFAULT, H5P_DEFAULT);
-// 					// 	H5Awrite(info, H5T_NATIVE_INT, &q_index);
-// 					// 	H5Aclose(info);
-// 					// 	H5Sclose(info_id);
-// 					// }
-
-// 					auto plist = H5Pcreate(H5P_DATASET_XFER);
-// 						H5Pset_dxpl_mpio(plist, H5FD_MPIO_COLLECTIVE);
-
-// 					// auto allocation_window = data_acc.get_allocation_window(part);
-// 					auto [file_space, allocation_space] = allocation_window_to_dataspace(allocation_window);
-// 					H5Dwrite(dataset_id, datatype, allocation_space, file_space, plist, allocation_window.get_allocation());
-
-// 					H5Sclose(dataspace);
-
-// 					// Close the dataset:
-// 					H5Dclose(dataset_id);
-// 					H5Sclose(allocation_space);
-// 					H5Sclose(file_space);
-// 					H5Pclose(plist);
-				// }
-
-				// cout << "debug8"<<endl;
-				// h5out->CloseGroup(group);cout << "debug9"<<endl;
-				// // RKSolver->addConstants_toH5(gdata, *h5out);
-
-				// delete h5out;cout << "debug10"<<endl;
+				delete h5out;
 			});
 		});
 	}
-// queue.slow_full_sync();
+
 	if(!isfloat) {
 		char OldChar[255] = {};
 		OldName.copy(OldChar,255);
@@ -1003,8 +889,8 @@ cout << "debug0"<<endl;
 
 }
 
-void Environment::Output(Data &gdata, bool isfloat, bool terminate)
-{ // <- rewrite to distributed
+void Environment::Output(Data &gdata, bool isfloat, bool terminate, bool progress_counters)
+{
 	/*
 	  Routine to write a hdf5 output file for double data -- can be used
 	  for restart
@@ -1061,15 +947,14 @@ void Environment::Output(Data &gdata, bool isfloat, bool terminate)
 	}
 //		numout = n_omIntAll + N_SUBS;
 
-
 	//	Hdf5Stream h5out(filename, numout, gdata.rank);
-	
+
 	Hdf5Stream *h5out;
 
 #if(HDF_PARALLEL_IO == CRONOS_ON)
 	h5out = new Hdf5Stream(filename, numout, gdata.rank, true);
 #else // New Output version
-	h5out = new Hdf5Stream(filename, numout, gdata.rank);
+	h5out = new Hdf5Stream(filename, numout, gdata.rank, false);
 #endif
 
 	// // Apply possible user-change to fields
@@ -1088,7 +973,6 @@ void Environment::Output(Data &gdata, bool isfloat, bool terminate)
 	gfunc->dataout(gdata, *h5out, *Problem, numout, isfloat, false);
 #endif
 
-
 	// // Apply possible user-change to fields
 	// if(isfloat) {
 	// 	Problem->TransCharConsUser(gdata);
@@ -1105,22 +989,24 @@ void Environment::Output(Data &gdata, bool isfloat, bool terminate)
 
 	delete h5out;
 
-	if(!isfloat) {
-		char OldChar[255] = {};
-		OldName.copy(OldChar,255);
-		OldName.clear();
-		//    cout << " Removing: " << OldChar << endl;
-		remove(OldChar);
-		OldName = filename;
-	}
+	// if(!isfloat) {
+	// 	char OldChar[255] = {};
+	// 	OldName.copy(OldChar,255);
+	// 	OldName.clear();
+	// 	//    cout << " Removing: " << OldChar << endl;
+	// 	remove(OldChar);
+	// 	OldName = filename;
+	// }
 	if(gdata.rank == 0 && Problem->checkout(2)){
 		cout << "......................................................" << endl;
 	}
 
-	if(isfloat) {
-		numflt_done++;
-	} else {
-		numdbl_done++;
+	if (progress_counters) {
+		if(isfloat) {
+			numflt_done++;
+		} else {
+			numdbl_done++;
+		}
 	}
 
 }

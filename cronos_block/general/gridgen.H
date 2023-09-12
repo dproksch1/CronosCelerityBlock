@@ -67,8 +67,9 @@ private:
 	void CheckOut(Data &, Queue &);
 	//	void Finalize(Data &, string);
 	void WriteDivB(Data &gdata);
-	void Output(Data &, bool, bool);
+	void Output(Data &, bool, bool, bool);
 	void Output_Distributed(Queue &, Data &, bool, bool);
+	void Output_Master(Queue &, Data &, bool, bool);
 	void FetchDataBuffer(Data &gdata, Queue &queue);
 	string MakeFilename(const int [DIM], int, bool, bool);
 	void AddParallelFileNameStuff(string &filename, const int [DIM]);
