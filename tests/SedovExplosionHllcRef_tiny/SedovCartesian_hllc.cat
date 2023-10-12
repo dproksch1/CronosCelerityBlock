@@ -24,9 +24,9 @@ dt_info     = 100. -> Datei der Bildschirmausgabe
 num_info    = 3
 dt_mov      = 0.0002  0.5  50.0  Movie output time
 ------------------- Spatial resolution ---
-Nx = 256 512 256 128 
-Ny = 256 64 
-Nz = 256 100 64 
+Nx = 192 512 256 128 
+Ny = 64 64 
+Nz = 64 100 64 
 xb = -0.5
 xe =  0.5
 yb = -0.5

@@ -163,12 +163,14 @@ void Environment::InitOutput(Queue &queue, Data &gdata)
 		WriteMovies(gdata);
 #endif
 
+
+//Output_Distributed(queue, gdata, true, false);
 		// Output of gdata data:
-#if (CRONOS_DISTR_OUTPUT == CRONOS_ON)
-		Output_Distributed(queue, gdata, true, false);
-#else
+// #if (CRONOS_DISTR_OUTPUT == CRONOS_ON)
+// 		Output_Distributed(queue, gdata, true, false);
+// #else
 		Output_Master(queue, gdata, true, false);
-#endif
+// #endif
 		// Output(gdata, true, false);
 //		// Output of gdata data:
 //		Output(gdata, false, false);
@@ -1013,7 +1015,7 @@ void Environment::Output(Data &gdata, bool isfloat, bool terminate, bool progres
 
 
 void Environment::LoadData(Data &gdata)
-{
+{cout << "LoadData" << endl;
 
 	/*
 	  Routine to load data from a previous timestep.

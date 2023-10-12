@@ -1,67 +1,161 @@
-Start testing: Jul 30 20:04 CEST
+Start testing: Oct 03 01:16 CEST
 ----------------------------------------------------------
-Unable to find executable: mpirun -n 2
-1/4 Testing: small_run
-1/4 Test: small_run
+Unable to find executable: mpirun -n 1
+1/8 Testing: small1_run
+1/8 Test: small1_run
 Command: "" "/home/dproksch/master_thesis/CronosCelerityBlock/proj" "/home/dproksch/master_thesis/CronosCelerityBlock/tests/SedovExplosionHllcRef_small" "SedovCartesian_hllc"
 Directory: /home/dproksch/master_thesis/CronosCelerityBlock
-"small_run" start time: 
+"small1_run" start time: 
 Output:
 ----------------------------------------------------------
 <end of output>
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"small_run" end time: Jul 30 20:04 CEST
-"small_run" time elapsed: 00:00:00
+"small1_run" end time: Oct 03 01:16 CEST
+"small1_run" time elapsed: 00:00:00
 ----------------------------------------------------------
 
-Failed test dependencies: small_run
-2/4 Testing: small_compare
-2/4 Test: small_compare
-Command: ""
+2/8 Testing: small1_compare
+2/8 Test: small1_compare
+Command: "/usr/bin/h5diff" "-v" "-d 1.5e-11" "--exclude-path" "/Data/version" "/home/dproksch/master_thesis/CronosCelerityBlock/tests/SedovExplosionHllcRef_small/SedovCartesian_hllc_float/SedovCartesian_hllc_flt_step4.h5" "/home/dproksch/master_thesis/CronosCelerityBlock/tests/SedovExplosionHllcRef_small/SedovCartesian_hllc_float/SedovCartesian_hllc_flt_step4.h5"
 Directory: /home/dproksch/master_thesis/CronosCelerityBlock
-"small_compare" start time: 
+"small1_compare" start time: Oct 03 01:16 CEST
 Output:
 ----------------------------------------------------------
+
+file1     file2
+---------------------------------------
+    x      x    /              
+    x      x    /Data          
+    x      x    /Data/SedovPars
+    x      x    /fluid00       
+    x      x    /fluid00/Etherm
+    x      x    /fluid00/rho   
+    x      x    /fluid00/v_x   
+    x      x    /fluid00/v_y   
+    x      x    /fluid00/v_z   
+
+group  : </> and </>
+0 differences found
+group  : </Data> and </Data>
+0 differences found
+group  : </Data/SedovPars> and </Data/SedovPars>
+0 differences found
+group  : </fluid00> and </fluid00>
+0 differences found
+dataset: </fluid00/Etherm> and </fluid00/Etherm>
+0 differences found
+dataset: </fluid00/rho> and </fluid00/rho>
+0 differences found
+dataset: </fluid00/v_x> and </fluid00/v_x>
+0 differences found
+dataset: </fluid00/v_y> and </fluid00/v_y>
+0 differences found
+dataset: </fluid00/v_z> and </fluid00/v_z>
+0 differences found
 <end of output>
-Test time =   0.00 sec
+Test time =   0.04 sec
 ----------------------------------------------------------
 Test Passed.
-"small_compare" end time: Jul 30 20:04 CEST
-"small_compare" time elapsed: 00:00:00
+"small1_compare" end time: Oct 03 01:16 CEST
+"small1_compare" time elapsed: 00:00:00
 ----------------------------------------------------------
 
 Unable to find executable: mpirun -n 2
-3/4 Testing: medium_run
-3/4 Test: medium_run
-Command: "" "/home/dproksch/master_thesis/CronosCelerityBlock/proj" "/home/dproksch/master_thesis/CronosCelerityBlock/tests/SedovExplosionHllcRef_medium" "SedovCartesian_hllc"
+3/8 Testing: small2_run
+3/8 Test: small2_run
+Command: "" "/home/dproksch/master_thesis/CronosCelerityBlock/proj" "/home/dproksch/master_thesis/CronosCelerityBlock/tests/SedovExplosionHllcRef_small" "SedovCartesian_hllc"
 Directory: /home/dproksch/master_thesis/CronosCelerityBlock
-"medium_run" start time: 
+"small2_run" start time: 
 Output:
 ----------------------------------------------------------
 <end of output>
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"medium_run" end time: Jul 30 20:04 CEST
-"medium_run" time elapsed: 00:00:00
+"small2_run" end time: Oct 03 01:16 CEST
+"small2_run" time elapsed: 00:00:00
 ----------------------------------------------------------
 
-Failed test dependencies: medium_run
-4/4 Testing: medium_compare
-4/4 Test: medium_compare
+Failed test dependencies: small2_run
+4/8 Testing: small2_compare
+4/8 Test: small2_compare
 Command: ""
 Directory: /home/dproksch/master_thesis/CronosCelerityBlock
-"medium_compare" start time: 
+"small2_compare" start time: 
 Output:
 ----------------------------------------------------------
 <end of output>
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"medium_compare" end time: Jul 30 20:04 CEST
-"medium_compare" time elapsed: 00:00:00
+"small2_compare" end time: Oct 03 01:16 CEST
+"small2_compare" time elapsed: 00:00:00
 ----------------------------------------------------------
 
-End testing: Jul 30 20:04 CEST
+Unable to find executable: mpirun -n 4
+5/8 Testing: small4_run
+5/8 Test: small4_run
+Command: "" "/home/dproksch/master_thesis/CronosCelerityBlock/proj" "/home/dproksch/master_thesis/CronosCelerityBlock/tests/SedovExplosionHllcRef_small" "SedovCartesian_hllc"
+Directory: /home/dproksch/master_thesis/CronosCelerityBlock
+"small4_run" start time: 
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"small4_run" end time: Oct 03 01:16 CEST
+"small4_run" time elapsed: 00:00:00
+----------------------------------------------------------
+
+Failed test dependencies: small4_run
+6/8 Testing: small4_compare
+6/8 Test: small4_compare
+Command: ""
+Directory: /home/dproksch/master_thesis/CronosCelerityBlock
+"small4_compare" start time: 
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"small4_compare" end time: Oct 03 01:16 CEST
+"small4_compare" time elapsed: 00:00:00
+----------------------------------------------------------
+
+Unable to find executable: mpirun -n 8
+7/8 Testing: small8_run
+7/8 Test: small8_run
+Command: "" "/home/dproksch/master_thesis/CronosCelerityBlock/proj" "/home/dproksch/master_thesis/CronosCelerityBlock/tests/SedovExplosionHllcRef_small" "SedovCartesian_hllc"
+Directory: /home/dproksch/master_thesis/CronosCelerityBlock
+"small8_run" start time: 
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"small8_run" end time: Oct 03 01:16 CEST
+"small8_run" time elapsed: 00:00:00
+----------------------------------------------------------
+
+Failed test dependencies: small8_run
+8/8 Testing: small8_compare
+8/8 Test: small8_compare
+Command: ""
+Directory: /home/dproksch/master_thesis/CronosCelerityBlock
+"small8_compare" start time: 
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"small8_compare" end time: Oct 03 01:16 CEST
+"small8_compare" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 03 01:16 CEST

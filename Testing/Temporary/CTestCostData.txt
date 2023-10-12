@@ -4,8 +4,19 @@ medium_run 0 0
 small_compare 0 0
 small_compare 0 0
 medium_compare 0 0
+small1_run 0 0
+small1_compare 2 0.0213213
+small2_run 0 0
+small2_compare 0 0
+small4_run 0 0
+small4_compare 0 0
+small8_run 0 0
+small8_compare 0 0
 ---
-small_run
-small_compare
-medium_run
-medium_compare
+small1_run
+small2_run
+small2_compare
+small4_run
+small4_compare
+small8_run
+small8_compare
