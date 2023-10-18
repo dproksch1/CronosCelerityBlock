@@ -3917,7 +3917,190 @@ void gridFunc::dataout(Data &gdata,  Hdf5Stream &h5out, ProblemType & Problem,
 }
 
 
+// void gridFunc::dataout2(Queue &queue, Data &gdata,  Hdf5Stream &h5out, ProblemType & Problem,
+//                        int numout, bool isfloat, bool is_collective)
+// {
+// 	Problem.WriteToH5(h5out);
 
+// 	// Hdf5Stream h5out(filename, numout, gdata.rank);
+
+// 	int rim(0);
+// 	if(isfloat) {
+// 		rim = BOUT_FLT;
+// 	} else {
+// 		rim = BOUT_DBL;
+// 	}
+
+// 	// Correction for boundary points if such are taken into account
+// 	double xmin[3];
+// 	// xmin[0] = gdata.xb[0]-rim*gdata.dx[0];
+// 	// xmin[1] = gdata.xb[1]-rim*gdata.dx[1];
+// 	// xmin[2] = gdata.xb[2]-rim*gdata.dx[2];
+// 	xmin[0] = gdata.getCen_x(-rim);
+// 	xmin[1] = gdata.getCen_y(-rim);
+// 	xmin[2] = gdata.getCen_z(-rim);
+  
+// 	int itime = static_cast<int>(gdata.time/gdata.dt);
+    
+// 	int nproc[3] = {1,1,1};
+// 	int coords[3] = {0,0,0};
+// 	string groupName = gdata.fluid.get_Name();
+
+// 	// queue.submit([=](celerity::handler& cgh) {
+// 	// 	cgh.host_task(celerity::on_master_node, [=] {
+// 			h5out.AddGlobalAttr("procs",nproc,3);
+// 			h5out.AddGlobalAttr("coords",coords,3);
+// 			h5out.AddGlobalAttr("rank",gdata.rank);
+
+// 		#if (FLUID_TYPE == CRONOS_HYDRO)
+// 			h5out.AddGlobalAttr("fluid_type", "hydro");
+// 		#elif (FLUID_TYPE == CRONOS_MHD)
+// 			h5out.AddGlobalAttr("fluid_type", "mhd");
+// 		#elif (FLUID_TYPE == CRONOS_RHD)
+// 			h5out.AddGlobalAttr("fluid_type", "rhd");
+// 		#else
+// 			h5out.AddGlobalAttr("fluid_type", "N/A");
+// 		#endif
+
+// 			h5out.AddGlobalAttr("geometry",GEOM);
+// 			h5out.AddGlobalAttr("itime",itime);
+// 			h5out.AddGlobalAttr("timestep",gdata.tstep);
+// 			h5out.AddGlobalAttr("time",gdata.time);
+// 			h5out.AddGlobalAttr("rim",rim);
+// 			h5out.AddGlobalAttr("dt",gdata.dt);
+// 			h5out.AddGlobalAttr("xmin",xmin,3);
+// 		#if (NON_LINEAR_GRID == _CRONOS_ON)
+// 			h5out.AddGlobalAttr("dx",gdata.dx,3);
+// 		#endif
+// 			h5out.AddGlobalAttr("CflNumber",gdata.cfl);
+
+// 			// Prepare mx and so on for parallel output if necessary
+
+// 			// In case of multifluid simulation do separate output for individual fluids
+// 		#if(CRONOS_OUTPUT_COMPATIBILITY == CRONOS_ON)
+// 			hid_t group = h5out.get_defaultGroup();
+// 		#else
+			
+// 			hid_t group = h5out.AddGroup(groupName);
+// 			h5out.CloseGroup(group);
+// 		#endif
+// 	// 	});
+// 	// });
+// 	// queue.slow_full_sync();
+
+// 	int qmin = 0;
+// 	int qmax = numout-n_omIntUser;
+
+// 	int qmin_user = 0;
+// 	int qmax_user = n_omIntUser;
+
+// 	int q_index = -1;
+
+//  	for (int q = qmin; q < qmax; ++q) {
+// 		queue.submit(celerity::allow_by_ref, [&](celerity::handler& cgh) {
+// 			cgh.host_task(celerity::on_master_node, celerity::allow_by_ref, [&] {
+
+// 				hid_t group = h5out.OpenGroup(groupName);
+
+// 				int qout = q;
+// 				if(q >= n_omInt) {
+// 					qout = q+N_ADD;
+// 				}
+				
+// 				/*
+// 				if(gdata.mag || (qout <4 || qout>6)) {
+// 				*/
+// 				string dsetName = gdata.om[qout].getName();
+// 		#if (USE_COROTATION == CRONOS_ON)
+// 				if(dsetName=="v_x_Corot") dsetName = "v_x";
+// 				if(dsetName=="v_y_Corot") dsetName = "v_y";
+// 				if(dsetName=="v_z_Corot") dsetName = "v_z";
+// 		#endif
+
+// 				if(isfloat) {
+// 					NumMatrix<float,3> data(Index::set(-rim,-rim,-rim),
+// 											Index::set(gdata.mx[0]+rim,gdata.mx[1]+rim,
+// 													gdata.mx[2]+rim));
+// 					data = gdata.float_data(qout,rim,true);
+// 					// Possibility of parallel IO into one file so far only
+// 					// for float data (because only those are analysed
+// 					// directly)
+
+// 					h5out.Write3DMatrix(dsetName, data, xmin, gdata.dx, group);
+
+// 					// if possible add unit to field
+// 					if(Problem.TrafoNorm != NULL) {
+
+// 						string fieldName;
+// 						if(qout < gdata.fluid.get_N_OMINT()) {
+// 							fieldName = gdata.fluid.get_fieldName(qout);
+// 							fieldName = gdata.om[qout].getName();
+// 						} else {
+// 							fieldName = dsetName;
+// 						}
+
+// 						h5out.AddAttributeToArray(dsetName, "NormFactor",
+// 								Problem.TrafoNorm->get_normConst(fieldName), group);
+// 						h5out.AddAttributeToArray(dsetName, "NormUnit",
+// 								Problem.TrafoNorm->get_unitNormConst(fieldName), group);
+// 						if(gdata.rank==0 && false) {
+// 							cout << " Setting Norm: " << Problem.TrafoNorm->get_normConst(fieldName) << " ";
+// 							cout << Problem.TrafoNorm->get_unitNormConst(fieldName) << " for field: ";
+// 							cout << fieldName << endl;
+// 						}
+// 					}
+
+// 				} else {
+// 					NumMatrix<double,3> data(Index::set(-rim,-rim,-rim),
+// 											Index::set(gdata.mx[0]+rim, gdata.mx[1]+rim,
+// 														gdata.mx[2]+rim));
+
+// 					for (int k = -rim; k <= gdata.mx[2]+rim; k++) {
+// 						for (int j = -rim; j <= gdata.mx[1]+rim; j++) {
+// 							for (int i = -rim; i <= gdata.mx[0]+rim; i++) {
+// 								data(i,j,k) = gdata.om[qout](i,j,k);
+// 							}
+// 						}
+// 					}
+// 					h5out.Write3DMatrix(dsetName, data, xmin, gdata.dx, group, q_index);
+// 				}
+
+// 				h5out.CloseGroup(group);
+// 				/*
+// 				}
+// 				*/
+// 			});
+// 		});
+// 	}
+
+//  	if(isfloat) {
+//  		// If desired write output of flag for carbuncle problem
+//  		if(gdata.use_carbuncleFlag) {
+//  			if(value_exists("write_carbuncleFlag")) {
+// 				queue.submit(celerity::allow_by_ref, [&](celerity::handler& cgh) {
+// 					cgh.host_task(celerity::on_master_node, celerity::allow_by_ref, [&] {
+
+// 						hid_t group = h5out.OpenGroup(groupName);
+						
+// 						NumMatrix<float,3> data(Index::set(-rim,-rim,-rim),
+// 								Index::set(gdata.mx[0]+rim, gdata.mx[1]+rim, gdata.mx[2]+rim));
+// 						for (int k = -rim; k <= gdata.mx[2]+rim; k++) {
+// 							for (int j = -rim; j <= gdata.mx[1]+rim; j++) {
+// 								for (int i = -rim; i <= gdata.mx[0]+rim; i++) {
+// 									data(i,j,k) = static_cast<float>(gdata.carbuncleFlag(i,j,k));
+// 								}
+// 							}
+// 						}
+// 						h5out.Write3DMatrix("carbuncle_flag", data, xmin, gdata.dx, group);
+				
+// 						h5out.CloseGroup(group);
+// 					});
+// 				});
+// 			}
+//  		}
+//  	}
+
+// }
 
 
 // void gridFunc::datain(Data &gdata, string &filename, ProblemType &Problem)

@@ -125,6 +125,7 @@ class Hdf5Stream {
 
 
   hid_t AddGroup(std::string);
+  hid_t OpenGroup(std::string groupName);
   void CloseGroup(hid_t group);
   hid_t get_defaultGroup();
   /*! Check whether attribute is available in the file*/

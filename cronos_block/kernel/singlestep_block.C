@@ -451,11 +451,41 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 // ----------------------------------------------------------------
 
 	TimeIntegratorGeneric[0]->Substep(queue, gdata, omRange, gdata.nomSYCL, gdata.dt, n, nom_max);
+ queue.slow_full_sync();
+	// for (int q = n_omInt-1; q >= 0; q--) {
+	// 	if (q == 0) queue.slow_full_sync();
+	// 	TimeIntegratorGeneric[0]->Substep(queue, gdata, omRange, gdata.nomSYCL, q, gdata.dt, n, nom_max);
+	// 	queue.slow_full_sync();
+	// }
 
+	// for (int q = 0; q < n_omInt; ++q) {
+	// 	TimeIntegratorGeneric[0]->Substep(queue, gdata, omRange, gdata.nomSYCL, q, gdata.dt, n, nom_max);
+	// 	if (q == 0) queue.slow_full_sync();
+	// }
+	// queue.slow_full_sync();
 	// for (int q = 0; q < n_omInt; ++q) {
 
 	// 	// TimeIntegratorGeneric[q]->Substep(queue, gdata, omRange, nomSYCL, gdata.om, n, nom_max);
 	// 	TimeIntegratorGeneric[q]->Substep(gdata, Problem, gdata.nom[q], gdata.om, n);
+	// }
+
+	// for (int q = 0; q < N_OMINT; q++) {
+
+	// 	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+	// 		celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::read_only_host_task};
+	// 		celerity::accessor omSYCL_out_acc{gdata.omSYCL_out[q], cgh, celerity::access::all{}, celerity::read_only_host_task};
+	// 		cgh.host_task(celerity::on_master_node, [=, &gdata]{
+	// 			for (int i = 0; i < nom_max[0]; i++) {
+	// 				for (int j = 0; j < nom_max[1]; j++) {
+	// 					for (int k = 0; k < nom_max[2]; k++) {
+	// 						if(omSYCL_out_acc[i][j][k] != omSYCL_acc[i][j][k]) {
+	// 							cout << "uneven: " << q << ": " << i << " " << j << " " << k << " - " << omSYCL_out_acc[i][j][k] << " " << omSYCL_acc[i][j][k] << endl;
+	// 						}
+	// 					}
+	// 				}
+	// 			}
+	// 		});
+	// 	});
 	// }
 
 #if (OMS_USER == TRUE)
@@ -619,6 +649,21 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	if(Problem.mag && n == RK_STEPS-1){
 		compute_divB(gdata, gfunc, Problem);
 	}
+
+	// queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+	// 	celerity::accessor nomSYCL_acc{gdata.nomSYCL, cgh, celerity::access::one_to_one{}, celerity::write_only};
+
+	// 	cgh.parallel_for<class IntegrationKernel_0_0>(gdata.nomSYCL.get_range(), [=](celerity::item<3> item){
+
+	// 		size_t ix = item.get_id(0);
+	// 		size_t iy = item.get_id(1);
+	// 		size_t iz = item.get_id(2);
+
+	// 		for (int d = 0; d < N_OMINT; d++) {
+	// 			nomSYCL_acc[ix][iy][iz].mat[d] = 0;
+	// 		}
+	// 	});
+	// });
 
 	return cfl;
 

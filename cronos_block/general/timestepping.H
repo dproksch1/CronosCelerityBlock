@@ -44,6 +44,9 @@ public:
 	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
                       CelerityBuffer<nom_t, 3> nomSYCL,
                       double dt, const int substep, size_t nom_max[]) = 0;
+	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
+					  CelerityBuffer<nom_t, 3> nomSYCL, int q,
+					  double dt, const int substep, size_t nom_max[]) = 0;
 	
 
 protected:
@@ -67,6 +70,9 @@ public:
 	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
                       CelerityBuffer<nom_t, 3> nomSYCL,
                       double dt, const int substep, size_t nom_max[]);
+	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
+					CelerityBuffer<nom_t, 3> nomSYCL, int q,
+					double dt, const int substep, size_t nom_max[]);
 
 private:
 	double oneThird, twoThirds;
@@ -85,6 +91,9 @@ public:
 	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
                       CelerityBuffer<nom_t, 3> nomSYCL,
                       double dt, const int substep, size_t nom_max[]);
+		virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
+					CelerityBuffer<nom_t, 3> nomSYCL, int q,
+					double dt, const int substep, size_t nom_max[]);
 
 };
 

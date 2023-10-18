@@ -309,17 +309,8 @@ void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
 	if (substep == 0) { // First Runge Kutta step
 
 		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-			celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_write};
-			celerity::accessor om_rho_acc{gdata.omSYCL[0], cgh, celerity::access::one_to_one{}, celerity::read_write};
-			celerity::accessor om_sx_acc{gdata.omSYCL[1], cgh, celerity::access::one_to_one{}, celerity::read_write};
-			celerity::accessor om_sy_acc{gdata.omSYCL[2], cgh, celerity::access::one_to_one{}, celerity::read_write};
-			celerity::accessor om_sz_acc{gdata.omSYCL[3], cgh, celerity::access::one_to_one{}, celerity::read_write};
-			celerity::accessor om_Eges_acc{gdata.omSYCL[4], cgh, celerity::access::one_to_one{}, celerity::read_write};
+			celerity::accessor om_rho_acc{gdata.omSYCL[0], cgh, celerity::access::one_to_one{}, celerity::read_only};
 			celerity::accessor om_save_rho_acc{this->omSYCL_save[0], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
-			celerity::accessor om_save_sx_acc{this->omSYCL_save[1], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
-			celerity::accessor om_save_sy_acc{this->omSYCL_save[2], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
-			celerity::accessor om_save_sz_acc{this->omSYCL_save[3], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
-			celerity::accessor om_save_Eges_acc{this->omSYCL_save[4], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
 
 			cgh.parallel_for<class IntegrationKernel_0>(nomSYCL.get_range(), [=](celerity::item<3> item){
 
@@ -328,19 +319,132 @@ void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
 				size_t iz = item.get_id(2);
 
 				om_save_rho_acc[ix][iy][iz] = om_rho_acc[ix][iy][iz];
+			});
+		});
+
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			celerity::accessor om_sx_acc{gdata.omSYCL[1], cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor om_save_sx_acc{this->omSYCL_save[1], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+
+			cgh.parallel_for<class IntegrationKernel_0>(nomSYCL.get_range(), [=](celerity::item<3> item){
+
+				size_t ix = item.get_id(0);
+				size_t iy = item.get_id(1);
+				size_t iz = item.get_id(2);
+
 				om_save_sx_acc[ix][iy][iz] = om_sx_acc[ix][iy][iz];
+			});
+		});
+
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			celerity::accessor om_sy_acc{gdata.omSYCL[2], cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor om_save_sy_acc{this->omSYCL_save[2], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+
+			cgh.parallel_for<class IntegrationKernel_0>(nomSYCL.get_range(), [=](celerity::item<3> item){
+
+				size_t ix = item.get_id(0);
+				size_t iy = item.get_id(1);
+				size_t iz = item.get_id(2);
+
 				om_save_sy_acc[ix][iy][iz] = om_sy_acc[ix][iy][iz];
+			});
+		});
+
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			celerity::accessor om_sz_acc{gdata.omSYCL[3], cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor om_save_sz_acc{this->omSYCL_save[3], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+
+			cgh.parallel_for<class IntegrationKernel_0>(nomSYCL.get_range(), [=](celerity::item<3> item){
+
+				size_t ix = item.get_id(0);
+				size_t iy = item.get_id(1);
+				size_t iz = item.get_id(2);
+
 				om_save_sz_acc[ix][iy][iz] = om_sz_acc[ix][iy][iz];
+			});
+		});
+
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			celerity::accessor om_Eges_acc{gdata.omSYCL[4], cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor om_save_Eges_acc{this->omSYCL_save[4], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+
+			cgh.parallel_for<class IntegrationKernel_0>(nomSYCL.get_range(), [=](celerity::item<3> item){
+
+				size_t ix = item.get_id(0);
+				size_t iy = item.get_id(1);
+				size_t iz = item.get_id(2);
+
 				om_save_Eges_acc[ix][iy][iz] = om_Eges_acc[ix][iy][iz];
+			});
+		});
+
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor om_rho_acc{gdata.omSYCL[0], cgh, celerity::access::one_to_one{}, celerity::read_write};
+
+			cgh.parallel_for<class IntegrationKernel_0>(nomSYCL.get_range(), [=](celerity::item<3> item){
+
+				size_t ix = item.get_id(0);
+				size_t iy = item.get_id(1);
+				size_t iz = item.get_id(2);
 
 				om_rho_acc[ix][iy][iz] -= dt * nomSYCL_acc[ix][iy][iz].mat[0];
-				om_sx_acc[ix][iy][iz] = (om_sx_acc[ix][iy][iz] - dt * nomSYCL_acc[ix][iy][iz].mat[1]) / om_rho_acc[ix][iy][iz];;
+			});
+		});
+
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor om_rho_acc{gdata.omSYCL[0], cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor om_sx_acc{gdata.omSYCL[1], cgh, celerity::access::one_to_one{}, celerity::read_write};
+			cgh.parallel_for<class IntegrationKernel_0>(nomSYCL.get_range(), [=](celerity::item<3> item){
+
+				size_t ix = item.get_id(0);
+				size_t iy = item.get_id(1);
+				size_t iz = item.get_id(2);
+
+				om_sx_acc[ix][iy][iz] = (om_sx_acc[ix][iy][iz] - dt * nomSYCL_acc[ix][iy][iz].mat[1]) / om_rho_acc[ix][iy][iz];
+			});
+		});
+
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor om_rho_acc{gdata.omSYCL[0], cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor om_sy_acc{gdata.omSYCL[2], cgh, celerity::access::one_to_one{}, celerity::read_write};
+
+			cgh.parallel_for<class IntegrationKernel_0>(nomSYCL.get_range(), [=](celerity::item<3> item){
+
+				size_t ix = item.get_id(0);
+				size_t iy = item.get_id(1);
+				size_t iz = item.get_id(2);
+
 				om_sy_acc[ix][iy][iz] = (om_sy_acc[ix][iy][iz] - dt * nomSYCL_acc[ix][iy][iz].mat[2]) / om_rho_acc[ix][iy][iz];
+			});
+		});
+
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor om_rho_acc{gdata.omSYCL[0], cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor om_sz_acc{gdata.omSYCL[3], cgh, celerity::access::one_to_one{}, celerity::read_write};
+
+			cgh.parallel_for<class IntegrationKernel_0>(nomSYCL.get_range(), [=](celerity::item<3> item){
+
+				size_t ix = item.get_id(0);
+				size_t iy = item.get_id(1);
+				size_t iz = item.get_id(2);
+
 				om_sz_acc[ix][iy][iz] = (om_sz_acc[ix][iy][iz] - dt * nomSYCL_acc[ix][iy][iz].mat[3]) / om_rho_acc[ix][iy][iz];
-				
-				// double E_kin = 0.5*(sqr(om_sx_acc[ix][iy][iz]) +
-				// 	                  sqr(om_sy_acc[ix][iy][iz]) +
-				// 	                  sqr(om_sz_acc[ix][iy][iz]))*om_rho_acc[ix][iy][iz];				
+			});
+		});
+
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_write};
+			celerity::accessor om_Eges_acc{gdata.omSYCL[4], cgh, celerity::access::one_to_one{}, celerity::read_write};
+
+			cgh.parallel_for<class IntegrationKernel_0>(nomSYCL.get_range(), [=](celerity::item<3> item){
+
+				size_t ix = item.get_id(0);
+				size_t iy = item.get_id(1);
+				size_t iz = item.get_id(2);
 
 				om_Eges_acc[ix][iy][iz] -= dt * nomSYCL_acc[ix][iy][iz].mat[4];
 
@@ -350,20 +454,54 @@ void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
 			});
 		});
 
+		// queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+		// 	celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_write};
+		// 	celerity::accessor om_rho_acc{gdata.omSYCL[0], cgh, celerity::access::one_to_one{}, celerity::read_write};
+		// 	celerity::accessor om_sx_acc{gdata.omSYCL[1], cgh, celerity::access::one_to_one{}, celerity::read_write};
+		// 	celerity::accessor om_sy_acc{gdata.omSYCL[2], cgh, celerity::access::one_to_one{}, celerity::read_write};
+		// 	celerity::accessor om_sz_acc{gdata.omSYCL[3], cgh, celerity::access::one_to_one{}, celerity::read_write};
+		// 	celerity::accessor om_Eges_acc{gdata.omSYCL[4], cgh, celerity::access::one_to_one{}, celerity::read_write};
+		// 	celerity::accessor om_save_rho_acc{this->omSYCL_save[0], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+		// 	celerity::accessor om_save_sx_acc{this->omSYCL_save[1], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+		// 	celerity::accessor om_save_sy_acc{this->omSYCL_save[2], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+		// 	celerity::accessor om_save_sz_acc{this->omSYCL_save[3], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+		// 	celerity::accessor om_save_Eges_acc{this->omSYCL_save[4], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+
+		// 	cgh.parallel_for<class IntegrationKernel_0>(nomSYCL.get_range(), [=](celerity::item<3> item){
+
+		// 		size_t ix = item.get_id(0);
+		// 		size_t iy = item.get_id(1);
+		// 		size_t iz = item.get_id(2);
+
+		// 		om_save_rho_acc[ix][iy][iz] = om_rho_acc[ix][iy][iz];
+		// 		om_save_sx_acc[ix][iy][iz] = om_sx_acc[ix][iy][iz];
+		// 		om_save_sy_acc[ix][iy][iz] = om_sy_acc[ix][iy][iz];
+		// 		om_save_sz_acc[ix][iy][iz] = om_sz_acc[ix][iy][iz];
+		// 		om_save_Eges_acc[ix][iy][iz] = om_Eges_acc[ix][iy][iz];
+
+		// 		om_rho_acc[ix][iy][iz] -= dt * nomSYCL_acc[ix][iy][iz].mat[0];
+		// 		om_sx_acc[ix][iy][iz] = (om_sx_acc[ix][iy][iz] - dt * nomSYCL_acc[ix][iy][iz].mat[1]) / om_rho_acc[ix][iy][iz];
+		// 		om_sy_acc[ix][iy][iz] = (om_sy_acc[ix][iy][iz] - dt * nomSYCL_acc[ix][iy][iz].mat[2]) / om_rho_acc[ix][iy][iz];
+		// 		om_sz_acc[ix][iy][iz] = (om_sz_acc[ix][iy][iz] - dt * nomSYCL_acc[ix][iy][iz].mat[3]) / om_rho_acc[ix][iy][iz];
+				
+		// 		// double E_kin = 0.5*(sqr(om_sx_acc[ix][iy][iz]) +
+		// 		// 	                  sqr(om_sy_acc[ix][iy][iz]) +
+		// 		// 	                  sqr(om_sz_acc[ix][iy][iz]))*om_rho_acc[ix][iy][iz];				
+
+		// 		om_Eges_acc[ix][iy][iz] -= dt * nomSYCL_acc[ix][iy][iz].mat[4];
+
+		// 		for (int d = 0; d < N_OMINT; d++) {
+		// 			nomSYCL_acc[ix][iy][iz].mat[d] = 0;
+		// 		}
+		// 	});
+		// });
+
 	} else if (substep == 1) { // Second Runge Kutta step
 
 		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-			celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_write};
+			celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_only};
 			celerity::accessor om_rho_acc{gdata.omSYCL[0], cgh, celerity::access::one_to_one{}, celerity::read_write};
-			celerity::accessor om_sx_acc{gdata.omSYCL[1], cgh, celerity::access::one_to_one{}, celerity::read_write};
-			celerity::accessor om_sy_acc{gdata.omSYCL[2], cgh, celerity::access::one_to_one{}, celerity::read_write};
-			celerity::accessor om_sz_acc{gdata.omSYCL[3], cgh, celerity::access::one_to_one{}, celerity::read_write};
-			celerity::accessor om_Eges_acc{gdata.omSYCL[4], cgh, celerity::access::one_to_one{}, celerity::read_write};
 			celerity::accessor om_save_rho_acc{this->omSYCL_save[0], cgh, celerity::access::one_to_one{}, celerity::read_only};
-			celerity::accessor om_save_sx_acc{this->omSYCL_save[1], cgh, celerity::access::one_to_one{}, celerity::read_only};
-			celerity::accessor om_save_sy_acc{this->omSYCL_save[2], cgh, celerity::access::one_to_one{}, celerity::read_only};
-			celerity::accessor om_save_sz_acc{this->omSYCL_save[3], cgh, celerity::access::one_to_one{}, celerity::read_only};
-			celerity::accessor om_save_Eges_acc{this->omSYCL_save[4], cgh, celerity::access::one_to_one{}, celerity::read_only};
 			cgh.parallel_for<class IntegrationKernel_1>(nomSYCL.get_range(), [=](celerity::item<3> item){
 
 				size_t ix = item.get_id(0);
@@ -372,19 +510,69 @@ void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
 
 				om_rho_acc[ix][iy][iz] = 0.5*om_save_rho_acc[ix][iy][iz] + 0.5*om_rho_acc[ix][iy][iz] 
 										- 0.5 * dt * nomSYCL_acc[ix][iy][iz].mat[0];
+			});
+		});
+
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor om_rho_acc{gdata.omSYCL[0], cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor om_sx_acc{gdata.omSYCL[1], cgh, celerity::access::one_to_one{}, celerity::read_write};
+			celerity::accessor om_save_sx_acc{this->omSYCL_save[1], cgh, celerity::access::one_to_one{}, celerity::read_only};
+			cgh.parallel_for<class IntegrationKernel_1>(nomSYCL.get_range(), [=](celerity::item<3> item){
+
+				size_t ix = item.get_id(0);
+				size_t iy = item.get_id(1);
+				size_t iz = item.get_id(2);
 
 				om_sx_acc[ix][iy][iz] = (0.5*om_save_sx_acc[ix][iy][iz] + 0.5*om_sx_acc[ix][iy][iz] 
 										- 0.5 * dt * nomSYCL_acc[ix][iy][iz].mat[1]) / om_rho_acc[ix][iy][iz];
 
+			});
+		});
+
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor om_rho_acc{gdata.omSYCL[0], cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor om_sy_acc{gdata.omSYCL[2], cgh, celerity::access::one_to_one{}, celerity::read_write};
+			celerity::accessor om_save_sy_acc{this->omSYCL_save[2], cgh, celerity::access::one_to_one{}, celerity::read_only};
+			cgh.parallel_for<class IntegrationKernel_1>(nomSYCL.get_range(), [=](celerity::item<3> item){
+
+				size_t ix = item.get_id(0);
+				size_t iy = item.get_id(1);
+				size_t iz = item.get_id(2);
+
 				om_sy_acc[ix][iy][iz] = (0.5*om_save_sy_acc[ix][iy][iz] + 0.5*om_sy_acc[ix][iy][iz] 
 										- 0.5 * dt * nomSYCL_acc[ix][iy][iz].mat[2]) / om_rho_acc[ix][iy][iz];
+
+			});
+		});
+
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor om_rho_acc{gdata.omSYCL[0], cgh, celerity::access::one_to_one{}, celerity::read_only};
+			celerity::accessor om_sz_acc{gdata.omSYCL[3], cgh, celerity::access::one_to_one{}, celerity::read_write};
+			celerity::accessor om_save_sz_acc{this->omSYCL_save[3], cgh, celerity::access::one_to_one{}, celerity::read_only};
+			cgh.parallel_for<class IntegrationKernel_1>(nomSYCL.get_range(), [=](celerity::item<3> item){
+
+				size_t ix = item.get_id(0);
+				size_t iy = item.get_id(1);
+				size_t iz = item.get_id(2);
 
 				om_sz_acc[ix][iy][iz] = (0.5*om_save_sz_acc[ix][iy][iz] + 0.5*om_sz_acc[ix][iy][iz] 
 										- 0.5 * dt * nomSYCL_acc[ix][iy][iz].mat[3]) / om_rho_acc[ix][iy][iz];
 
-				// double E_kin = 0.5*(sqr(om_sx_acc[ix][iy][iz]) +
-				// 	                  sqr(om_sy_acc[ix][iy][iz]) +
-				// 	                  sqr(om_sz_acc[ix][iy][iz]))*om_rho_acc[ix][iy][iz];
+			});
+		});
+
+		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+			celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_write};
+			celerity::accessor om_Eges_acc{gdata.omSYCL[4], cgh, celerity::access::one_to_one{}, celerity::read_write};
+			celerity::accessor om_save_Eges_acc{this->omSYCL_save[4], cgh, celerity::access::one_to_one{}, celerity::read_only};
+			cgh.parallel_for<class IntegrationKernel_1>(nomSYCL.get_range(), [=](celerity::item<3> item){
+
+				size_t ix = item.get_id(0);
+				size_t iy = item.get_id(1);
+				size_t iz = item.get_id(2);
 
 				om_Eges_acc[ix][iy][iz] = (0.5*om_save_Eges_acc[ix][iy][iz] + 0.5*om_Eges_acc[ix][iy][iz] 
 										- 0.5 * dt * nomSYCL_acc[ix][iy][iz].mat[4]);// - dt * nomSYCL_acc[ix][iy][iz].mat[4] - E_kin;
@@ -394,12 +582,284 @@ void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
 				}
 			});
 		});
+
+		// queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+		// 	celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_write};
+		// 	celerity::accessor om_rho_acc{gdata.omSYCL[0], cgh, celerity::access::one_to_one{}, celerity::read_only};
+		// 	celerity::accessor om_sx_acc{gdata.omSYCL[1], cgh, celerity::access::one_to_one{}, celerity::read_write};
+		// 	celerity::accessor om_sy_acc{gdata.omSYCL[2], cgh, celerity::access::one_to_one{}, celerity::read_write};
+		// 	celerity::accessor om_sz_acc{gdata.omSYCL[3], cgh, celerity::access::one_to_one{}, celerity::read_write};
+		// 	celerity::accessor om_Eges_acc{gdata.omSYCL[4], cgh, celerity::access::one_to_one{}, celerity::read_write};
+		// 	celerity::accessor om_save_rho_acc{this->omSYCL_save[0], cgh, celerity::access::one_to_one{}, celerity::read_only};
+		// 	celerity::accessor om_save_sx_acc{this->omSYCL_save[1], cgh, celerity::access::one_to_one{}, celerity::read_only};
+		// 	celerity::accessor om_save_sy_acc{this->omSYCL_save[2], cgh, celerity::access::one_to_one{}, celerity::read_only};
+		// 	celerity::accessor om_save_sz_acc{this->omSYCL_save[3], cgh, celerity::access::one_to_one{}, celerity::read_only};
+		// 	celerity::accessor om_save_Eges_acc{this->omSYCL_save[4], cgh, celerity::access::one_to_one{}, celerity::read_only};
+		// 	cgh.parallel_for<class IntegrationKernel_1>(nomSYCL.get_range(), [=](celerity::item<3> item){
+
+		// 		size_t ix = item.get_id(0);
+		// 		size_t iy = item.get_id(1);
+		// 		size_t iz = item.get_id(2);
+
+		// 		// om_rho_acc[ix][iy][iz] = 0.5*om_save_rho_acc[ix][iy][iz] + 0.5*om_rho_acc[ix][iy][iz] 
+		// 		// 						- 0.5 * dt * nomSYCL_acc[ix][iy][iz].mat[0];
+
+		// 		om_sx_acc[ix][iy][iz] = (0.5*om_save_sx_acc[ix][iy][iz] + 0.5*om_sx_acc[ix][iy][iz] 
+		// 								- 0.5 * dt * nomSYCL_acc[ix][iy][iz].mat[1]) / om_rho_acc[ix][iy][iz];
+
+		// 		om_sy_acc[ix][iy][iz] = (0.5*om_save_sy_acc[ix][iy][iz] + 0.5*om_sy_acc[ix][iy][iz] 
+		// 								- 0.5 * dt * nomSYCL_acc[ix][iy][iz].mat[2]) / om_rho_acc[ix][iy][iz];
+
+		// 		om_sz_acc[ix][iy][iz] = (0.5*om_save_sz_acc[ix][iy][iz] + 0.5*om_sz_acc[ix][iy][iz] 
+		// 								- 0.5 * dt * nomSYCL_acc[ix][iy][iz].mat[3]) / om_rho_acc[ix][iy][iz];
+
+		// 		// double E_kin = 0.5*(sqr(om_sx_acc[ix][iy][iz]) +
+		// 		// 	                  sqr(om_sy_acc[ix][iy][iz]) +
+		// 		// 	                  sqr(om_sz_acc[ix][iy][iz]))*om_rho_acc[ix][iy][iz];
+
+		// 		om_Eges_acc[ix][iy][iz] = (0.5*om_save_Eges_acc[ix][iy][iz] + 0.5*om_Eges_acc[ix][iy][iz] 
+		// 								- 0.5 * dt * nomSYCL_acc[ix][iy][iz].mat[4]);// - dt * nomSYCL_acc[ix][iy][iz].mat[4] - E_kin;
+
+		// 		for (int d = 0; d < N_OMINT; d++) {
+		// 			nomSYCL_acc[ix][iy][iz].mat[d] = 0;
+		// 		}
+		// 	});
+		// });
 			
 	}
 
 	gdata.om[1].rename("v_x");
 	gdata.om[2].rename("v_y");
 	gdata.om[3].rename("v_z");
+#endif
+}
+
+void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
+		CelerityBuffer<nom_t, 3> nomSYCL, int q,
+		double dt, const int substep, size_t nom_max[3]) {
+
+	int B = -3;
+	//auto range = celerity::range<3>(iend[0]-ibeg[0], iend[1]-ibeg[1], iend[2]-ibeg[2]);
+
+#if  (RK_STEPS == 3)
+	
+#else
+
+	//	}
+cout << "q == " << q << endl;
+	if (substep == 0) { // First Runge Kutta step
+
+		if (q == 0) {cout << "s0q0" << endl;
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+				celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_only};
+				celerity::accessor om_rho_out_acc{gdata.omSYCL_out[0], cgh, celerity::access::one_to_one{}, celerity::read_write};
+				celerity::accessor om_rho_acc{gdata.omSYCL[0], cgh, celerity::access::one_to_one{}, celerity::read_write};
+				celerity::accessor om_save_rho_acc{this->omSYCL_save[0], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+
+				cgh.parallel_for<class IntegrationKernel_0_0>(nomSYCL.get_range(), [=](celerity::item<3> item){
+
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					om_save_rho_acc[ix][iy][iz] = om_rho_acc[ix][iy][iz];
+
+					om_rho_out_acc[ix][iy][iz] = om_rho_acc[ix][iy][iz] - dt * nomSYCL_acc[ix][iy][iz].mat[0];
+
+				});
+			});
+
+			gdata.om[1].rename("v_x");
+			gdata.om[2].rename("v_y");
+			gdata.om[3].rename("v_z");
+		} else if (q == 1) {cout << "s0q1" << endl;
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+				celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_only};
+				celerity::accessor om_rho_acc{gdata.omSYCL_out[0], cgh, celerity::access::one_to_one{}, celerity::read_only};
+				celerity::accessor om_sx_out_acc{gdata.omSYCL_out[1], cgh, celerity::access::one_to_one{}, celerity::read_write};
+				celerity::accessor om_sx_acc{gdata.omSYCL[1], cgh, celerity::access::one_to_one{}, celerity::read_write};
+				celerity::accessor om_save_sx_acc{this->omSYCL_save[1], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+				
+				cgh.parallel_for<class IntegrationKernel_0_1>(nomSYCL.get_range(), [=](celerity::item<3> item){
+
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					om_save_sx_acc[ix][iy][iz] = om_sx_acc[ix][iy][iz];
+
+					double rho = om_rho_acc[ix][iy][iz] - dt * nomSYCL_acc[ix][iy][iz].mat[0];
+					om_sx_out_acc[ix][iy][iz] = (om_sx_acc[ix][iy][iz] - dt * nomSYCL_acc[ix][iy][iz].mat[1]) / 
+												om_rho_acc[ix][iy][iz];
+				
+				});
+			});
+		} else if (q == 2) {cout << "s0q2" << endl;
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+				celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_only};
+				celerity::accessor om_rho_acc{gdata.omSYCL_out[0], cgh, celerity::access::one_to_one{}, celerity::read_only};
+				celerity::accessor om_sy_out_acc{gdata.omSYCL_out[2], cgh, celerity::access::one_to_one{}, celerity::read_write};
+				celerity::accessor om_sy_acc{gdata.omSYCL[2], cgh, celerity::access::one_to_one{}, celerity::read_write};
+				celerity::accessor om_save_sy_acc{this->omSYCL_save[2], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+				
+				cgh.parallel_for<class IntegrationKernel_0_2>(nomSYCL.get_range(), [=](celerity::item<3> item){
+
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					om_save_sy_acc[ix][iy][iz] = om_sy_acc[ix][iy][iz];
+
+					om_sy_out_acc[ix][iy][iz] = (om_sy_acc[ix][iy][iz] - dt * nomSYCL_acc[ix][iy][iz].mat[2]) / 
+												om_rho_acc[ix][iy][iz];
+				
+				});
+			});
+		} else if (q == 3) {cout << "s0q3" << endl;
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+				celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_only};
+				celerity::accessor om_rho_acc{gdata.omSYCL_out[0], cgh, celerity::access::one_to_one{}, celerity::read_only};
+				celerity::accessor om_sz_out_acc{gdata.omSYCL_out[3], cgh, celerity::access::one_to_one{}, celerity::read_write};
+				celerity::accessor om_sz_acc{gdata.omSYCL[3], cgh, celerity::access::one_to_one{}, celerity::read_write};
+				celerity::accessor om_save_sz_acc{this->omSYCL_save[3], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+				
+				cgh.parallel_for<class IntegrationKernel_0_3>(nomSYCL.get_range(), [=](celerity::item<3> item){
+
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					om_save_sz_acc[ix][iy][iz] = om_sz_acc[ix][iy][iz];
+
+					om_sz_out_acc[ix][iy][iz] = (om_sz_acc[ix][iy][iz] - dt * nomSYCL_acc[ix][iy][iz].mat[3]) / 
+												om_rho_acc[ix][iy][iz];
+				
+				});
+			});
+		} else if (q == 4) {cout << "s0q4" << endl;
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+				celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_only};
+				celerity::accessor om_Eges_out_acc{gdata.omSYCL_out[4], cgh, celerity::access::one_to_one{}, celerity::read_write};
+				celerity::accessor om_Eges_acc{gdata.omSYCL[4], cgh, celerity::access::one_to_one{}, celerity::read_write};
+				celerity::accessor om_save_Eges_acc{this->omSYCL_save[4], cgh, celerity::access::one_to_one{}, celerity::write_only};
+
+				cgh.parallel_for<class IntegrationKernel_0_4>(nomSYCL.get_range(), [=](celerity::item<3> item){
+
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					om_save_Eges_acc[ix][iy][iz] = om_Eges_acc[ix][iy][iz];
+					om_Eges_out_acc[ix][iy][iz] = om_Eges_acc[ix][iy][iz] - dt * nomSYCL_acc[ix][iy][iz].mat[4];
+
+				});
+			});
+		}
+
+	} else if (substep == 1) { // Second Runge Kutta step
+
+		if (q == 0) {cout << "s1q0" << endl;
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+				celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_only};
+				celerity::accessor om_rho_acc{gdata.omSYCL[0], cgh, celerity::access::one_to_one{}, celerity::read_write};
+				celerity::accessor om_save_rho_acc{this->omSYCL_save[0], cgh, celerity::access::one_to_one{}, celerity::read_only};
+				cgh.parallel_for<class IntegrationKernel_1_0>(nomSYCL.get_range(), [=](celerity::item<3> item){
+
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					om_rho_acc[ix][iy][iz] = 0.5*om_save_rho_acc[ix][iy][iz] + 0.5*om_rho_acc[ix][iy][iz] 
+											- 0.5 * dt * nomSYCL_acc[ix][iy][iz].mat[0];
+				});
+			});
+
+			gdata.om[1].rename("v_x");
+			gdata.om[2].rename("v_y");
+			gdata.om[3].rename("v_z");
+		} else if (q == 1) {cout << "s1q1" << endl;
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+				celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_only};
+				celerity::accessor om_rho_acc{gdata.omSYCL[0], cgh, celerity::access::one_to_one{}, celerity::read_only};
+				celerity::accessor om_sx_acc{gdata.omSYCL[1], cgh, celerity::access::one_to_one{}, celerity::read_write};
+				celerity::accessor om_save_rho_acc{this->omSYCL_save[0], cgh, celerity::access::one_to_one{}, celerity::read_only};
+				celerity::accessor om_save_sx_acc{this->omSYCL_save[1], cgh, celerity::access::one_to_one{}, celerity::read_only};
+				cgh.parallel_for<class IntegrationKernel_1_1>(nomSYCL.get_range(), [=](celerity::item<3> item){
+
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					double rho = 0.5*om_save_rho_acc[ix][iy][iz] + 0.5*om_rho_acc[ix][iy][iz] 
+											- 0.5 * dt * nomSYCL_acc[ix][iy][iz].mat[0];
+
+					om_sx_acc[ix][iy][iz] = (0.5*om_save_sx_acc[ix][iy][iz] + 0.5*om_sx_acc[ix][iy][iz] 
+											- 0.5 * dt * nomSYCL_acc[ix][iy][iz].mat[1]) / om_rho_acc[ix][iy][iz];
+
+				});
+			});
+		} else if (q == 2) {cout << "s1q2" << endl;
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+				celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_only};
+				celerity::accessor om_rho_acc{gdata.omSYCL[0], cgh, celerity::access::one_to_one{}, celerity::read_only};
+				celerity::accessor om_sy_acc{gdata.omSYCL[2], cgh, celerity::access::one_to_one{}, celerity::read_write};
+				celerity::accessor om_save_rho_acc{this->omSYCL_save[0], cgh, celerity::access::one_to_one{}, celerity::read_only};
+				celerity::accessor om_save_sy_acc{this->omSYCL_save[2], cgh, celerity::access::one_to_one{}, celerity::read_only};
+				cgh.parallel_for<class IntegrationKernel_1_2>(nomSYCL.get_range(), [=](celerity::item<3> item){
+
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					double rho = 0.5*om_save_rho_acc[ix][iy][iz] + 0.5*om_rho_acc[ix][iy][iz] 
+											- 0.5 * dt * nomSYCL_acc[ix][iy][iz].mat[0];
+
+					om_sy_acc[ix][iy][iz] = (0.5*om_save_sy_acc[ix][iy][iz] + 0.5*om_sy_acc[ix][iy][iz] 
+											- 0.5 * dt * nomSYCL_acc[ix][iy][iz].mat[2]) / om_rho_acc[ix][iy][iz];
+
+				});
+			});
+		} else if (q == 3) {cout << "s1q3" << endl;
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+				celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_only};
+				celerity::accessor om_rho_acc{gdata.omSYCL[0], cgh, celerity::access::one_to_one{}, celerity::read_only};
+				celerity::accessor om_sz_acc{gdata.omSYCL[3], cgh, celerity::access::one_to_one{}, celerity::read_write};
+				celerity::accessor om_save_rho_acc{this->omSYCL_save[0], cgh, celerity::access::one_to_one{}, celerity::read_only};
+				celerity::accessor om_save_sz_acc{this->omSYCL_save[3], cgh, celerity::access::one_to_one{}, celerity::read_only};
+				cgh.parallel_for<class IntegrationKernel_1_3>(nomSYCL.get_range(), [=](celerity::item<3> item){
+
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					double rho = 0.5*om_save_rho_acc[ix][iy][iz] + 0.5*om_rho_acc[ix][iy][iz] 
+											- 0.5 * dt * nomSYCL_acc[ix][iy][iz].mat[0];
+
+					om_sz_acc[ix][iy][iz] = (0.5*om_save_sz_acc[ix][iy][iz] + 0.5*om_sz_acc[ix][iy][iz] 
+											- 0.5 * dt * nomSYCL_acc[ix][iy][iz].mat[3]) / om_rho_acc[ix][iy][iz];
+
+				});
+			});
+		} else if (q == 4) {cout << "s1q4" << endl;
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+				celerity::accessor nomSYCL_acc{nomSYCL, cgh, celerity::access::one_to_one{}, celerity::read_only};
+				celerity::accessor om_Eges_acc{gdata.omSYCL[4], cgh, celerity::access::one_to_one{}, celerity::read_write};
+				celerity::accessor om_save_Eges_acc{this->omSYCL_save[4], cgh, celerity::access::one_to_one{}, celerity::read_only};
+				cgh.parallel_for<class IntegrationKernel_1_4>(nomSYCL.get_range(), [=](celerity::item<3> item){
+
+					size_t ix = item.get_id(0);
+					size_t iy = item.get_id(1);
+					size_t iz = item.get_id(2);
+
+					om_Eges_acc[ix][iy][iz] = (0.5*om_save_Eges_acc[ix][iy][iz] + 0.5*om_Eges_acc[ix][iy][iz] 
+											- 0.5 * dt * nomSYCL_acc[ix][iy][iz].mat[4]);// - dt * nomSYCL_acc[ix][iy][iz].mat[4] - E_kin;
+
+				});
+			});
+		}
+			
+	}
+
 #endif
 }
 
@@ -452,3 +912,7 @@ void VanLeerIntegrator::Substep(Queue &queue, const Data &gdata, CelerityRange<3
 void VanLeerIntegrator::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
                       CelerityBuffer<nom_t, 3> nomSYCL,
                       double dt, const int substep, size_t nom_max[3]) {}
+
+void VanLeerIntegrator::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
+		CelerityBuffer<nom_t, 3> nomSYCL, int q,
+		double dt, const int substep, size_t nom_max[3]) {}

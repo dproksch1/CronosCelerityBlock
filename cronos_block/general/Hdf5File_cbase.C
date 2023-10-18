@@ -237,6 +237,10 @@ bool Hdf5Stream::AddToEntries(hid_t my_group) {
   return true;
 }
 
+hid_t Hdf5Stream::OpenGroup(std::string groupName) {
+  return H5Gopen2(hdf5file, groupName.c_str(), H5P_DEFAULT);
+}
+
 void Hdf5Stream::CloseGroup(hid_t my_group) { H5Gclose(my_group); }
 
 hid_t Hdf5Stream::get_defaultGroup() { return group; }
