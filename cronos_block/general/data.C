@@ -162,15 +162,20 @@ Data::Data() : cflSYCL (celerity::buffer<double,1>(celerity::range{1})), nomSYCL
 	om = new Pot[numElements];
 	//om = new Pot[N_OM+N_P]; //necessary for MHD
 
+	std::vector<double> zeros1((mx[0]+6+1)*(mx[1]+6+1)*(mx[2]+6+1), 0.0);
+	std::vector<double> zeros2((mx[0]+2+1)*(mx[1]+2+1)*(mx[2]+2+1), 0.0);
+	std::vector<float> zeros3((mx[0]+1)*(mx[1]+1)*(mx[2]+1), 0.0);
+	std::vector<int> zeros4((mx[0]+6+1)*(mx[1]+6+1)*(mx[2]+6+1), 0);
+
 	for (int i = 0; i < numElements; i++) {
-		omSYCL.push_back(CelerityBuffer<double, 3>(Range<3>(mx[0]+6 +1, mx[1]+6+1, mx[2]+6+1)));
-		omSYCL_out.push_back(CelerityBuffer<double, 3>(Range<3>(mx[0]+2 +1, mx[1]+2+1, mx[2]+2+1)));
-		omSYCL_out_flt.push_back(CelerityBuffer<float, 3>(Range<3>(mx[0]+1, mx[1]+1, mx[2]+1)));
+			omSYCL.push_back(CelerityBuffer<double, 3>(zeros1.data(), Range<3>(mx[0]+6 +1, mx[1]+6+1, mx[2]+6+1)));
+			omSYCL_out.push_back(CelerityBuffer<double, 3>(zeros2.data(), Range<3>(mx[0]+2 +1, mx[1]+2+1, mx[2]+2+1)));
+			omSYCL_out_flt.push_back(CelerityBuffer<float, 3>(zeros3.data(), Range<3>(mx[0]+1, mx[1]+1, mx[2]+1)));
 	}
 
 	for (int i = 0; i < 1; i++) {
-		pThermSYCL.push_back(CelerityBuffer<double, 3>(Range<3>(mx[0]+6+1, mx[1]+6+1, mx[2]+6+1)));
-		carbuncleFlagSYCL.push_back(CelerityBuffer<int, 3>(Range<3>(mx[0]+6+1, mx[1]+6+1, mx[2]+6+1)));
+			pThermSYCL.push_back(CelerityBuffer<double, 3>(zeros1.data(), Range<3>(mx[0]+6+1, mx[1]+6+1, mx[2]+6+1)));
+			carbuncleFlagSYCL.push_back(CelerityBuffer<int, 3>(zeros4.data(), Range<3>(mx[0]+6+1, mx[1]+6+1, mx[2]+6+1)));
 	}
 
 	nom = new NumMatrix<double,3> [n_omInt];

@@ -53,10 +53,42 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	}
 
 // ----------------------------------------------------------------
+//      Setup Buffer for RK-Step
+// ----------------------------------------------------------------
+	
+	gettimeofday(&tick, 0);
+	
+	auto omRange = gdata.omSYCL[0].get_range();
+	size_t nom_max[3] = {omRange.get(0), omRange.get(1), omRange.get(2)};
+
+	if (gdata.tstep <= 0 && n == 0) {
+		for (int q = 0; q < N_OMINT; q++) {
+
+			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+				celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::one_to_one{}, celerity::write_only_host_task};
+				cgh.host_task(omRange, [=, &gdata](celerity::partition<3> part){
+
+					const auto& sr = part.get_subrange();
+
+					for (int i = sr.offset[0]; i < sr.offset[0] + sr.range[0]; i++) {
+						for (int j = sr.offset[1]; j < sr.offset[1] + sr.range[1]; j++) {
+							for (int k = sr.offset[2]; k < sr.offset[2] + sr.range[2]; k++) {
+								omSYCL_acc[i][j][k] = gdata.om[q](i-3,j-3,k-3);
+							}
+						}
+					}
+				});
+			});
+		}
+	}
+
+	
+
+// ----------------------------------------------------------------
 // Start the clock:
 // ----------------------------------------------------------------
 
-	gettimeofday(&tick, 0);
+	gettimeofday(&tin11, 0);
 	gettimeofday(&tin1, 0);
 	cstart = clock();  
 
@@ -97,32 +129,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 // 		gdata.nom_user[q].clear();
 // 	}
 
-// #endif
-
-// ----------------------------------------------------------------
-//      Setup Buffer for RK-Step
-// ----------------------------------------------------------------
-
-	auto omRange = gdata.omSYCL[0].get_range();
-	size_t nom_max[3] = {omRange.get(0), omRange.get(1), omRange.get(2)};
-
-	if (gdata.tstep <= 0 && n == 0) {
-		for (int q = 0; q < N_OMINT; q++) {
-
-			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-				celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::write_only_host_task};
-				cgh.host_task(celerity::on_master_node, [=, &gdata]{
-					for (int i = 0; i < nom_max[0]; i++) {
-						for (int j = 0; j < nom_max[1]; j++) {
-							for (int k = 0; k < nom_max[2]; k++) {
-								omSYCL_acc[i][j][k] = gdata.om[q](i-3,j-3,k-3);
-							}
-						}
-					}
-				});
-			});
-		}
-	}	
+// #endif	
 
 // ---------------------------------------------------------------	      
 //      Trafo of variables to conservative form
@@ -382,6 +389,9 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	// 	}
 	// }
 
+	gettimeofday(&tock, 0);
+	cstep = clock();
+
 // ----------------------------------------------------------------
 //   Check for errors:
 // ----------------------------------------------------------------
@@ -451,42 +461,6 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 // ----------------------------------------------------------------
 
 	TimeIntegratorGeneric[0]->Substep(queue, gdata, omRange, gdata.nomSYCL, gdata.dt, n, nom_max);
- queue.slow_full_sync();
-	// for (int q = n_omInt-1; q >= 0; q--) {
-	// 	if (q == 0) queue.slow_full_sync();
-	// 	TimeIntegratorGeneric[0]->Substep(queue, gdata, omRange, gdata.nomSYCL, q, gdata.dt, n, nom_max);
-	// 	queue.slow_full_sync();
-	// }
-
-	// for (int q = 0; q < n_omInt; ++q) {
-	// 	TimeIntegratorGeneric[0]->Substep(queue, gdata, omRange, gdata.nomSYCL, q, gdata.dt, n, nom_max);
-	// 	if (q == 0) queue.slow_full_sync();
-	// }
-	// queue.slow_full_sync();
-	// for (int q = 0; q < n_omInt; ++q) {
-
-	// 	// TimeIntegratorGeneric[q]->Substep(queue, gdata, omRange, nomSYCL, gdata.om, n, nom_max);
-	// 	TimeIntegratorGeneric[q]->Substep(gdata, Problem, gdata.nom[q], gdata.om, n);
-	// }
-
-	// for (int q = 0; q < N_OMINT; q++) {
-
-	// 	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-	// 		celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::read_only_host_task};
-	// 		celerity::accessor omSYCL_out_acc{gdata.omSYCL_out[q], cgh, celerity::access::all{}, celerity::read_only_host_task};
-	// 		cgh.host_task(celerity::on_master_node, [=, &gdata]{
-	// 			for (int i = 0; i < nom_max[0]; i++) {
-	// 				for (int j = 0; j < nom_max[1]; j++) {
-	// 					for (int k = 0; k < nom_max[2]; k++) {
-	// 						if(omSYCL_out_acc[i][j][k] != omSYCL_acc[i][j][k]) {
-	// 							cout << "uneven: " << q << ": " << i << " " << j << " " << k << " - " << omSYCL_out_acc[i][j][k] << " " << omSYCL_acc[i][j][k] << endl;
-	// 						}
-	// 					}
-	// 				}
-	// 			}
-	// 		});
-	// 	});
-	// }
 
 #if (OMS_USER == TRUE)
 
@@ -499,14 +473,13 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 #endif
 
+// only necessary for super small domain sizes, I will find a better solution for this
+queue.slow_full_sync();
 
 //	delete [] nom;
 //#if (OMS_USER == TRUE)
 //	delete [] nom_user;
 //#endif
-
-	gettimeofday(&tock, 0);
-	cstep = clock();
 
 // ----------------------------------------------------------------
 //   Determine time at intermediate steps:
@@ -608,11 +581,16 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		gettimeofday(&tstep, 0);
 	}
 
-	double delt = ((tock.tv_sec + tock.tv_usec/1.e6) - 
+	double delt = ((tin11.tv_sec + tin11.tv_usec/1.e6) - 
 	             (tick.tv_sec + tick.tv_usec/1.e6));
 
-	double delt2 = ((tock2.tv_sec + tock2.tv_usec/1.e6) - 
+	double delt2 = ((tock.tv_sec + tock.tv_usec/1.e6) - 
+				(tin11.tv_sec + tin11.tv_usec/1.e6));
+
+	double delt3 = ((tock2.tv_sec + tock2.tv_usec/1.e6) - 
 	              (tock.tv_sec + tock.tv_usec/1.e6));
+
+	double delt4 = delt + delt2 + delt3;
 
 	double dtStep = ((tstep.tv_sec + tstep.tv_usec/1.e6) -
 	               (tstepOld.tv_sec + tstepOld.tv_usec/1.e6));
@@ -620,8 +598,8 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	if(gdata.rank == 0) {
 		if(n == RK_STEPS-1 && Problem.get_Info() && Problem.checkout(5)) {
 			cout << "------------------------------------------------------" << endl;
-			cout << " Time needed for substeps:  " << delt << " " << delt2 << endl;
-			cout << "             for full step: " << dtStep << endl;
+			cout << " Time needed for substeps:  " << delt << " " << delt2 << " " << delt2 << endl;
+			cout << "             for full step: " << delt3 << endl;
 //       cout << " CPU Cycle times: " << gdata.rank << " ";
 //       cout << (1.*(cstep-cstart))/CLOCKS_PER_SEC << " ";
 //       cout << (1.*(cend-cstep))/CLOCKS_PER_SEC << endl;

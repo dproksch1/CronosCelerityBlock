@@ -275,41 +275,41 @@ void HyperbolicSolver::init(Queue &queue, Data &gdata, gridFunc &gfunc,
 
 	}
 
-	for (int q = 0; q < gdata.omSYCL.size(); q++) {
-		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-			celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
-			cgh.parallel_for<class BufferInitializationKernel>(gdata.omSYCL[q].get_range(), [=](celerity::item<3> item) {
-				omSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0.0;
-			});
-		});
+	// for (int q = 0; q < gdata.omSYCL.size(); q++) {
+	// 	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+	// 		celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+	// 		cgh.parallel_for<class BufferInitializationKernel>(gdata.omSYCL[q].get_range(), [=](celerity::item<3> item) {
+	// 			omSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0.0;
+	// 		});
+	// 	});
 
-		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-			celerity::accessor omSYCL_out_acc{gdata.omSYCL_out[q], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
-			cgh.parallel_for<class BufferInitializationKernel>(gdata.omSYCL_out[q].get_range(), [=](celerity::item<3> item) {
-				omSYCL_out_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0.0;
-			});
-		});
+	// 	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+	// 		celerity::accessor omSYCL_out_acc{gdata.omSYCL_out[q], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+	// 		cgh.parallel_for<class BufferInitializationKernel>(gdata.omSYCL_out[q].get_range(), [=](celerity::item<3> item) {
+	// 			omSYCL_out_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0.0;
+	// 		});
+	// 	});
 
-		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-			celerity::accessor omSYCL_out_flt_acc{gdata.omSYCL_out_flt[q], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
-			cgh.parallel_for<class BufferInitializationKernel>(gdata.omSYCL_out_flt[q].get_range(), [=](celerity::item<3> item) {
-				omSYCL_out_flt_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0.0;
-			});
-		});
-	}
+	// 	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+	// 		celerity::accessor omSYCL_out_flt_acc{gdata.omSYCL_out_flt[q], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+	// 		cgh.parallel_for<class BufferInitializationKernel>(gdata.omSYCL_out_flt[q].get_range(), [=](celerity::item<3> item) {
+	// 			omSYCL_out_flt_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0.0;
+	// 		});
+	// 	});
+	// }
 
-	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-		celerity::accessor nomSYCL_acc{gdata.nomSYCL, cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
-		celerity::accessor pThermSYCL_acc{gdata.pThermSYCL[0], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
-		celerity::accessor carbuncleFlagSYCL_acc{gdata.carbuncleFlagSYCL[0], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
-		cgh.parallel_for<class BufferInitializationKernel>(gdata.nomSYCL.get_range(), [=](celerity::item<3> item) {
-			for (int d = 0; d < N_OMINT; d++) {
-				nomSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)].mat[d] = 0;
-			}
-			pThermSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
-			carbuncleFlagSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
-		});
-	});
+	// queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
+	// 	celerity::accessor nomSYCL_acc{gdata.nomSYCL, cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+	// 	celerity::accessor pThermSYCL_acc{gdata.pThermSYCL[0], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+	// 	celerity::accessor carbuncleFlagSYCL_acc{gdata.carbuncleFlagSYCL[0], cgh, celerity::access::one_to_one{}, celerity::write_only, celerity::no_init};
+	// 	cgh.parallel_for<class BufferInitializationKernel>(gdata.nomSYCL.get_range(), [=](celerity::item<3> item) {
+	// 		for (int d = 0; d < N_OMINT; d++) {
+	// 			nomSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)].mat[d] = 0;
+	// 		}
+	// 		pThermSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
+	// 		carbuncleFlagSYCL_acc[item.get_id(0)][item.get_id(1)][item.get_id(2)] = 0;
+	// 	});
+	// });
 
 	// Store values at boundaries for fixed boundary conditions
 	gfunc.prep_boundaries(gdata, Problem);
