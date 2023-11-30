@@ -529,7 +529,7 @@ void Environment::FetchDataBuffer(Data &gdata, Queue &queue)
 			});
 		});
 	}
-	// queue.slow_full_sync();
+	queue.slow_full_sync();
 }
 
 
@@ -585,7 +585,6 @@ int Environment::integrate(Data &gdata, Queue& queue)
 
 	// Check if ending condition is reached:
 	if(EndProgram==0) {
-
 		EndProgram = CheckEnd(gdata, queue);
 	}
 

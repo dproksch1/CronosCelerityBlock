@@ -474,7 +474,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 #endif
 
 // only necessary for super small domain sizes, I will find a better solution for this
-queue.slow_full_sync();
+// queue.slow_full_sync();
 
 //	delete [] nom;
 //#if (OMS_USER == TRUE)
