@@ -1,9 +1,9 @@
-#include "transformations.H"
+#include "transformations_block.H"
 #include "physical_constants.H"
 #include <stdlib.h>
 
 
-Transformations::Transformations(const CronosFluid &fluid, ProblemType &Problem, bool TPhys, int iFluid) {
+Transformations_Block::Transformations_Block(const CronosFluid &fluid, ProblemType &Problem, bool TPhys, int iFluid) {
 	TempErr = 0;
 
 	// Copying some constants from Problem-class to use locally
@@ -59,16 +59,16 @@ Transformations::Transformations(const CronosFluid &fluid, ProblemType &Problem,
 	}
 }
 
-void Transformations::set_thermal(bool thermal) {
+void Transformations_Block::set_thermal(bool thermal) {
 	this->thermal = thermal;
 }
 
-bool Transformations::get_thermal() {
+bool Transformations_Block::get_thermal() {
 	return thermal;
 }
 
 
-void Transformations::TransPrim2Cons(Data &gdata, gridFunc &gfunc,
+void Transformations_Block::TransPrim2Cons(Data &gdata, gridFunc &gfunc,
                                      ProblemType &Problem) {
 	//! Transform from primitive to conservative variables
 
@@ -94,7 +94,7 @@ void Transformations::TransPrim2Cons(Data &gdata, gridFunc &gfunc,
 }
 
 
-void Transformations::TransCons2Prim(Data &gdata, gridFunc &gfunc,
+void Transformations_Block::TransCons2Prim(Data &gdata, gridFunc &gfunc,
                                      ProblemType &Problem) {
 	//! Transform from conservative to primitive variables
 #if (USE_ANGULAR_MOMENTUM == TRUE)
@@ -117,7 +117,7 @@ void Transformations::TransCons2Prim(Data &gdata, gridFunc &gfunc,
 
 
 
-void Transformations::TransMomen2Vel(Data &gdata, gridFunc &gfunc,
+void Transformations_Block::TransMomen2Vel(Data &gdata, gridFunc &gfunc,
                                      ProblemType &Problem)
 {
 	if(gdata.om[q_sx].getName() == "v_x" || 
@@ -140,7 +140,7 @@ void Transformations::TransMomen2Vel(Data &gdata, gridFunc &gfunc,
 
 
 
-void Transformations::TransVel2Momen(Data &gdata, gridFunc &gfunc,
+void Transformations_Block::TransVel2Momen(Data &gdata, gridFunc &gfunc,
                                      ProblemType &Problem)
 {
 	if(gdata.om[q_sx].getName() == "s_x" || 
@@ -162,13 +162,13 @@ void Transformations::TransVel2Momen(Data &gdata, gridFunc &gfunc,
 
 
 
-void Transformations::TransEth2E(const Data &gdata, gridFunc &gfunc,
+void Transformations_Block::TransEth2E(const Data &gdata, gridFunc &gfunc,
                                  ProblemType &Problem) const
 {
 
 	if(gdata.om[q_Eges].getName() != "Etherm") {
 		cerr << " Energy is: " << gdata.om[q_Eges].getName() << " " << q_Eges << endl;
-		throw CException(" Transformations::TransEth2E - om[q_Eges] is not set as thermal energy ");
+		throw CException(" Transformations_Block::TransEth2E - om[q_Eges] is not set as thermal energy ");
 	}
 
 	if(Problem.gamma < 1.0000000001) {
@@ -209,12 +209,12 @@ void Transformations::TransEth2E(const Data &gdata, gridFunc &gfunc,
 
 
 
-void Transformations::TransE2Eth(Data &gdata, gridFunc &gfunc,
+void Transformations_Block::TransE2Eth(Data &gdata, gridFunc &gfunc,
                                  ProblemType &Problem) {
 	TransE2Eth(gdata, gfunc, Problem, 0, false);
 }
 
-void Transformations::TransE2Eth(Data &gdata, gridFunc &gfunc,
+void Transformations_Block::TransE2Eth(Data &gdata, gridFunc &gfunc,
                                  ProblemType &Problem, int n, bool DualEnergy)
 {
 	if(gdata.om[q_Eges].getName() != "Eges") {
@@ -273,7 +273,7 @@ void Transformations::TransE2Eth(Data &gdata, gridFunc &gfunc,
 #if(CRSWITCH_DUAL_ENERGY == CRONOS_OFF)
 					if(!Problem.force_min(q_Eges) && 
 					   gdata.om[q_Eges](i,j,k) < 0.){
-						cerr << " Transformations::TransE2Eth " << endl;
+						cerr << " Transformations_Block::TransE2Eth " << endl;
 //						cerr << q_rho << " " << q_sx << " " << q_Eges << endl;
 						cerr << " Error! negative energy at cell ("
 							  << i << " " << j << " " << k << "), pos ("
@@ -389,7 +389,7 @@ void Transformations::TransE2Eth(Data &gdata, gridFunc &gfunc,
 
 
 
-void Transformations::TransT2Eth(const Data &gdata, gridFunc &gfunc,
+void Transformations_Block::TransT2Eth(const Data &gdata, gridFunc &gfunc,
                                  ProblemType &Problem) const
 {
 
@@ -426,7 +426,7 @@ void Transformations::TransT2Eth(const Data &gdata, gridFunc &gfunc,
 
 
 
-void Transformations::TransT2E(const Data &gdata, gridFunc &gfunc,
+void Transformations_Block::TransT2E(const Data &gdata, gridFunc &gfunc,
                                ProblemType &Problem) const
 {
 	if(gdata.om[q_Eges].getName() != "Temp") {
@@ -440,7 +440,7 @@ void Transformations::TransT2E(const Data &gdata, gridFunc &gfunc,
 
 
 
-double Transformations::TransEth2T(Data &gdata, gridFunc &gfunc,
+double Transformations_Block::TransEth2T(Data &gdata, gridFunc &gfunc,
                                  ProblemType &Problem) 
 {
 	if(gdata.om[q_Eges].getName() != "Etherm") {
@@ -479,7 +479,7 @@ double Transformations::TransEth2T(Data &gdata, gridFunc &gfunc,
 }
 
 
-double Transformations::TransE2T(Data &gdata, gridFunc &gfunc,
+double Transformations_Block::TransE2T(Data &gdata, gridFunc &gfunc,
                                ProblemType &Problem)
 {
 
@@ -492,7 +492,7 @@ double Transformations::TransE2T(Data &gdata, gridFunc &gfunc,
 }
 
 
-void Transformations::get_Cons(const Data &gdata, const ProblemType &Problem,
+void Transformations_Block::get_Cons(const Data &gdata, const ProblemType &Problem,
 	const EquationOfState &eos, phys_fields_0D &fields, int ix, int iy, int iz, int face)
 {
 	NumArray<double> Pos(3); //stays uninitialized
@@ -572,7 +572,7 @@ void Transformations::get_Cons(const Data &gdata, const ProblemType &Problem,
 
 #if (USE_COROTATION == CRONOS_ON)
 
-void Transformations::TransCorotToInert(Data &gdata, gridFunc &gfunc, ProblemType &problem) {
+void Transformations_Block::TransCorotToInert(Data &gdata, gridFunc &gfunc, ProblemType &problem) {
 	//! Transform velocity from corotating to inertial frame
 	/*!
 	 * Here we need to distinguish between different coordinate systems (see below)
@@ -630,7 +630,7 @@ void Transformations::TransCorotToInert(Data &gdata, gridFunc &gfunc, ProblemTyp
 
 }
 
-void Transformations::TransInertToCorot(Data &gdata, gridFunc &gfunc, ProblemType &problem) {
+void Transformations_Block::TransInertToCorot(Data &gdata, gridFunc &gfunc, ProblemType &problem) {
 	//! Transform velocity from inertial to corotating frame
 	/*!
 	 * Here we need to distinguish between different coordinate systems (see below)
@@ -688,7 +688,7 @@ void Transformations::TransInertToCorot(Data &gdata, gridFunc &gfunc, ProblemTyp
 
 }
 
-double Transformations::TransCorotToInert_x(Data &gdata, double vCorot, int ix, int iy, int iz) {
+double Transformations_Block::TransCorotToInert_x(Data &gdata, double vCorot, int ix, int iy, int iz) {
 	//! Local transform from corotating to inertial frame
 	/*!
 	 * transformation of x-component
@@ -702,7 +702,7 @@ double Transformations::TransCorotToInert_x(Data &gdata, double vCorot, int ix, 
 
 }
 
-double Transformations::TransCorotToInert_y(Data &gdata, double vCorot, int ix, int iy, int iz) {
+double Transformations_Block::TransCorotToInert_y(Data &gdata, double vCorot, int ix, int iy, int iz) {
 	//! Local transform from corotating to inertial frame
 	/*!
 	 * transformation of y-component
@@ -719,7 +719,7 @@ double Transformations::TransCorotToInert_y(Data &gdata, double vCorot, int ix, 
 
 }
 
-double Transformations::TransCorotToInert_z(Data &gdata, double vCorot, int ix, int iy, int iz) {
+double Transformations_Block::TransCorotToInert_z(Data &gdata, double vCorot, int ix, int iy, int iz) {
 	//! Local transform from corotating to inertial frame
 	/*!
 	 * transformation of z-component
@@ -738,7 +738,7 @@ double Transformations::TransCorotToInert_z(Data &gdata, double vCorot, int ix, 
 
 
 
-double Transformations::TransInertToCorot_x(Data &gdata, double vInert, int ix, int iy, int iz) {
+double Transformations_Block::TransInertToCorot_x(Data &gdata, double vInert, int ix, int iy, int iz) {
 	//! Local transform from inertial to corotating frame
 	/*!
 	 * transformation of x-component
@@ -753,7 +753,7 @@ double Transformations::TransInertToCorot_x(Data &gdata, double vInert, int ix, 
 }
 
 
-double Transformations::TransInertToCorot_y(Data &gdata, double vInert, int ix, int iy, int iz) {
+double Transformations_Block::TransInertToCorot_y(Data &gdata, double vInert, int ix, int iy, int iz) {
 	//! Local transform from inertial to corotating frame
 	/*!
 	 * transformation of y-component
@@ -770,7 +770,7 @@ double Transformations::TransInertToCorot_y(Data &gdata, double vInert, int ix, 
 
 }
 
-double Transformations::TransInertToCorot_z(Data &gdata, double vInert, int ix, int iy, int iz) {
+double Transformations_Block::TransInertToCorot_z(Data &gdata, double vInert, int ix, int iy, int iz) {
 	//! Local transform from inertial to corotating frame
 	/*!
 	 * transformation of z-component
@@ -791,7 +791,7 @@ double Transformations::TransInertToCorot_z(Data &gdata, double vInert, int ix, 
 
 
 
-void Transformations::src_Corotating(Data &gdata, ProblemType &problem, NumMatrix<double, 3> nom[]) {
+void Transformations_Block::src_Corotating(Data &gdata, ProblemType &problem, NumMatrix<double, 3> nom[]) {
 	//! Add corotation source term -\rho (\vec{\Omega} \times \vec{u})
 	/*!
 	 * Beware: u_1 -> u_x and u_2 -> u_y for Cartesian coordinates, while
@@ -831,7 +831,7 @@ void Transformations::src_Corotating(Data &gdata, ProblemType &problem, NumMatri
 }
 
 
-void Transformations::store_uInert(Data &gdata, phys_fields_0D &fields, int ix, int iy, int iz) {
+void Transformations_Block::store_uInert(Data &gdata, phys_fields_0D &fields, int ix, int iy, int iz) {
 	//! Store inertial frame velocity frame:
 	fields.uInertial[0] = fields.uPri[q_sx_loc];
 	fields.uInertial[1] = fields.uPri[q_sy_loc];
@@ -849,7 +849,7 @@ void Transformations::store_uInert(Data &gdata, phys_fields_0D &fields, int ix, 
 /********* Transformation of Kernel Buffers (not used) ********/
 
 
-void Transformations::TransT2E(const Data &gdata, gridFunc &gfunc,
+void Transformations_Block::TransT2E(const Data &gdata, gridFunc &gfunc,
                                ProblemType &Problem, Queue &queue) const
 {
 	if(gdata.om[q_Eges].getName() != "Temp") {
@@ -860,7 +860,7 @@ void Transformations::TransT2E(const Data &gdata, gridFunc &gfunc,
 
 }
 
-void Transformations::TransPrim2Cons(Data &gdata, gridFunc &gfunc,
+void Transformations_Block::TransPrim2Cons(Data &gdata, gridFunc &gfunc,
                                      ProblemType &Problem, Queue& queue) {
 	//! Transform from primitive to conservative variables
 
@@ -886,7 +886,7 @@ void Transformations::TransPrim2Cons(Data &gdata, gridFunc &gfunc,
 	}
 }
 
-void Transformations::TransCons2Prim(Data &gdata, gridFunc &gfunc,
+void Transformations_Block::TransCons2Prim(Data &gdata, gridFunc &gfunc,
                                      ProblemType &Problem, Queue& queue) {
 	//! Transform from conservative to primitive variables
 #if (USE_ANGULAR_MOMENTUM == TRUE)
@@ -905,7 +905,7 @@ void Transformations::TransCons2Prim(Data &gdata, gridFunc &gfunc,
 
 }
 
-void Transformations::TransMomen2Vel(Data &gdata, gridFunc &gfunc,
+void Transformations_Block::TransMomen2Vel(Data &gdata, gridFunc &gfunc,
                                      ProblemType &Problem, Queue &queue)
 {
 	if(gdata.om[q_sx].getName() == "v_x" || 
@@ -933,7 +933,7 @@ void Transformations::TransMomen2Vel(Data &gdata, gridFunc &gfunc,
 	gdata.om[q_sz].rename("v_z");
 }
 
-void Transformations::TransVel2Momen(Data &gdata, gridFunc &gfunc,
+void Transformations_Block::TransVel2Momen(Data &gdata, gridFunc &gfunc,
                                      ProblemType &Problem, Queue &queue) {
 
 	if(gdata.om[q_sx].getName() == "s_x" || 
@@ -961,13 +961,13 @@ void Transformations::TransVel2Momen(Data &gdata, gridFunc &gfunc,
 	gdata.om[q_sz].rename("s_z");
 }
 
-void Transformations::TransEth2E(const Data &gdata, gridFunc &gfunc,
+void Transformations_Block::TransEth2E(const Data &gdata, gridFunc &gfunc,
                                  ProblemType &Problem, Queue &queue) const
 {
 
 	if(gdata.om[q_Eges].getName() != "Etherm") {
 		cerr << " Energy is: " << gdata.om[q_Eges].getName() << " " << q_Eges << endl;
-		throw CException(" Transformations::TransEth2E - om[q_Eges] is not set as thermal energy ");
+		throw CException(" Transformations_Block::TransEth2E - om[q_Eges] is not set as thermal energy ");
 	}
 
 	if(Problem.gamma < 1.0000000001) {
@@ -1026,7 +1026,7 @@ void Transformations::TransEth2E(const Data &gdata, gridFunc &gfunc,
 	gdata.om[q_Eges].rename("Eges");
 }
 
-void Transformations::TransE2Eth(Data &gdata, gridFunc &gfunc, ProblemType &Problem, Queue &queue, int n, bool DualEnergy)
+void Transformations_Block::TransE2Eth(Data &gdata, gridFunc &gfunc, ProblemType &Problem, Queue &queue, int n, bool DualEnergy)
 {
 	if(Problem.gamma < 1.0000000001) {
 		throw CException(" Must not be isothermal ");
@@ -1082,7 +1082,7 @@ void Transformations::TransE2Eth(Data &gdata, gridFunc &gfunc, ProblemType &Prob
 }
 
 
-// void Transformations::TransE2Eth(Data &gdata, gridFunc &gfunc,
+// void Transformations_Block::TransE2Eth(Data &gdata, gridFunc &gfunc,
 //                                  ProblemType &Problem, Queue &queue) {
 	
 // 	if(gdata.om[q_Eges].getName() != "Eges") {
@@ -1133,7 +1133,7 @@ void Transformations::TransE2Eth(Data &gdata, gridFunc &gfunc, ProblemType &Prob
 	        
 // #if(CRSWITCH_DUAL_ENERGY == CRONOS_OFF)
 // 					if(!force_min && omSYCL_Eges[i][j][k] < 0.){
-// 						cerr << " Transformations::TransE2Eth " << endl;
+// 						cerr << " Transformations_Block::TransE2Eth " << endl;
 // //						cerr << q_rho << " " << q_sx << " " << q_Eges << endl;
 // 						cerr << " Error! negative energy at cell ("
 // 							  << i << " " << j << " " << k << "), pos ("
@@ -1220,7 +1220,7 @@ void Transformations::TransE2Eth(Data &gdata, gridFunc &gfunc, ProblemType &Prob
 // 	}
 // }
 
-void Transformations::TransT2Eth(const Data &gdata, gridFunc &gfunc,
+void Transformations_Block::TransT2Eth(const Data &gdata, gridFunc &gfunc,
                                  ProblemType &Problem, Queue &queue) const
 {
 
@@ -1256,7 +1256,7 @@ void Transformations::TransT2Eth(const Data &gdata, gridFunc &gfunc,
 
 /****** Inner Kernel Transformation******/
 
-double Transformations::TransEth2E(double rhoinv, double psq, double Bsq, double ETherm) const {
+double Transformations_Block::TransEth2E(double rhoinv, double psq, double Bsq, double ETherm) const {
 #if (FLUID_TYPE == CRONOS_MHD)
 	return TransEth2E_MHD(rhoinv, psq, Bsq, ETherm);
 #elif (FLUID_TYPE == CRONOS_HYDRO)
@@ -1270,7 +1270,7 @@ double Transformations::TransEth2E(double rhoinv, double psq, double Bsq, double
 #endif
 }
 
-double Transformations::TransT2E(const ProblemType &Problem, double rhoinv, double psq, double Bsq, double ETherm) const {
+double Transformations_Block::TransT2E(const ProblemType &Problem, double rhoinv, double psq, double Bsq, double ETherm) const {
 #if (FLUID_TYPE == CRONOS_MHD)
 	return TransT2E_MHD(Problem, rhoinv, psq, Bsq, ETherm);
 #elif (FLUID_TYPE == CRONOS_HYDRO)
@@ -1284,26 +1284,26 @@ double Transformations::TransT2E(const ProblemType &Problem, double rhoinv, doub
 #endif
 }
 
-double Transformations::TransEth2E_HD(double rhoinv, double psq, double Bsq, double ETherm)
+double Transformations_Block::TransEth2E_HD(double rhoinv, double psq, double Bsq, double ETherm)
 {
 	double Energy(ETherm + 0.5*psq*rhoinv);
 	return Energy;
 }
 
-double Transformations::TransT2E_HD(ProblemType &Problem,
+double Transformations_Block::TransT2E_HD(ProblemType &Problem,
 		double rhoinv, double psq, double Bsq, double Temp)
 {
 	double Energy(1./(rhoinv*(Problem.gamma-1.))*Temp);
 	return TransEth2E(rhoinv, psq, Bsq, Energy);
 }
 
-double Transformations::TransEth2E_MHD(double rhoinv, double psq, double Bsq, double ETherm) const
+double Transformations_Block::TransEth2E_MHD(double rhoinv, double psq, double Bsq, double ETherm) const
 {
 	double Energy(ETherm + 0.5*psq*rhoinv + 0.5*Bsq);
 	return Energy;
 }
 
-double Transformations::TransT2E_MHD(const ProblemType &Problem,
+double Transformations_Block::TransT2E_MHD(const ProblemType &Problem,
 		double rhoinv, double psq, double Bsq, double Temp) const
 {
 	double Energy(1./(rhoinv*(Problem.gamma-1.))*Temp);

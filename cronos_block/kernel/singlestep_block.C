@@ -12,22 +12,23 @@
 #include <unistd.h>
 
 #include "reconst_block.H"
-#include "transformations.H"
+#include "transformations_block.H"
 #include "RiemannSolverHD.H"
 #include "PhysFluxesHD.H"
 #include "utils.H"
 
-#if(STANDALONE_USAGE == TRUE)
-#include "utils.H"
-#else
+// #if(STANDALONE_USAGE == TRUE)
+// #include "utils.H"
+// #else
 #include "queue.H"
-#endif
+#include "lazy_assertion.H"
+// #endif
 
 using namespace std;
 
 double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
                                   ProblemType &Problem, int n, Queue& queue)
-{
+{	cout << "debug 0" << endl;
   //! Block structured version of singlestep
   /*! 
    * This version of singlestep solves all directions simultaneously
@@ -55,7 +56,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 // ----------------------------------------------------------------
 //      Setup Buffer for RK-Step
 // ----------------------------------------------------------------
-	
+	cout << "debug 1" << endl;
 	gettimeofday(&tick, 0);
 	
 	auto omRange = gdata.omSYCL[0].get_range();
@@ -80,6 +81,8 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 				});
 			});
 		}
+
+		TimeIntegratorGeneric[0]->init_omBuffer(queue, gdata.mx);
 	}
 
 	
@@ -91,7 +94,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	gettimeofday(&tin11, 0);
 	gettimeofday(&tin1, 0);
 	cstart = clock();  
-
+	cout << "debug 2" << endl;
 // ----------------------------------------------------------------
 // Relevant declarations
 // ----------------------------------------------------------------
@@ -191,7 +194,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 	// Compute the carbuncle-flag if necessary
 	if(gdata.use_carbuncleFlag) {
-		Riemann[DirX]->compute_carbuncleFlag(queue, gdata);
+		compute_carbuncleFlag(queue, gdata, Riemann[DirX]->getAlphaCarbuncle());
 	}
 
 // ---------------------------------------------------------------	      
@@ -242,7 +245,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 // ---------------------------------------------------------------	      
 //      Compute Kernel
 //----------------------------------------------------------------
-
+	cout << "debug 3" << endl;
 	queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 
 		auto rd = celerity::reduction(gdata.cflSYCL, cgh, cl::sycl::maximum<double>{},
@@ -297,12 +300,12 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 	gdata.fetch_cfl(queue);
 	cfl_lin = gdata.cfl;
-
+	cout << "debug 4" << endl;
 // ---------------------------------------------------------------	      
 //      Former Kernel for Non-Parallel Execution
 //----------------------------------------------------------------
 
-	// auto computeStep = [](Reconstruction_Block reconst, const std::unique_ptr<Transformations>& Trafo, const std::unique_ptr<PhysFluxes>& PhysFlux, const std::vector<std::unique_ptr<RiemannSolver>>& Riemann, const ProblemType& Problem, const std::unique_ptr<EquationOfState>& eos, const Data& gdata, int ix, int iy, int iz, double& cfl_lin) {
+	// auto computeStep = [](Reconstruction_Block reconst, const std::unique_ptr<Transformations_Block>& Trafo, const std::unique_ptr<PhysFluxes>& PhysFlux, const std::vector<std::unique_ptr<RiemannSolver>>& Riemann, const ProblemType& Problem, const std::unique_ptr<EquationOfState>& eos, const Data& gdata, int ix, int iy, int iz, double& cfl_lin) {
 
 	// 	// Reconstruction at given position
 	// 	std::vector<phys_fields_0D> physVals;
@@ -450,12 +453,12 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 // ----------------------------------------------------------------
 //   Transform to conservative variables:
 // ----------------------------------------------------------------
-
+	cout << "debug 5" << endl;
 	// Trafo->TransPrim2Cons(gdata, gfunc, Problem);
 	// Problem.TransPrim2Cons(gdata);	
 	Trafo->TransPrim2Cons(gdata, gfunc, Problem, queue);
 	Problem.TransPrim2Cons(queue, gdata);	
-
+	cout << "debug 6" << endl;
 // ----------------------------------------------------------------
 //   Determine domain to be integrated and apply changes:
 // ----------------------------------------------------------------
@@ -521,7 +524,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 #else
 	int q_max = n_omInt;
 #endif
-
+	cout << "debug 6.1" << endl;
 	// Boundary conditions
 	for(int q=0; q<q_max; ++q) {
 		// gfunc.boundary(gdata, Problem, gdata.om[q],B,q);
@@ -544,21 +547,21 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 // 		} else {
 // 			Trafo->TransE2T(gdata, gfunc, Problem);
 // 		}
-
+	cout << "debug 6.2" << endl;
 		Trafo->TransE2Eth(gdata, gfunc, Problem, queue, 0, true);
  
 		for(int q=q_Eges; q<n_omInt; ++q) {
 			// gfunc.boundary(gdata, Problem, gdata.om[q],B,q);
 			gfunc.boundary(queue,gdata, Problem, gdata.om[q],B,q);
 		}
-
+	cout << "debug 6.3" << endl;
 #if (USE_COROTATION == CRONOS_ON)
 		// Transform to co-rotating frame velocity for BCs
 		Trafo->TransInertToCorot(gdata, gfunc, Problem);
 #endif
 
 	}
-
+	cout << "debug 6.4" << endl;
 	// Problem.TransCons2Prim(gdata);
 	Problem.TransCons2Prim(queue, gdata);
 
@@ -572,7 +575,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 // ----------------------------------------------------------------
 //   Runtime estimates
 // ----------------------------------------------------------------
-
+	cout << "debug 7" << endl;
 	gettimeofday(&tock2, 0);
 	cend = clock();
 
@@ -606,7 +609,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		}
 
 	}
-
+	cout << "debug 8" << endl;
 // ----------------------------------------------------------------
 //   Test physical state
 // ----------------------------------------------------------------

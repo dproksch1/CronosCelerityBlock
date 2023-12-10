@@ -45,7 +45,7 @@ HyperbolicSolver::HyperbolicSolver(Data &gdata, ProblemType &Problem)
 
 	init_constants(gdata);
 
-	Trafo = std::make_unique<Transformations>(gdata.fluid, Problem, false);
+	Trafo = std::make_unique<Transformations_Block>(gdata.fluid, Problem, false);
 
 	IntegrateA = true;
 	bcVecPotResized = false;

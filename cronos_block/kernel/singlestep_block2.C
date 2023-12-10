@@ -12,7 +12,7 @@
 #include <unistd.h>
 
 #include "reconst_block.H"
-#include "transformations.H"
+#include "transformations_block.H"
 #include "RiemannSolverHD.H"
 #include "PhysFluxesHD.H"
 #include "utils.H"
@@ -21,6 +21,7 @@
 #include "utils.H"
 #else
 #include "queue.H"
+#include "lazy_assertion.H"
 #endif
 
 using namespace std;
@@ -315,7 +316,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 //      Former Kernel for Non-Parallel Execution
 //----------------------------------------------------------------
 
-	auto computeStep = [](Reconstruction_Block reconst, const std::unique_ptr<Transformations>& Trafo, const std::unique_ptr<PhysFluxes>& PhysFlux, const std::vector<std::unique_ptr<RiemannSolver>>& Riemann, const ProblemType& Problem, const std::unique_ptr<EquationOfState>& eos, const Data& gdata, int ix, int iy, int iz, double& cfl_lin) {
+	auto computeStep = [](Reconstruction_Block reconst, const std::unique_ptr<Transformations_Block>& Trafo, const std::unique_ptr<PhysFluxes>& PhysFlux, const std::vector<std::unique_ptr<RiemannSolver>>& Riemann, const ProblemType& Problem, const std::unique_ptr<EquationOfState>& eos, const Data& gdata, int ix, int iy, int iz, double& cfl_lin) {
 
 		// Reconstruction at given position
 		std::vector<phys_fields_0D> physVals;

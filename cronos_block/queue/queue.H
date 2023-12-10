@@ -3,6 +3,8 @@
 #include <CL/sycl.hpp>
 #include <celerity/celerity.h>
 
+#define CELERITY_PARALLEL CRONOS_ON
+
 //using Queue = cl::sycl::queue;
 using Queue = celerity::distr_queue;
 

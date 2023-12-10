@@ -2,9 +2,10 @@
 #define CRONOS_COMPUTE_STEP_H
 
 #include "reconst_block.H"
-#include "transformations.H"
+#include "transformations_block.H"
 #include "RiemannSolverHD.H"
 #include "PhysFluxesHD.H"
+#include "solver_func.H"
 #include "utils.H"
 
 namespace gpu {

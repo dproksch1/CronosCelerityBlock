@@ -107,11 +107,14 @@ else()
 endif()
 
 include_directories(cronos_block/test)
+include_directories(cronos_block/data)
 include_directories(cronos_block/general)
 include_directories(cronos_block/interface_functions)
 include_directories(cronos_block/kernel)
-include_directories(cronos_block/riemann_solver)
+include_directories(cronos_block/queue)
 include_directories(cronos_block/reconstruction)
+include_directories(cronos_block/riemann_solver)
+include_directories(cronos_block/stepfunctions)
 include_directories(cronos_block/utils)
 include_directories(cronos_block/configuration/standalone/cronos_block)
 # include_directories(cronos_block/configuration/ShockTubeSod)
@@ -128,32 +131,33 @@ set(SOURCES
     cronos_block/general/buildinfo.C
     cronos_block/general/CException.C
     cronos_block/general/cfl.C
-    cronos_block/general/data.C
     cronos_block/general/eos.C
     cronos_block/general/fluid.C
     cronos_block/general/grid.C
-    cronos_block/general/gridfunc.C
-    cronos_block/general/gridgen.C
     cronos_block/general/gridParam.C
-    cronos_block/general/Hdf5File_cbase.C
     cronos_block/general/movie.C
     cronos_block/general/normalisation.C
     cronos_block/general/proj.C
     cronos_block/general/sources.C
     cronos_block/general/specific.C
-    cronos_block/general/timestepping.C
     cronos_block/general/units.C
+    cronos_block/data/data.C
     cronos_block/interface_functions/problem.C
     cronos_block/interface_functions/solver.C
     cronos_block/kernel/fields_local.C
     cronos_block/kernel/singlestep_block.C
-    cronos_block/kernel/transformations.C
-    cronos_block/riemann_solver/changes.C
+    cronos_block/kernel/transformations_block.C
+    cronos_block/kernel/solver_func.C
+    cronos_block/kernel/changes.C
+    cronos_block/reconstruction/reconst_block.C
     cronos_block/riemann_solver/hllc_hd.C
     cronos_block/riemann_solver/PhysFluxesHD.C
     cronos_block/riemann_solver/RiemannSolver.C
     cronos_block/riemann_solver/vChar_hd.C
-    cronos_block/reconstruction/reconst_block.C
+    cronos_block/stepfunctions/gridfunc.C
+    cronos_block/stepfunctions/gridgen.C
+    cronos_block/stepfunctions/Hdf5File_cbase.C
+    cronos_block/stepfunctions/timestepping.C
     #test/proj.C
     #test/test_data.C
     #test/singlestep_stub.C

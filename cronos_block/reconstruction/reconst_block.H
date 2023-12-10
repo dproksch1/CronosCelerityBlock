@@ -9,10 +9,11 @@
 #include "fields_local.H"
 #include "standalone_usage.H"
 #include "utils.H"
-
-#if(STANDALONE_USAGE == TRUE)
 #include "direction.H"
-#endif
+
+// #if(STANDALONE_USAGE == TRUE)
+// #include "direction.H"
+// #endif
 
 namespace gpu {
 

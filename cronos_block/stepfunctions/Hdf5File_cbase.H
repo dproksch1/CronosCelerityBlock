@@ -9,6 +9,7 @@
 #include "hdf5.h"
 #include "matrix.H"
 #include "queue.H"
+#include "lazy_assertion.H"
 #include "constants.H"
 
 // template<typename T> hid_t get_hdf5_data_type();

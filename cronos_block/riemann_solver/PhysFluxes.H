@@ -24,9 +24,9 @@ protected:
 };
 
 
-class PhysFluxesUser {
+class PhysFluxesUser_block {
 public:
-	PhysFluxesUser(){};
+	PhysFluxesUser_block(){};
 	virtual void get_PhysFlux(Data &gdata, ProblemType &Problem, phys_fields_0D &fields,
 	        int ix, int iy, int iz, int face)=0;
 };

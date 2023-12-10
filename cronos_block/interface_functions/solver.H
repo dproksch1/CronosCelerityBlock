@@ -7,6 +7,7 @@
 #include "gridfunc.H"
 #include "CException.H"
 #include "queue.H"
+#include "lazy_assertion.H"
 
 class rksolver {
 public:

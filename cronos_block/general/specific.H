@@ -17,7 +17,7 @@
 #include "limiter.H"
 #include "problem.H"
 #include "eos.H"
-#include "transformations.H"
+#include "transformations_block.H"
 #include "sources.H"
 #include "timestepping.H"
 #include "RiemannSolver.H"
@@ -26,6 +26,7 @@
 #include "PhysFluxesHD.H"
 #include "reconst_block.H"
 #include "queue.H"
+#include "lazy_assertion.H"
 
 
 class HyperbolicSolver: public rksolver {
@@ -95,7 +96,7 @@ private:
 	timeval tin11, tin12, tin13, tin14;
 	std::unique_ptr<EquationOfState> eos;
 	std::unique_ptr<SourceTerms> sources;
-	std::unique_ptr<Transformations> Trafo;
+	std::unique_ptr<Transformations_Block> Trafo;
 	NumMatrix<double,3> *v_max_p;
 	NumMatrix<double,3> *v_max_m;
 	// For the new solver:

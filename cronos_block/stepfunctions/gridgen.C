@@ -14,6 +14,7 @@
 #include <filesystem>
 
 #include "queue.H"
+#include "lazy_assertion.H"
 
 // local functions:
 void RemoveNullsFromString(string &input)

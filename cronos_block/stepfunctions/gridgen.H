@@ -27,6 +27,7 @@ typedef long long Long;
 #include "problem.H"
 #include "solver.H"
 #include "queue.H"
+#include "lazy_assertion.H"
 
 class Environment
 {

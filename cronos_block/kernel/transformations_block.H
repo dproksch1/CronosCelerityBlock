@@ -1,5 +1,5 @@
-#ifndef CRONOS_TRANSFORMATIONS_H
-#define CRONOS_TRANSFORMATIONS_H
+#ifndef CRONOS_TRANSFORMATIONS_BLOCK_H
+#define CRONOS_TRANSFORMATIONS_BLOCK_H
 
 #include "CException.H"
 #include "data.H"
@@ -117,9 +117,9 @@ namespace gpu {
 
 }
 
-class Transformations {
+class Transformations_Block {
 public:
-	Transformations(const CronosFluid&, ProblemType &, bool, int iFluid=0);
+	Transformations_Block(const CronosFluid&, ProblemType &, bool, int iFluid=0);
 	void TransPrim2Cons(Data &gdata, gridFunc &gfunc, ProblemType &Problem);
 	void TransCons2Prim(Data &gdata, gridFunc &gfunc, ProblemType &Problem);
     void TransMomen2Vel(Data &, gridFunc &, ProblemType &);

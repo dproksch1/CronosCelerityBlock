@@ -1,5 +1,5 @@
-#ifndef CRONOS_RIEMANNSOVLER_H
-#define CRONOS_RIEMANNSOVLER_H = 1
+#ifndef CRONOS_RIEMANNSOLVER_H
+#define CRONOS_RIEMANNSOLVER_H = 1
 
 #include "data.H"
 #include "problem.H"
@@ -41,8 +41,9 @@ public:
 	int get_Fluid_Type() {
 		return Fluid_Type;
 	}
+	double getAlphaCarbuncle();
 	void compute_carbuncleFlag(Data &gdata);
-	void compute_carbuncleFlag(Queue &queue, Data &gdata);
+	// void compute_carbuncleFlag(Queue &queue, Data &gdata);
 	void set_verbosity(int _verb);
 	
 protected:

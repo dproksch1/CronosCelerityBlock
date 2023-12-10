@@ -13,6 +13,7 @@
 #include "fluid.H"
 #include "constants.H"
 #include "queue.H"
+#include "lazy_assertion.H"
 #include "utils.H"
 
 #ifndef DATA_TYPE

@@ -157,7 +157,7 @@
         "fields_local.H": "cpp",
         "compute_step.H": "cpp",
         "reconst_block.H": "cpp",
-        "transformations.H": "cpp",
+        "transformations_block.H": "cpp",
         "changes.H": "cpp",
         "timewrapper.H": "cpp",
         "singlestep_block copy.C": "cpp",
