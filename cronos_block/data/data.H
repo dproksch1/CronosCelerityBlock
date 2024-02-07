@@ -37,10 +37,6 @@ public:
 	Pot& operator=(const double&);  
 	double get_max();
 	double get_min();
-// 	std::string get_FieldType();
-// 	void set_FieldType(std::string);
-// private:
-// 	std::string FieldType; // Indicates the name used in the program
 };
 
 class id_handler {
@@ -84,10 +80,7 @@ public:
 	celerity::buffer<double, 1> cflSYCL;
 	CelerityBuffer<nom_t, 3> nomSYCL;
 	NumMatrix<double,3> *nom;
-//	Pot om[N_OM+N_P];
-//	Pot om[31];
-//	std::vector<Pot> om;
-//	std::vector<Pot*> om;
+
 #if (OMS_USER == TRUE)
 	Pot *om_user;
 #endif

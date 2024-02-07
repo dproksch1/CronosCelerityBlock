@@ -14,7 +14,6 @@
 #else
 #include <utime.h>
 #endif
-//#include "celerity_test.H"
 
 #include <fenv.h>
 #include <signal.h>
@@ -44,12 +43,9 @@ int main(int argc, char* argv[])
 	};
 
 	if (argc == 2) {
-		//setenv("pname", argv[1], 1);
 		setenvWrapper("pname", argv[1]);
 	} else if (argc == 3) {
-		//setenv("poub",argv[1],1);
 		setenvWrapper("poub", argv[1]);
-		//setenv("pname",argv[2],1);
 		setenvWrapper("pname", argv[2]);
 	}
 
@@ -68,14 +64,10 @@ int main(int argc, char* argv[])
 
 	int EndProgram(0);
 
-	//DeviceSelector device_selector;
-	//Queue queue(device_selector);
 	Queue queue;
 
 	Data gdata;
 	Environment solver(gdata);
-
-	//cout << gdata.fluid.get_fieldName(qReconst) << "\n";
 
 	bool RESTART = bool(value((char*)"restart"));
 
@@ -97,11 +89,8 @@ int main(int argc, char* argv[])
 		solver.InitOutput(queue, gdata);
 	}
 
-	// for (;;) {
 	while (EndProgram == 0) {
 		EndProgram = solver.integrate(gdata, queue);
-	//	// EndProgram = solver.Finalize(gdata, queue, static_cast<string>("Stopping for gdm"));
-
 	}
 
 	if (EndProgram == 1) {
@@ -111,13 +100,3 @@ int main(int argc, char* argv[])
 		return EndProgram;
 	}
 }
-
-
-
-
-
-
-
-
-
-

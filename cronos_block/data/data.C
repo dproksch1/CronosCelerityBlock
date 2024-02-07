@@ -184,32 +184,21 @@ Data::Data() : cflSYCL (celerity::buffer<double,1>(celerity::range{1})), nomSYCL
 		nom[q].resize(Index::set(0,0,0), Index::set(mx[0],mx[1],mx[2]));
 	}
 
-//	exit(3);
-//	om.clear();
-//	om.reserve(N_OM+N_P);
 	for(int q=0; q<N_OM+N_P; ++q) {
-//		cout << " kuh " << q << endl;
-		// Make om fields
-//		om.push_back(Pot(mx));
-//		cout << " next " << endl;
 		om[q].clear();
-		// om[q].set_VariableName("om");
 	}
 
 #if (OMS_USER == TRUE)
 	int n_omIntUser = fluid.get_N_OMINT_USER();
 
 	om_user = new Pot[n_omUser];
-//	nom_user = new NumMatrix<double,3> [n_omUser];
 	nom_user = new NumMatrix<double,3> [n_omIntUser];
 
-//	for (int q = 0; q < n_omUser; ++q) {
 	for (int q = 0; q < n_omIntUser; ++q) {
 		nom_user[q].resize(Index::set(0,0,0), Index::set(mx[0],mx[1],mx[2]));
 	}
 	for(int q=0; q<n_omUser; ++q) {
 		om_user[q].clear();
-		// om_user[q].set_VariableName("om_user");
 	}
 #else
 	nom_user = NULL;
@@ -227,7 +216,6 @@ Data::Data() : cflSYCL (celerity::buffer<double,1>(celerity::range{1})), nomSYCL
 		sprintf(cll,"%2.2d",ll);
 		name += cll;
     
-//		om.push_back(new Pot(mx));
 		om[ll].resize(mx);
 		om[ll].rename(name);
 		om[ll].clear();

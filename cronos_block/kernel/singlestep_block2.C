@@ -107,24 +107,6 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	auto omRange = gdata.omSYCL[0].get_range();
 	size_t nom_max[3] = {omRange.get(0), omRange.get(1), omRange.get(2)};
 
-	// if (gdata.tstep <= 1 && n == 0) {
-	// 	for (int q = 0; q < N_OMINT; q++) {
-
-	// 		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-	// 			celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::write_only_host_task};
-	// 			cgh.host_task(celerity::on_master_node, [=, &gdata]{
-	// 				for (int i = 0; i < nom_max[0]; i++) {
-	// 					for (int j = 0; j < nom_max[1]; j++) {
-	// 						for (int k = 0; k < nom_max[2]; k++) {
-	// 							omSYCL_acc[i][j][k] = gdata.om[q](i-3,j-3,k-3);
-	// 						}
-	// 					}
-	// 				}
-	// 			});
-	// 		});
-	// 	}
-	// }
-
 // ---------------------------------------------------------------	      
 //      Trafo of variables to conservative form
 //----------------------------------------------------------------
@@ -403,31 +385,6 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		}
 	}
 
-	// queue.slow_full_sync();
-	// 	if (gdata.tstep <= 1) {
-	// 		for (int q = 1; q < 5; q++) {
-
-	// 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-	// 				celerity::accessor omSYCL_acc{gdata.omSYCL[q], cgh, celerity::access::all{}, celerity::write_only_host_task};
-	// 				cgh.host_task(celerity::on_master_node, [=, &gdata]{
-	// 					for (int i = 61; i < 62; i++) {
-	// 						for (int j = 61; j < 62; j++) {
-	// 							for (int k = 61; k < 68; k++) {
-	// 								// if (omSYCL_acc[i][j][k] > 1.000000000001 || omSYCL_acc[i][j][k] < (1.0 - 0.000000000001)) {
-	// 								printf("%d,%d,%d: %f\n",i,j,k,omSYCL_acc[i][j][k]);
-	// 								// }
-	// 								//if (gdata.om[q](i-3,j-3,k-3) > 1.000000000001 || gdata.om[q](i-3,j-3,k-3) < (1.0 - 0.000000000001)) {
-	// 									// printf("%d,%d,%d: %f\n",i,j,k,gdata.om[q](i-3,j-3,k-3));
-	// 								//}
-	// 							}
-	// 						}
-	// 					}
-	// 				});
-	// 			});
-	// 		}
-	// 	}queue.slow_full_sync();
-
-
 // ----------------------------------------------------------------
 //   Check for errors:
 // ----------------------------------------------------------------
@@ -489,8 +446,6 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 	Trafo->TransPrim2Cons(gdata, gfunc, Problem);
 	Problem.TransPrim2Cons(gdata);
-	// Trafo->TransPrim2Cons(gdata, gfunc, Problem, queue);
-	// Problem.TransPrim2Cons(queue, gdata);
 
 // ----------------------------------------------------------------
 //   Determine domain to be integrated and apply changes:

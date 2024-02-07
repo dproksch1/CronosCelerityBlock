@@ -10,62 +10,6 @@
 
 namespace gpu {
 
-    template<typename uPriAccessorType, typename NumFluxAccessorType, typename NumPtotalAccessorType, typename CFlagAccessorType, typename IdxConstType, typename FluidConstType>
-    void computeStep(const uPriAccessorType& uPri_acc, size_t ix, size_t iy, size_t iz, size_t ixyz, double* cfl_lin, NumFluxAccessorType& numFlux,
-                    NumPtotalAccessorType& num_ptotal, const CFlagAccessorType& carbuncle_flag, const bool thermal, const double gamma, const double problem_cs2, const double denominator,
-                    const double half_beta, const int fluidType, const double Theta, bool use_carbuncle, IdxConstType idx, FluidConstType fluidConst) {
-
-        //no vector in device code
-        double uPri[gpu::FaceMax][N_OMINT] = {};
-        double uCon[gpu::FaceMax][N_OMINT] = {};
-        double physFlux[gpu::FaceMax][N_OMINT] = {};
-        double physValPtherm[gpu::FaceMax] = {};
-        double physValPtotal[gpu::FaceMax] = {};
-
-        for (int i = 0; i < gpu::FaceMax; i++) {
-            for (int j = 0; j < N_OMINT; j++) {
-                uPri[i][j] = uPri_acc[ix][iy][iz].mat[i][j];
-            }
-        }
-
-        int cflag[gpu::FaceMax] = {};
-        cflag[gpu::FaceEast] = carbuncle_flag[ix+1][iy][iz];
-        cflag[gpu::FaceWest] = carbuncle_flag[ix-1][iy][iz];
-        cflag[gpu::FaceNorth] = carbuncle_flag[ix][iy+1][iz];
-        cflag[gpu::FaceSouth] = carbuncle_flag[ix][iy-1][iz];
-        cflag[gpu::FaceTop] = carbuncle_flag[ix][iy][iz+1];
-        cflag[gpu::FaceBottom] = carbuncle_flag[ix][iy][iz-1];
-
-        for (int dir = 0; dir < DirMax; ++dir) {
-
-            int face = dir * 2;
-
-            gpu::get_Cons(uPri[face], uCon[face], physValPtherm[face], physValPtotal[face], ix, iy, iz, face,
-                            thermal, gamma, problem_cs2, denominator, half_beta, fluidType, fluidConst);
-
-            gpu::get_PhysFlux(physFlux[face], uPri[face], uCon[face], physValPtherm[face], face, fluidConst);
-
-            gpu::get_Cons(uPri[face+1], uCon[face+1], physValPtherm[face+1], physValPtotal[face+1], ix, iy, iz, face+1,
-                            thermal, gamma, problem_cs2, denominator, half_beta, fluidType, fluidConst);
-
-            gpu::get_PhysFlux(physFlux[face+1], uPri[face+1], uCon[face+1], physValPtherm[face+1], face+1, fluidConst);
-        }
-
-        double numVals_Ch[DirMax][gpu::NumV_Max] = {};
-
-        if (ix >= 2 && iy >= 2 && iz >= 2) {
-            for (int dir = 0; dir < DirMax; ++dir) {
-                int face = dir * 2;
-                *cfl_lin = cl::sycl::fmax(gpu::get_vChar(uPri[face], uCon[face], physValPtherm[face], uPri[face+1], uCon[face+1],
-                                physValPtherm[face+1], numVals_Ch[dir], dir, gamma, idx, fluidConst), *cfl_lin);
-                num_ptotal[dir] = gpu::get_NumFlux(uPri[face+1], uCon[face+1], physFlux[face+1], physValPtherm[face+1],
-                                        physValPtotal[face+1], cflag[face+1], uPri[face], uCon[face], physFlux[face], physValPtherm[face], 
-                                        physValPtotal[face], cflag[face], numFlux[dir], numVals_Ch[dir], use_carbuncle, dir, gamma, fluidConst);
-            }
-        }
-    }
-
-
     template<typename omAccessorType, typename NumFluxAccessorType, typename NumPtotalAccessorType, typename CFlagAccessorType, typename IdxConstType, typename FluidConstType>
     void computeStep(const omAccessorType& om_rho_acc, const omAccessorType& om_sx_acc, const omAccessorType& om_sy_acc, const omAccessorType& om_sz_acc, const omAccessorType& om_Eges_acc,
                     size_t ix, size_t iy, size_t iz, size_t ixyz, double* cfl_lin, NumFluxAccessorType& numFlux,

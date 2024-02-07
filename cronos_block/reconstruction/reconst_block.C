@@ -24,7 +24,6 @@ SingleReconstruction_Block::SingleReconstruction_Block(const Data& gdata, int di
         limiterID = static_cast<int>(value("Limiter"));
     }
 
-    //Limiter = new limiter(limiterID);
     Limiter = limiter();
 
     if (gdata.rank == 0) {

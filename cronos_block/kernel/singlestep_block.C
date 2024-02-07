@@ -466,7 +466,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	// Trafo->TransPrim2Cons(gdata, gfunc, Problem);
 	// Problem.TransPrim2Cons(gdata);	
 	Trafo->TransPrim2Cons(gdata, gfunc, Problem, queue);
-	Problem.TransPrim2Cons(queue, gdata);	
+	Problem.TransPrim2Cons(queue, gdata);
 
 // ----------------------------------------------------------------
 //   Determine domain to be integrated and apply changes:
@@ -604,17 +604,11 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 	double delt4 = delt + delt2 + delt3;
 
-	double dtStep = ((tstep.tv_sec + tstep.tv_usec/1.e6) -
-	               (tstepOld.tv_sec + tstepOld.tv_usec/1.e6));
-
 	if(gdata.rank == 0) {
 		if(n == RK_STEPS-1 && Problem.get_Info() && Problem.checkout(5)) {
 			cout << "------------------------------------------------------" << endl;
-			cout << " Time needed for substeps:  " << delt << " " << delt2 << " " << delt2 << endl;
+			cout << " Time needed for substeps:  " << delt << " " << delt2 << " " << delt3 << endl;
 			cout << "             for full step: " << delt3 << endl;
-//       cout << " CPU Cycle times: " << gdata.rank << " ";
-//       cout << (1.*(cstep-cstart))/CLOCKS_PER_SEC << " ";
-//       cout << (1.*(cend-cstep))/CLOCKS_PER_SEC << endl;
 		}
 
 	}
@@ -639,21 +633,6 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	if(Problem.mag && n == RK_STEPS-1){
 		compute_divB(gdata, gfunc, Problem);
 	}
-
-	// queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-	// 	celerity::accessor nomSYCL_acc{gdata.nomSYCL, cgh, celerity::access::one_to_one{}, celerity::write_only};
-
-	// 	cgh.parallel_for<class IntegrationKernel_0_0>(gdata.nomSYCL.get_range(), [=](celerity::item<3> item){
-
-	// 		size_t ix = item.get_id(0);
-	// 		size_t iy = item.get_id(1);
-	// 		size_t iz = item.get_id(2);
-
-	// 		for (int d = 0; d < N_OMINT; d++) {
-	// 			nomSYCL_acc[ix][iy][iz].mat[d] = 0;
-	// 		}
-	// 	});
-	// });
 
 	return cfl;
 
