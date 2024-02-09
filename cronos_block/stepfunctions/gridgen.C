@@ -164,15 +164,6 @@ void Environment::InitOutput(Queue &queue, Data &gdata)
 		WriteMovies(gdata);
 #endif
 
-		// Output of gdata data:
-// #if (CRONOS_DISTR_OUTPUT == CRONOS_ON)
-// 		Output_Distributed(queue, gdata, true, false);
-// #else
-		//Output_Master(queue, gdata, true, false);
-// #endif
-		// Output(gdata, true, false);
-//		// Output of gdata data:
-//		Output(gdata, false, false);
 	}
 
 }

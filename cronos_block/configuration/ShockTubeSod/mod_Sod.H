@@ -184,7 +184,7 @@ void ShockTubeTestHydro::bc_User(Queue &queue, Data &gdata, NumMatrix<double,3> 
 		if(top == 1) {
 
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(rim, omRange.get(1), omRange.get(2));
+			auto range = CelerityRange<3>(rim, omRange.get(1), omRange.get(2));
 
 			double rhoRInit_local = this->rhoRInit;
 			double VRXInit_local = this->VRXInit;

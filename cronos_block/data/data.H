@@ -59,7 +59,6 @@ public:
 	~Data();
 	void floatom_out(int R, Hdf5Stream & file, int om_lo, int om_hi);
 	void float_out(int, bool);
-	void CheckNan(int);
 	double computeInt(int);
 	double computeRMS(int);
 	NumMatrix<double,3>  computeAbs(int, int) const;
@@ -77,7 +76,7 @@ public:
 
 	Pot *om;
 	std::vector<CelerityBuffer<double, 3>> omSYCL;
-	celerity::buffer<double, 1> cflSYCL;
+	CelerityBuffer<double, 1> cflSYCL;
 	CelerityBuffer<nom_t, 3> nomSYCL;
 	NumMatrix<double,3> *nom;
 

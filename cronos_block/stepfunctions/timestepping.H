@@ -9,24 +9,6 @@
 #include "utils.H"
 #include <vector>
 
-
-namespace gpu {
-
-	template<typename NumAccessorType>
-	double get_nomSYCL_at_q(NumAccessorType nomAcc, int ix, int iy, int iz, short q) {
-		switch(q) {
-			case 0: return nomAcc[ix][iy][iz].rho;
-			case 1: return nomAcc[ix][iy][iz].sx;
-			case 2: return nomAcc[ix][iy][iz].sy;
-			case 3: return nomAcc[ix][iy][iz].sz;
-			case 4: return nomAcc[ix][iy][iz].Eges;
-			default: return 0.;
-		}
-	}
-
-}
-
-
 class TimeIntegrator {
 public:
 	TimeIntegrator(const int);
@@ -34,13 +16,6 @@ public:
 	void set_IntRange(int [], int []);
 	void init_omBuffer(Queue &, const int []);
 	void set_corrField(int);
-	void save_data(const Pot om[], const int substep);
-	virtual double get_dt(Data & gdata, const int substep);
-	virtual void Substep(const Data &gdata, ProblemType &, NumMatrix<double, 3> &nom,
-	             Pot om[], const int substep) = 0;
-	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
-                      CelerityBuffer<nom_t, 3> nomSYCL,
-                      Pot om[], const int substep, size_t nom_max[]) = 0;
 	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
                       CelerityBuffer<nom_t, 3> nomSYCL,
                       double dt, const int substep, size_t nom_max[]) = 0;
@@ -50,7 +25,6 @@ protected:
 	int ibeg[DIM], iend[DIM];
 	int qch;
 	const int n_saves;
-	NumMatrix<double, DIM> *om_save;
 	std::vector<CelerityBuffer<double, 3>> omSYCL_save;
 };
 
@@ -58,12 +32,6 @@ protected:
 class RKSteps: public TimeIntegrator {
 public:
 	RKSteps();
-	virtual double get_dt(Data & gdata, int substep);
-	virtual void Substep(const Data &gdata, ProblemType &, NumMatrix<double, 3> &nom,
-	             Pot om[], const int substep);
-	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
-                      CelerityBuffer<nom_t, 3> nomSYCL,
-                      Pot om[], const int substep, size_t nom_max[]);
 	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
                       CelerityBuffer<nom_t, 3> nomSYCL,
                       double dt, const int substep, size_t nom_max[]);
@@ -76,12 +44,6 @@ private:
 class VanLeerIntegrator: public TimeIntegrator {
 public:
 	VanLeerIntegrator();
-	virtual double get_dt(Data & gdata, int substep);
-	virtual void Substep(const Data &gdata, ProblemType &, NumMatrix<double, 3> &nom,
-	             Pot om[], const int substep);
-	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
-                      CelerityBuffer<nom_t, 3> nomSYCL,
-                      Pot om[], const int substep, size_t nom_max[]);
 	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
                       CelerityBuffer<nom_t, 3> nomSYCL,
                       double dt, const int substep, size_t nom_max[]);

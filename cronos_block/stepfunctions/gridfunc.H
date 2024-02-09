@@ -204,119 +204,6 @@ namespace distr_io {
 	#endif
 
 	}
-
-	template<typename DataT>
-	void dataout3(Data &gdata,  Hdf5Stream &h5out,
-						ProblemType & Problem, int numout, bool isfloat, celerity::buffer_allocation_window<DataT, 3> om_acc)
-	{cout << "dataout3"<<endl;
-		Problem.WriteToH5(h5out);
-
-		int rim(0);
-		if(isfloat) {
-			rim = BOUT_FLT;
-		} else {
-			rim = BOUT_DBL;
-		}
-
-		NumArray<int> mx_global(3);
-		NumArray<float> xmin_global(3), delx(3);
-		for (int dir = 0; dir < 3; dir++) {
-			mx_global(dir) = gdata.global_mx[dir];
-			xmin_global(dir) = gdata.get_pos_global(dir, rim, 0);
-			delx(dir) = gdata.dx[dir];
-		}
-
-
-		double xmin[3];
-		xmin[0] = gdata.getCen_x(-rim);
-		xmin[1] = gdata.getCen_y(-rim);
-		xmin[2] = gdata.getCen_z(-rim);
-
-		int itime = static_cast<int>(gdata.time/gdata.dt);
-
-		int nproc[3] = {1,1,1};
-		int coords[3] = {0,0,0};
-		h5out.AddGlobalAttr("procs",nproc,3);
-		h5out.AddGlobalAttr("coords",coords,3);
-		h5out.AddGlobalAttr("rank",gdata.rank);
-		h5out.AddGlobalAttr("fluid_type", "hydro");
-
-		h5out.AddGlobalAttr("geometry",GEOM);
-		h5out.AddGlobalAttr("itime",itime);
-		h5out.AddGlobalAttr("timestep",gdata.tstep);
-		h5out.AddGlobalAttr("time",gdata.time);
-		h5out.AddGlobalAttr("rim",rim);
-		h5out.AddGlobalAttr("dt",gdata.dt);
-		h5out.AddGlobalAttr("xmin",xmin,3);
-	#if (NON_LINEAR_GRID == _CRONOS_ON)
-		h5out.AddGlobalAttr("dx",gdata.dx,3);
-	#endif
-		h5out.AddGlobalAttr("CflNumber",gdata.cfl);
-
-	#if(CRONOS_OUTPUT_COMPATIBILITY == CRONOS_ON)
-		hid_t group = h5out.get_defaultGroup();
-	#else
-		string groupName = gdata.fluid.get_Name();
-		hid_t group = h5out.AddGroup(groupName);
-	#endif
-
-		// if (isfloat) {
-
-		// } else {
-		// }
-
-	#if(CRONOS_OUTPUT_COMPATIBILITY != CRONOS_ON)
-		h5out.CloseGroup(group);
-	#endif
-
-	}
-
-	template<typename DataT>
-	void dataout2(Data &gdata,  Hdf5Stream &h5out,
-						ProblemType & Problem, int numout, bool isfloat, int q, celerity::buffer_allocation_window<DataT, 3> om_acc)
-	{
-
-		int rim(0);
-		if(isfloat) {
-			rim = BOUT_FLT;
-		} else {
-			rim = BOUT_DBL;
-		}
-
-		NumArray<int> mx_global(3);
-		NumArray<float> xmin_global(3), delx(3);
-		for (int dir = 0; dir < 3; dir++) {
-			mx_global(dir) = gdata.global_mx[dir];
-			xmin_global(dir) = gdata.get_pos_global(dir, rim, 0);
-			delx(dir) = gdata.dx[dir];
-		}
-
-
-		double xmin[3];
-		xmin[0] = gdata.getCen_x(-rim);
-		xmin[1] = gdata.getCen_y(-rim);
-		xmin[2] = gdata.getCen_z(-rim);
-
-		int itime = static_cast<int>(gdata.time/gdata.dt);
-
-		int nproc[3] = {1,1,1};
-		int coords[3] = {0,0,0};
-
-		string groupName = gdata.fluid.get_Name();
-		hid_t group = h5out.OpenGroup(groupName);
-
-		// if (isfloat) {
-
-		// } else {
-			Write3DMatrix(h5out, gdata.om[q].getName(), om_acc, mx_global, rim,
-						xmin, gdata.dx, group, q, true, isfloat);
-		// }
-
-	#if(CRONOS_OUTPUT_COMPATIBILITY != CRONOS_ON)
-		h5out.CloseGroup(group);
-	#endif
-
-	}
 	
 }
 
@@ -328,7 +215,7 @@ public:
 	gridFunc(Data &);
 	void boundary(Data &, ProblemType &);
 	void boundary(Data &, ProblemType &, NumMatrix<double,3> &omb, int);
-	void boundary_old(Data &, ProblemType &, NumMatrix<double,3> &omb, int, int, int iFluid=0);
+	// void boundary_old(Data &, ProblemType &, NumMatrix<double,3> &omb, int, int, int iFluid=0);
 
 	/*!
 	 * Optimised boundary condition routine for MPI parallel case - trying to avoid stalls by
@@ -349,9 +236,9 @@ public:
 	// void dataout(Data &, string &, ProblemType &, int, bool);
 
 	void dataout(Data &, Hdf5Stream &, ProblemType &, int, bool, bool is_collective);
-	void dataout2(Queue &, Data &, Hdf5Stream &, ProblemType &, int, bool, bool is_collective);
+	// void dataout2(Queue &, Data &, Hdf5Stream &, ProblemType &, int, bool, bool is_collective);
 	void datain(Data &, Hdf5iStream &, string &, ProblemType &);
-	void datain_old(Data &, Hdf5iStream &, string &, ProblemType &);
+	// void datain_old(Data &, Hdf5iStream &, string &, ProblemType &);
 	/*!
 	 * Function to load restart data from runs, which wrote all data into a single file
 	 * the maximum refinement factor is returned
@@ -363,22 +250,22 @@ public:
 	void prep_boundaries(Data &, ProblemType &);
 	int get_bc_Type(int);
 private:
-	void bc_SendRecv(Data &, NumMatrix<double,3> &, NumMatrix<double,3> &,
-	                 int, int, int, bool, bool);
-	void bc_SendRecv(Data &, NumArray<double> &, NumArray<double> &,
-	                 int dir, int size_send, int size_recv, int, int, bool, bool);
-#ifdef parallel
-	void bc_ISendRecv(Data &, NumArray<double> &, NumArray<double> &, MPI_Request *,
-	                 int dir, int size_send, int size_recv, int, int, bool, bool);
-#else
-	void bc_ISendRecv(Data &, NumArray<double> &, NumArray<double> &,
-	                 int dir, int size_send, int size_recv, int, int, bool, bool);
-#endif
-	void bc_Periodic_old(Data &gdata, ProblemType &, NumMatrix<double,3> &omb,
-	                 int dir, int q, int rim, bool internal_only=false);
+	// void bc_SendRecv(Data &, NumMatrix<double,3> &, NumMatrix<double,3> &,
+	//                  int, int, int, bool, bool);
+	// void bc_SendRecv(Data &, NumArray<double> &, NumArray<double> &,
+	//                  int dir, int size_send, int size_recv, int, int, bool, bool);
+// #ifdef parallel
+// 	void bc_ISendRecv(Data &, NumArray<double> &, NumArray<double> &, MPI_Request *,
+// 	                 int dir, int size_send, int size_recv, int, int, bool, bool);
+// #else
+// 	void bc_ISendRecv(Data &, NumArray<double> &, NumArray<double> &,
+// 	                 int dir, int size_send, int size_recv, int, int, bool, bool);
+// #endif
+	// void bc_Periodic_old(Data &gdata, ProblemType &, NumMatrix<double,3> &omb,
+	//                  int dir, int q, int rim, bool internal_only=false);
 
-	void bc_Periodic(Data &gdata, ProblemType &, NumMatrix<double,3> &omb,
-	                 int dir, int q, int rim, bool internal_only=false);
+	// void bc_Periodic(Data &gdata, ProblemType &, NumMatrix<double,3> &omb,
+	//                  int dir, int q, int rim, bool internal_only=false);
 	/*!
 	 * Periodic boundary conditions for non-mpi version of the code, only
 	 * */
@@ -419,7 +306,6 @@ private:
 	 * @param iz index of coordinate surrounding axis
 	 * */
 	int get_AxisPartners(Data &gdata, int top, int iz);
-	void do_AxisValCorrectionCyl(Data &gdata, ProblemType &Problem);
 	void do_AxisValCorrectionSph(Data &gdata, ProblemType &Problem, bool top);
 	void bc_Extrapolate(Data &, ProblemType &, NumMatrix<double,3> &,
 	                    int, int, int, int);
@@ -432,7 +318,6 @@ private:
 	void bc_Fixed_general(NumMatrix<double,3> &, NumMatrix<double,3> &,
 	                      int imin[3], int imax[3]);
 	void Prolongate(Data &, NumMatrix<double,3> &, const int &, int mxloc[], int);
-	void ExchangePositions(Data &, int top=0);
 	int get_powerTwo(int val);
 
 	void bc_Outflow(Queue &queue, Data &, ProblemType &, NumMatrix<double,3> &,
@@ -451,8 +336,6 @@ private:
 	NumMatrix<int,1> AxisPartnersPhi[2];  // array of mapping partners
 	NumMatrix<double,1> PhiPos[2];
 	NumMatrix<double,1> cosPos[3], sinPos[3];
-	// NumMatrix<double,3> BoundVals[2*DIM];
-	// NumMatrix<double,3> BoundVals_User[2*DIM];
 	NumMatrix<double,3> bcVals_xb[N_OMINT], bcVals_xe[N_OMINT];
 	NumMatrix<double,3> bcVals_yb[N_OMINT], bcVals_ye[N_OMINT];
 	NumMatrix<double,3> bcVals_zb[N_OMINT], bcVals_ze[N_OMINT];
@@ -460,8 +343,6 @@ private:
 	NumMatrix<double,3> Recv_x, Recv_y, Recv_z, Recv_empty;
 	NumMatrix<double,3> Send_x, Send_y, Send_z, Send_empty;
 
-//	NumArray<double> RecvArr_x, RecvArr_y, RecvArr_z, RecvArr_empty;
-//	NumArray<double> SendArr_x, SendArr_y, SendArr_z, SendArr_empty;
 	NumArray<double> SendArr_buff, RecvArr_buff;
 	NumArray<double> RecvArrSmall_x, RecvArrSmall_y, RecvArrSmall_z;
 	NumArray<double> SendArrSmall_x, SendArrSmall_y, SendArrSmall_z;

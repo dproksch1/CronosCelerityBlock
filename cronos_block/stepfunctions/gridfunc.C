@@ -378,26 +378,6 @@ gridFunc::gridFunc(Data &gdata)
 		RecvArrLR.resize(size);
 	}
 
-
-
-
-//	cout << " Done prep " << gdata.rank << endl;
-	// for(int dir=0; dir<DIM; ++dir) {
-	// 	for(int q=0; q<n_om+N_P; ++q) {
-	// 		if(bc_Type[2*dir] == 7) {
-	// 		} else {
-	// 			om[q].set
-	// 		}
-	// 	}
-	// }
-
-	// for(int ibound=0; ibound<2*DIM; ++ibound) {
-	// 	if(bc_Type[ibound] == 7) {
-	// 		for(int q=0; q<n_omInt; ++q) {
-	// 			om.q
-	// 		}
-	// 	}
-	// }
 	cout << " My upper type: " << gdata.rank << " " << bc_Type[2] << " " << bc_Type[3] << endl;
 
 }
@@ -681,215 +661,6 @@ void gridFunc::boundary(Data &gdata, ProblemType &Problem,
 };
 
 
-
-void gridFunc::boundary_old(Data &gdata, ProblemType &Problem,
-                        NumMatrix<double,3> &omb, int rim, int q, int iFluid)
-{
-
-	NumMatrix<double,3> Recv;
-	NumMatrix<double,3> Send;
-
-	/*
-	  Determine type of boundary condition for the individual directions:
-	  (-1) -> MPI-periodic (only for internal use)
-	  (0) -> Periodic
-	  (1) -> Periodic (with data at mx to be overwritten)
-	  (2) -> Extrapolation
-	  (3) -> Outflow
-	  (4) -> User defined local bcs (bc_User)
-	  (5) -> Reflecting boundaries
-	  (6) -> singularity axis boundary conditions
-	  (7) -> constant boundaries (kept from initial conditions) - still under construction
-
-	*/
-
-	//-----------------------------------------------------------
-	// First we determine which field we are actually dealing with
-	// -----------------------------------------------------------
-
-	if(q>-1) {
-		q = Problem.get_q(omb);
-	}
-
-
-	//-----------------------------------------------------------
-	// x-direction
-	//-----------------------------------------------------------
-
-	// Periodic AND MPI boundary conditions 
-	bc_Periodic(gdata, Problem, omb, 0, q, rim);
-
-	// Left:
-	if(bc_Type[0] > 1) {
-		if (bc_Type[0] == 2) {
-			bc_Extrapolate(gdata, Problem, omb,0,0,q,rim);
-		} else if (bc_Type[0] == 3) {
-			bc_Outflow(gdata, Problem, omb,0,0,q,rim);
-		} else if (bc_Type[0] == 4) {
-			Problem.bc_User(gdata, omb,0,0,q,rim);
-		} else if (bc_Type[0] == 5) {
-			bc_Reflecting(gdata, Problem, omb,0,0,q,rim);
-		} else if (bc_Type[0] == 6) {
-			bc_Axis(gdata, Problem, omb, 0, 0, q,rim);
-		} else if (bc_Type[0] == 7) {
-			if(omb.get_bcTypeLow(0) == 2) {
-				bc_Extrapolate(gdata, Problem, omb,0,0,q,rim);
-			} else {
-				bc_Fixed(gdata, Problem, omb,0,0,q,rim);
-			}
-		} else {
-			cerr << " No such boundary condition 1 " << endl;
-		}
-	}
-
-	// Right:
-	if(bc_Type[1] > 1) {
-		if (bc_Type[1] == 2){
-			bc_Extrapolate(gdata, Problem, omb,0,1,q,rim);
-		} else if (bc_Type[1] == 3) {
-			bc_Outflow(gdata, Problem, omb,0,1,q,rim);
-		} else if (bc_Type[1] == 4) {
-			Problem.bc_User(gdata, omb,0,1,q,rim);
-		} else if (bc_Type[1] == 5) {
-			bc_Reflecting(gdata, Problem, omb,0,1,q,rim);
-		} else if (bc_Type[1] == 7) {
-			if(omb.get_bcTypeHigh(0) == 2) {
-				bc_Extrapolate(gdata, Problem, omb,0,1,q,rim);
-			} else {
-				bc_Fixed(gdata, Problem, omb,0,1,q,rim);
-			}
-		} else {
-			cerr << " No such boundary condition 2 " << endl;
-		}
-	}
-
-	//-----------------------------------------------------------
-	// y-direction
-	//-----------------------------------------------------------
-
-	// Periodic AND MPI boundary conditions 
-	bc_Periodic(gdata, Problem, omb, 1, q, rim);
-
-	if(bc_Type[2] > 1) {
-		if(bc_Type[2] == 2) {
-			bc_Extrapolate(gdata, Problem, omb,1,0,q,rim);
-		} else if(bc_Type[2] == 3) {
-			bc_Outflow(gdata, Problem, omb,1,0,q,rim);
-		} else if(bc_Type[2] == 4) {
-			Problem.bc_User(gdata, omb,1,0,q,rim);
-		} else if(bc_Type[2] == 5) {
-			bc_Reflecting(gdata, Problem, omb,1,0,q,rim);
-		} else if (bc_Type[2] == 6) {
-			bc_Axis(gdata, Problem, omb, 1, 0, q,rim);
-		} else if (bc_Type[2] == 7) {
-			if(omb.get_bcTypeLow(1) == 2) {
-				bc_Extrapolate(gdata, Problem, omb,1,0,q,rim);
-			} else {
-				bc_Fixed(gdata, Problem, omb,1,0,q,rim);
-			}
-		} else {
-			cerr << " No such boundary condition 3 " << " " << bc_Type[1]<< endl;
-		}
-	}
-
-	if(bc_Type[3] > 1) {
-		if(bc_Type[3] == 2) {
-			bc_Extrapolate(gdata, Problem, omb,1,1,q,rim);
-		} else if(bc_Type[3] == 3) {
-			bc_Outflow(gdata, Problem, omb,1,1,q,rim);
-		} else if(bc_Type[3] == 4) {
-			Problem.bc_User(gdata, omb,1,1,q,rim);
-		} else if(bc_Type[3] == 5) {
-			bc_Reflecting(gdata, Problem, omb,1,1,q,rim);
-		} else if (bc_Type[3] == 6) {
-			bc_Axis(gdata, Problem, omb, 1, 1, q,rim);
-		} else if (bc_Type[3] == 7) {
-			if(omb.get_bcTypeHigh(1) == 2) {
-				bc_Extrapolate(gdata, Problem, omb,1,1,q,rim);
-			} else {
-				bc_Fixed(gdata, Problem, omb,1,1,q,rim);
-			}
-		} else {
-			cerr << " No such boundary condition 4 " << endl;
-		}
-	}
-
-	//-----------------------------------------------------------
-	// z-direction
-	//-----------------------------------------------------------
-
-	// Periodic AND MPI boundary conditions 
-	bc_Periodic(gdata, Problem, omb, 2, q, rim);
-
-	if(bc_Type[4] > 1) {
-		if (bc_Type[4] == 2) {
-			bc_Extrapolate(gdata, Problem, omb,2,0,q,rim);
-		} else if (bc_Type[4] == 3) {
-			bc_Outflow(gdata, Problem, omb,2,0,q,rim);
-		} else if (bc_Type[4] == 4) {
-			Problem.bc_User(gdata, omb,2,0,q,rim);
-		} else if (bc_Type[4] == 5) {
-			bc_Reflecting(gdata, Problem, omb,2,0,q,rim);
-		} else if (bc_Type[4] == 7) {
-			if(omb.get_bcTypeLow(2) == 2) {
-				bc_Extrapolate(gdata, Problem, omb,2,0,q,rim);
-			} else {
-				bc_Fixed(gdata, Problem, omb,2,0,q,rim);
-			}
-		} else {
-			cerr << " No such boundary condition 5 " << endl;
-		}
-	}
-  
-	if(bc_Type[5] > 1) {
-		if (bc_Type[5] == 2) {
-			bc_Extrapolate(gdata, Problem, omb,2,1,q,rim);
-		} else if (bc_Type[5] == 3) {
-			bc_Outflow(gdata, Problem, omb,2,1,q,rim);
-		} else if (bc_Type[5] == 4) {
-			Problem.bc_User(gdata, omb,2,1,q,rim);
-		} else if (bc_Type[5] == 5) {
-			bc_Reflecting(gdata, Problem, omb,2,1,q,rim);
-		} else if (bc_Type[5] == 7) {
-			if(omb.get_bcTypeHigh(2) == 2) {
-				bc_Extrapolate(gdata, Problem, omb,2,1,q,rim);
-			} else {
-				bc_Fixed(gdata, Problem, omb,2,1,q,rim);
-			}
-		} else {
-			cerr << " No such boundary condition 6 " << endl;
-		}
-	}
-
-	// Do correction for magnetic field on axis after all
-	// magnetic boundaries have been applied
-//	if(q == q_Bz) {
-	if(omb.getName()=="B_z") {
-
-#if (GEOM == CYLINDRICAL)
-		if(gdata.get_singularity_treatment(0) > 0) {
-			do_AxisValCorrectionCyl(gdata, Problem);
-		}
-#else
-		// Correction at lower theta boundary
-		if(gdata.get_singularity_treatment(2) > 0) {
-			do_AxisValCorrectionSph(gdata, Problem, 0);
-		}
-		// Correction at lower theta boundary
-		// if(gdata.get_singularity_treatment(2) > 0) {
-		// 	do_AxisValCorrectionSph(gdata, Problem, 2);
-		// }
-		if(gdata.get_singularity_treatment(3) > 0) {
-			do_AxisValCorrectionSph(gdata, Problem, 1);
-		}
-#endif
-//#ifdef parallel
-//		MPI_Barrier(gdata.comm3d);
-//#endif
-	}
-
-}
-
 void gridFunc::boundary(Queue &queue, Data &gdata, ProblemType &Problem,
                         NumMatrix<double,3> &omb, int rim, int q, int iFluid)
 {
@@ -1048,11 +819,6 @@ void gridFunc::boundary(Data &gdata, ProblemType &Problem,
 	// addressed we begin with the periodic boundary conditions - in particularl
 	// those for the MPI-parallel case
 
-//	// In parallel case start with sending all necessary data packages
-//#ifdef parallel
-//	bc_MPISend(gdata, Problem, omb, q, rim);
-//#endif
-
 	//-----------------------------------------------------------
 	// x-direction
 	//-----------------------------------------------------------
@@ -1201,390 +967,18 @@ void gridFunc::boundary(Data &gdata, ProblemType &Problem,
 		}
 	}
 
-//	// Finally write all that that was received withing earlier MPI communications
-//#ifdef parallel
-//	bc_MPIRecv(gdata, Problem, omb, q, rim);
-//#endif
-
-
 	// Do correction for magnetic field on axis after all
 	// magnetic boundaries have been applied
 //	if(q == q_Bz) {
 	if(omb.getName()=="B_z") {
 
-#if (GEOM == CYLINDRICAL)
-		if(gdata.get_singularity_treatment(0) > 0) {
-			do_AxisValCorrectionCyl(gdata, Problem);
-		}
-#else
 		// Correction at lower theta boundary
 		if(gdata.get_singularity_treatment(2) > 0) {
 			do_AxisValCorrectionSph(gdata, Problem, 0);
 		}
-		// Correction at lower theta boundary
-		// if(gdata.get_singularity_treatment(2) > 0) {
-		// 	do_AxisValCorrectionSph(gdata, Problem, 2);
-		// }
+
 		if(gdata.get_singularity_treatment(3) > 0) {
 			do_AxisValCorrectionSph(gdata, Problem, 1);
-		}
-#endif
-//#ifdef parallel
-//		MPI_Barrier(gdata.comm3d);
-//#endif
-	}
-
-}
-
-void gridFunc::bc_SendRecv(Data &gdata, NumMatrix<double,3> &Send,
-                           NumMatrix<double,3> &Recv, int dir, int above,
-                           int q, bool do_Send, bool do_Receive)
-{
-	// (Nearly) Nothing to be done
-	Recv = Send;
-}
-
-
-void gridFunc::bc_SendRecv(Data &gdata, NumArray<double> &Send,
-		NumArray<double> &Recv, int dir, int size_send, int size_recv, int above, int q, bool do_Send, bool do_Receive)
-{
-	// (Nearly) Nothing to be done
-	for(int iter=0; iter<size_send; iter++) {
-		Recv(iter) = Send(iter);
-	}
-}
-
-
-
-void gridFunc::bc_ISendRecv(Data &gdata, NumArray<double> &Send, NumArray<double> &Recv,
-		int dir, int size_send, int size_recv, int above, int q, bool do_Send, bool do_Receive)
-{
-	// (Nearly) Nothing to be done
-	for(int iter=0; iter<size_send; iter++) {
-		Recv(iter) = Send(iter);
-	}
-}
-
-
-
-void gridFunc::bc_Periodic_old(Data &gdata, ProblemType &Problem,
-                           NumMatrix<double,3> &omb,
-                           int dir, int q, int rim, bool internal_only) {
-
-	NumMatrix<double,3> Recv;
-	NumMatrix<double,3> Send;
-
-	bool SendLeft(false), RecvRight(false);
-
-	if(bc_Type[2*dir] < 2) SendLeft = true;
-	if(bc_Type[2*dir+1] < 2) RecvRight = true;
-	
-	if(internal_only) {
-#ifdef parallel
-		if(gdata.check_MpiLowest(dir)) {
-			SendLeft = false;
-		}
-		if(gdata.check_MpiHighest(dir)) {
-			RecvRight = false;
-		}
-#else
-		SendLeft = false;
-		RecvRight = false;
-#endif
-	}
-
-	// First part: from left to right (e.g., u(mx+1) = u(1) / u(0))
-	if (SendLeft) { // Sender is Periodic
-		
-		int iminSend(1);
-		int imaxSend(rim);
-		int shift(0);
-		
-		// For new gridding scheme size is always the same:
-		if(gdata.get_EdgeGridding()) {
-			// iminSend = 0;
-			// imaxSend = rim-1;
-			iminSend = 1;
-			imaxSend = rim;
-			shift = 1;
-		} else {		
-			iminSend = 1;
-			imaxSend = rim;
-			if(bc_Type[2*dir] == 1 || gdata.time < 0.01*gdata.dt) {
-				iminSend = 0;
-			}
-		}
-		if(dir == 0) {
-			Send.resize(Index::set(iminSend, -rim, -rim),
-			            Index::set(imaxSend, gdata.mx[1]+rim,
-			                       gdata.mx[2]+rim));
-
-			for (int k = -rim; k <= gdata.mx[2]+rim; k++){
-				for (int j = -rim; j <= gdata.mx[1]+rim; j++){
-					for (int i = iminSend; i <= imaxSend; i++){
-						Send(i,j,k) = omb(i-shift,j,k);    // x_min -> x_max
-					}
-				}
-			}
-
-		} else if (dir == 1) {
-			Send.resize(Index::set(-rim, iminSend, -rim),
-			            Index::set(gdata.mx[0]+rim, imaxSend,
-			                       gdata.mx[2]+rim));
-
-			for (int j = iminSend; j <= imaxSend; j++){
-				for (int k = -rim; k <= gdata.mx[2]+rim; k++){
-					for (int i = -rim; i <= gdata.mx[0]+rim; i++){
-						Send(i,j,k) = omb(i,j-shift,k);    // y_min -> y_max
-					}
-				}
-			}
-
-		} else if (dir == 2) {
-			Send.resize(Index::set(-rim, -rim, iminSend),
-			            Index::set(gdata.mx[0]+rim, gdata.mx[1]+rim,
-			                       imaxSend));
-				
-			for (int k = iminSend; k <= imaxSend; k++){
-				for (int j = -rim; j <= gdata.mx[1]+rim; j++){
-					for (int i = -rim; i <= gdata.mx[0]+rim; i++){
-						Send(i,j,k) = omb(i,j,k-shift);    // z_max side
-					}
-				}
-			}
-				
-		}
-			
-		if(bc_Type[2*dir] > -1) { // User specific periodic bcs
-			Problem.bc_periodic(gdata, Send, omb, q, dir, false);
-		}
-	} else {
-		Send.resize(Index::set(0,0,0), Index::set(0,0,0));
-	}
-
-		
-	int iminRecv(1);
-	int imaxRecv(rim);
-	if(RecvRight) {  // Receiver is Periodic
-		if(gdata.get_EdgeGridding()) {
-			// iminRecv = 1; // Corresponding to mx[0]+1
-			// iminRecv = 0; // Corresponding to mx[0]+1
-			// imaxRecv = rim-1;
-			iminRecv = 1; // Corresponding to mx[0]+1
-			imaxRecv = rim;
-		} else {
-			if(bc_Type[2*dir+1] == 1 || gdata.time < 0.01*gdata.dt) {
-				iminRecv = 0;
-			}
-		}
-		if(dir == 0) {
-			Recv.resize(Index::set(iminRecv,-rim,-rim),
-			            Index::set(imaxRecv,gdata.mx[1]+rim,gdata.mx[2]+rim));
-		} else if (dir == 1) {
-			Recv.resize(Index::set(-rim,iminRecv,-rim),
-			            Index::set(gdata.mx[0]+rim,imaxRecv,gdata.mx[2]+rim));
-		} else if (dir == 2) {
-			Recv.resize(Index::set(-rim,-rim,iminRecv),
-			            Index::set(gdata.mx[0]+rim,gdata.mx[1]+rim,imaxRecv));
-		}
-	} else {
-		Recv.resize(Index::set(0,0,0), Index::set(0,0,0));
-	}
-    
-
-	if(SendLeft || RecvRight) { // Periodic
-		bc_SendRecv(gdata, Send, Recv, dir, 0, q, SendLeft, RecvRight);
-	}
-
-
-
-		
-	if(RecvRight) {
-		if(dir == 0) {
-			for (int k = -rim; k <= gdata.mx[2]+rim; k++){
-				for (int j = -rim; j <= gdata.mx[1]+rim; j++){
-					for (int i = iminRecv; i <= imaxRecv; i++){
-						omb(gdata.mx[0]+i,j,k) = Recv(i,j,k);
-					}
-				}
-			}
-		} else if (dir == 1) {
-			for (int j = iminRecv; j <= imaxRecv; j++){
-				for (int k = -rim; k <= gdata.mx[2]+rim; k++){
-					for (int i = -rim; i <= gdata.mx[0]+rim; i++){
-						// y_min -> y_max
-						omb(i,gdata.mx[1]+j,k) = Recv(i,j,k); 
-					}
-				}
-			}
-		} else if (dir == 2) {
-			for (int k = iminRecv; k <= imaxRecv; k++){
-				for (int j = -rim; j <= gdata.mx[1]+rim; j++){
-					for (int i = -rim; i <= gdata.mx[0]+rim; i++){
-						// z_min -> z_max
-						omb(i,j,gdata.mx[2]+k) = Recv(i,j,k);
-					}
-				}
-			}
-		}
-	}
-
-
-	bool SendRight(false), RecvLeft(false);
-
-	if(bc_Type[2*dir+1] < 2) SendRight = true;
-	if(bc_Type[2*dir]   < 2) RecvLeft  = true;
-
-	if(internal_only) {
-		SendLeft = false;
-		RecvRight = false;
-	}
-
-	// Second part: from right to left (e.g., u(-1) = u(mx-1) / u(mx))
-	if(SendRight) { // Periodic
-
-		int iminSend(-rim); // Corresponding to mx[0]+i
-		int imaxSend(-1);
-		int shift(0);
-
-		// For new gridding scheme size is always the same:
-		if(gdata.get_EdgeGridding()) {
-			// iminSend = -rim+1;
-			// imaxSend =  0;
-			iminSend = -rim;
-			imaxSend =  -1;
-			if((bc_Type[2*dir+1] > -1 || gdata.time < 0.01*gdata.dt) &&
-			   //if((bc_Type[2*dir+1] > -2 || gdata.time < 0.01*gdata.dt) &&
-			   ((dir==0 && q==q_Bx) || (dir==1 && q==q_By) || 
-			    (dir==2 && q==q_Bz))) {
-				// imaxSend = -1;
-				imaxSend = -2;
-			}
-			// shift=-1;
-			shift=1;
-		} else {		
-			iminSend = -rim;
-			imaxSend = -1;
-			if((bc_Type[2*dir+1] > -1 || gdata.time < 0.01*gdata.dt) && 
-			   ((dir==0 && q==q_Bx) || (dir==1 && q==q_By) ||
-			    (dir==2 && q==q_Bz))) {
-				imaxSend = -2;
-			}
-		}
-		if(dir == 0) {
-			Send.resize(Index::set(iminSend,-rim,-rim),
-			            Index::set(imaxSend,gdata.mx[1]+rim,
-			                       gdata.mx[2]+rim));
-
-			for (int k = -rim; k <= gdata.mx[2]+rim; k++){
-				for (int j = -rim; j <= gdata.mx[1]+rim; j++){
-					for (int i = imaxSend; i >= iminSend; --i){
-						// x_max -> x_min
-						Send(i,j,k) = omb(gdata.mx[0]+i+shift,j,k); 
-					}
-				}
-			}
-
-		} else if (dir == 1) {
-			Send.resize(Index::set(-rim,iminSend,-rim),
-			            Index::set(gdata.mx[0]+rim,imaxSend,
-			                       gdata.mx[2]+rim));
-
-			for (int j = imaxSend; j >= iminSend; --j){
-				for (int k = -rim; k <= gdata.mx[2]+rim; k++){
-					for (int i = -rim; i <= gdata.mx[0]+rim; i++){
-						// y_max -> y_min
-						Send(i,j,k) = omb(i,gdata.mx[1]+j+shift,k);
-					}
-				}
-			}
-
-		} else if (dir == 2) {
-			Send.resize(Index::set(-rim,-rim, iminSend),
-			            Index::set(gdata.mx[0]+rim,gdata.mx[1]+rim,
-			                       imaxSend));
-
-			for (int k = imaxSend; k >= iminSend; --k){
-				for (int j = -rim; j <= gdata.mx[1]+rim; j++){
-					for (int i = -rim; i <= gdata.mx[0]+rim; i++){
-						// z_max -> z_min
-						Send(i,j,k) = omb(i,j,gdata.mx[2]+k+shift); 
-					}
-				}
-			}
-
-		}
-    
-		if(bc_Type[2*dir+1] > -1) {
-			Problem.bc_periodic(gdata, Send, omb, q, dir, true);
-		}
-	} else {
-		Send.resize(Index::set(0,0,0), Index::set(0,0,0));
-	}
-	
-	imaxRecv = -1;
-	if(RecvLeft) {
-		if(gdata.get_EdgeGridding()) {
-			//if((bc_Type[2*dir] > -2 || gdata.time < 0.01*gdata.dt) && 
-			if((bc_Type[2*dir] > -1 || gdata.time < 0.01*gdata.dt) && 
-			   ((dir==0 && q==q_Bx) || (dir==1 && q==q_By) ||
-			    (dir==2 && q==q_Bz))) {
-				imaxRecv = -2; // Corresponding to mx[0]+1
-			}
-		} else {
-			if((bc_Type[2*dir] > -1 || gdata.time < 0.01*gdata.dt) && 
-			   ((dir==0 && q==q_Bx) || (dir==1 && q==q_By) ||
-			    (dir==2 && q==q_Bz))) {
-				imaxRecv = -2;
-			}
-		}
-		if(dir == 0) {
-			Recv.resize(Index::set(-rim,-rim,-rim),
-			            Index::set(imaxRecv,gdata.mx[1]+rim,
-			                       gdata.mx[2]+rim));
-		} else if (dir == 1) {
-			Recv.resize(Index::set(-rim,-rim,-rim),
-			            Index::set(gdata.mx[0]+rim,imaxRecv,
-			                       gdata.mx[2]+rim));
-		} else if (dir == 2) {
-			Recv.resize(Index::set(-rim,-rim,-rim),
-			            Index::set(gdata.mx[0]+rim,gdata.mx[1]+rim,
-			                       imaxRecv));
-		}
-	} else {
-		Recv.resize(Index::set(0,0,0), Index::set(0,0,0));
-	}
-		
-	if(SendRight || RecvLeft) {
-		bc_SendRecv(gdata, Send, Recv, dir, 1, q, SendRight, RecvLeft);
-	}
-  
-
-	if(RecvLeft) {
-		if(dir == 0) {
-			for (int k = -rim; k <= gdata.mx[2]+rim; k++){
-				for (int j = -rim; j <= gdata.mx[1]+rim; j++){
-					for (int i = imaxRecv; i >= -rim; --i){
-						omb(i,j,k) = Recv(i,j,k);
-					}
-				}
-			}
-		} else if (dir == 1) {
-			for (int j = imaxRecv; j >= -rim; --j){
-				for (int k = -rim; k <= gdata.mx[2]+rim; k++){
-					for (int i = -rim; i <= gdata.mx[0]+rim; i++){
-						omb(i,j,k) = Recv(i,j,k);
-					}
-				}
-			}
-		} else if (dir == 2) {
-			for (int k = imaxRecv; k >= -rim; --k){
-				for (int j = -rim; j <= gdata.mx[1]+rim; j++){
-					for (int i = -rim; i <= gdata.mx[0]+rim; i++){
-						omb(i,j,k) = Recv(i,j,k);
-					}
-				}
-			}
 		}
 	}
 
@@ -1605,7 +999,7 @@ void gridFunc::bc_Periodic(Queue &queue, Data &gdata, ProblemType &Problem,
 		if (dir == 0) {
 
 			get_bcBuffRange(gdata, i_min, i_max, 0, 1, q, rim);
-			auto left_to_right = Range<3>(i_max + 1 - i_min, omRange.get(1), omRange.get(2));
+			auto left_to_right = CelerityRange<3>(i_max + 1 - i_min, omRange.get(1), omRange.get(2));
 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{(size_t) gdata.mx[0] + 2*rim + 1,1,1}, celerity::read_write};
 				cgh.parallel_for<class Periodic_Dir1_Left_to_Right>(left_to_right, [=, &gdata](celerity::item<3> item){
@@ -1618,7 +1012,7 @@ void gridFunc::bc_Periodic(Queue &queue, Data &gdata, ProblemType &Problem,
 			});
 
 			get_bcBuffRange(gdata, i_min, i_max, 0, 0, q, rim);
-			auto right_to_left = Range<3>(-(i_min + 1) - i_max, omRange.get(1), omRange.get(2));
+			auto right_to_left = CelerityRange<3>(-(i_min + 1) - i_max, omRange.get(1), omRange.get(2));
 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{(size_t) gdata.mx[0] + 2*rim + 1,1,1}, celerity::read_write};
 				cgh.parallel_for<class Periodic_Dir1_Right_to_Left>(right_to_left, [=, &gdata](celerity::item<3> item){
@@ -1633,7 +1027,7 @@ void gridFunc::bc_Periodic(Queue &queue, Data &gdata, ProblemType &Problem,
 		} else if (dir == 2) {
 
 			get_bcBuffRange(gdata, i_min, i_max, 1, 1, q, rim);
-			auto left_to_right = Range<3>(omRange.get(0), i_max + 1 - i_min, omRange.get(2));
+			auto left_to_right = CelerityRange<3>(omRange.get(0), i_max + 1 - i_min, omRange.get(2));
 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,(size_t) gdata.mx[1] + 2*rim + 1,1}, celerity::read_write};
 				cgh.parallel_for<class Periodic_Dir1_Left_to_Right>(left_to_right, [=, &gdata](celerity::item<3> item){
@@ -1646,7 +1040,7 @@ void gridFunc::bc_Periodic(Queue &queue, Data &gdata, ProblemType &Problem,
 			});
 
 			get_bcBuffRange(gdata, i_min, i_max, 1, 0, q, rim);
-			auto right_to_left = Range<3>(omRange.get(0), -(i_min + 1) - i_max, omRange.get(2));
+			auto right_to_left = CelerityRange<3>(omRange.get(0), -(i_min + 1) - i_max, omRange.get(2));
 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,(size_t) gdata.mx[1] + 2*rim + 1,1}, celerity::read_write};
 				cgh.parallel_for<class Periodic_Dir1_Right_to_Left>(right_to_left, [=, &gdata](celerity::item<3> item){
@@ -1661,7 +1055,7 @@ void gridFunc::bc_Periodic(Queue &queue, Data &gdata, ProblemType &Problem,
 		} else if (dir == 3) {
 
 			get_bcBuffRange(gdata, i_min, i_max, 2, 1, q, rim);
-			auto left_to_right = Range<3>(omRange.get(0), omRange.get(1), i_max + 1 - i_min);
+			auto left_to_right = CelerityRange<3>(omRange.get(0), omRange.get(1), i_max + 1 - i_min);
 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,1,(size_t) gdata.mx[2] + 2*rim + 1}, celerity::read_write};
 				cgh.parallel_for<class Periodic_Dir1_Left_to_Right>(left_to_right, [=, &gdata](celerity::item<3> item){
@@ -1674,7 +1068,7 @@ void gridFunc::bc_Periodic(Queue &queue, Data &gdata, ProblemType &Problem,
 			});
 
 			get_bcBuffRange(gdata, i_min, i_max, 2, 0, q, rim);
-			auto right_to_left = Range<3>(omRange.get(0), omRange.get(1), -(i_min + 1) - i_max);
+			auto right_to_left = CelerityRange<3>(omRange.get(0), omRange.get(1), -(i_min + 1) - i_max);
 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 				celerity::accessor om_acc{gdata.omSYCL[q], cgh, celerity::access::neighborhood{1,1,(size_t) gdata.mx[2] + 2*rim + 1}, celerity::read_write};
 				cgh.parallel_for<class Periodic_Dir1_Right_to_Left>(right_to_left, [=, &gdata](celerity::item<3> item){
@@ -1773,336 +1167,6 @@ void gridFunc::bc_Periodic_serial(Data &gdata, ProblemType &Problem,
 }
 
 
-void gridFunc::bc_Periodic(Data &gdata, ProblemType &Problem,
-                           NumMatrix<double,3> &omb,
-                           int dir, int q, int rim, bool internal_only) {
-
-
-
-	bool SendLeft(false), RecvRight(false);
-
-	if(bc_Type[2*dir] < 2) SendLeft = true;
-	if(bc_Type[2*dir+1] < 2) RecvRight = true;
-
-	if(internal_only) {
-		SendLeft = false;
-		RecvRight = false;
-	}
-
-	int size_send = 0;
-	// First part: from left to right (e.g., u(mx+1) = u(1) / u(0))
-	if (SendLeft) { // Sender is Periodic
-
-		int iminSend(1);
-		int imaxSend(rim);
-		int shift(0);
-
-		// For new gridding scheme size is always the same:
-		if(gdata.get_EdgeGridding()) {
-			// iminSend = 0;
-			// imaxSend = rim-1;
-			iminSend = 1;
-			imaxSend = rim;
-			shift = 1;
-		} else {
-			iminSend = 1;
-			imaxSend = rim;
-			if(bc_Type[2*dir] == 1 || gdata.time < 0.01*gdata.dt) {
-				iminSend = 0;
-			}
-		}
-		if(dir == 0) {
-			int iter=0;
-			for (int k = -rim; k <= gdata.mx[2]+rim; k++){
-				for (int j = -rim; j <= gdata.mx[1]+rim; j++){
-					for (int i = iminSend; i <= imaxSend; i++){
-						SendArr_buff(iter) = omb(i-shift,j,k);    // x_min -> x_max
-						iter++;
-					}
-				}
-			}
-			size_send = iter;
-
-
-		} else if (dir == 1) {
-			int iter=0;
-			for (int j = iminSend; j <= imaxSend; j++){
-				for (int k = -rim; k <= gdata.mx[2]+rim; k++){
-					for (int i = -rim; i <= gdata.mx[0]+rim; i++){
-						SendArr_buff(iter) = omb(i,j-shift,k);    // y_min -> y_max
-						iter++;
-					}
-				}
-			}
-			size_send = iter;
-
-		} else if (dir == 2) {
-			int iter=0;
-			for (int k = iminSend; k <= imaxSend; k++){
-				for (int j = -rim; j <= gdata.mx[1]+rim; j++){
-					for (int i = -rim; i <= gdata.mx[0]+rim; i++){
-						SendArr_buff(iter) = omb(i,j,k-shift);    // z_max side
-						iter++;
-					}
-				}
-			}
-			size_send = iter;
-
-		}
-
-		if(bc_Type[2*dir] > -1) { // User specific periodic bcs
-		  // COMMENT: not implemented for 1D storage
-			// cerr << " Not implemented, yet" << endl;
-			// exit(3);
-//			Problem.bc_periodic(gdata, *Send, omb, q, dir, false);
-		}
-
-	} else {
-
-		size_send = 0;
-//		Send.resize(Index::set(0,0,0), Index::set(0,0,0));
-	}
-
-
-	int iminRecv(1);
-	int imaxRecv(rim);
-	int size_recv(0);
-	if(RecvRight) {  // Receiver is Periodic
-		if(gdata.get_EdgeGridding()) {
-			// iminRecv = 1; // Corresponding to mx[0]+1
-			// iminRecv = 0; // Corresponding to mx[0]+1
-			// imaxRecv = rim-1;
-			iminRecv = 1; // Corresponding to mx[0]+1
-			imaxRecv = rim;
-		} else {
-			if(bc_Type[2*dir+1] == 1 || gdata.time < 0.01*gdata.dt) {
-				iminRecv = 0;
-			}
-		}
-		if(dir == 0) {
-			size_recv = (imaxRecv-iminRecv+1)*(gdata.mx[1]+2*rim+1)*(gdata.mx[2]+2*rim+1);
-		} else if (dir == 1) {
-			size_recv = (gdata.mx[0]+2*rim+1)*(imaxRecv-iminRecv+1)*(gdata.mx[2]+2*rim+1);
-		} else if (dir == 2) {
-			size_recv = (gdata.mx[0]+2*rim+1)*(gdata.mx[1]+2*rim+1)*(imaxRecv-iminRecv+1);
-		}
-	} else {
-		size_recv = 0;
-	}
-
-
-
-	if(SendLeft || RecvRight) { // Periodic
-		bc_SendRecv(gdata, SendArr_buff, RecvArr_buff, dir, size_send, size_recv, 0, q, SendLeft, RecvRight);
-	}
-
-
-
-
-	if(RecvRight) {
-		if(dir == 0) {
-			int iter = 0;
-			for (int k = -rim; k <= gdata.mx[2]+rim; k++){
-				for (int j = -rim; j <= gdata.mx[1]+rim; j++){
-					for (int i = iminRecv; i <= imaxRecv; i++){
-						omb(gdata.mx[0]+i,j,k) = RecvArr_buff(iter);
-						iter++;
-					}
-				}
-			}
-		} else if (dir == 1) {
-			int iter = 0;
-			for (int j = iminRecv; j <= imaxRecv; j++){
-				for (int k = -rim; k <= gdata.mx[2]+rim; k++){
-					for (int i = -rim; i <= gdata.mx[0]+rim; i++){
-						// y_min -> y_max
-						omb(i,gdata.mx[1]+j,k) = RecvArr_buff(iter);
-						iter++;
-					}
-				}
-			}
-		} else if (dir == 2) {
-			int iter = 0;
-			for (int k = iminRecv; k <= imaxRecv; k++){
-				for (int j = -rim; j <= gdata.mx[1]+rim; j++){
-					for (int i = -rim; i <= gdata.mx[0]+rim; i++){
-						// z_min -> z_max
-						omb(i,j,gdata.mx[2]+k) = RecvArr_buff(iter);
-						iter++;
-					}
-				}
-			}
-		}
-	}
-
-
-	bool SendRight(false), RecvLeft(false);
-
-	if(bc_Type[2*dir+1] < 2) SendRight = true;
-	if(bc_Type[2*dir]   < 2) RecvLeft  = true;
-
-	if(internal_only) {
-#ifdef parallel
-		if(gdata.check_MpiLowest(dir)) {
-			RecvLeft = false;
-		}
-		if(gdata.check_MpiHighest(dir)) {
-			SendRight = false;
-		}
-#else
-		SendLeft = false;
-		RecvRight = false;
-#endif
-	}
-
-	// Second part: from right to left (e.g., u(-1) = u(mx-1) / u(mx))
-	if(SendRight) { // Periodic
-
-		int iminSend(-rim); // Corresponding to mx[0]+i
-		int imaxSend(-1);
-		int shift(0);
-
-		// For new gridding scheme size is always the same:
-		if(gdata.get_EdgeGridding()) {
-			// iminSend = -rim+1;
-			// imaxSend =  0;
-			iminSend = -rim;
-			imaxSend =  -1;
-			if((bc_Type[2*dir+1] > -1 || gdata.time < 0.01*gdata.dt) &&
-			   //if((bc_Type[2*dir+1] > -2 || gdata.time < 0.01*gdata.dt) &&
-			   ((dir==0 && q==q_Bx) || (dir==1 && q==q_By) ||
-			    (dir==2 && q==q_Bz))) {
-				// imaxSend = -1;
-				imaxSend = -2;
-			}
-			// shift=-1;
-			shift=1;
-		} else {
-			iminSend = -rim;
-			imaxSend = -1;
-			if((bc_Type[2*dir+1] > -1 || gdata.time < 0.01*gdata.dt) &&
-			   ((dir==0 && q==q_Bx) || (dir==1 && q==q_By) ||
-			    (dir==2 && q==q_Bz))) {
-				imaxSend = -2;
-			}
-		}
-		if(dir == 0) {
-			int iter=0;
-			for (int k = -rim; k <= gdata.mx[2]+rim; k++){
-				for (int j = -rim; j <= gdata.mx[1]+rim; j++){
-					for (int i = imaxSend; i >= iminSend; --i){
-						// x_max -> x_min
-						SendArr_buff(iter) = omb(gdata.mx[0]+i+shift,j,k);
-						iter++;
-					}
-				}
-			}
-			size_send = iter;
-
-		} else if (dir == 1) {
-			int iter=0;
-			for (int j = imaxSend; j >= iminSend; --j){
-				for (int k = -rim; k <= gdata.mx[2]+rim; k++){
-					for (int i = -rim; i <= gdata.mx[0]+rim; i++){
-						// y_max -> y_min
-						SendArr_buff(iter) = omb(i,gdata.mx[1]+j+shift,k);
-						iter++;
-					}
-				}
-			}
-			size_send = iter;
-
-		} else if (dir == 2) {
-			int iter=0;
-			for (int k = imaxSend; k >= iminSend; --k){
-				for (int j = -rim; j <= gdata.mx[1]+rim; j++){
-					for (int i = -rim; i <= gdata.mx[0]+rim; i++){
-						// z_max -> z_min
-						SendArr_buff(iter) = omb(i,j,gdata.mx[2]+k+shift);
-						iter++;
-					}
-				}
-			}
-			size_send = iter;
-
-		}
-
-//		if(bc_Type[2*dir+1] > -1) {
-//			Problem.bc_periodic(gdata, Send, omb, q, dir, true);
-//		}
-	} else {
-		size_send = 0;
-	}
-
-	imaxRecv = -1;
-	if(RecvLeft) {
-		if(gdata.get_EdgeGridding()) {
-			//if((bc_Type[2*dir] > -2 || gdata.time < 0.01*gdata.dt) &&
-			if((bc_Type[2*dir] > -1 || gdata.time < 0.01*gdata.dt) &&
-					((dir==0 && q==q_Bx) || (dir==1 && q==q_By) ||
-							(dir==2 && q==q_Bz))) {
-				imaxRecv = -2; // Corresponding to mx[0]+1
-			}
-		} else {
-			if((bc_Type[2*dir] > -1 || gdata.time < 0.01*gdata.dt) &&
-					((dir==0 && q==q_Bx) || (dir==1 && q==q_By) ||
-							(dir==2 && q==q_Bz))) {
-				imaxRecv = -2;
-			}
-		}
-		if(dir == 0) {
-			size_recv = (imaxRecv+rim+1)*(gdata.mx[1]+2*rim+1)*(gdata.mx[2]+2*rim+1);
-		} else if (dir == 1) {
-			size_recv = (gdata.mx[0]+2*rim+1)*(imaxRecv+rim+1)*(gdata.mx[2]+2*rim+1);
-		} else if (dir == 2) {
-			size_recv = (gdata.mx[0]+2*rim+1)*(gdata.mx[1]+2*rim+1)*(imaxRecv+rim+1);
-		}
-	} else {
-		size_recv = 0;
-	}
-
-
-	if(SendRight || RecvLeft) {
-		bc_SendRecv(gdata, SendArr_buff, RecvArr_buff, dir, size_send, size_recv, 1, q, SendRight, RecvLeft);
-	}
-
-
-	if(RecvLeft) {
-		if(dir == 0) {
-			int iter = 0;
-			for (int k = -rim; k <= gdata.mx[2]+rim; k++){
-				for (int j = -rim; j <= gdata.mx[1]+rim; j++){
-					for (int i = imaxRecv; i >= -rim; --i){
-						omb(i,j,k) = RecvArr_buff(iter);
-						iter++;
-					}
-				}
-			}
-		} else if (dir == 1) {
-			int iter = 0;
-			for (int j = imaxRecv; j >= -rim; --j){
-				for (int k = -rim; k <= gdata.mx[2]+rim; k++){
-					for (int i = -rim; i <= gdata.mx[0]+rim; i++){
-						omb(i,j,k) = RecvArr_buff(iter);
-						iter++;
-					}
-				}
-			}
-		} else if (dir == 2) {
-			int iter = 0;
-			for (int k = imaxRecv; k >= -rim; --k){
-				for (int j = -rim; j <= gdata.mx[1]+rim; j++){
-					for (int i = -rim; i <= gdata.mx[0]+rim; i++){
-						omb(i,j,k) = RecvArr_buff(iter);;
-						iter++;
-					}
-				}
-			}
-		}
-	}
-
-}
-
 void gridFunc::get_bcBuffRange(Data &gdata, int &range_min, int & range_max,
 		int dir, int leftToRight, int q, int rim ) {
 	if(leftToRight) {
@@ -2131,90 +1195,9 @@ void gridFunc::get_bcBuffRange(Data &gdata, int &range_min, int & range_max,
 }
 
 
-void gridFunc::ExchangePositions(Data &gdata, int top) {
-	// First we need to find if we have a corresponding opposite rank
-	// (should moslty be the case - only when deviding by odd number
-	// would we expect problems)
-
-	// cerr << " Exchanging " << gdata.rank << " " << gdata.coords[0] << endl;
-
-#if (GEOM != CARTESIAN)
-	PhiPos[top].resize(Index::set(-B),
-	                   Index::set(gdata.global_mx[gdata.phi_dir]+B));
-
-	// Compute Phi-positions also for serial run
-	for(int ip = -B; ip <= gdata.mx[gdata.phi_dir]+B; ++ip) { 
-		double phi = gdata.getCen(gdata.phi_dir, ip);
-		
-		PhiPos[top](ip) = phi;
-		
-	}
-
-#endif // not cartesian
-
-}
-
-
 void gridFunc::compute_AxisPartners(Data &gdata, int top) {
 	// Computing the partners for axis boundary conditions - so far
 	// only for cylindrical coordinates
-
-#if (GEOM != CARTESIAN)
-	ExchangePositions(gdata, top);
-
-	// Array over full phi-domain
-	AxisPartnersPhi[top].resize(Index::set(-B),
-			Index::set(gdata.mx[gdata.phi_dir]+B));
-
-	double Pi2 = 2.*M_PI;
-	double eps = (1.e-5)*(gdata.xe[gdata.phi_dir]-
-	                      gdata.xb[gdata.phi_dir])/gdata.global_mx[gdata.phi_dir];
-
-	// loop over azimuthal domain:
-	// look for mapping p.s
-	for (int ip = -B; ip <= gdata.global_mx[gdata.phi_dir]+B; ++ip) {
-
-		AxisPartnersPhi[top](ip) = -100;   // default value to flag a failure
-		// 'phi' = required partner position
-
-		double phi = PhiPos[top](ip) + M_PI;
-		phi -= Pi2*static_cast<int>(phi/Pi2);    // keep phi in [0,2pi]
-
-		// if (phi >= gdata.xb[gdata.phi_dir] and   // desired mp inside grid
-		//     phi <= gdata.xe[gdata.phi_dir]) {   //  => loop candidates
-		if (phi >= gdata.global_xb[gdata.phi_dir] and  // desired mp inside grid
-		    phi <= gdata.global_xe[gdata.phi_dir]) {   //  => loop candidates
-
-			// loop candidates
-			for (int imp = 0; imp <= gdata.global_mx[gdata.phi_dir]; ++imp) { 
-				//if (abs(gdata.getCen(gdata.phi_dir, imp) - phi) < eps) {
-				if (abs(PhiPos[top](imp) - phi) < eps) {
-					AxisPartnersPhi[top](ip) = imp; // found one
-					break;
-				}
-			}
-
-			if (AxisPartnersPhi[top](ip) == -100) {  // mp needed, but none found
-				cerr << "error: singularity present, "
-				     << "but cells cannot be mapped." << endl;
-				exit(1);
-			}
-		} else {
-			AxisPartnersPhi[top](ip) = -10;  // this means "no mp needed"
-		}
-
-
-		// Workaround for single grid point in phi-direction:
-		if(gdata.global_mx[gdata.phi_dir]==0) {
-			AxisPartnersPhi[top](ip) = 0;
-		}
-//		 if(gdata.rank==0) {
-//		 	cout << " My partner: " << ip << " " << AxisPartnersPhi[top](ip) << " ";
-//		 	cout << phi << " " << (phi-M_PI)/M_PI;
-//		 	cout << endl;
-//		 }
-	}
-#endif	
 
 	// Additional convenience functions holding sin and cos of positions
 	// along the grid
@@ -2359,70 +1342,6 @@ void gridFunc::bc_AxisSph(Data &gdata, ProblemType &Problem,
 }
 
 
-void gridFunc::do_AxisValCorrectionCyl(Data &gdata, ProblemType &Problem) {
-#if (GEOM == CYLINDRICAL)
-	int jnum = gdata.get_RankWidth(1);
-	for (int iz = -B; iz <= gdata.mx[2]+B; ++iz) {
-		double Bcx_sum = 0.;  // new values for Cartesian Bx, By
-		double Bcy_sum = 0.;  //  on the singular axis
-		int N_terms(0);
-			//		for (int j = 0; j <= gdata.mx[1]; j++) {
-			// Do not use phi=0 twice!
-		if(gdata.get_singularity_treatment(0) == 1) { // at lower r-bound
-			for (int iy = 0; iy < jnum; iy++) {
-				// br0_j, bp0_j: projected to (r,phi)=(0,phi_j) via avg.
-				double br0_j = (+gdata.om[q_Bx]( 0,iy,  iz)
-				              +gdata.om[q_Bx](-2,iy,  iz))/2.;
-				double bp0_j = (+gdata.om[q_By]( 0,iy-1,iz)
-				              +gdata.om[q_By]( 0,iy  ,iz)
-				              +gdata.om[q_By](-1,iy-1,iz)
-				              +gdata.om[q_By](-1,iy  ,iz))/4.;
-				double phi = gdata.getCen(1, iy);
-				Bcx_sum += br0_j * cos(phi) - bp0_j * sin(phi);
-				Bcy_sum += br0_j * sin(phi) + bp0_j * cos(phi);
-				// if(gdata.rank==0 && k==1) {
-				// 	cout << " axis: " << j << " " << br0_j << " " << bp0_j << " " << Bcx_sum << " " << Bcy_sum << endl;
-				// 	cout << "    " << gdata.om[q_By]( 0,j-1,k) << " ";
-				// 	cout << gdata.om[q_By]( 0,j  ,k) << " ";
-				// 	cout << gdata.om[q_By](-1,j  ,k) << " ";
-				// 	cout << gdata.om[q_By](-1,j-1,k) << " ";
-				// 	cout << endl;
-				// }
-				N_terms++;
-			}
-
-		} else {
-			Bcx_sum = 0.;
-			Bcy_sum = 0.;
-			N_terms = 0.;
-		}
-
-		double Bcx_ave(Bcx_sum/N_terms);
-		double Bcy_ave(Bcy_sum/N_terms);
-
-		// if((gdata.rank==0 && k==gdata.mx[2]) ||
-		//    (gdata.rank==1 && k==-1)) {
-		// 	cout << setiosflags(ios::scientific) << setprecision(12);
-		// 	cout << " corr val: " << gdata.rank << " " << Bcx_ave << " " <<	Bcy_ave << endl;
-		// 	cout << resetiosflags(ios::scientific) << setprecision(6);
-		// }
-
-		if(gdata.get_singularity_treatment(0) == 1) { // at lower r-bound
-			for (int iy = -B; iy <= gdata.mx[1]+B; iy++) { // set Br(0)s
-				double phi = gdata.getCen(1, iy);
-				double Br0_ave = ( Bcx_ave * cos(phi) +
-				                 Bcy_ave * sin(phi) );
-				gdata.om[q_Bx](-1,iy,iz) = Br0_ave;
-			} // j
-		} // check if r==0
-	} // k
-	// exit(3);
-
-
-#endif
-}
-
-
 void gridFunc::do_AxisValCorrectionSph(Data &gdata, ProblemType &Problem, bool top) {
 	//! Correction for mag field values on polar axis
 
@@ -2477,7 +1396,7 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 			int ixmin = 0;
 
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(rim + ixmin, omRange.get(1), omRange.get(2));
+			auto range = CelerityRange<3>(rim + ixmin, omRange.get(1), omRange.get(2));
 
 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 
@@ -2498,7 +1417,7 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 			int ixmin = 1;
 
 			// auto omRange = gdata.omSYCL[q].get_range();
-			// auto range = Range<3>(rim + ixmin, omRange.get(1), omRange.get(2));
+			// auto range = CelerityRange<3>(rim + ixmin, omRange.get(1), omRange.get(2));
 
 			// queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 
@@ -2516,7 +1435,7 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 			// });
 			
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(omRange.get(0), omRange.get(1), omRange.get(2));
+			auto range = CelerityRange<3>(omRange.get(0), omRange.get(1), omRange.get(2));
 
 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 
@@ -2542,7 +1461,7 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 			int iymin = 0;
 
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(omRange.get(0), rim + iymin, omRange.get(2));
+			auto range = CelerityRange<3>(omRange.get(0), rim + iymin, omRange.get(2));
 
 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 
@@ -2563,7 +1482,7 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 			int iymin = 1;
 
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(omRange.get(0), rim + iymin, omRange.get(2));
+			auto range = CelerityRange<3>(omRange.get(0), rim + iymin, omRange.get(2));
 
 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 
@@ -2581,7 +1500,7 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 			});
 
 			// auto omRange = gdata.omSYCL[q].get_range();
-			// auto range = Range<3>(omRange.get(0), omRange.get(1), omRange.get(2));
+			// auto range = CelerityRange<3>(omRange.get(0), omRange.get(1), omRange.get(2));
 
 			// queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 
@@ -2607,7 +1526,7 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 			int izmin = 0;
 
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(omRange.get(0), omRange.get(1), rim + izmin);
+			auto range = CelerityRange<3>(omRange.get(0), omRange.get(1), rim + izmin);
 
 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 
@@ -2628,7 +1547,7 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 			int izmin = 1;
 
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(omRange.get(0), omRange.get(1), rim + izmin);
+			auto range = CelerityRange<3>(omRange.get(0), omRange.get(1), rim + izmin);
 
 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 
@@ -2646,7 +1565,7 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 			});
 
 			// auto omRange = gdata.omSYCL[q].get_range();
-			// auto range = Range<3>(omRange.get(0), omRange.get(1), omRange.get(2));
+			// auto range = CelerityRange<3>(omRange.get(0), omRange.get(1), omRange.get(2));
 
 			// queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 
@@ -2791,7 +1710,7 @@ void gridFunc::bc_Outflow(Queue &queue, Data &gdata, ProblemType &pr,
 		if(above == 0) {
 			
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(rim, omRange.get(1), omRange.get(2));
+			auto range = CelerityRange<3>(rim, omRange.get(1), omRange.get(2));
 
 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 
@@ -2818,7 +1737,7 @@ void gridFunc::bc_Outflow(Queue &queue, Data &gdata, ProblemType &pr,
 			});
 		} else {
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(rim, omRange.get(1), omRange.get(2));
+			auto range = CelerityRange<3>(rim, omRange.get(1), omRange.get(2));
 
 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 
@@ -2850,7 +1769,7 @@ void gridFunc::bc_Outflow(Queue &queue, Data &gdata, ProblemType &pr,
 		if(above == 0) {
 			
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(omRange.get(0), rim, omRange.get(2));
+			auto range = CelerityRange<3>(omRange.get(0), rim, omRange.get(2));
 
 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 
@@ -2877,7 +1796,7 @@ void gridFunc::bc_Outflow(Queue &queue, Data &gdata, ProblemType &pr,
 			});
 		} else {
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(omRange.get(0), rim, omRange.get(2));
+			auto range = CelerityRange<3>(omRange.get(0), rim, omRange.get(2));
 
 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 
@@ -2909,7 +1828,7 @@ void gridFunc::bc_Outflow(Queue &queue, Data &gdata, ProblemType &pr,
 		if(above == 0) {
 			
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(omRange.get(0), omRange.get(1), rim);
+			auto range = CelerityRange<3>(omRange.get(0), omRange.get(1), rim);
 
 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 
@@ -2936,7 +1855,7 @@ void gridFunc::bc_Outflow(Queue &queue, Data &gdata, ProblemType &pr,
 			});
 		} else {
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(omRange.get(0), omRange.get(1), rim);
+			auto range = CelerityRange<3>(omRange.get(0), omRange.get(1), rim);
 
 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 
@@ -3185,7 +2104,7 @@ void gridFunc::bc_Reflecting(Queue &queue, Data &gdata, ProblemType &pr,
 	if(dir == 0) {
 		if(above == 0) {
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(rim, omRange.get(1), omRange.get(2));
+			auto range = CelerityRange<3>(rim, omRange.get(1), omRange.get(2));
 
 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 
@@ -3207,7 +2126,7 @@ void gridFunc::bc_Reflecting(Queue &queue, Data &gdata, ProblemType &pr,
 			});
 		} else if (above == 1) {
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(rim, omRange.get(1), omRange.get(2));
+			auto range = CelerityRange<3>(rim, omRange.get(1), omRange.get(2));
 
 			int mxx = gdata.mx[0];
 
@@ -3235,7 +2154,7 @@ void gridFunc::bc_Reflecting(Queue &queue, Data &gdata, ProblemType &pr,
 	if(dir == 1) {
 		if(above == 0) {
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(omRange.get(0), rim, omRange.get(2));
+			auto range = CelerityRange<3>(omRange.get(0), rim, omRange.get(2));
 
 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 
@@ -3257,7 +2176,7 @@ void gridFunc::bc_Reflecting(Queue &queue, Data &gdata, ProblemType &pr,
 			});
 		} else if(above == 1) {
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(omRange.get(0), rim, omRange.get(2));
+			auto range = CelerityRange<3>(omRange.get(0), rim, omRange.get(2));
 
 			int mxy = gdata.mx[1];
 
@@ -3285,7 +2204,7 @@ void gridFunc::bc_Reflecting(Queue &queue, Data &gdata, ProblemType &pr,
 	if(dir == 2) {
 		if(above == 0) {
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(omRange.get(0), omRange.get(1), rim);
+			auto range = CelerityRange<3>(omRange.get(0), omRange.get(1), rim);
 
 			queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
 
@@ -3307,7 +2226,7 @@ void gridFunc::bc_Reflecting(Queue &queue, Data &gdata, ProblemType &pr,
 			});
 		} else if(above == 1) {
 			auto omRange = gdata.omSYCL[q].get_range();
-			auto range = Range<3>(omRange.get(0), omRange.get(1), rim);
+			auto range = CelerityRange<3>(omRange.get(0), omRange.get(1), rim);
 
 			int mxz = gdata.mx[1];
 
@@ -3636,73 +2555,6 @@ void gridFunc::bc_Fixed_general(NumMatrix<double,3> &omb,
 	}
 }
 
-// template<typename DataAccessorType>
-// void gridFunc::dataout_Distributed(Data &gdata,  Hdf5Stream &h5out, celerity::partition<1> part,
-// 					   ProblemType & Problem, int numout, bool isfloat, const DataAccessorType& om_rho_acc,
-// 					   const DataAccessorType& om_sx_acc, const DataAccessorType& om_sy_acc, 
-// 					   const DataAccessorType& om_sz_acc, const DataAccessorType& om_Eges_acc)
-// {
-// 	Problem.WriteToH5(h5out);
-
-// 	int rim(0);
-// 	if(isfloat) {
-// 		rim = BOUT_FLT;
-// 	} else {
-// 		rim = BOUT_DBL;
-// 	}
-	
-// 	NumArray<int> mx_global(3);
-// 	NumArray<float> xmin_global(3), delx(3);
-// 	for (int dir = 0; dir < 3; dir++) {
-// 		mx_global(dir) = gdata.global_mx[dir];
-// 		xmin_global(dir) = gdata.get_pos_global(dir, rim, 0);
-// 		delx(dir) = gdata.dx[dir];
-// 	}
-
-
-// 	double xmin[3];
-// 	xmin[0] = gdata.getCen_x(-rim);
-// 	xmin[1] = gdata.getCen_y(-rim);
-// 	xmin[2] = gdata.getCen_z(-rim);
-  
-// 	int itime = static_cast<int>(gdata.time/gdata.dt);
-
-// 	int nproc[3] = {1,1,1};
-// 	int coords[3] = {0,0,0};
-// 	h5out.AddGlobalAttr("procs",nproc,3);
-// 	h5out.AddGlobalAttr("coords",coords,3);
-// 	h5out.AddGlobalAttr("rank",gdata.rank);
-// 	h5out.AddGlobalAttr("fluid_type", "hydro");
-
-// 	h5out.AddGlobalAttr("geometry",GEOM);
-// 	h5out.AddGlobalAttr("itime",itime);
-// 	h5out.AddGlobalAttr("timestep",gdata.tstep);
-// 	h5out.AddGlobalAttr("time",gdata.time);
-// 	h5out.AddGlobalAttr("rim",rim);
-// 	h5out.AddGlobalAttr("dt",gdata.dt);
-// 	h5out.AddGlobalAttr("xmin",xmin,3);
-// #if (NON_LINEAR_GRID == _CRONOS_ON)
-// 	h5out.AddGlobalAttr("dx",gdata.dx,3);
-// #endif
-// 	h5out.AddGlobalAttr("CflNumber",gdata.cfl);
-
-// #if(CRONOS_OUTPUT_COMPATIBILITY == CRONOS_ON)
-// 	hid_t group = h5out.get_defaultGroup();
-// #else
-// 	string groupName = gdata.fluid.get_Name();
-// 	hid_t group = h5out.AddGroup(groupName);
-// #endif
-
-// 	if (isfloat) {
-
-// 	} else {
-// 		string dsetName = gdata.om[0].getName();
-// 		h5out.Write3DMatrix_Distributed(dsetName, om_rho_acc, mx_global, gdata.rim,
-// 										 xmin_global, delx, group, &part, 0, true, false);
-// 	}
-
-// }
-
 // void gridFunc::dataout(Data &gdata, string &filename, ProblemType & Problem,
 //                        int numout, bool isfloat)
 void gridFunc::dataout(Data &gdata,  Hdf5Stream &h5out, ProblemType & Problem,
@@ -3915,201 +2767,6 @@ void gridFunc::dataout(Data &gdata,  Hdf5Stream &h5out, ProblemType & Problem,
 #endif
 
 }
-
-// void gridFunc::datain(Data &gdata, string &filename, ProblemType &Problem)
-// {
-void gridFunc::datain_old(Data &gdata, Hdf5iStream & h5in, string &filename,
-                      ProblemType &Problem)
-{
-
-	// Hdf5iStream h5in(filename);
-
-
-	Problem.ReadFromH5(h5in);
-
-	h5in.ReadGlobalAttr("time",gdata.time);
-	h5in.ReadGlobalAttr("dt",gdata.dt);
-	int rim(0); // Boundary points to be taken into account
-	h5in.ReadGlobalAttr("rim",rim);
-	h5in.ReadGlobalAttr("CflNumber",gdata.cfl);
-	//   h5in.ReadGlobalAttr("xmin",*xb);
-  
-	int mxsm[DIM];
-
-	// get group name:
-	string groupName = gdata.fluid.get_Name();
-
-
-	h5in.getSize(groupName, gdata.om[0].getName(), mxsm, DIM);
-
-	for(int i=0; i<DIM; ++i) {
-		mxsm[i] -= 2*rim+1;
-	}
-
-	NumMatrix<double,3> Data;
-	// Check if grid ratio can be devided by zero:
-	for(int dir=0; dir<3; ++dir) {
-		if(mxsm[dir] > 0) {
-			if(gdata.mx[dir]%mxsm[dir] != 0) {
-				throw CException(" New grid-extent no devisor of old one ");
-			}
-		}
-	}
-
-	int fac(1);
-	int facloc[3];
-	for(int dir=0; dir<3; ++dir) {
-		if(mxsm[dir] > 0) {
-			facloc[dir] = gdata.mx[dir]/mxsm[dir];
-		} else {
-			facloc[dir] = 1;
-		}
-	}
-	if(facloc[0] != facloc[1] || facloc[1] != facloc[2]) {
-		if(gdata.rank == 0) {
-			cerr << " Change of resolution not uniform " << endl;
-			cerr << " x-direction:    " << facloc[0] << endl;
-			cerr << " y-direction:    " << facloc[1] << endl;
-			cerr << " z-direction:    " << facloc[2] << endl;
-		}
-		exit(-102);
-	} else {
-		fac = facloc[0];
-	}
-
-	if(fac < 1) {
-		throw CException(" Grid can only be extended ");
-	}
-
-	// Adjust timestep:
-	gdata.dt /= fac;
-
-
-	int numin(0);
-	h5in.ReadGlobalAttr("Entries",numin);
-	int diffnum = 0;
-	if(!gdata.mag) {
-		diffnum = 3;
-	}
-	if(numin < N_OMINT_ALL + N_SUBS - diffnum) {
-		cerr << " Not enough entries in input file " << endl;
-		cerr << numin << " " << n_omInt << " " << N_SUBS << endl;
-		exit(-54);
-	}
-
-	int shift[DIM];
-	for(int i=0; i<DIM; ++i) {
-		shift[i] = 0;
-	}
-	for (int q = 0; q < n_omInt+n_omIntUser+N_SUBS; ++q) {
-
-//		bool is_generic = true;
-
-		int qin = q;
-		if(q < n_omInt) {
-			qin = q;
-		} else if(q >= n_omInt && q < n_omInt+N_SUBS) {
-			qin = q+N_ADD;
-		} else {
-			qin = q-(n_omInt+N_SUBS);
-//			is_generic = false;
-		}
-    
-		/*
-		  if(gdata.mag || (qin <4 || qin>6)) {
-		*/
-
-		Data.resize(Index::set(-rim, -rim, -rim),
-		            Index::set(mxsm[0]+rim, mxsm[1]+rim, mxsm[2]+rim));
-		Data.clear();
-		
-#if (OMS_USER == TRUE)
-		if(q < n_omInt+N_SUBS) {
-#endif
-			gdata.om[qin].rename("dump");
-#if (OMS_USER == TRUE)
-		} else {
-			gdata.om_user[qin].rename("dump");
-		}
-#endif
-
-		int qshift = 0;
-		// if(!gdata.mag && qin > 6) {
-		// This should only have been applicable to the non-user fields?!
-		// I do not see how this was ever sensible???
-		// if(!gdata.mag && qin > 6) {
-		// 	qshift = 3;
-		// }
-
-#if (OMS_USER == TRUE)
-		if(q < n_omInt+N_SUBS) {
-#endif
-			gdata.om[qin].rename(h5in.GetDatasetName(q-qshift));
-			h5in.Read3DMatrix(gdata.om[qin].getName(), Data);
-#if (OMS_USER == TRUE)
-		} else {
-			gdata.om_user[qin].rename(h5in.GetDatasetName(q-qshift));
-			h5in.Read3DMatrix(gdata.om_user[qin].getName(), Data);
-		}
-#endif
-
-		/*
-		  }
-		*/
-
-		double facred = fac;
-		int mxloc[3] = {mxsm[0], mxsm[1], mxsm[2]};
-		if(fac != 1 && gdata.rank == 0) {
-			cout << " Prolongating: ";
-		}
-		while(facred != 1) {
-			if(gdata.rank == 0) {
-				cout << facred << " ";
-			}
-			Prolongate(gdata, Data, qin, mxloc, rim);
-			facred /= 2;
-		}
-		if(fac != 1) {
-			cout << endl;
-		}
-
-		int imin[DIM];
-		int imax[DIM];
-		for(int i=0; i<DIM; ++i) {
-			imin[i] = -rim;
-			imax[i] = gdata.mx[i]+rim;
-		}
-		
-		/*
-		  if(gdata.mag || (qin <4 || qin>6)) {
-		*/
-
-		for(int k=imin[2]; k<=imax[2]; ++k) {
-			for(int j=imin[1]; j<=imax[1]; ++j) {
-				for(int i=imin[0]; i<=imax[0]; ++i) {
-					
-#if (OMS_USER == TRUE)
-					if(q < n_omInt+N_SUBS) {
-#endif
-						gdata.om[qin](i+shift[0],j+shift[1],
-						              k+shift[2]) = Data(i+shift[0],j+shift[1],k+shift[2]);
-#if (OMS_USER == TRUE)
-					} else {
-						gdata.om_user[qin](i+shift[0],j+shift[1],
-						                   k+shift[2]) = Data(i+shift[0],j+shift[1],k+shift[2]);
-					}
-#endif
-					
-				}
-			}
-		}
-		/*
-		  }
-		*/
-	}
-
-}
-
 
 
 void gridFunc::datain(Data &gdata, Hdf5iStream & h5in, string &filename,

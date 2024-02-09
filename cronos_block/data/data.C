@@ -140,7 +140,7 @@ double Pot::get_min()
 	return minimum;
 }
 
-Data::Data() : cflSYCL (celerity::buffer<double,1>(celerity::range{1})), nomSYCL (CelerityBuffer<nom_t, 3>(celerity::range<3>(mx[0]+6 +1, mx[1]+6+1, mx[2]+6+1)))
+Data::Data() : cflSYCL (CelerityBuffer<double,1>(celerity::range{1})), nomSYCL (CelerityBuffer<nom_t, 3>(CelerityRange<3>(mx[0]+6 +1, mx[1]+6+1, mx[2]+6+1)))
 {
 
 	// Start runtime timer
@@ -168,14 +168,14 @@ Data::Data() : cflSYCL (celerity::buffer<double,1>(celerity::range{1})), nomSYCL
 	std::vector<int> zeros4((mx[0]+6+1)*(mx[1]+6+1)*(mx[2]+6+1), 0);
 
 	for (int i = 0; i < numElements; i++) {
-			omSYCL.push_back(CelerityBuffer<double, 3>(zeros1.data(), Range<3>(mx[0]+6 +1, mx[1]+6+1, mx[2]+6+1)));
-			omSYCL_out.push_back(CelerityBuffer<double, 3>(zeros2.data(), Range<3>(mx[0]+2 +1, mx[1]+2+1, mx[2]+2+1)));
-			omSYCL_out_flt.push_back(CelerityBuffer<float, 3>(zeros3.data(), Range<3>(mx[0]+1, mx[1]+1, mx[2]+1)));
+			omSYCL.push_back(CelerityBuffer<double, 3>(zeros1.data(), CelerityRange<3>(mx[0]+6 +1, mx[1]+6+1, mx[2]+6+1)));
+			omSYCL_out.push_back(CelerityBuffer<double, 3>(zeros2.data(), CelerityRange<3>(mx[0]+2 +1, mx[1]+2+1, mx[2]+2+1)));
+			omSYCL_out_flt.push_back(CelerityBuffer<float, 3>(zeros3.data(), CelerityRange<3>(mx[0]+1, mx[1]+1, mx[2]+1)));
 	}
 
 	for (int i = 0; i < 1; i++) {
-			pThermSYCL.push_back(CelerityBuffer<double, 3>(zeros1.data(), Range<3>(mx[0]+6+1, mx[1]+6+1, mx[2]+6+1)));
-			carbuncleFlagSYCL.push_back(CelerityBuffer<int, 3>(zeros4.data(), Range<3>(mx[0]+6+1, mx[1]+6+1, mx[2]+6+1)));
+			pThermSYCL.push_back(CelerityBuffer<double, 3>(zeros1.data(), CelerityRange<3>(mx[0]+6+1, mx[1]+6+1, mx[2]+6+1)));
+			carbuncleFlagSYCL.push_back(CelerityBuffer<int, 3>(zeros4.data(), CelerityRange<3>(mx[0]+6+1, mx[1]+6+1, mx[2]+6+1)));
 	}
 
 	nom = new NumMatrix<double,3> [n_omInt];
@@ -561,49 +561,6 @@ void Data::floatom_out(int R, Hdf5Stream & h5file, int om_lo, int om_hi)
 		}
 	}
 }
-
-
-
-void Data::CheckNan(int pos)
-{
-	char message[255];
-	sprintf(message,"Check: %2.2d om is NAN",pos);
-
-	int found_NAN = 0;
-	int qNAN(-10), iNAN(-10), jNAN(-10), kNAN(-10);
-
-	for (int q = 0; q < N_OMINT; ++q){
-
-		int lo[3], up[3];
-		lo[0] = om[q].getLow(0);
-		lo[1] = om[q].getLow(1);
-		lo[2] = om[q].getLow(2);
-    
-		up[0] = om[q].getHigh(0);
-		up[1] = om[q].getHigh(1);
-		up[2] = om[q].getHigh(2);
-      
-		for (int k = lo[2]; k <= up[2]; k++){
-			for (int j = lo[1]; j <= up[1]; j++){
-				for (int i = lo[0]; i <= up[0]; i++){
-					if(std::isnan(om[q](i,j,k)) && !found_NAN) {
-						found_NAN = 1;
-						qNAN = q;
-						iNAN = i;
-						jNAN = j;
-						kNAN = k;
-					}
-				}
-			}
-		}
-	}
-
-	if(found_NAN) {
-		throw CException(message,pos,qNAN,iNAN,jNAN,kNAN);
-	}
-}
-
-
 
 void Data::set_fieldIds() {
 	// std::map<NumMatrix<double,3> *,int> id_numbers;

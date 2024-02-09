@@ -166,6 +166,8 @@
         "Hdf5File_cbase2.C": "cpp",
         "Hdf5File_cbase2 copy.C": "cpp",
         "Hdf5File_cbase copy.C": "cpp",
-        "singlestep_block_seq.C": "cpp"
+        "singlestep_block_seq.C": "cpp",
+        "transformations_block.C": "cpp",
+        "solver_func.C": "cpp"
     }
 }

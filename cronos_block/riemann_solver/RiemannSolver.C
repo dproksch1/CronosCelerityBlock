@@ -3,112 +3,50 @@
 
 using namespace std;
 
-void RiemannSolver::compute_carbuncleFlag(Data &gdata) {
-	
-	if(gdata.use_carbuncleFlag) {
-
-		gdata.carbuncleFlag.clear();
-
-		double pLoc, pOth, ratio;
-		// Loop over whole grid:
-		for(int zk = -2; zk<=gdata.mx[2]+2; ++zk){
-			for(int jy = -2; jy<=gdata.mx[1]+2; ++jy){
-				for(int ix = -2; ix<=gdata.mx[0]+2; ++ix){
-					int local_flag = 0;
-					pLoc = gdata.pTherm(ix, jy, zk);
-
-					for(int dir=0; dir<3; ++dir) {
-						if(dir==0) {// x-direction
-							pOth = gdata.pTherm(ix+1, jy, zk);
-						} else if (dir==1) {
-							pOth = gdata.pTherm(ix, jy+1, zk);
-						} else {
-							pOth = gdata.pTherm(ix, jy, zk+1);
-						}
-						ratio = abs(pLoc-pOth)/std::min(pLoc, pOth);
-//						if(ratio>0.1) {
-//							cout << " Da " << ratio << " " << ix << " " << jy << endl;
-//						}
-						if(ratio > alpha_carbuncle) {
-							local_flag = 1;
-//							if(zk==0) {
-//								cout << " Flag at " << ix << " " << jy << " " << zk << " " << dir <<  endl;
-//							}
-							if(dir==0) {
-								gdata.carbuncleFlag(ix, jy, zk) = 1;
-								gdata.carbuncleFlag(ix+1, jy, zk) = 1;
-							} else if(dir==1) {
-								gdata.carbuncleFlag(ix, jy, zk) = 1;
-								gdata.carbuncleFlag(ix, jy, zk+1) = 1;
-							} else {
-								gdata.carbuncleFlag(ix, jy, zk) = 1;
-								gdata.carbuncleFlag(ix, jy, zk+1) = 1;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
 double RiemannSolver::getAlphaCarbuncle() {
 	return alpha_carbuncle;
 }
-
-// void RiemannSolver::compute_carbuncleFlag(Queue &queue, Data &gdata) {
-	
-// 	if(gdata.use_carbuncleFlag) {
-
-// 		double alpha_c = alpha_carbuncle;
-// 		auto range = gdata.omSYCL[0].get_range();
-
-// 		queue.submit(celerity::allow_by_ref, [=, &gdata](celerity::handler& cgh) {
-
-// 			celerity::accessor ptherm_acc{gdata.pThermSYCL[0], cgh, celerity::access::neighborhood{2,2,2}, celerity::read_only};	
-// 			celerity::accessor carbuncleFlag_acc{gdata.carbuncleFlagSYCL[0], cgh, celerity::access::neighborhood{2,2,2}, celerity::write_only};
-
-// 			cgh.parallel_for<class CarbuncleFlagKernel>(range, [=](celerity::item<3> item) {
-
-// 				size_t ix = item.get_id(0);
-// 				size_t iy = item.get_id(1);
-// 				size_t iz = item.get_id(2);
-
-// 				double pLoc, pOth, ratio;
-
-// 				int local_flag = 0;
-
-// 				pLoc = ptherm_acc[ix][iy][iz];
-
-// 				for(int dir=0; dir<3; ++dir) {
-// 					if(dir==0) {// x-direction
-// 						pOth = ptherm_acc[ix+1][iy][iz];
-// 					} else if (dir==1) {
-// 						pOth = ptherm_acc[ix][iy+1][iz];
-// 					} else {
-// 						pOth = ptherm_acc[ix][iy][iz+1];
-// 					}
-// 					ratio = abs(pLoc-pOth)/cl::sycl::min(pLoc, pOth);
-
-// 					if(ratio > alpha_c) {
-// 						if(dir==0) {
-// 							carbuncleFlag_acc[ix][iy][iz] = 1;
-// 							carbuncleFlag_acc[ix+1][iy][iz] = 1;
-// 						} else if(dir==1) {
-// 							carbuncleFlag_acc[ix][iy][iz] = 1;
-// 							carbuncleFlag_acc[ix][iy][iz+1] = 1;
-// 						} else {
-// 							carbuncleFlag_acc[ix][iy][iz] = 1;
-// 							carbuncleFlag_acc[ix][iy][iz+1] = 1;
-// 						}
-// 					}
-// 				}
-// 			});
-// 		});
-// 	}
-// }
 
 
 void RiemannSolver::set_verbosity(int _verb) {
 	verbosity = _verb;
 }
+
+RiemannSolverHD::RiemannSolverHD(const Data &gdata, int dir, int Fluid_Type) : RiemannSolver(gdata, dir, Fluid_Type) {
+#if(FLUID_TYPE==CRONOS_HYDRO)
+	this->q_rho = gdata.fluid.get_q_rho();
+	this->q_sx  = gdata.fluid.get_q_sx();
+	this->q_sy  = gdata.fluid.get_q_sy();
+	this->q_sz  = gdata.fluid.get_q_sz();
+	this->q_Eges = gdata.fluid.get_q_Eges();
+	this->q_Eadd = gdata.fluid.get_q_Eadd();
+#endif
+}
+
+#if (ENERGETICS != ISOTHERMAL)
+HLLCSolver_Hydro::HLLCSolver_Hydro(const Data &gdata, int dir, int Fluid_Type) : RiemannSolverHD(gdata, dir, Fluid_Type) {
+	veps = 1.e-120;
+
+#if(FLUID_TYPE != CRONOS_MULTIFLUID)
+	reset_Indices(gdata.fluid);
+#else
+	reset_Indices(gdata.fluids->fluids[0]);
+#endif
+	if(dir == 0) {
+		this->qvPar = q_sx;
+		this->qvP1  = q_sy;
+		this->qvP2  = q_sz;
+	} else if (dir == 1) {
+		this->qvP2  = q_sx;
+		this->qvPar = q_sy;
+		this->qvP1  = q_sz;
+	} else {
+		this->qvP1  = q_sx;
+		this->qvP2  = q_sy;
+		this->qvPar = q_sz;
+	}   
+	gamma = value((char*)"Adiabatic_exponent");
+
+}
+
+#endif

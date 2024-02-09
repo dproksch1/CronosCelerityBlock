@@ -13,8 +13,6 @@
 
 #include "reconst_block.H"
 #include "transformations_block.H"
-#include "RiemannSolverHD.H"
-#include "PhysFluxesHD.H"
 #include "utils.H"
 
 // #if(STANDALONE_USAGE == TRUE)
@@ -37,9 +35,6 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
   if(eos == nullptr) {
 	eos = std::make_unique<EquationOfState>(Problem);
-  }
-  if(sources == NULL) {
-	sources = std::make_unique<SourceTerms>(gdata, Problem, IntegrateA, thermal);
   }
 
 // ----------------------------------------------------------------
@@ -102,104 +97,11 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 	gettimeofday(&tin11, 0);
 	gettimeofday(&tin1, 0);
-	cstart = clock();  
-
-// ----------------------------------------------------------------
-// Relevant declarations
-// ----------------------------------------------------------------
-
-//	nom = new NumMatrix<double,3> [n_omInt];
-//	for (int q = 0; q < n_omInt; ++q) {
-//#if (FLUID_TYPE == CRONOS_MHD)
-//		if((gdata.om[q].getName() == "B_x" ||
-//		    gdata.om[q].getName() == "B_y" ||
-//		    gdata.om[q].getName() == "B_z")) {
-//			nom[q].resize(Index::set(0,0,0),
-//			              Index::set(0,0,0));
-//		} else {
-//#endif
-//			nom[q].resize(Index::set(0,0,0),
-//			              Index::set(gdata.mx[0],gdata.mx[1],gdata.mx[2]));
-//#if (FLUID_TYPE == CRONOS_MHD)
-//		}
-//}
-//#endif
-// 	for (int q = 0; q < n_omInt; ++q) {
-// 		gdata.nom[q].clear();
-// 	}
-
-// 	// Prepare user fields if necessary
-// 	#if (OMS_USER == TRUE)
-
-// //	nom_user = new NumMatrix<double,3> [n_omIntUser];
-// //	for (int q = 0; q < n_omIntUser; ++q) {
-// //		nom_user[q].resize(Index::set(0,0,0),
-// //		                   Index::set(gdata.mx[0],gdata.mx[1],gdata.mx[2]));
-// //		nom_user[q].clear();
-// //	}
-// 	for (int q = 0; q < n_omIntUser; ++q) {
-// 		gdata.nom_user[q].clear();
-// 	}
-
-// #endif	
+	cstart = clock();
 
 // ---------------------------------------------------------------	      
-//      Trafo of variables to conservative form
+//  Setup Carbuncle Flag
 //----------------------------------------------------------------
-
-#if(CRSWITCH_DUAL_ENERGY == CRONOS_ON)
-	if(n_omInt > 7) {
-		Trafo->computeEntropyFromE(gdata, gfunc, Problem);
-	}
-#endif
-
-#if (USE_COROTATION == CRONOS_ON)
-	// Transform to inertial frame velocity
-	Trafo->TransCorotToInert(gdata, gfunc, Problem);
-#endif
-
-// 	Trafo->TransPrim2Cons(gdata, gfunc, Problem);
-
-// 	// User defined transform
-// 	Problem.TransPrim2Cons(gdata);
-
-// // ---------------------------------------------------------------	      
-// //      Saving old variables for Runge-Kutta (conservative form)
-// //----------------------------------------------------------------
-
-// 	if (n == 0) {
-// 		for (int q = 0; q < n_omInt; ++q){
-// #if(FLUID_TYPE == CRONOS_HYDRO)
-// 			gdata.om[n_Omega+q] = gdata.om[q];         // save om_n
-// #elif (FLUID_TYPE == CRONOS_MHD)
-// 			if((q < q_Bx || q > q_Bz) || !IntegrateA) {
-// 				gdata.om[n_Omega+q] = gdata.om[q];         // save om_n
-// 			} else {
-// 				gdata.om[n_Omega+q] = gdata.om[n_omInt+N_ADD+q-q_Bx];
-// 			}
-// #endif
-// 		}
-
-// #if (OMS_USER == TRUE)
-// 		// Saving user-variables (if necessary)
-// 		for (int q = 0; q < n_omIntUser; ++q) {
-// 			gdata.om_user[n_OmegaUser+q] = gdata.om_user[q];
-// 		}
-// #endif
-
-// 	}
-
-// // ---------------------------------------------------------------	      
-// //      Trafo primitive variables for reconstruction
-// //----------------------------------------------------------------
-
-// 	Trafo->TransCons2Prim(gdata, gfunc, Problem);
-
-// 	// User defined transform
-// 	Problem.TransCons2Prim(gdata);
-
-// 	// Check for nans in primitive variables
-// 	gdata.CheckNan(1);
 
 	// Compute the carbuncle-flag if necessary
 	if(gdata.use_carbuncleFlag) {
@@ -217,8 +119,6 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	for(int dir=0; dir<3; ++dir) {
 			n_ghost[dir] = 3;
 	}
-
-	// Reconstruction_Block reconst(gdata, 0, gdata.fluid);
 
 	int n_omInt = gdata.fluid.get_N_OMINT();
 
@@ -247,7 +147,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		idx[i] = gdata.idx[i];
 	}
 
-	auto range = Range<3>(gdata.mx[0] + 2*n_ghost[0] + 1, gdata.mx[1] + 2*n_ghost[1] + 1, gdata.mx[2] + 2*n_ghost[2] + 1);
+	auto range = CelerityRange<3>(gdata.mx[0] + 2*n_ghost[0] + 1, gdata.mx[1] + 2*n_ghost[1] + 1, gdata.mx[2] + 2*n_ghost[2] + 1);
 	int rangeEnd[3] = {gdata.mx[0] + n_ghost[0] + 1, gdata.mx[1] + n_ghost[1] + 1, gdata.mx[2] + n_ghost[2] + 1};
 
 
@@ -307,165 +207,30 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		});
 	});
 
-	gdata.fetch_cfl(queue);
-	cfl_lin = gdata.cfl;
-
-// ---------------------------------------------------------------	      
-//      Former Kernel for Non-Parallel Execution
-//----------------------------------------------------------------
-
-	// auto computeStep = [](Reconstruction_Block reconst, const std::unique_ptr<Transformations_Block>& Trafo, const std::unique_ptr<PhysFluxes>& PhysFlux, const std::vector<std::unique_ptr<RiemannSolver>>& Riemann, const ProblemType& Problem, const std::unique_ptr<EquationOfState>& eos, const Data& gdata, int ix, int iy, int iz, double& cfl_lin) {
-
-	// 	// Reconstruction at given position
-	// 	std::vector<phys_fields_0D> physVals;
-	// 	for (int inum = 0; inum < 6; ++inum) {
-	// 		physVals.push_back(phys_fields_0D(gdata, inum, gdata.fluid));
-	// 	}
-	// 	reconst.compute(gdata, physVals, ix, iy, iz);
-
-	// 	if (ix >= -1 && iy >= -1 && iz >= -1) {
-
-	// 		std::vector<phys_fields_0D> physValsOld;
-	// 		for (int inum = 0; inum < 6; ++inum) {
-	// 			physValsOld.push_back(phys_fields_0D(gdata, inum, gdata.fluid));
-	// 		}
-
-	// 		reconst.compute(gdata, physValsOld, ix - 1, iy, iz, DirX);
-	// 		reconst.compute(gdata, physValsOld, ix, iy - 1, iz, DirY);
-	// 		reconst.compute(gdata, physValsOld, ix, iy, iz - 1, DirZ);
-
-	// 		physVals[gpu::FaceEast] = physValsOld[gpu::FaceEast];
-	// 		physVals[gpu::FaceNorth] = physValsOld[gpu::FaceNorth];
-	// 		physVals[gpu::FaceTop] = physValsOld[gpu::FaceTop];
-
-	// 	}			
-		
-	// 	for (int dir = 0; dir < DirMax; ++dir) {
-
-	// 		int ixOff = (dir == DirX) ? ix : ix - 1;
-	// 		int iyOff = (dir == DirY) ? iy : iy - 1;
-	// 		int izOff = (dir == DirZ) ? iz : iz - 1;
-
-	// 		int face = dir * 2;
-
-	// 		Trafo->get_Cons(gdata, Problem, *eos, physVals[face], ix, iy, iz, face);
-	// 		PhysFlux->get_PhysFlux(gdata, Problem, physVals[face], ix, iy, iz, face);
-	// 		// i-1,j,k - East
-	// 		Trafo->get_Cons(gdata, Problem, *eos, physVals[face + 1], ix, iy, iz, face + 1);
-	// 		PhysFlux->get_PhysFlux(gdata, Problem, physVals[face + 1], ixOff, iyOff, izOff, face + 1);
-
-	// 	}
-
-	// 	std::vector<num_fields_0D> numVals;
-	// 	for (int idir = 0; idir < 3; ++idir) {
-	// 		numVals.push_back(num_fields_0D(gdata, gdata.fluid));
-	// 	}
-
-	// 	if (ix >= -1 && iy >= -1 && iz >= -1) {
-	// 		for (int dir = 0; dir < DirMax; ++dir) {
-	// 			int face = dir * 2;
-	// 			get_vChar2(gdata, Problem, physVals[face], physVals[face + 1], numVals[dir], dir, cfl_lin);
-	// 			get_NumFlux2(gdata, physVals[face + 1], physVals[face], numVals[dir], dir);
-	// 		}
-	// 	}
-
-	// 	return numVals;
-
-	// };
-
-	// for (int iz = -n_ghost[2]+1; iz <= gdata.mx[2]+n_ghost[2]-1; ++iz){
-
-	// 	for (int iy = -n_ghost[1]+1; iy <= gdata.mx[1]+n_ghost[1]-1; ++iy){
-
-	// 		for (int ix = ixStart; ix <= ixEnd; ++ix){
-	// 			//if (ix == ixEnd && iy == gdata.mx[1]+n_ghost[1]-1 && iz == gdata.mx[2]+n_ghost[2]-1) cout << "reach limit: " << ix << "." <<  iy << "." << iz << "\n";
-	// 			const int fluidType = Riemann[DirX]->get_Fluid_Type();
-
-	// 			if(ix >= 0 && ix <= gdata.mx[0] && iy >= 0 && iy <= gdata.mx[1] && iz >= 0 && iz <= gdata.mx[2]) {
-	// 				//cout << "seq kernel iteration " << ix << " " << iy << " " << iz <<"\n";
-	// 				const auto numVals = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix, iy, iz, cfl_lin);
-
-	// 				//gdata.nom update n_OMINT
-	// 				const auto numValsX = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix + 1, iy, iz, cfl_lin);
-	// 				get_Changes(gdata, numVals[DirX], numValsX[DirX], gdata.nom, ix, iy, iz, DirX, fluidType);
-
-	// 				const auto numValsY = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix, iy + 1, iz, cfl_lin);
-	// 				get_Changes(gdata, numVals[DirY], numValsY[DirY], gdata.nom, ix, iy, iz, DirY, fluidType);
-
-	// 				const auto numValsZ = computeStep(reconst, Trafo, PhysFlux, Riemann, Problem, eos, gdata, ix, iy, iz + 1, cfl_lin);
-	// 				get_Changes(gdata, numVals[DirZ], numValsZ[DirZ], gdata.nom, ix, iy, iz, DirZ, fluidType);
-		
-	// 			}
-	// 		}
-
-	// 	}
-	// }
-
-	gettimeofday(&tock, 0);
-	cstep = clock();
-
-// ----------------------------------------------------------------
-//   Check for errors:
-// ----------------------------------------------------------------
-
-	// for(int q = 0; q<n_omInt; ++q) {
-	// 	CheckNan(gdata.nom[q],q, 0, 1,"nom");
-	// }
-
 // ----------------------------------------------------------------
 //   Compute Courant number
 // ----------------------------------------------------------------
 
+	gdata.fetch_cfl(queue);
+	cfl_lin = gdata.cfl;
+
+	gettimeofday(&tock, 0);
+	cstep = clock();
+
 	double cfl = compute_cfl(gdata, Problem, cfl_eta, cfl_lin, n);
 	cout << "cfl: " << cfl << endl;
-	//double cfl = 0.0;
-// ----------------------------------------------------------------
-//   Geometrical source terms:
-// ----------------------------------------------------------------
-
-#if (GEOM != CARTESIAN)
-	sources->src_Geom(gdata, Problem, gdata.nom);
-#endif
-
-// ----------------------------------------------------------------
-//   Geometrical source terms:
-// ----------------------------------------------------------------
-
-#if (USE_COROTATION == CRONOS_ON)
-	Trafo->src_Corotating(gdata, Problem, gdata.nom);
-#endif
 
 // ----------------------------------------------------------------
 //   User defined source terms:
 // ----------------------------------------------------------------
 
-#if (USE_COROTATION == CRONOS_ON)
-	// Transform to co-rotating frame velocity for user src
-	Trafo->TransInertToCorot(gdata, gfunc, Problem);
-#endif
-
 	Problem.src_User(gdata, gdata.nom, gdata.nom_user);
-
-#if (USE_COROTATION == CRONOS_ON)
-	// Transform back to inertial frame
-	Trafo->TransCorotToInert(gdata, gfunc, Problem);
-#endif
-
-// ----------------------------------------------------------------
-//   Check for errors again before applying the changes:
-// ----------------------------------------------------------------
-
-	// for(int q = 0; q<n_omInt; ++q) {
-	// 	CheckNan(gdata.nom[q],q, 0, 2,"nom");
-	// }
 
 // ----------------------------------------------------------------
 //   Transform to conservative variables:
 // ----------------------------------------------------------------
 
-	// Trafo->TransPrim2Cons(gdata, gfunc, Problem);
-	// Problem.TransPrim2Cons(gdata);	
-	Trafo->TransPrim2Cons(gdata, gfunc, Problem, queue);
+	Trafo->TransPrim2Cons(queue, gdata, gfunc, Problem);
 	Problem.TransPrim2Cons(queue, gdata);
 
 // ----------------------------------------------------------------
@@ -485,13 +250,8 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 #endif
 
-// only necessary for super small domain sizes, I will find a better solution for this
+// only necessary for super small domain sizes, we will find a better solution for this
 // queue.slow_full_sync();
-
-//	delete [] nom;
-//#if (OMS_USER == TRUE)
-//	delete [] nom_user;
-//#endif
 
 // ----------------------------------------------------------------
 //   Determine time at intermediate steps:
@@ -510,24 +270,6 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 //   Transformation to primitive variables and apply bcs
 // ----------------------------------------------------------------
 
-// 	gettimeofday(&tock2, 0);
-// #if (USE_ANGULAR_MOMENTUM == TRUE)
-// 	Trafo->TransAngMom2Vel(gdata, gfunc, Problem);
-// #else
-// 	Trafo->TransMomen2Vel(gdata, gfunc, Problem);
-// #endif
-
-#if (FLUID_TYPE == CRONOS_MHD)
-	if(IntegrateA) {
-		compute_B(gdata, gfunc, Problem);
-	}
-#endif
-
-#if (USE_COROTATION == CRONOS_ON)
-	// Transform to co-rotating frame velocity for BCs
-	Trafo->TransInertToCorot(gdata, gfunc, Problem);
-#endif
-
 #if(ENERGETICS == FULL)
 	int q_max = q_Eges;
 #else
@@ -536,42 +278,19 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 	// Boundary conditions
 	for(int q=0; q<q_max; ++q) {
-		// gfunc.boundary(gdata, Problem, gdata.om[q],B,q);
 		gfunc.boundary(queue,gdata, Problem, gdata.om[q],B,q);
 	}
 
 	if(ENERGETICS == FULL) {
 
-#if (USE_COROTATION == CRONOS_ON)
-		// Transform back for energy trafo
-		Trafo->TransCorotToInert(gdata, gfunc, Problem);
-#endif
-
-// 		if(thermal) {
-// #if(CRSWITCH_DUAL_ENERGY == CRONOS_ON)
-// 			Trafo->TransE2Eth(gdata, gfunc, Problem, n, true);
-// #else
-// 			Trafo->TransE2Eth(gdata, gfunc, Problem);
-// #endif
-// 		} else {
-// 			Trafo->TransE2T(gdata, gfunc, Problem);
-// 		}
-
-		Trafo->TransE2Eth(gdata, gfunc, Problem, queue, 0, true);
+		Trafo->TransE2Eth(queue, gdata, gfunc, Problem, 0, true);
  
 		for(int q=q_Eges; q<n_omInt; ++q) {
-			// gfunc.boundary(gdata, Problem, gdata.om[q],B,q);
 			gfunc.boundary(queue,gdata, Problem, gdata.om[q],B,q);
 		}
 
-#if (USE_COROTATION == CRONOS_ON)
-		// Transform to co-rotating frame velocity for BCs
-		Trafo->TransInertToCorot(gdata, gfunc, Problem);
-#endif
-
 	}
 
-	// Problem.TransCons2Prim(gdata);
 	Problem.TransCons2Prim(queue, gdata);
 
 #if (OMS_USER == TRUE)
@@ -614,20 +333,8 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	}
 
 // ----------------------------------------------------------------
-//   Test physical state
+//   compute divB
 // ----------------------------------------------------------------
-
-#if (USE_COROTATION == CRONOS_ON)
-	// Transform to inertial frame velocity for phystest
-	Trafo->TransCorotToInert(gdata, gfunc, Problem);
-#endif
-
-	// phystest(gdata, gfunc, Problem, n);
-
-#if (USE_COROTATION == CRONOS_ON)
-	// Transform back to co-rotating frame
-	Trafo->TransInertToCorot(gdata, gfunc, Problem);
-#endif
 
 	// Computing div B only at end of timestep
 	if(Problem.mag && n == RK_STEPS-1){
@@ -635,5 +342,4 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	}
 
 	return cfl;
-
 }

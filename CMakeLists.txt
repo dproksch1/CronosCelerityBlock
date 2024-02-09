@@ -138,7 +138,6 @@ set(SOURCES
     cronos_block/general/movie.C
     cronos_block/general/normalisation.C
     cronos_block/general/proj.C
-    cronos_block/general/sources.C
     cronos_block/general/specific.C
     cronos_block/general/units.C
     cronos_block/data/data.C
@@ -149,11 +148,7 @@ set(SOURCES
     cronos_block/kernel/transformations_block.C
     cronos_block/kernel/solver_func.C
     cronos_block/kernel/changes.C
-    cronos_block/reconstruction/reconst_block.C
-    cronos_block/riemann_solver/hllc_hd.C
-    cronos_block/riemann_solver/PhysFluxesHD.C
     cronos_block/riemann_solver/RiemannSolver.C
-    cronos_block/riemann_solver/vChar_hd.C
     cronos_block/stepfunctions/gridfunc.C
     cronos_block/stepfunctions/gridgen.C
     cronos_block/stepfunctions/Hdf5File_cbase.C

@@ -18,12 +18,8 @@
 #include "problem.H"
 #include "eos.H"
 #include "transformations_block.H"
-#include "sources.H"
 #include "timestepping.H"
 #include "RiemannSolver.H"
-#include "RiemannSolverHD.H"
-#include "PhysFluxes.H"
-#include "PhysFluxesHD.H"
 #include "reconst_block.H"
 #include "queue.H"
 #include "lazy_assertion.H"
@@ -39,7 +35,7 @@ public:
 	virtual void init(Queue &, Data &, gridFunc &, ProblemType &);
 	virtual void restart(Queue &, Data &, gridFunc &, ProblemType &);
 	virtual double singlestep(Data &, gridFunc &, ProblemType &, int, Queue&);
-	virtual void phystest(Data &, gridFunc &, ProblemType &, int, int iFluid=0);
+	// virtual void phystest(Data &, gridFunc &, ProblemType &, int, int iFluid=0);
 
 private:
 	void init_general(Queue &, Data &, gridFunc &, ProblemType &);
@@ -52,7 +48,6 @@ private:
 	void compute_B(Data &, gridFunc &, ProblemType &, bool initial_setup=false);
 	double compute_divB(Data &, gridFunc &, ProblemType &);
 	double compute_divB(Data &, gridFunc &, ProblemType &, NumMatrix<double,3> &);
-	void CheckNan(NumMatrix<double,3> &, int, int, int, string);
 	void TransPot2Mag(Data &, gridFunc &, ProblemType &);
 	void TransMag2Pot(Data &, gridFunc &, ProblemType &);
 	void ComputeChecksumA(Data &, double []);
@@ -95,7 +90,6 @@ private:
 	timeval tin1, tin2, tin3, tin4, tin5, tin6, tin7, tin8, tin9, tin10;
 	timeval tin11, tin12, tin13, tin14;
 	std::unique_ptr<EquationOfState> eos;
-	std::unique_ptr<SourceTerms> sources;
 	std::unique_ptr<Transformations_Block> Trafo;
 	NumMatrix<double,3> *v_max_p;
 	NumMatrix<double,3> *v_max_m;
@@ -103,7 +97,7 @@ private:
 	std::vector<std::unique_ptr<RiemannSolver>> Riemann;
 	
 	//std::vector<std::unique_ptr<Reconstruction>> ReconstX, ReconstY, ReconstZ;
-	std::unique_ptr<PhysFluxes> PhysFlux;
+	// std::unique_ptr<PhysFluxes> PhysFlux;
 	//Saves *Save;
 
 	/** Buffer for HyperbolicSolver::get_Changes */
