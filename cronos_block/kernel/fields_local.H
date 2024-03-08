@@ -7,6 +7,7 @@
 #include "data.H"
 #include "constants.H"
 
+//! @brief physical flux tracking for Non-Celerity Cronos
 class phys_fields_0D {
 public:
 	phys_fields_0D(const Data &, int, const CronosFluid &fluid);
@@ -28,7 +29,7 @@ private:
 	int face, num;
 };
 
-
+//! @brief numerical flux tracking for Non-Celerity Cronos
 class num_fields_0D {
 public:
 	num_fields_0D(const Data &, const CronosFluid &fluid);

@@ -1,5 +1,6 @@
 #include "solver_func.H"
 
+//! @brief Compute the carbuncle flag for the Celerity version of the data grid
 void compute_carbuncleFlag(Queue &queue, Data &gdata, double alpha_c) {
 	
 	if(gdata.use_carbuncleFlag) {

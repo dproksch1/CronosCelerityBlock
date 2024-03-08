@@ -7,6 +7,7 @@
 
 namespace distr_io {
 
+	//! @brief Extracts the layout data of the buffer allocation window
 	template <typename T>
 	std::pair<hid_t, hid_t> allocation_window_to_dataspace(const celerity::buffer_allocation_window<T, 3>& layout)
 	{
@@ -29,6 +30,7 @@ namespace distr_io {
 		return {file_space, allocation_space};
 	}
 
+	//! @brief Write out the data of the provided buffer allocation window
 	template<typename DataT>
 	bool Write3DMatrix(Hdf5Stream &h5out, const std::string &ArrayName, celerity::buffer_allocation_window<DataT, 3> allocation_window, 
 											const NumArray<int> &mx_global, int rim, const double *xb, const double *dx, hid_t my_group, int q_index,
@@ -127,6 +129,7 @@ namespace distr_io {
 		return true;
 	}
 
+	//! @brief Write of the data of all provided allocation windows
 	template<typename DataT>
 	void dataout(Data &gdata,  Hdf5Stream &h5out,
 						ProblemType & Problem, int numout, bool isfloat, celerity::buffer_allocation_window<DataT, 3> om_rho_acc,
@@ -210,12 +213,14 @@ namespace distr_io {
 
 
 
-class gridFunc {
+/*!
+ * @brief Offers boundary conditions and writeout functionality
+ */
+class GridFunc {
 public:
-	gridFunc(Data &);
+	GridFunc(Data &);
 	void boundary(Data &, ProblemType &);
 	void boundary(Data &, ProblemType &, NumMatrix<double,3> &omb, int);
-	// void boundary_old(Data &, ProblemType &, NumMatrix<double,3> &omb, int, int, int iFluid=0);
 
 	/*!
 	 * Optimised boundary condition routine for MPI parallel case - trying to avoid stalls by
@@ -230,15 +235,10 @@ public:
 	void boundary(Data &gdata, ProblemType &problem, NumMatrix<double,3> &omb,
 			int rim, int q, int iFluid=0);
 
-	void boundary(Queue &, Data &gdata, ProblemType &problem, NumMatrix<double,3> &omb,
-			int rim, int q, int iFluid=0);
-
-	// void dataout(Data &, string &, ProblemType &, int, bool);
+	void boundary(Queue &, Data &gdata, ProblemType &problem, int rim, int q, int iFluid=0);
 
 	void dataout(Data &, Hdf5Stream &, ProblemType &, int, bool, bool is_collective);
-	// void dataout2(Queue &, Data &, Hdf5Stream &, ProblemType &, int, bool, bool is_collective);
 	void datain(Data &, Hdf5iStream &, string &, ProblemType &);
-	// void datain_old(Data &, Hdf5iStream &, string &, ProblemType &);
 	/*!
 	 * Function to load restart data from runs, which wrote all data into a single file
 	 * the maximum refinement factor is returned
@@ -249,31 +249,15 @@ public:
 #endif
 	void prep_boundaries(Data &, ProblemType &);
 	int get_bc_Type(int);
-private:
-	// void bc_SendRecv(Data &, NumMatrix<double,3> &, NumMatrix<double,3> &,
-	//                  int, int, int, bool, bool);
-	// void bc_SendRecv(Data &, NumArray<double> &, NumArray<double> &,
-	//                  int dir, int size_send, int size_recv, int, int, bool, bool);
-// #ifdef parallel
-// 	void bc_ISendRecv(Data &, NumArray<double> &, NumArray<double> &, MPI_Request *,
-// 	                 int dir, int size_send, int size_recv, int, int, bool, bool);
-// #else
-// 	void bc_ISendRecv(Data &, NumArray<double> &, NumArray<double> &,
-// 	                 int dir, int size_send, int size_recv, int, int, bool, bool);
-// #endif
-	// void bc_Periodic_old(Data &gdata, ProblemType &, NumMatrix<double,3> &omb,
-	//                  int dir, int q, int rim, bool internal_only=false);
 
-	// void bc_Periodic(Data &gdata, ProblemType &, NumMatrix<double,3> &omb,
-	//                  int dir, int q, int rim, bool internal_only=false);
+private:
 	/*!
 	 * Periodic boundary conditions for non-mpi version of the code, only
 	 * */
 	void bc_Periodic_serial(Data &gdata, ProblemType &, NumMatrix<double,3> &omb,
 			int dir, int q, int rim);
 		
-	void bc_Periodic(Queue &, Data &gdata, ProblemType &, NumMatrix<double,3> &omb,
-			int dir, int q, int rim);
+	void bc_Periodic(Queue &, Data &gdata, ProblemType &, int dir, int q, int rim);
 
 	/*!
 	 * Determine size of send buffer in send direction
@@ -320,45 +304,22 @@ private:
 	void Prolongate(Data &, NumMatrix<double,3> &, const int &, int mxloc[], int);
 	int get_powerTwo(int val);
 
-	void bc_Outflow(Queue &queue, Data &, ProblemType &, NumMatrix<double,3> &,
-	                int, int, int, int);
-	void bc_Extrapolate(Queue &queue, Data &, ProblemType &, NumMatrix<double,3> &,
-	                    int, int, int, int);
-	void bc_Reflecting(Queue &queue, Data &, ProblemType &, NumMatrix<double,3> &,
-	                   int, int, int, int);
+	void bc_Outflow(Queue &queue, Data &, ProblemType &, int, int, int, int);
+	void bc_Extrapolate(Queue &queue, Data &, ProblemType &, int, int, int, int);
+	void bc_Reflecting(Queue &queue, Data &, ProblemType &, int, int, int, int);
 
 	/**
 	 * Adapt resolution of input data to version of cat file
 	 * */
 	void RefineData(Data &gdata, NumMatrix<double,3> &, int mx[DIM],
 			NumArray<int> &factor, NumArray<int> &staggered, int rim);
+
 	int bc_Type[6];
 	NumMatrix<int,1> AxisPartnersPhi[2];  // array of mapping partners
-	NumMatrix<double,1> PhiPos[2];
 	NumMatrix<double,1> cosPos[3], sinPos[3];
 	NumMatrix<double,3> bcVals_xb[N_OMINT], bcVals_xe[N_OMINT];
 	NumMatrix<double,3> bcVals_yb[N_OMINT], bcVals_ye[N_OMINT];
 	NumMatrix<double,3> bcVals_zb[N_OMINT], bcVals_ze[N_OMINT];
-
-	NumMatrix<double,3> Recv_x, Recv_y, Recv_z, Recv_empty;
-	NumMatrix<double,3> Send_x, Send_y, Send_z, Send_empty;
-
-	NumArray<double> SendArr_buff, RecvArr_buff;
-	NumArray<double> RecvArrSmall_x, RecvArrSmall_y, RecvArrSmall_z;
-	NumArray<double> SendArrSmall_x, SendArrSmall_y, SendArrSmall_z;
-	NumArray<double> RecvArr_xLR, RecvArr_yLR, RecvArr_zLR;
-	NumArray<double> RecvArr_xRL, RecvArr_yRL, RecvArr_zRL;
-	NumArray<double> SendArr_xLR, SendArr_yLR, SendArr_zLR;
-	NumArray<double> SendArr_xRL, SendArr_yRL, SendArr_zRL;
-
-	NumArray<double> SendArrRL, SendArrLR, RecvArrRL, RecvArrLR;
-
-#ifdef parallel
-	MPI_Request requests_xRL[2], requests_xLR[2];
-	MPI_Request requests_yRL[2], requests_yLR[2];
-	MPI_Request requests_zRL[2], requests_zLR[2];
-	MPI_Request requests_RL[2], requests_LR[2];
-#endif
 
 #if (OMS_USER == TRUE)
 	NumMatrix<double,3> bcVals_User_xb[N_OMINT], bcVals_User_xe[N_OMINT];

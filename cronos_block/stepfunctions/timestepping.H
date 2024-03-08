@@ -23,7 +23,6 @@ public:
 
 protected:
 	int ibeg[DIM], iend[DIM];
-	int qch;
 	const int n_saves;
 	std::vector<CelerityBuffer<double, 3>> omSYCL_save;
 };

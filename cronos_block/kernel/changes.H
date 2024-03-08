@@ -7,24 +7,15 @@
 
 namespace gpu {
 
-	inline size_t nom_iyiz(size_t iy, size_t iz, size_t z_max) {
-		return (iy * z_max) + iz;
-	}
-
-	template<typename NumFluxAccessorType, typename IdxConstType>
-	double get_Changes1DCart(const NumFluxAccessorType& numfM, const NumFluxAccessorType &numfP,
+	//! @brief Calculates the cell update modifiers for the given field
+	template<typename FluxAccessorType, typename IdxConstType>
+	double get_Changes1DCart(const FluxAccessorType& numfM, const FluxAccessorType &numfP,
 			int dir, IdxConstType idx, int q) {
 
-/*#if (NON_LINEAR_GRID == CRONOS_ON)
-		//double idx = gdata.getCen_idx(dir, iPos);
-#else
-		double idx_dir = idx[dir];
-#endif*/
-
 		return (numfP[q] - numfM[q])*idx[dir];
-
 	}
 
+	//! @brief Converts the numerical flux to cell update modifiers and applies them to the accumulation buffers
 	template<typename NumAccessorType, typename NumFluxAccessorType, typename SinglePtotalAccessorType, typename IdxConstType>
 	void get_Changes(NumAccessorType& nomAcc, int ix, int iy, int iz, int dir, const NumFluxAccessorType& numfM,
 					const SinglePtotalAccessorType &numPtotal_M, const NumFluxAccessorType &numfP, const SinglePtotalAccessorType &numPtotal_P,
@@ -43,72 +34,17 @@ namespace gpu {
 
 			int q_global = q;
 
-#if (GEOM == CARTESIAN)
 			// Cartesian case
 			nomAcc[ix][iy][iz].mat[q] += get_Changes1DCart(numfM, numfP, dir, idx, q);
-#else
 
-			/*// general case
-			double change = (numfP[q]*AreaP - numfM[q]*AreaM)*iVol;
-
-			nom[ix][iy][iz] += change;*/
-			nomAcc[ix][nom_iyiz(iy,iz,z_max)][q_global] += get_Changes1DCart(numfM, numfP, dir, iPos, q);
-
-			// Compute mass flux in case of spherical coordinates
-#if (GEOM == SPHERICAL)
-			if(dir==0) {
-				gdata.massFlux(ix) += numfM.flux_num[0]*AreaM;
-			}
+			// Handle possibly extracted pressure
+#if EXTRACT_PRESSURE == TRUE
+			nom[q_global](ix, iy, iz) += get_Changes1DCart(gdata, numPtotal_P, numPtotal_M, dir, iPos, q);
 #endif
-
-#endif // IF GEOM
-
-			// Handle possibly extracted pressure (unimplemented for now)
-/*#if EXTRACT_PRESSURE == TRUE
-			// Get corresponding indices
-#if(FLUID_TYPE == CRONOS_MULTIFLUID)
-			int q_sx_global = gdata.fluids->fluids[iFluid].get_q_sx_global();
-			int q_sy_global = gdata.fluids->fluids[iFluid].get_q_sy_global();
-#else
-			int q_sx_global = q_sx;
-			int q_sy_global = q_sy;
-#endif
-
-#if (GEOM == CARTESIAN)
-
-			nom[q_global](ix, iy, iz) += get_Changes1DCart(gdata, numfP.ptotal_num, numfM.ptotal_num, dir, iPos, q);
-
-#else
-
-			// general case
-			double change = (numfP.ptotal_num*AreaP - numfM.ptotal_num*AreaM)*iVol;
-
-			nom[q_global](ix, iy, iz) += change;
-
-#endif // IF GEOM
-#endif // IF EXTRACT PRESSURE
-*/
 
 		}
 	}
 
-	template<typename NumAccessorType, typename NumFluxAccessorType, typename IdxConstType>
-	void get_Changes_Local(NumAccessorType& nomAcc, int q, int ix, int iy, int iz, int dir,
-							const NumFluxAccessorType& numfM, const NumFluxAccessorType &numfP, IdxConstType idx) {
-		
-
-#if (GEOM == CARTESIAN)
-		// Cartesian case
-		nomAcc[ix][iy][iz] += get_Changes1DCart(numfM, numfP, dir, idx, q);
-#endif // IF GEOM
-
-	}
 }
-
-void get_Changes(const Data &, const num_fields_0D &, const num_fields_0D &,
-			NumMatrix<double,3> [], int, int, int, int dir, int, int iFluid=0);
-
-double get_Changes1DCart(const Data &, const NumArray<double> &, const NumArray<double> &,
-			int, int, int);
 
 #endif

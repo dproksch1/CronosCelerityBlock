@@ -12,7 +12,7 @@ public:
 	ShockTubeTestHydro(const Data &);
 	virtual void init_fields(Data &, int [], int []);
 	void bc_User(Data &, NumMatrix<double,3> &, int, int, int, int);
-	void bc_User(Queue &, Data &, NumMatrix<double,3> &, int, int, int, int);
+	void bc_User(Queue &, Data &, int, int, int, int);
 	void WriteToH5(Hdf5Stream &);
 private:
 	double rhoLInit, rhoRInit;
@@ -177,8 +177,7 @@ void ShockTubeTestHydro::bc_User(Data &gdata, NumMatrix<double,3> &omb,
 	}
 }
 
-void ShockTubeTestHydro::bc_User(Queue &queue, Data &gdata, NumMatrix<double,3> &omb,
-		int dir, int top, int q, int rim) {
+void ShockTubeTestHydro::bc_User(Queue &queue, Data &gdata, int dir, int top, int q, int rim) {
 
 	if(dir == 0) {
 		if(top == 1) {

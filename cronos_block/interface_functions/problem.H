@@ -26,7 +26,7 @@ public:
 	virtual string get_Name(); 
 	int get_Type();
 	virtual void bc_User(Data &, NumMatrix<double,3> &, int, int, int, int);
-	virtual void bc_User(Queue &, Data &, NumMatrix<double,3> &, int, int, int, int);
+	virtual void bc_User(Queue &, Data &, int, int, int, int);
 	virtual void bc_periodic(Data &,
 	                         NumMatrix<double,3> &, NumMatrix<double,3> &,
 	                         int, int, bool){};
@@ -56,20 +56,12 @@ public:
 	virtual void ReadFromH5(Hdf5iStream &) {}
 	virtual void WriteToH5(Hdf5Stream &) {}
 
-/*	virtual void get_PhysFluxUser(Data &gdata, cronos::vector<double> &iPos,
-	                              phys_fields_1D &pf, phys_fields_1D &pfUser,
-	                              int dir, double shift) {}
-	virtual void get_PhysFlux(Data &gdata, cronos::vector<double> &iPos,
-			phys_fields_1D &pf, int dir, double shift) {}*/
-
 	virtual void TransPrim2Cons(Data &) {}
 	virtual void TransPrim2Cons(Queue &, Data &) {}
 	virtual void TransCons2Prim(Data &) {}
 	virtual void TransCons2Prim(Queue &, Data &) {}
 
 	void name_User(Data &);
-	/**Routine to access some internal variables from anywhere (e.g. from an Euler solver)*/
-	double get_internalValue(int){return 0.;}
 	int get_q(NumMatrix<double,3> &, string fluidName="fluid00");
 	double get_cs2() const;
 	void set_q(int q, NumMatrix<double,3> &);

@@ -23,19 +23,14 @@
 // #endif
 
 using namespace std;
-
-double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
+  
+/*! 
+ * @brief structured Celerity version of singlestep
+ * @details This version of singlestep solves all directions simultaneously and uses Celerity kernels
+ */
+double HyperbolicSolver::singlestep(Data &gdata, GridFunc &gfunc,
                                   ProblemType &Problem, int n, Queue& queue)
 {
-  //! Block structured version of singlestep
-  /*! 
-   * This version of singlestep solves all directions simultaneously
-   * with future applications like AMR in mind
-   */
-
-  if(eos == nullptr) {
-	eos = std::make_unique<EquationOfState>(Problem);
-  }
 
 // ----------------------------------------------------------------
 // Checking for negative Temperatures
@@ -89,7 +84,6 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		TimeIntegratorGeneric[0]->init_omBuffer(queue, gdata.mx);
 	}
 
-	
 
 // ----------------------------------------------------------------
 // Start the clock:
@@ -179,24 +173,23 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 				double numFlux[DirMax][N_OMINT] = {};
 				double num_ptotal[DirMax] = {};
 
-				size_t ixyz = (ix * range.get(1) + iy) * range.get(2) + iz;
-				gpu::computeStep(om_rho_acc, om_sx_acc, om_sy_acc, om_sz_acc, om_Eges_acc, ix, iy, iz, ixyz, &cfl_lin, numFlux, num_ptotal, carbuncle_flag, thermal, problem_gamma, problem_cs2,
+				gpu::computeStep(om_rho_acc, om_sx_acc, om_sy_acc, om_sz_acc, om_Eges_acc, ix, iy, iz, &cfl_lin, numFlux, num_ptotal, carbuncle_flag, thermal, problem_gamma, problem_cs2,
 													denominator, half_beta, fluidType, Theta, use_carbuncle, idx, fluidConst);
 
 				double numFlux_Dir[DirMax][N_OMINT] = {};
 				double num_ptotal_Dir[DirMax] = {};
 
-				gpu::computeStep(om_rho_acc, om_sx_acc, om_sy_acc, om_sz_acc, om_Eges_acc, ix + 1, iy, iz, ixyz + range.get(1) * range.get(2), &cfl_lin, numFlux_Dir, num_ptotal_Dir,
+				gpu::computeStep(om_rho_acc, om_sx_acc, om_sy_acc, om_sz_acc, om_Eges_acc, ix + 1, iy, iz, &cfl_lin, numFlux_Dir, num_ptotal_Dir,
 													carbuncle_flag, thermal, problem_gamma, problem_cs2, denominator, half_beta, fluidType, Theta, use_carbuncle, idx, fluidConst);
 				gpu::get_Changes(nom_acc, ix, iy, iz, DirX, numFlux[DirX], num_ptotal[DirX], numFlux_Dir[DirX], num_ptotal_Dir[DirX],
 										N_OMINT, nom_max[2], idx);
 
-				gpu::computeStep(om_rho_acc, om_sx_acc, om_sy_acc, om_sz_acc, om_Eges_acc,  ix, iy + 1, iz, ixyz + range.get(2), &cfl_lin, numFlux_Dir, num_ptotal_Dir, carbuncle_flag, thermal, problem_gamma, problem_cs2,
+				gpu::computeStep(om_rho_acc, om_sx_acc, om_sy_acc, om_sz_acc, om_Eges_acc,  ix, iy + 1, iz, &cfl_lin, numFlux_Dir, num_ptotal_Dir, carbuncle_flag, thermal, problem_gamma, problem_cs2,
 													denominator, half_beta, fluidType, Theta, use_carbuncle, idx, fluidConst);
 				gpu::get_Changes(nom_acc, ix, iy, iz, DirY, numFlux[DirY], num_ptotal[DirY], numFlux_Dir[DirY], num_ptotal_Dir[DirY],
 										N_OMINT, nom_max[2], idx);
 
-				gpu::computeStep(om_rho_acc, om_sx_acc, om_sy_acc, om_sz_acc, om_Eges_acc, ix, iy, iz + 1, ixyz + 1, &cfl_lin, numFlux_Dir, num_ptotal_Dir, carbuncle_flag, thermal, problem_gamma, problem_cs2,
+				gpu::computeStep(om_rho_acc, om_sx_acc, om_sy_acc, om_sz_acc, om_Eges_acc, ix, iy, iz + 1, &cfl_lin, numFlux_Dir, num_ptotal_Dir, carbuncle_flag, thermal, problem_gamma, problem_cs2,
 													denominator, half_beta, fluidType, Theta, use_carbuncle, idx, fluidConst);
 				gpu::get_Changes(nom_acc, ix, iy, iz, DirZ, numFlux[DirZ], num_ptotal[DirZ], numFlux_Dir[DirZ], num_ptotal_Dir[DirZ],
 										N_OMINT, nom_max[2], idx);
@@ -278,7 +271,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 
 	// Boundary conditions
 	for(int q=0; q<q_max; ++q) {
-		gfunc.boundary(queue,gdata, Problem, gdata.om[q],B,q);
+		gfunc.boundary(queue,gdata, Problem, B, q);
 	}
 
 	if(ENERGETICS == FULL) {
@@ -286,7 +279,7 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 		Trafo->TransE2Eth(queue, gdata, gfunc, Problem, 0, true);
  
 		for(int q=q_Eges; q<n_omInt; ++q) {
-			gfunc.boundary(queue,gdata, Problem, gdata.om[q],B,q);
+			gfunc.boundary(queue,gdata, Problem, B, q);
 		}
 
 	}
@@ -321,13 +314,13 @@ double HyperbolicSolver::singlestep(Data &gdata, gridFunc &gfunc,
 	double delt3 = ((tock2.tv_sec + tock2.tv_usec/1.e6) - 
 	              (tock.tv_sec + tock.tv_usec/1.e6));
 
-	double delt4 = delt + delt2 + delt3;
+	double delt4 = delt2 + delt3;
 
 	if(gdata.rank == 0) {
 		if(n == RK_STEPS-1 && Problem.get_Info() && Problem.checkout(5)) {
 			cout << "------------------------------------------------------" << endl;
 			cout << " Time needed for substeps:  " << delt << " " << delt2 << " " << delt3 << endl;
-			cout << "             for full step: " << delt3 << endl;
+			cout << "             for full step: " << delt4 << endl;
 		}
 
 	}

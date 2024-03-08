@@ -45,15 +45,12 @@ public:
 	void InitOutput(Queue &, Data &);
 	void Abort(Data &, CException);
 	int Finalize(Data &, Queue &, string);
-	unique_ptr<rksolver> RKSolver;
-//	rksolver *RKSolver;
-	/**vector of Euler solvers*/
-	//vector< unique_ptr<eulersolver> > EulerSolvers;
-	//	eulersolver *EulerSolver;
+	unique_ptr<RKSolver> rksolver;
+
 	int outputflag;
 	double restart_time;
 	std::unique_ptr<ProblemType> Problem;
-	std::unique_ptr<gridFunc> gfunc;
+	std::unique_ptr<GridFunc> gfunc;
 private:
 	void setup(Data &);
 	void init_solvers(Data &);
@@ -66,14 +63,11 @@ private:
 	bool CheckEnd(Data &, Queue &);
 	bool CheckEnd_User(Data &, Queue &);
 	void CheckOut(Data &, Queue &);
-	//	void Finalize(Data &, string);
-	void WriteDivB(Data &gdata);
 	void Output(Data &, bool, bool, bool);
 	void Output_Distributed(Queue &, Data &, bool, bool);
 	void Output_Master(Queue &, Data &, bool, bool);
 	void FetchDataBuffer(Data &gdata, Queue &queue);
 	string MakeFilename(const int [DIM], int, bool, bool);
-	void AddParallelFileNameStuff(string &filename, const int [DIM]);
 	void getCoords(const Data &, string, int [DIM], int [DIM]);
 	timeval tick,tock;
 	int numdbl_out, numdbl_done, numdbl_pass;

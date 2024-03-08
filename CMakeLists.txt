@@ -106,7 +106,7 @@ else()
   include_directories(${CRONOSNUMLIB_INCLUDE_DIR}/CronosNumLib)
 endif()
 
-include_directories(cronos_block/test)
+# include_directories(cronos_block/test)
 include_directories(cronos_block/data)
 include_directories(cronos_block/general)
 include_directories(cronos_block/interface_functions)
@@ -115,7 +115,7 @@ include_directories(cronos_block/queue)
 include_directories(cronos_block/reconstruction)
 include_directories(cronos_block/riemann_solver)
 include_directories(cronos_block/stepfunctions)
-include_directories(cronos_block/utils)
+# include_directories(cronos_block/utils)
 include_directories(cronos_block/configuration/standalone/cronos_block)
 # include_directories(cronos_block/configuration/ShockTubeSod)
 include_directories(cronos_block/configuration/SedovExplosion)
@@ -131,7 +131,6 @@ set(SOURCES
     cronos_block/general/buildinfo.C
     cronos_block/general/CException.C
     cronos_block/general/cfl.C
-    cronos_block/general/eos.C
     cronos_block/general/fluid.C
     cronos_block/general/grid.C
     cronos_block/general/gridParam.C
@@ -147,7 +146,6 @@ set(SOURCES
     cronos_block/kernel/singlestep_block.C
     cronos_block/kernel/transformations_block.C
     cronos_block/kernel/solver_func.C
-    cronos_block/kernel/changes.C
     cronos_block/riemann_solver/RiemannSolver.C
     cronos_block/stepfunctions/gridfunc.C
     cronos_block/stepfunctions/gridgen.C

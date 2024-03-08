@@ -9,18 +9,21 @@
 #include "queue.H"
 #include "lazy_assertion.H"
 
-class rksolver {
+
+/*!
+ * @brief Generic Runge-Kutta solver class
+ */
+class RKSolver {
 public:
-	virtual double singlestep(Data &, gridFunc &, ProblemType &, int, Queue&) {return 0.;}
-	virtual void phystest(Data &, gridFunc &, ProblemType &, int){}
+	virtual double singlestep(Data &, GridFunc &, ProblemType &, int, Queue&) {return 0.;}
+	virtual void phystest(Data &, GridFunc &, ProblemType &, int){}
 	virtual void init_constants(Data &) {}
 	virtual void addConstants_toH5(Data &, Hdf5Stream &h5out) {}
 	virtual void getConstants_fromH5(Data &, Hdf5iStream &h5in) {}
-	virtual void init(Queue &, Data &, gridFunc &, ProblemType &) {}
-	virtual void restart(Queue &, Data &, gridFunc &, ProblemType &) {}
+	virtual void init(Queue &, Data &, GridFunc &, ProblemType &) {}
+	virtual void restart(Queue &, Data &, GridFunc &, ProblemType &) {}
 	virtual void Abort(CException) {}
-	virtual ~rksolver(){}
-	double dt_idl, dt_mov;
+	virtual ~RKSolver(){}
 };
 
 #endif

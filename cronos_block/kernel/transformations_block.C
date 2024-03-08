@@ -2,7 +2,6 @@
 #include "physical_constants.H"
 #include <stdlib.h>
 
-
 Transformations_Block::Transformations_Block(const CronosFluid &fluid, ProblemType &Problem, bool TPhys, int iFluid) {
 	TempErr = 0;
 
@@ -67,9 +66,9 @@ bool Transformations_Block::get_thermal() {
 	return thermal;
 }
 
-
+//! @brief Transform energy density buffer from temperature to overall energy density
 void Transformations_Block::TransT2E(Queue &queue, const Data &gdata,
-									 gridFunc &gfunc, ProblemType &Problem) const
+									 GridFunc &gfunc, ProblemType &Problem) const
 {
 	if(gdata.om[q_Eges].getName() != "Temp") {
 		throw CException(" om[q_Eges] is not set as temperature ");
@@ -79,8 +78,9 @@ void Transformations_Block::TransT2E(Queue &queue, const Data &gdata,
 
 }
 
+//! @brief Transform grid data buffers from primitive to conservative form
 void Transformations_Block::TransPrim2Cons(Queue& queue, Data &gdata,
-									 gridFunc &gfunc, ProblemType &Problem) {
+									 GridFunc &gfunc, ProblemType &Problem) {
 	//! Transform from primitive to conservative variables
 
 	if (ENERGETICS == FULL) {
@@ -105,8 +105,9 @@ void Transformations_Block::TransPrim2Cons(Queue& queue, Data &gdata,
 	}
 }
 
+//! @brief Transform grid data buffers from conservative to primitive form
 void Transformations_Block::TransCons2Prim(Queue &queue, Data &gdata,
-									 gridFunc &gfunc, ProblemType &Problem) {
+									 GridFunc &gfunc, ProblemType &Problem) {
 	//! Transform from conservative to primitive variables
 #if (USE_ANGULAR_MOMENTUM == TRUE)
 	TransAngMom2Vel(gdata, gfunc, Problem);
@@ -124,8 +125,9 @@ void Transformations_Block::TransCons2Prim(Queue &queue, Data &gdata,
 
 }
 
+//! @brief Transform directional buffers from momentum to velocity
 void Transformations_Block::TransMomen2Vel(Queue &queue, Data &gdata,
-									 gridFunc &gfunc, ProblemType &Problem)
+									 GridFunc &gfunc, ProblemType &Problem)
 {
 	if(gdata.om[q_sx].getName() == "v_x" || 
 	   gdata.om[q_sy].getName() == "v_y" ||
@@ -152,8 +154,9 @@ void Transformations_Block::TransMomen2Vel(Queue &queue, Data &gdata,
 	gdata.om[q_sz].rename("v_z");
 }
 
+//! @brief Transform directional buffers from velocity to momentum
 void Transformations_Block::TransVel2Momen(Queue &queue, Data &gdata,
-									 gridFunc &gfunc, ProblemType &Problem) {
+									 GridFunc &gfunc, ProblemType &Problem) {
 
 	if(gdata.om[q_sx].getName() == "s_x" || 
 	   gdata.om[q_sy].getName() == "s_y" ||
@@ -180,8 +183,9 @@ void Transformations_Block::TransVel2Momen(Queue &queue, Data &gdata,
 	gdata.om[q_sz].rename("s_z");
 }
 
+//! @brief Transform energy density buffer from thermal energy density to overall energy density
 void Transformations_Block::TransEth2E(Queue &queue, const Data &gdata,
-								 gridFunc &gfunc, ProblemType &Problem) const
+								 GridFunc &gfunc, ProblemType &Problem) const
 {
 
 	if(gdata.om[q_Eges].getName() != "Etherm") {
@@ -245,7 +249,8 @@ void Transformations_Block::TransEth2E(Queue &queue, const Data &gdata,
 	gdata.om[q_Eges].rename("Eges");
 }
 
-void Transformations_Block::TransE2Eth(Queue &queue, Data &gdata, gridFunc &gfunc,
+//! @brief Transform energy density buffer from overall energy density to thermal energy density
+void Transformations_Block::TransE2Eth(Queue &queue, Data &gdata, GridFunc &gfunc,
 								 ProblemType &Problem, int n, bool DualEnergy)
 {
 	if(Problem.gamma < 1.0000000001) {
@@ -298,11 +303,11 @@ void Transformations_Block::TransE2Eth(Queue &queue, Data &gdata, gridFunc &gfun
 	});
 
 	gdata.om[q_Eges].rename("Etherm");
-	gfunc.boundary(queue, gdata, Problem, gdata.om[q_Eges],B,q_Eges, iFluid);
+	gfunc.boundary(queue, gdata, Problem, B, q_Eges, iFluid);
 }
 
-
-// void Transformations_Block::TransE2Eth(Data &gdata, gridFunc &gfunc,
+//! @brief Transform energy density buffer from overall energy density to thermal energy density
+// void Transformations_Block::TransE2Eth(Data &gdata, GridFunc &gfunc,
 //                                  ProblemType &Problem, Queue &queue) {
 	
 // 	if(gdata.om[q_Eges].getName() != "Eges") {
@@ -440,8 +445,9 @@ void Transformations_Block::TransE2Eth(Queue &queue, Data &gdata, gridFunc &gfun
 // 	}
 // }
 
+//! @brief Transform energy density buffer from temperature to thermal energy density
 void Transformations_Block::TransT2Eth(Queue &queue, const Data &gdata,
-								 gridFunc &gfunc, ProblemType &Problem) const
+								 GridFunc &gfunc, ProblemType &Problem) const
 {
 
 	if(gdata.om[q_Eges].getName() != "Temp") {

@@ -16,22 +16,15 @@ TimeIntegrator::~TimeIntegrator()
 	omSYCL_save.clear();
 }
 
-
+//! @brief Wrapper for generic time integrator setup in main application
 void TimeIntegrator::set_corrField(int qch)
-{
-	this->qch = qch;
+{}
 
-}
-
+//! @brief Wrapper for generic time integrator setup in main application
 void TimeIntegrator::set_IntRange(int ibeg[], int iend[])
-{
-	for(int d=0; d<DIM; ++d) {
-		this->ibeg[d] = ibeg[d];
-		this->iend[d] = iend[d];
-	}
+{}
 
-}
-
+//! @brief Sets up the buffer that caches the grid data between integration steps
 void TimeIntegrator::init_omBuffer(Queue &queue, const int mx[])
 {
 	for (int i = 0; i < 5; i++) {
@@ -47,17 +40,12 @@ RKSteps::RKSteps():
 }
 
 
+//! @brief Performs integration via Runge-Kutta step for specified substep
 void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
 		CelerityBuffer<nom_t, 3> nomSYCL,
 		double dt, const int substep, size_t nom_max[3]) {
 
-	int B = -3;
-
-#if  (RK_STEPS == 3)
-	
-#else
-
-	//	}
+#if  (RK_STEPS == 2)
 
 	if (substep == 0) { // First Runge Kutta step
 

@@ -25,27 +25,6 @@ void RemoveNullsFromString(string &input)
 	}
 }
 
-//int file_exists(char *fname)
-//{
-//	FILE *file;
-//	if ((file=fopen(fname,"r"))) {
-//		fclose(file);
-//		return 1;
-//	} else {
-//		return 0;
-//	}
-//}
-//
-//
-//int file_exists(string fnameString)
-//{
-//	int len = fnameString.size();
-//	char* fname = new char[len+1];
-//	fnameString.copy(fname,len);
-//	fname[len] = '\0';
-//	return file_exists(fname);
-//}
-
 
 Environment::Environment(Data &gdata)
 	: restart_time(0.), restart_step(0),
@@ -73,10 +52,10 @@ Environment::Environment(Data &gdata)
 	  cfl_max(value((char*)"cfl_threshold"))
 {
 
-	gfunc = std::make_unique<gridFunc>(gdata);
+	gfunc = std::make_unique<GridFunc>(gdata);
 	setup(gdata);
 
-//	RKSolver = new rksolver();
+//	rksolver = new RKSolver();
 //	EulerSolver = new eulersolver();
 	init_solvers(gdata);
 
@@ -101,8 +80,8 @@ Environment::Environment(Data &gdata)
 
 
 Environment::~Environment() {
-//	if(RKSolver != NULL) {
-//		delete RKSolver;
+//	if(rksolver != NULL) {
+//		delete rksolver;
 //	}
 
 	//if(Problem != NULL) {
@@ -119,13 +98,12 @@ Environment::~Environment() {
 }
 
 
+//! @brief Performs the initial setup of the simulation environment
 void Environment::setup(Data &gdata)
 {
 	// Set the problem type
 	setType(gdata);
   
-
-
 	// Naming of standard fields:
 	Problem->name_User(gdata);
   
@@ -137,13 +115,6 @@ void Environment::setup(Data &gdata)
 	int n_Omega = gdata.fluid.get_N_OMEGA();
 #endif
 
-//	// Naming of additional fields:
-//	for(int q=0; q<n_omInt; ++q) {
-//		std::ostringstream dummy;
-//		dummy << gdata.om[q].getName() << "_old";
-//		gdata.om[q+n_Omega].rename(dummy.str());
-//	}
-
 	for(int q=0; q<N_ADD; ++q) {
 		std::ostringstream dummy;
 		dummy << "Add" << q;
@@ -153,7 +124,7 @@ void Environment::setup(Data &gdata)
 }
 
 
-
+//! @brief Performs the initial writeouts
 void Environment::InitOutput(Queue &queue, Data &gdata)
 {
 	// Initial output
@@ -169,7 +140,10 @@ void Environment::InitOutput(Queue &queue, Data &gdata)
 }
 
 
-
+/*!
+ * @brief Checks for completion using the time and timestep conditions and potentially
+ * 			triggers finalization
+ */
 bool Environment::CheckEnd(Data &gdata, Queue &queue)
 {
 	// Check if runtime exceeded
@@ -200,7 +174,10 @@ bool Environment::CheckEnd(Data &gdata, Queue &queue)
 }
 
 
-
+/*!
+ * @brief Checks for completion using the user-defined convergence rules and potentially
+ * 			triggers finalization
+ */
 bool Environment::CheckEnd_User(Data &gdata, Queue &queue) {
 	bool EndProgram_User = Problem->checkConvergence(gdata);
 
@@ -211,6 +188,8 @@ bool Environment::CheckEnd_User(Data &gdata, Queue &queue) {
 	return false;
 }
 
+
+//! Computes the timestep delta
 void Environment::compute_dt(Data &gdata, double factor)
 {
 
@@ -303,7 +282,7 @@ void Environment::compute_dt(Data &gdata, double factor)
 
 }
 
-
+//! Compares timestep-size against the output step-sizes and potentially performs writeouts
 void Environment::CheckOut(Data &gdata, Queue &queue)
 {
 	int outputflag[5] = {0, 0, 0, 0, 0};
@@ -501,7 +480,7 @@ void Environment::CheckOut(Data &gdata, Queue &queue)
 #endif
 }
 
-
+//! @brief Performs a fetch of the Celerity buffer into the NumMatrix data structure and synchronizes
 void Environment::FetchDataBuffer(Data &gdata, Queue &queue)
 {
 	auto omRange = gdata.omSYCL[0].get_range();
@@ -526,6 +505,7 @@ void Environment::FetchDataBuffer(Data &gdata, Queue &queue)
 
 
 #if (CRONOS_MOVIE == CRONOS_ON)
+//! @brief Performs the problems specified movie output
 void Environment::WriteMovies(Data &gdata)
 {
 	if(gdata.rank == 0 && Problem->checkout(2)) {
@@ -540,6 +520,7 @@ void Environment::WriteMovies(Data &gdata)
 #endif
 
 
+//! @brief Performs time step and checks for end conditions
 int Environment::integrate(Data &gdata, Queue& queue)
 {
 	int EndProgram(0);
@@ -591,7 +572,7 @@ int Environment::integrate(Data &gdata, Queue& queue)
 }
 
 
-
+//! @brief Performs final output and triggers the application's end condition
 int Environment::Finalize(Data &gdata, Queue &queue, string message)
 {
 	if(gdata.rank == 0) {
@@ -605,101 +586,26 @@ int Environment::Finalize(Data &gdata, Queue &queue, string message)
 		Output_Distributed(queue, gdata, true, false);
 #else	
 		FetchDataBuffer(gdata, queue);
-		Output_Master(queue, gdata, true, false);
+		Output_Master(queue, gdata, true, true);
 #endif
-	// Output(gdata, true, false);
-
-	if(false) {
-		WriteDivB(gdata);
-	}
-
-	queue.slow_full_sync();
 
 	return 1; // Indicate normal end of program
 	
 	// exit(1);
 }
 
-
-void Environment::WriteDivB(Data &gdata) {
-
-	if(N_ADD < 2) {
-		return;
-	}
-
-	string filename = getenv("poub");
-	filename += "/";
-	filename += getenv("pname");
-
-	filename += "_divB.h5";
-	Hdf5Stream h5out(filename, 1, gdata.rank);
-
-	// Write header stuff
-
-	int nproc[3] = {1,1,1};
-	int coords[3] = {0,0,0};
-	h5out.AddGlobalAttr("procs",nproc,3);
-	h5out.AddGlobalAttr("coords",coords,3);
-	h5out.AddGlobalAttr("rank",gdata.rank);
-	h5out.AddGlobalAttr("timestep",gdata.tstep);
-	h5out.AddGlobalAttr("time",gdata.time);
-	h5out.AddGlobalAttr("rim",0);
-
-	NumMatrix<double,3> data(Index::set(0,0,0),
-	                         Index::set(gdata.mx[0], gdata.mx[1],
-	                                    gdata.mx[2]));
-			
-	for (int k = 0; k <= gdata.mx[2]; k++) {
-		for (int j = 0; j <= gdata.mx[1]; j++) {
-			for (int i = 0; i <= gdata.mx[0]; i++) {
-				data(i,j,k) = gdata.om[N_OMINT+1](i,j,k);
-			}
-		}
-	}
-	
-	double xmin[3];
-
-	xmin[0] = gdata.getCen_x(0);
-	xmin[1] = gdata.getCen_y(0);
-	xmin[2] = gdata.getCen_z(0);
-
-	hid_t defaultGroup = h5out.get_defaultGroup();
-	h5out.Write3DMatrix("div_B", data, xmin, gdata.dx, defaultGroup);
-
-}
-
-
-
-
+//! @brief Aborts the application and outputs error
 void Environment::Abort(Data &gdata, CException exep)
 {
 	cout << flush;
 	cerr << " Program aborted due to this error: " << endl;
 	cerr << exep.returnReport() << endl;
-//	cerr << exep.returnError() << endl;
-
-	if(false) {
-		WriteDivB(gdata);
-	}
-
-	//  Output(gdata, true, true);
-
-
-//	// Call destructor of HyperbolicSolver
-//	if(RKSolver != NULL) {
-//		delete RKSolver;
-//	}
-	
-	//if(Problem != NULL) {
-	//	delete Problem;
-	//}
-
-	//delete gfunc;
 
 	int errorcode = -1;
 	exit(errorcode);
 }
 
+//! @brief Performs the application's HDF5 writeout of its NumMatrix structure on the master node
 void Environment::Output_Master(Queue &queue, Data &gdata, bool isfloat, bool sync)
 {
 	
@@ -722,6 +628,7 @@ void Environment::Output_Master(Queue &queue, Data &gdata, bool isfloat, bool sy
 
 }
 
+//! @brief Performs a distributed version of the application's HDF5 writeout of its NumMatrix structure
 void Environment::Output_Distributed(Queue &queue, Data &gdata, bool isfloat, bool terminate)
 {
 	/*
@@ -815,7 +722,7 @@ void Environment::Output_Distributed(Queue &queue, Data &gdata, bool isfloat, bo
 				distr_io::dataout(gdata, *h5out, *Problem, numout, isfloat, om_rho,
 											om_sx, om_sy, om_sz, om_Eges);
 				
-				RKSolver->addConstants_toH5(gdata, *h5out);
+				rksolver->addConstants_toH5(gdata, *h5out);
 
 				delete h5out;
 			});
@@ -852,7 +759,7 @@ void Environment::Output_Distributed(Queue &queue, Data &gdata, bool isfloat, bo
 				distr_io::dataout(gdata, *h5out, *Problem, numout, isfloat, om_rho,
 											om_sx, om_sy, om_sz, om_Eges);
 				
-				RKSolver->addConstants_toH5(gdata, *h5out);
+				rksolver->addConstants_toH5(gdata, *h5out);
 
 				delete h5out;
 			});
@@ -880,6 +787,8 @@ void Environment::Output_Distributed(Queue &queue, Data &gdata, bool isfloat, bo
 
 }
 
+
+//! @brief Routine to write a hdf5 output file
 void Environment::Output(Data &gdata, bool isfloat, bool terminate, bool progress_counters)
 {
 	/*
@@ -970,7 +879,7 @@ void Environment::Output(Data &gdata, bool isfloat, bool terminate, bool progres
 	// }
 
 	// Now add the data from the rksolver:
-	RKSolver->addConstants_toH5(gdata, *h5out);
+	rksolver->addConstants_toH5(gdata, *h5out);
 
 	// Now add the data from the eulersolver:
 
@@ -1002,9 +911,9 @@ void Environment::Output(Data &gdata, bool isfloat, bool terminate, bool progres
 
 }
 
-
+//! @brief Routine to load data from a previous timestep
 void Environment::LoadData(Data &gdata)
-{cout << "LoadData" << endl;
+{
 
 	/*
 	  Routine to load data from a previous timestep.
@@ -1056,7 +965,7 @@ void Environment::LoadData(Data &gdata)
 					gfunc->datain(gdata, h5in, filename, *Problem);
 
 					// Get additional constants for Runge Kutta solver
-					RKSolver->getConstants_fromH5(gdata, h5in);
+					rksolver->getConstants_fromH5(gdata, h5in);
 
 				} catch (CException exep) {
 					Abort(gdata, exep);
@@ -1081,7 +990,7 @@ void Environment::LoadData(Data &gdata)
 	factor = gfunc->datain_collective(gdata, h5in, filename, *Problem);
 
 	// Get additional constants for Runge Kutta solver
-	RKSolver->getConstants_fromH5(gdata, h5in);
+	rksolver->getConstants_fromH5(gdata, h5in);
 #endif
 
 	// Recompute times for data output:
@@ -1099,6 +1008,7 @@ void Environment::LoadData(Data &gdata)
 }
 
 #if(FLUID_TYPE != CRONOS_MULTIFLUID)
+//! @brief Routine to load floating point data from a previous timestep
 void Environment::LoadData_flt(Data &gdata, int load_step)
 {
 
@@ -1174,43 +1084,10 @@ string Environment::MakeFilename(const int coords[DIM], int tstep,
 
 	string filename = sstr_fname.str();
   
-
-/*#ifdef parallel
-
-#if(HDF_PARALLEL_IO == CRONOS_ON)
-#if(CRONOS_OUTPUT_COMPATIBILITY == CRONOS_ON)
-	if(!isfloat) {
-		AddParallelFileNameStuff(filename, coords);
-	}
-#endif
-#else 
-	AddParallelFileNameStuff(filename, coords);
-#endif
-
-#endif*/
 	filename += ".h5";
 
 	return filename;
-
 }
-
-
-void Environment::AddParallelFileNameStuff(string &filename,
-                                           const int coords[DIM])
-{
-	// Adding coordinates for parallel case:
-	char ccoord[255];
-	filename += "_coord";
-	for(int i=0; i<DIM-1;++i) {
-		sprintf(ccoord,"%i",coords[i]);
-		filename += ccoord;
-		filename +="-";
-	}
-	sprintf(ccoord,"%i",coords[DIM-1]);
-	filename += ccoord;
-}
-
-
 
 void Environment::getCoords(const Data &gdata, string dirname,
                             int coords[DIM], int numFiles[DIM])
@@ -1222,60 +1099,6 @@ void Environment::getCoords(const Data &gdata, string dirname,
 		numFiles[i] = 1;
 	}
 
-/*#ifdef parallel
-	int fac(1);
-	bool Alert = false;
-	if(gdata.rank == 0) {
-
-		string filename = dirname;
-		filename += "/";
-		filename += MakeFilename(gdata.coords, restart_step, false, false);
-
-		if (!file_exists(filename)) {
-			cerr << "Could not find restart file" << " ";
-			cerr << filename << endl;
-			exit(1);
-		}
-
-		// Getting number of ranks in old simulation
-		Hdf5iStream h5in(filename);
-		int nprocOld[DIM];
-		h5in.ReadGlobalAttr("procs",*nprocOld);
-
-		for(int i=0; i<DIM; ++i) {
-			// Check for lower core number in old simulation
-			if(gdata.nproc[i] > nprocOld[i]) {
-				if(gdata.nproc[i]%nprocOld[i] != 0) {
-					Alert = true;
-				} else {
-					facloc[i] = gdata.nproc[i]/nprocOld[i];
-					fac *= facloc[i];
-				}
-			} else if (gdata.nproc[i] < nprocOld[i]) {
-				// Check for higher core number in old simulation
-				if(nprocOld[i]%gdata.nproc[i] != 0) {
-					Alert = true;
-				} else {
-					numFiles[i] = nprocOld[i]/gdata.nproc[i];
-					facloc[i] = -numFiles[i];
-					fac *= facloc[i];
-					if(fac > 0) fac *= -1;
-				}
-			}
-		}
-	}
-//	MPI_Barrier(gdata.comm3d);
-	MPI_Bcast(&Alert, 1, MPI_INT, 0, gdata.comm3d);
-	MPI_Bcast(&fac, 1, MPI_INT, 0, gdata.comm3d);
-	MPI_Bcast(&facloc[0], DIM, MPI_INT, 0, gdata.comm3d);
-	MPI_Bcast(&numFiles[0], DIM, MPI_INT, 0, gdata.comm3d);
-//	MPI_Barrier(gdata.comm3d);
-
-	if(Alert) {
-		throw CException(" New number of processes not compatible with old one ");
-	}
-
-#endif*/
 	// Giving the equivalent coordinates of the old jobs.
 	for(int i=0; i<DIM; ++i) {
 		if(facloc[i] > 1) {

@@ -5,7 +5,6 @@
 
 #include "matrix.H"
 #include "data.H"
-#include "limiter.H"
 #include "fields_local.H"
 #include "standalone_usage.H"
 #include "utils.H"

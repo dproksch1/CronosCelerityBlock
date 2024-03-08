@@ -5,13 +5,13 @@
 #include "data.H"
 #include "gridfunc.H"
 #include "problem.H"
-#include "eos.H"
 #include "vector.H"
 #include "fields_local.H"
 #include "utils.H"
 
 namespace gpu {
 
+	//! @brief Pressure function for GPU kernels
 	inline double pressure(double dens, const double problem_cs2, const double gamma, const double denominator, const double half_beta) {
 #ifdef SOUND
 		if(gamma != 1.){
@@ -28,6 +28,7 @@ namespace gpu {
 #endif
 	}
 
+	//! @brief Transformation from thermal energy density to overall energy density for GPU kernels
 	inline double TransEth2E_gpu(double rhoinv, double psq, double Bsq, double ETherm, const int fluidType) {
 		
 		#if (FLUID_TYPE == CRONOS_MHD)
@@ -46,14 +47,16 @@ namespace gpu {
 		return Energy;
 	}
 
+	//! @brief Transformation from thermal energy density to temperature for GPU kernels
 	inline double TransT2Eth_gpu(double problem_gamma, double rhoinv, double ETherm) {
 
 		return 1./(rhoinv*(problem_gamma-1.))*ETherm;
 	}
 
+	//! @brief Computation of conserved point value variables from characteristic ones
 	template<typename UPriAccessorType, typename UConAccessorType, typename SinglePthermAccessorType, typename SinglePtotalAccessorType, typename FluidConstType>
 	void get_Cons(UPriAccessorType& uPri, UConAccessorType& uCon, SinglePthermAccessorType& ptherm,
-				 SinglePtotalAccessorType& ptotal, int ix, int iy, int iz, int face, int thermal, double problem_gamma,
+				 SinglePtotalAccessorType& ptotal, int face, int thermal, double problem_gamma,
 				 const double problem_cs2, const double denominator, const double half_beta, const int fluidType, FluidConstType fluidConst) {
 		
 		int dir = face / 2;
@@ -111,6 +114,7 @@ namespace gpu {
 
 }
 
+//! @brief Offers functionality to transfer the Celerity data buffers between their different states
 class Transformations_Block {
 public:
 	Transformations_Block(const CronosFluid&, ProblemType &, bool, int iFluid=0);
@@ -118,14 +122,14 @@ public:
     void set_thermal(bool thermal);
 	bool get_thermal();
 
-	void TransPrim2Cons(Queue &, Data &gdata, gridFunc &gfunc, ProblemType &Problem);
-	void TransCons2Prim(Queue &, Data &gdata, gridFunc &gfunc, ProblemType &Problem);
-	void TransVel2Momen(Queue &, Data &, gridFunc &, ProblemType &);
-	void TransMomen2Vel(Queue &, Data &, gridFunc &, ProblemType &);
-	void TransE2Eth(Queue &, Data &, gridFunc &, ProblemType &, int, bool);
-	void TransEth2E(Queue &, const Data &gdata, gridFunc &gfunc, ProblemType &Problem) const;
-	void TransT2Eth(Queue &, const Data &, gridFunc &, ProblemType &) const;
-	void TransT2E(Queue &, const Data &, gridFunc &, ProblemType &) const;
+	void TransPrim2Cons(Queue &, Data &gdata, GridFunc &gfunc, ProblemType &Problem);
+	void TransCons2Prim(Queue &, Data &gdata, GridFunc &gfunc, ProblemType &Problem);
+	void TransVel2Momen(Queue &, Data &, GridFunc &, ProblemType &);
+	void TransMomen2Vel(Queue &, Data &, GridFunc &, ProblemType &);
+	void TransE2Eth(Queue &, Data &, GridFunc &, ProblemType &, int, bool);
+	void TransEth2E(Queue &, const Data &gdata, GridFunc &gfunc, ProblemType &Problem) const;
+	void TransT2Eth(Queue &, const Data &, GridFunc &, ProblemType &) const;
+	void TransT2E(Queue &, const Data &, GridFunc &, ProblemType &) const;
 
 private:
     double TNorm;

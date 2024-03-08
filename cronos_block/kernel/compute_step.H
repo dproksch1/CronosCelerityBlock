@@ -8,13 +8,13 @@
 
 namespace gpu {
 
+    //! @brief the vertices and computes the numerical fluxes for the given cell
     template<typename omAccessorType, typename NumFluxAccessorType, typename NumPtotalAccessorType, typename CFlagAccessorType, typename IdxConstType, typename FluidConstType>
     void computeStep(const omAccessorType& om_rho_acc, const omAccessorType& om_sx_acc, const omAccessorType& om_sy_acc, const omAccessorType& om_sz_acc, const omAccessorType& om_Eges_acc,
-                    size_t ix, size_t iy, size_t iz, size_t ixyz, double* cfl_lin, NumFluxAccessorType& numFlux,
+                    size_t ix, size_t iy, size_t iz, double* cfl_lin, NumFluxAccessorType& numFlux,
                     NumPtotalAccessorType& num_ptotal, const CFlagAccessorType& carbuncle_flag, const bool thermal, const double gamma, const double problem_cs2, const double denominator,
                     const double half_beta, const int fluidType, const double Theta, bool use_carbuncle, IdxConstType idx, FluidConstType fluidConst) {
 
-        //no vector in device code
         double uPri[gpu::FaceMax][N_OMINT] = {};
         double uCon[gpu::FaceMax][N_OMINT] = {};
         double physFlux[gpu::FaceMax][N_OMINT] = {};
@@ -73,12 +73,12 @@ namespace gpu {
 
             int face = dir * 2;
 
-            gpu::get_Cons(uPri[face], uCon[face], physValPtherm[face], physValPtotal[face], ix, iy, iz, face,
+            gpu::get_Cons(uPri[face], uCon[face], physValPtherm[face], physValPtotal[face], face,
                             thermal, gamma, problem_cs2, denominator, half_beta, fluidType, fluidConst);
 
             gpu::get_PhysFlux(physFlux[face], uPri[face], uCon[face], physValPtherm[face], face, fluidConst);
 
-            gpu::get_Cons(uPri[face+1], uCon[face+1], physValPtherm[face+1], physValPtotal[face+1], ix, iy, iz, face+1,
+            gpu::get_Cons(uPri[face+1], uCon[face+1], physValPtherm[face+1], physValPtotal[face+1], face+1,
                             thermal, gamma, problem_cs2, denominator, half_beta, fluidType, fluidConst);
 
             gpu::get_PhysFlux(physFlux[face+1], uPri[face+1], uCon[face+1], physValPtherm[face+1], face+1, fluidConst);

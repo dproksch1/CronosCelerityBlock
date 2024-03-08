@@ -11,7 +11,7 @@
   -----------------------------------------------------------------*/
 
 
-gridFunc::gridFunc(Data &gdata)
+GridFunc::GridFunc(Data &gdata)
 {
 
 	// Use a value that is not used (-1 used by user fields -> so, I am using -2)
@@ -258,133 +258,18 @@ gridFunc::gridFunc(Data &gdata)
 
 #if (VEC_POT_BCS == TRUE)
 	if(use_fixed_bcs) {
-		cerr << " gridfunc::gridfunc " << endl;
+		cerr << " GridFunc::gridfunc " << endl;
 		cerr << " Error: fixed BCs together with vector potential boundaries is not implemented " << endl;
 		exit(-22);
 	}
 #endif
 
-	// Prepare size of Send and Receive arrays
-	// (currently only for case of edge gridding)
-
-	if(gdata.get_EdgeGridding()) {
-
-		int rim = 3;
-
-		int iminSend = 1;
-		int imaxSend = rim;
-
-//		Send_x.resize(Index::set(iminSend, -rim, -rim),
-//				Index::set(imaxSend, gdata.mx[1]+rim, gdata.mx[2]+rim));
-//		SendArr_x.resize((imaxSend-iminSend+1)*(gdata.mx[1]+2*rim+1)*(gdata.mx[2]+2*rim+1));
-//		SendArrSmall_x.resize((imaxSend-iminSend)*(gdata.mx[1]+2*rim+1)*(gdata.mx[2]+2*rim+1));
-//
-//		Send_y.resize(Index::set(-rim, iminSend, -rim),
-//				Index::set(gdata.mx[0]+rim, imaxSend, gdata.mx[2]+rim));
-//		SendArr_y.resize((gdata.mx[0]+2*rim+1)*(imaxSend-iminSend+1)*(gdata.mx[2]+2*rim+1));
-//		SendArrSmall_y.resize((gdata.mx[0]+2*rim+1)*(imaxSend-iminSend)*(gdata.mx[2]+2*rim+1));
-//
-//		Send_z.resize(Index::set(-rim, -rim, iminSend),
-//				Index::set(gdata.mx[0]+rim, gdata.mx[1]+rim, imaxSend));
-//		SendArr_z.resize((gdata.mx[0]+2*rim+1)*(gdata.mx[1]+2*rim+1)*(imaxSend-iminSend+1));
-//		SendArrSmall_z.resize((gdata.mx[0]+2*rim+1)*(gdata.mx[1]+2*rim+1)*(imaxSend-iminSend));
-//
-//		Send_empty.resize(Index::set(0,0,0), Index::set(0,0,0));
-//		SendArr_empty.resize(0);
-
-		int size_x = (imaxSend-iminSend+1)*(gdata.mx[1]+2*rim+1)*(gdata.mx[2]+2*rim+1);
-		int size_y = (gdata.mx[0]+2*rim+1)*(imaxSend-iminSend+1)*(gdata.mx[2]+2*rim+1);
-		int size_z = (gdata.mx[0]+2*rim+1)*(gdata.mx[1]+2*rim+1)*(imaxSend-iminSend+1);
-		int size = std::max(size_x, std::max(size_y, size_z));
-
-		SendArr_buff.resize(size);
-		RecvArr_buff.resize(size);
-
-		SendArr_xRL.resize(size_x);
-		SendArr_xLR.resize(size_x);
-		SendArr_yRL.resize(size_y);
-		SendArr_yLR.resize(size_y);
-		SendArr_zRL.resize(size_z);
-		SendArr_zLR.resize(size_z);
-
-		RecvArr_xRL.resize(size_x);
-		RecvArr_xLR.resize(size_x);
-		RecvArr_yRL.resize(size_y);
-		RecvArr_yLR.resize(size_y);
-		RecvArr_zRL.resize(size_z);
-		RecvArr_zLR.resize(size_z);
-
-		SendArrRL.resize(size);
-		SendArrLR.resize(size);
-
-		RecvArrRL.resize(size);
-		RecvArrLR.resize(size);
-
-		// imaxRecv = rim-1;
-		int iminRecv = 1; // Corresponding to mx[0]+1
-		int imaxRecv = rim;
-//		Recv_x.resize(Index::set(iminRecv,-rim,-rim),
-//				Index::set(imaxRecv,gdata.mx[1]+rim,gdata.mx[2]+rim));
-//		RecvArr_x.resize((imaxSend-iminSend+1)*(gdata.mx[1]+2*rim+1)*(gdata.mx[2]+2*rim+1));
-//		RecvArrSmall_x.resize((imaxSend-iminSend)*(gdata.mx[1]+2*rim+1)*(gdata.mx[2]+2*rim+1));
-//
-//		Recv_y.resize(Index::set(-rim,iminRecv,-rim),
-//				Index::set(gdata.mx[0]+rim,imaxRecv,gdata.mx[2]+rim));
-//		RecvArr_y.resize((gdata.mx[0]+2*rim+1)*(imaxSend-iminSend+1)*(gdata.mx[2]+2*rim+1));
-//		RecvArrSmall_y.resize((gdata.mx[0]+2*rim+1)*(imaxSend-iminSend)*(gdata.mx[2]+2*rim+1));
-//
-//		Recv_z.resize(Index::set(-rim,-rim,iminRecv),
-//				Index::set(gdata.mx[0]+rim,gdata.mx[1]+rim,imaxRecv));
-//		RecvArr_z.resize((gdata.mx[0]+2*rim+1)*(gdata.mx[1]+2*rim+1)*(imaxSend-iminSend+1));
-//		RecvArrSmall_z.resize((gdata.mx[0]+2*rim+1)*(gdata.mx[1]+2*rim+1)*(imaxSend-iminSend));
-//
-//		Recv_empty.resize(Index::set(0,0,0), Index::set(0,0,0));
-//		RecvArr_empty.resize(0);
-
-	} else 	{ // old gridding (mx)
-
-		int rim = 3;
-
-//		int iminSend = 1;
-		int iminSend = 0;
-		int imaxSend = rim;
-
-		int size_x = (imaxSend-iminSend+1)*(gdata.mx[1]+2*rim+1)*(gdata.mx[2]+2*rim+1);
-		int size_y = (gdata.mx[0]+2*rim+1)*(imaxSend-iminSend+1)*(gdata.mx[2]+2*rim+1);
-		int size_z = (gdata.mx[0]+2*rim+1)*(gdata.mx[1]+2*rim+1)*(imaxSend-iminSend+1);
-		int size = std::max(size_x, std::max(size_y, size_z));
-
-		SendArr_buff.resize(size);
-		RecvArr_buff.resize(size);
-
-		SendArr_xRL.resize(size_x);
-		SendArr_xLR.resize(size_x);
-		SendArr_yRL.resize(size_y);
-		SendArr_yLR.resize(size_y);
-		SendArr_zRL.resize(size_z);
-		SendArr_zLR.resize(size_z);
-
-		RecvArr_xRL.resize(size_x);
-		RecvArr_xLR.resize(size_x);
-		RecvArr_yRL.resize(size_y);
-		RecvArr_yLR.resize(size_y);
-		RecvArr_zRL.resize(size_z);
-		RecvArr_zLR.resize(size_z);
-
-		SendArrRL.resize(size);
-		SendArrLR.resize(size);
-
-		RecvArrRL.resize(size);
-		RecvArrLR.resize(size);
-	}
-
 	cout << " My upper type: " << gdata.rank << " " << bc_Type[2] << " " << bc_Type[3] << endl;
 
 }
 
-
-
-int gridFunc::get_bc_Type(int num) 
+//! @brief Returns the boundary type for the given direction
+int GridFunc::get_bc_Type(int num) 
 {
 	int bc_type_ret(0);
 	if(num < 8) {
@@ -398,8 +283,8 @@ int gridFunc::get_bc_Type(int num)
 }
 
 
-
-void gridFunc::prep_boundaries(Data &gdata, ProblemType &pt) {
+//! @brief Prepares the boundaries for the NumMatrix version of the data grid
+void GridFunc::prep_boundaries(Data &gdata, ProblemType &pt) {
 
 	if(gdata.rank==0) {
 		cout << " Storing values for fixed boundaries " << endl;
@@ -617,8 +502,8 @@ void gridFunc::prep_boundaries(Data &gdata, ProblemType &pt) {
 }
 
 
-
-void gridFunc::boundary(Data &gdata, ProblemType &pr)
+//! @brief Applies all boundary conditions for the NumMatrix version of the data grid
+void GridFunc::boundary(Data &gdata, ProblemType &pr)
 {
 	/*
 	  When doing the extrapolation:
@@ -653,31 +538,31 @@ void gridFunc::boundary(Data &gdata, ProblemType &pr)
 
 }
 
-
-void gridFunc::boundary(Data &gdata, ProblemType &Problem,
+//! @brief Applies boundary conditions for the provided field of NumMatrix version of the data grid
+void GridFunc::boundary(Data &gdata, ProblemType &Problem,
                         NumMatrix<double,3> &omb, int rim)
 {
 	boundary(gdata, Problem, omb, rim,-1);
 };
 
-
-void gridFunc::boundary(Queue &queue, Data &gdata, ProblemType &Problem,
-                        NumMatrix<double,3> &omb, int rim, int q, int iFluid)
+//! @brief Applies boundary conditions for the selected buffer of the Celerity data grid
+void GridFunc::boundary(Queue &queue, Data &gdata, ProblemType &Problem,
+                        int rim, int q, int iFluid)
 {
 
 	//-----------------------------------------------------------
 	// x-direction
 	//-----------------------------------------------------------
 
-	bc_Periodic(queue, gdata, Problem, omb, 0, q, rim);
+	bc_Periodic(queue, gdata, Problem, 0, q, rim);
 
 	if(bc_Type[0] > 1) {
 		if (bc_Type[0] == 2) {
-			bc_Extrapolate(queue, gdata, Problem, omb,0,0,q,rim);
+			bc_Extrapolate(queue, gdata, Problem,0,0,q,rim);
 		} else if (bc_Type[0] == 3) {
-			bc_Outflow(queue, gdata, Problem, omb,0,0,q,rim);
+			bc_Outflow(queue, gdata, Problem,0,0,q,rim);
 		} else if (bc_Type[0] == 4) {
-			Problem.bc_User(queue, gdata, omb,0,0,q,rim);
+			Problem.bc_User(queue, gdata,0,0,q,rim);
 		} else if (bc_Type[0] == 5) {
 			cerr << " Not implemented" << endl;
 		} else if (bc_Type[0] == 6) {
@@ -692,11 +577,11 @@ void gridFunc::boundary(Queue &queue, Data &gdata, ProblemType &Problem,
 	// Right:
 	if(bc_Type[1] > 1) {
 		if (bc_Type[1] == 2){
-			bc_Extrapolate(queue, gdata, Problem, omb,0,1,q,rim);
+			bc_Extrapolate(queue, gdata, Problem,0,1,q,rim);
 		} else if (bc_Type[1] == 3) {
-			bc_Outflow(queue, gdata, Problem, omb,0,1,q,rim);
+			bc_Outflow(queue, gdata, Problem,0,1,q,rim);
 		} else if (bc_Type[1] == 4) {
-			Problem.bc_User(queue, gdata, omb,0,1,q,rim);
+			Problem.bc_User(queue, gdata,0,1,q,rim);
 		} else if (bc_Type[1] == 5) {
 			cerr << " Not implemented" << endl;
 		} else if (bc_Type[1] == 7) {
@@ -710,17 +595,17 @@ void gridFunc::boundary(Queue &queue, Data &gdata, ProblemType &Problem,
 	// y-direction
 	//-----------------------------------------------------------
 
-	bc_Periodic(queue, gdata, Problem, omb, 1, q, rim);
+	bc_Periodic(queue, gdata, Problem, 1, q, rim);
 
 	if(bc_Type[2] > 1) {
 		if(bc_Type[2] == 2) {
-			bc_Extrapolate(queue, gdata, Problem, omb,1,0,q,rim);
+			bc_Extrapolate(queue, gdata, Problem,1,0,q,rim);
 		} else if(bc_Type[2] == 3) {
-			bc_Outflow(queue, gdata, Problem, omb,1,0,q,rim);
+			bc_Outflow(queue, gdata, Problem,1,0,q,rim);
 		} else if(bc_Type[2] == 4) {
-			Problem.bc_User(queue, gdata, omb,1,0,q,rim);
+			Problem.bc_User(queue, gdata,1,0,q,rim);
 		} else if(bc_Type[2] == 5) {
-			bc_Reflecting(queue, gdata, Problem, omb,0,0,q,rim);
+			bc_Reflecting(queue, gdata, Problem,0,0,q,rim);
 		} else if (bc_Type[2] == 6) {
 			cerr << " Not implemented" << endl;
 		} else if (bc_Type[2] == 7) {
@@ -732,13 +617,13 @@ void gridFunc::boundary(Queue &queue, Data &gdata, ProblemType &Problem,
 
 	if(bc_Type[3] > 1) {
 		if(bc_Type[3] == 2) {
-			bc_Extrapolate(queue, gdata, Problem, omb,1,1,q,rim);
+			bc_Extrapolate(queue, gdata, Problem,1,1,q,rim);
 		} else if(bc_Type[3] == 3) {
-			bc_Outflow(queue, gdata, Problem, omb,1,1,q,rim);
+			bc_Outflow(queue, gdata, Problem,1,1,q,rim);
 		} else if(bc_Type[3] == 4) {
-			Problem.bc_User(queue, gdata, omb,1,1,q,rim);
+			Problem.bc_User(queue, gdata,1,1,q,rim);
 		} else if(bc_Type[3] == 5) {
-			bc_Reflecting(queue, gdata, Problem, omb,0,0,q,rim);
+			bc_Reflecting(queue, gdata, Problem,0,0,q,rim);
 		} else if (bc_Type[3] == 6) {
 			cerr << " Not implemented" << endl;
 		} else if (bc_Type[3] == 7) {
@@ -752,17 +637,17 @@ void gridFunc::boundary(Queue &queue, Data &gdata, ProblemType &Problem,
 	// z-direction
 	//-----------------------------------------------------------
 
-	bc_Periodic(queue, gdata, Problem, omb, 2, q, rim);
+	bc_Periodic(queue, gdata, Problem, 2, q, rim);
 
 	if(bc_Type[4] > 1) {
 		if (bc_Type[4] == 2) {
-			bc_Extrapolate(queue, gdata, Problem, omb,2,0,q,rim);
+			bc_Extrapolate(queue, gdata, Problem,2,0,q,rim);
 		} else if (bc_Type[4] == 3) {
-			bc_Outflow(queue, gdata, Problem, omb,2,0,q,rim);
+			bc_Outflow(queue, gdata, Problem,2,0,q,rim);
 		} else if (bc_Type[4] == 4) {
-			Problem.bc_User(queue, gdata, omb,2,0,q,rim);
+			Problem.bc_User(queue, gdata,2,0,q,rim);
 		} else if (bc_Type[4] == 5) {
-			bc_Reflecting(queue, gdata, Problem, omb,0,0,q,rim);
+			bc_Reflecting(queue, gdata, Problem,0,0,q,rim);
 		} else if (bc_Type[4] == 7) {
 			cerr << " Not implemented" << endl;
 		} else {
@@ -774,13 +659,13 @@ void gridFunc::boundary(Queue &queue, Data &gdata, ProblemType &Problem,
 		if (bc_Type[5] == 2) {
 			
 			
-			bc_Extrapolate(queue, gdata, Problem, omb,2,1,q,rim);
+			bc_Extrapolate(queue, gdata, Problem,2,1,q,rim);
 		} else if (bc_Type[5] == 3) {
-			bc_Outflow(queue, gdata, Problem, omb,2,1,q,rim);
+			bc_Outflow(queue, gdata, Problem,2,1,q,rim);
 		} else if (bc_Type[5] == 4) {
-			Problem.bc_User(queue, gdata, omb,2,1,q,rim);
+			Problem.bc_User(queue, gdata,2,1,q,rim);
 		} else if (bc_Type[5] == 5) {
-			bc_Reflecting(queue, gdata, Problem, omb,0,0,q,rim);
+			bc_Reflecting(queue, gdata, Problem,0,0,q,rim);
 		} else if (bc_Type[5] == 7) {
 			cerr << " Not implemented" << endl;
 		} else {
@@ -789,7 +674,8 @@ void gridFunc::boundary(Queue &queue, Data &gdata, ProblemType &Problem,
 	}
 }
 
-void gridFunc::boundary(Data &gdata, ProblemType &Problem,
+//! @brief Applies boundary conditions for the provided field of NumMatrix version of the data grid
+void GridFunc::boundary(Data &gdata, ProblemType &Problem,
                         NumMatrix<double,3> &omb, int rim, int q, int iFluid)
 {
 
@@ -984,8 +870,9 @@ void gridFunc::boundary(Data &gdata, ProblemType &Problem,
 
 }
 
-void gridFunc::bc_Periodic(Queue &queue, Data &gdata, ProblemType &Problem,
-		NumMatrix<double,3> &omb, int dir, int q, int rim) {
+//! @brief Applies the periodic condition onto the selected boundary
+void GridFunc::bc_Periodic(Queue &queue, Data &gdata, ProblemType &Problem,
+							int dir, int q, int rim) {
 
 	int shift(0);
 	if(gdata.get_EdgeGridding()) {
@@ -1083,8 +970,8 @@ void gridFunc::bc_Periodic(Queue &queue, Data &gdata, ProblemType &Problem,
 	} 
 }
 
-
-void gridFunc::bc_Periodic_serial(Data &gdata, ProblemType &Problem,
+//! @brief Applies the periodic conditions onto the selected boundary
+void GridFunc::bc_Periodic_serial(Data &gdata, ProblemType &Problem,
 		NumMatrix<double,3> &omb, int dir, int q, int rim) {
 
 	int shift(0);
@@ -1166,8 +1053,8 @@ void gridFunc::bc_Periodic_serial(Data &gdata, ProblemType &Problem,
 	}
 }
 
-
-void gridFunc::get_bcBuffRange(Data &gdata, int &range_min, int & range_max,
+//! @brief Fetches the minimum and maximum range of the boundary condition buffer
+void GridFunc::get_bcBuffRange(Data &gdata, int &range_min, int & range_max,
 		int dir, int leftToRight, int q, int rim ) {
 	if(leftToRight) {
 
@@ -1194,10 +1081,11 @@ void gridFunc::get_bcBuffRange(Data &gdata, int &range_min, int & range_max,
 	}
 }
 
-
-void gridFunc::compute_AxisPartners(Data &gdata, int top) {
-	// Computing the partners for axis boundary conditions - so far
-	// only for cylindrical coordinates
+/*!
+ * @brief Computing the partners for axis boundary conditions
+ *		 (so far only for cylindrical coordinates) 
+ */
+void GridFunc::compute_AxisPartners(Data &gdata, int top) {
 
 	// Additional convenience functions holding sin and cos of positions
 	// along the grid
@@ -1213,18 +1101,15 @@ void gridFunc::compute_AxisPartners(Data &gdata, int top) {
 
 }
 
-
-
-int gridFunc::get_AxisPartners(Data &gdata, int top, int iz) {
+int GridFunc::get_AxisPartners(Data &gdata, int top, int iz) {
 	int shift = 0;
 	int i_phi_other = AxisPartnersPhi[top](iz+shift);
 	return i_phi_other;
 }
 
 
-
-
-void gridFunc::bc_Axis(Data &gdata, ProblemType &Problem,
+//! @brief Applies the axis condition onto the selected boundary
+void GridFunc::bc_Axis(Data &gdata, ProblemType &Problem,
 		NumMatrix<double,3> &omb, int dir, int top, int q, int rim) {
 #if (GEOM == CYLINDRICAL)
 	if(dir==0) {
@@ -1238,7 +1123,7 @@ void gridFunc::bc_Axis(Data &gdata, ProblemType &Problem,
 }
 
 
-void gridFunc::bc_AxisCyl(Data &gdata, ProblemType &Problem,
+void GridFunc::bc_AxisCyl(Data &gdata, ProblemType &Problem,
 		NumMatrix<double,3> &omb, int q, int rim) {
 
 	// Special treatment of coordinate axis - so far only for
@@ -1278,8 +1163,8 @@ void gridFunc::bc_AxisCyl(Data &gdata, ProblemType &Problem,
 
 }
 
-
-void gridFunc::bc_AxisSph(Data &gdata, ProblemType &Problem,
+//! @brief Applies the spherical axis condition onto the selected boundary
+void GridFunc::bc_AxisSph(Data &gdata, ProblemType &Problem,
 		NumMatrix<double,3> &omb, int top, int q, int rim) {
 #if (GEOM == 3)
 
@@ -1341,9 +1226,8 @@ void gridFunc::bc_AxisSph(Data &gdata, ProblemType &Problem,
 
 }
 
-
-void gridFunc::do_AxisValCorrectionSph(Data &gdata, ProblemType &Problem, bool top) {
-	//! Correction for mag field values on polar axis
+//! @brief Provides a correction for mag field values on polar axis
+void GridFunc::do_AxisValCorrectionSph(Data &gdata, ProblemType &Problem, bool top) {
 
 //#if (GEOM == SPHERICAL)
 	// Check if singularity is on current rank
@@ -1384,8 +1268,8 @@ void gridFunc::do_AxisValCorrectionSph(Data &gdata, ProblemType &Problem, bool t
 //#endif
 }
 
-void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem, 
-                              NumMatrix<double,3> &omb,
+//! @brief Applies the extrapolate conditions onto the selected boundary
+void GridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem, 
                               int dir, int above, int q, int rim)
 {
 
@@ -1587,7 +1471,8 @@ void gridFunc::bc_Extrapolate(Queue &queue, Data &gdata, ProblemType &Problem,
 	}
 }
 
-void gridFunc::bc_Extrapolate(Data &gdata, ProblemType &Problem, 
+//! @brief Applies the extrapolate condition onto the selected boundary
+void GridFunc::bc_Extrapolate(Data &gdata, ProblemType &Problem, 
                               NumMatrix<double,3> &omb,
                               int dir, int above, int q, int rim)
 {
@@ -1700,9 +1585,8 @@ void gridFunc::bc_Extrapolate(Data &gdata, ProblemType &Problem,
 	}
 }
 
-
-void gridFunc::bc_Outflow(Queue &queue, Data &gdata, ProblemType &pr,
-                          NumMatrix<double,3> &omb,
+//! @brief Applies the outflow condition onto the selected boundary
+void GridFunc::bc_Outflow(Queue &queue, Data &gdata, ProblemType &pr,
                           int dir, int above, int q, int rim)
 
 {
@@ -1887,8 +1771,8 @@ void gridFunc::bc_Outflow(Queue &queue, Data &gdata, ProblemType &pr,
 }
 
 
-
-void gridFunc::bc_Outflow(Data &gdata, ProblemType &pr,
+//! @brief Applies the outflow condition onto the selected boundary
+void GridFunc::bc_Outflow(Data &gdata, ProblemType &pr,
                           NumMatrix<double,3> &omb,
                           int dir, int above, int q, int rim)
 {
@@ -2076,9 +1960,8 @@ void gridFunc::bc_Outflow(Data &gdata, ProblemType &pr,
 	}
 }
 
-
-void gridFunc::bc_Reflecting(Queue &queue, Data &gdata, ProblemType &pr,
-                             NumMatrix<double,3> &omb,
+//! @brief Applies the reflecting condition onto the selected boundary
+void GridFunc::bc_Reflecting(Queue &queue, Data &gdata, ProblemType &pr,
                              int dir, int above, int q, int rim)
 {
 	/*
@@ -2087,7 +1970,7 @@ void gridFunc::bc_Reflecting(Queue &queue, Data &gdata, ProblemType &pr,
 	  gradient.
 	*/
 
-	string qname = omb.getName();
+	string qname = gdata.om[q].getName();
 	bool is_sx = false;
 	if(qname=="s_x") {
 		is_sx = true;
@@ -2252,9 +2135,8 @@ void gridFunc::bc_Reflecting(Queue &queue, Data &gdata, ProblemType &pr,
 	}
 }
 
-
-
-void gridFunc::bc_Reflecting(Data &gdata, ProblemType &pr,
+//! @brief Applies the reflecting condition onto the selected boundary
+void GridFunc::bc_Reflecting(Data &gdata, ProblemType &pr,
                              NumMatrix<double,3> &omb,
                              int dir, int above, int q, int rim)
 {
@@ -2388,8 +2270,8 @@ void gridFunc::bc_Reflecting(Data &gdata, ProblemType &pr,
 }
 
 
-
-void gridFunc::bc_Fixed(Data &gdata, ProblemType &pr,
+//! @brief Applies the fixed type condition onto the selected boundary
+void GridFunc::bc_Fixed(Data &gdata, ProblemType &pr,
                         NumMatrix<double,3> &omb,
                         int dir, int above, int q, int rim)
 {
@@ -2540,7 +2422,8 @@ void gridFunc::bc_Fixed(Data &gdata, ProblemType &pr,
 
 }
 
-void gridFunc::bc_Fixed_general(NumMatrix<double,3> &omb,
+//! @brief Applies the fixed type condition onto the selected boundary
+void GridFunc::bc_Fixed_general(NumMatrix<double,3> &omb,
                                 NumMatrix<double,3> &bcVals,
                                 int imin[3], int imax[3]) {
 
@@ -2555,9 +2438,8 @@ void gridFunc::bc_Fixed_general(NumMatrix<double,3> &omb,
 	}
 }
 
-// void gridFunc::dataout(Data &gdata, string &filename, ProblemType & Problem,
-//                        int numout, bool isfloat)
-void gridFunc::dataout(Data &gdata,  Hdf5Stream &h5out, ProblemType & Problem,
+//! @brief Performs a serial writeout of the grid data
+void GridFunc::dataout(Data &gdata,  Hdf5Stream &h5out, ProblemType & Problem,
                        int numout, bool isfloat, bool is_collective)
 {
 
@@ -2768,8 +2650,8 @@ void gridFunc::dataout(Data &gdata,  Hdf5Stream &h5out, ProblemType & Problem,
 
 }
 
-
-void gridFunc::datain(Data &gdata, Hdf5iStream & h5in, string &filename,
+//! @brief Serially reads the data from the input files and initizales the NumMatrix grid data
+void GridFunc::datain(Data &gdata, Hdf5iStream & h5in, string &filename,
                       ProblemType &Problem)
 {
 
@@ -3019,7 +2901,7 @@ void gridFunc::datain(Data &gdata, Hdf5iStream & h5in, string &filename,
 }
 
 
-int gridFunc::get_powerTwo(int val) {
+int GridFunc::get_powerTwo(int val) {
 	int powerTwo=0;
 	while(val >= 2) {
 		val /= 2;
@@ -3028,7 +2910,8 @@ int gridFunc::get_powerTwo(int val) {
 	return powerTwo;
 }
 
-double gridFunc::datain_collective(Data &gdata, Hdf5iStream & h5in, string &filename,
+//! @brief Collectively reads the data from the input files and initizales the NumMatrix grid data
+double GridFunc::datain_collective(Data &gdata, Hdf5iStream & h5in, string &filename,
                       ProblemType &Problem)
 {
 
@@ -3393,7 +3276,7 @@ double gridFunc::datain_collective(Data &gdata, Hdf5iStream & h5in, string &file
 }
 
 
-void gridFunc::RefineData(Data &gdata, NumMatrix<double,3> &dataOld, int mx[DIM],
+void GridFunc::RefineData(Data &gdata, NumMatrix<double,3> &dataOld, int mx[DIM],
 		NumArray<int> &factor, NumArray<int> &staggered, int rim) {
 	// start with x-dimesion
 	NumArray<int> mxOld(3);
@@ -3504,7 +3387,7 @@ void gridFunc::RefineData(Data &gdata, NumMatrix<double,3> &dataOld, int mx[DIM]
 
 
 #if(FLUID_TYPE != CRONOS_MULTIFLUID)
-void gridFunc::load_flt(Data &gdata, Hdf5iStream & h5in, string &filename,
+void GridFunc::load_flt(Data &gdata, Hdf5iStream & h5in, string &filename,
                       ProblemType &Problem)
 {
 	//
@@ -3573,7 +3456,7 @@ void gridFunc::load_flt(Data &gdata, Hdf5iStream & h5in, string &filename,
 }
 #endif
 
-void gridFunc::Prolongate(Data &gdata, NumMatrix<double,3> &data, const int &q,
+void GridFunc::Prolongate(Data &gdata, NumMatrix<double,3> &data, const int &q,
                           int mxloc[3], int rim) 
 {
 	/* 

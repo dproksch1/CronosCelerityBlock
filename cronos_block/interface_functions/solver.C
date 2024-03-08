@@ -4,13 +4,15 @@
 
 #define CR_CELERITY CELERITY_OFF
 
+
+//! @brief Initalizes the solver and its constants
 void Environment::init_solvers(Data &gdata)
 {
 	// Specified user class
-	RKSolver = std::make_unique<HyperbolicSolver>(gdata, *Problem);
+	rksolver = std::make_unique<HyperbolicSolver>(gdata, *Problem);
 
 	try{
-		RKSolver->init_constants(gdata);
+		rksolver->init_constants(gdata);
 	} catch (CException exep) {
 		Abort(gdata, exep);
 	}
@@ -18,6 +20,7 @@ void Environment::init_solvers(Data &gdata)
 }
 
 
+//! @brief Performs a single timestep using the partial-differential equation
 void Environment::pdestep(Data &gdata, Queue& queue)
 {
 	gdata.cfl = 0.;
@@ -31,8 +34,8 @@ void Environment::pdestep(Data &gdata, Queue& queue)
 			cout << "  RKSTEP = " << n+1 << endl;
 		}
 		try {
-			RKSolver->singlestep(gdata, *gfunc, *Problem, n, queue);
-			// gdata.cfl = (std::max(RKSolver->singlestep(gdata, *gfunc, *Problem, n, queue), gdata.cfl));
+			rksolver->singlestep(gdata, *gfunc, *Problem, n, queue);
+			// gdata.cfl = (std::max(rksolver->singlestep(gdata, *gfunc, *Problem, n, queue), gdata.cfl));
 		} catch (CException exep) {
 
 			Abort(gdata, exep);

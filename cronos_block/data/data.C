@@ -287,18 +287,18 @@ Data::~Data() {
 	delete [] nom_user;
 #endif
 
-	// Timer for code finalisation
-	gettimeofday(&tock_end, 0);
+	// // Timer for code finalisation
+	// gettimeofday(&tock_end, 0);
 
-	double full_time_sec = ((tock_end.tv_sec + tock_end.tv_usec/1.e6) -
-			(tick_start.tv_sec + tick_start.tv_usec/1.e6));
-	double time_per_step = full_time_sec/(1.*tstep);
-	if(rank==0) {
-		cout << "======================================================" << endl;
-		cout << " Total run time               " << git_humanReadable(full_time_sec) << endl;
-		cout << " Average time step duration   " << git_humanReadable(time_per_step) << endl;
-		cout << "======================================================" << endl;
-	}
+	// double full_time_sec = ((tock_end.tv_sec + tock_end.tv_usec/1.e6) -
+	// 		(tick_start.tv_sec + tick_start.tv_usec/1.e6));
+	// double time_per_step = full_time_sec/(1.*tstep);
+	// if(rank==0) {
+	// 	cout << "======================================================" << endl;
+	// 	cout << " Total run time               " << git_humanReadable(full_time_sec) << endl;
+	// 	cout << " Average time step duration   " << git_humanReadable(time_per_step) << endl;
+	// 	cout << "======================================================" << endl;
+	// }
 }
 
 

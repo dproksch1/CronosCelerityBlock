@@ -7,17 +7,17 @@
 
 
 HyperbolicSolver::HyperbolicSolver(Data &gdata, ProblemType &Problem)
-	: Ekin_tave(0.),
-	  Emag_tave(0.),
-	  Etherm_tave(0.),
-	  Eges_tave(0.),
-	  Ekfluc_tave(0.),
-	  Ebfluc_tave(0.),
-	  Vorticity_tave(0.),
-	  Enstrophy_tave(0.),
-	  cs_tave(0.),
-	  v2ave_tave(0.),
-	  time_ave(0.)
+	// : Ekin_tave(0.),
+	//   Emag_tave(0.),
+	//   Etherm_tave(0.),
+	//   Eges_tave(0.),
+	//   Ekfluc_tave(0.),
+	//   Ebfluc_tave(0.),
+	//   Vorticity_tave(0.),
+	//   Enstrophy_tave(0.),
+	//   cs_tave(0.),
+	//   v2ave_tave(0.),
+	//   time_ave(0.)
 {
 	with_mag = (FLUID_TYPE == CRONOS_MHD);
 	q_rho = gdata.fluid.get_q_rho();
@@ -136,16 +136,14 @@ HyperbolicSolver::HyperbolicSolver(Data &gdata, ProblemType &Problem)
 	set_UserPde(gdata);
 #endif
 
-	for(int dir=0; dir < DIM; ++dir) {
-		gflux[dir].resize(Index::set(-2),Index::set(gdata.mx[dir]+1));
-		gflux[dir].clear();
-	}
+	// for(int dir=0; dir < DIM; ++dir) {
+	// 	gflux[dir].resize(Index::set(-2),Index::set(gdata.mx[dir]+1));
+	// 	gflux[dir].clear();
+	// }
 
 	// Get starting time
 	gettimeofday(&tstep, 0);
 
-	// Initialising classes with NULL.
-	eos = nullptr;
 }
 
 
@@ -241,7 +239,7 @@ void HyperbolicSolver::getConstants_fromH5(Data &gdata, Hdf5iStream &h5in)
 }
 
 
-void HyperbolicSolver::init(Queue &queue, Data &gdata, gridFunc &gfunc,
+void HyperbolicSolver::init(Queue &queue, Data &gdata, GridFunc &gfunc,
                             ProblemType &Problem)
 {
 
@@ -285,30 +283,11 @@ void HyperbolicSolver::init(Queue &queue, Data &gdata, gridFunc &gfunc,
 	// Store values at boundaries for fixed boundary conditions
 	gfunc.prep_boundaries(gdata, Problem);
 
-	// if Vector-Potential is given -> Transform to magnetic field
-	/*if (FLUID_TYPE == CRONOS_MHD || with_mag) {
-		if(gdata.om[q_Bx].getName() == "A_x" ||
-				gdata.om[q_By].getName() == "A_y" ||
-				gdata.om[q_Bz].getName() == "A_z") {
-			TransPot2Mag(gdata, gfunc, Problem);
-			IntegrateA = true;
-			if(gdata.rank == 0) {
-				cout << " Integrating the vector potential " << endl;
-			}
-		} else {
-			IntegrateA = false;
-			if(gdata.rank == 0) {
-				cout << " Integrating the magnetic induction " << endl;
-			}
-		}
-	}*/
-
-
 	init_general(queue, gdata, gfunc, Problem);
 }
 
 
-void HyperbolicSolver::init_general(Queue &queue, Data &gdata, gridFunc &gfunc,
+void HyperbolicSolver::init_general(Queue &queue, Data &gdata, GridFunc &gfunc,
                                     ProblemType &Problem)
 {
 	// General initialisation procedure
@@ -339,7 +318,7 @@ void HyperbolicSolver::init_general(Queue &queue, Data &gdata, gridFunc &gfunc,
 
 
 void HyperbolicSolver::set_TimeIntegrator(Queue &queue, const Data &gdata,
-                                          gridFunc &gfunc) {
+                                          GridFunc &gfunc) {
 
 	TimeIntegratorGeneric.resize(n_omInt);
 
@@ -429,7 +408,7 @@ void HyperbolicSolver::set_TimeIntegrator(Queue &queue, const Data &gdata,
 }
 
 
-void HyperbolicSolver::restart(Queue &queue, Data &gdata, gridFunc &gfunc,
+void HyperbolicSolver::restart(Queue &queue, Data &gdata, GridFunc &gfunc,
                                ProblemType &Problem)
 {
     // Store boundary values for fixed boundary conditions
@@ -441,14 +420,14 @@ void HyperbolicSolver::restart(Queue &queue, Data &gdata, gridFunc &gfunc,
 
 
 
-double HyperbolicSolver::compute_divB(Data &gdata, gridFunc &gfunc,
+double HyperbolicSolver::compute_divB(Data &gdata, GridFunc &gfunc,
                                     ProblemType &Problem)
 {
 	if(Problem.get_Info() && Problem.checkout(4)) {
 
 		double divVal;
 		if(N_ADD >= 2) {
-			Pot & divB = gdata.om[n_omInt+1];
+			Pot &divB = gdata.om[n_omInt+1];
 			divVal = compute_divB(gdata, gfunc, Problem, divB);
 		} else {
 			NumMatrix<double,3> divB(Index::set(-3,-3,-3),
@@ -463,7 +442,7 @@ double HyperbolicSolver::compute_divB(Data &gdata, gridFunc &gfunc,
 
 
 
-double HyperbolicSolver::compute_divB(Data &gdata, gridFunc &gfunc,
+double HyperbolicSolver::compute_divB(Data &gdata, GridFunc &gfunc,
                                     ProblemType &Problem,
                                     NumMatrix<double,3> &divB)
 {
