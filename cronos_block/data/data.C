@@ -600,6 +600,7 @@ bool Data::is_userField(NumMatrix<double,3> &omField) {
 
 }
 
+//! @brief Fetches the cfl number from the reduction buffer
 void Data::fetch_cfl(Queue &queue) {
 
 	double cfl_lin(0.);

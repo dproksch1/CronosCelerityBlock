@@ -1,3 +1,11 @@
+/**
+ * @file
+ * @brief GPU-compatible second-order reconstruction for the main kernel
+ *
+ * This file provides a GPU-compatible version of second-order reconstruction specifically
+ *  scoped for the Celerity Cronos main kernel.
+ */
+
 #ifndef CRONOS_RECONST_BLOCK_H
 #define CRONOS_RECONST_BLOCK_H = 1
 
@@ -22,6 +30,7 @@ namespace gpu {
 		double _p;
 	};
 	
+	//! @brief Applies a minmod limiter to the given values
 	inline double minmodCompute(const double Theta, double& up, double& uc, double& um) {
 		up *= Theta;
 		um *= Theta;
@@ -38,6 +47,7 @@ namespace gpu {
 		}
 	}
 
+	//! @brief Computes the reconstruction derivatives
 	template<typename AccessorType>
 	auto getDerivs(AccessorType& omAcc, size_t ix, size_t iy, size_t iz) {
 		//size_t q = qReconst;
@@ -60,6 +70,7 @@ namespace gpu {
 		return std::tuple{x, y, z};
 	}
 	
+	//! @brief Computes the reconstruction derivatives and applies a minmod limiter
 	template<typename AccessorType>
 	auto prepareDerivs(AccessorType& omAcc, const double Theta, size_t ix, size_t iy, size_t iz) {
 
@@ -72,6 +83,7 @@ namespace gpu {
 		return std::tuple{ deriv_x, deriv_y, deriv_z };
 	}
 	
+	//! @brief Computes the reconstruction derivatives with an offset of -1 and applies a minmod limiter
 	template<typename AccessorType>
 	auto prepareDerivsOffset(AccessorType& omAcc, const double Theta, size_t ix, size_t iy, size_t iz) {
 
@@ -98,46 +110,7 @@ namespace gpu {
 		return std::tuple{ deriv_x, deriv_y, deriv_z };
 	}
 
-	template<typename AccessorType>
-	void get_Vals_EW(AccessorType& omAcc, double uPri[][N_OMINT], size_t ix, size_t iy, size_t iz, int q, double deriv_x) {
-		double shift(0.);
-		uPri[FaceWest][q] = omAcc[ix][iy][iz] - (0.5 + shift) * deriv_x;
-		uPri[FaceEast][q] = uPri[FaceWest][q] + deriv_x;
-	}
-
-	template<typename AccessorType>
-	void get_Vals_SN(AccessorType& omAcc, double uPri[][N_OMINT], size_t ix, size_t iy, size_t iz, int q, double deriv_y) {
-		double shift(0.);
-		uPri[FaceSouth][q] = omAcc[ix][iy][iz] - 0.5 * deriv_y;
-		uPri[FaceNorth][q] = uPri[FaceSouth][q] + deriv_y;
-	}
-
-	template<typename AccessorType>
-	void get_Vals_BT(AccessorType& omAcc, double uPri[][N_OMINT], size_t ix, size_t iy, size_t iz, int q, double deriv_z) {
-		double shift(0.);
-		uPri[FaceBottom][q] = omAcc[ix][iy][iz] - 0.5 * deriv_z;
-		uPri[FaceTop][q] = uPri[FaceBottom][q] + deriv_z;
-	}
-	
-	template<typename AccessorType>
-	void compute(AccessorType& omAcc, double physValsAcc[][N_OMINT], const double Theta, size_t ix, size_t iy, size_t iz, int q, Direction dir) {
-
-		auto [deriv_x, deriv_y, deriv_z] = prepareDerivs(omAcc, Theta, ix, iy, iz);
-		
-		if (dir == DirAll || dir == DirX) {
-			get_Vals_EW(omAcc, physValsAcc, ix, iy, iz, q, deriv_x);
-		}
-
-		if (dir == DirAll || dir == DirY) {
-			get_Vals_SN(omAcc, physValsAcc, ix, iy, iz, q, deriv_y);
-		}
-
-		if (dir == DirAll || dir == DirZ) {
-			get_Vals_BT(omAcc, physValsAcc, ix, iy, iz, q, deriv_z);
-		}
-		
-	}
-
+	//! @brief Reconstructs the vertices for the directions West, South and Bottom
 	template<typename AccessorType>
 	auto computeWSB(AccessorType& omAcc, const double Theta, size_t ix, size_t iy, size_t iz) {
 
@@ -151,6 +124,7 @@ namespace gpu {
 		return std::tuple{uPriWest, uPriSouth, uPriBottom};
 	}
 	
+	//! @brief Reconstructs the vertices for the directions East, North and Top
 	template<typename AccessorType>
 	auto computeENT(AccessorType& omAcc, const double Theta, size_t ix, size_t iy, size_t iz) {
 
@@ -162,22 +136,6 @@ namespace gpu {
 		double uPriTop = omAcc[ix][iy][iz - 1] + 0.5 * deriv_z;
 		
 		return std::tuple{uPriEast, uPriNorth, uPriTop};
-	}
-
-	template<typename AccessorType>
-	auto computeLowerCorner(AccessorType& omAcc, size_t ix, size_t iy, size_t iz) {
-
-		auto [deriv_x, deriv_y, deriv_z] = prepareDerivs(omAcc, ix, iy, iz);
-		double shift(0.);
-
-		double uPriWest = omAcc[ix][iy][iz] - (0.5 + shift) * deriv_x;
-		double uPriSouth = omAcc[ix][iy][iz] - 0.5 * deriv_y;
-		double uPriBottom = omAcc[ix][iy][iz] - 0.5 * deriv_z;
-		double uPriEast = uPriWest + deriv_x;
-		double uPriNorth = uPriSouth + deriv_y;
-		double uPriTop = uPriBottom + deriv_z;
-		
-		return std::tuple{uPriWest, uPriEast, uPriSouth, uPriNorth, uPriBottom, uPriTop};
 	}
 
 }

@@ -1,3 +1,11 @@
+/**
+ * @file
+ * @brief Field data structures for computations in Non-Celerity Cronos
+ *
+ * This file provides data structures for fields in Non-Celerity simulations.
+ * It is unused for the standalone usage of this version, but has to remain for adequate proxy-app integration.
+ */
+
 #ifndef CRONOS_FIELDS_1D
 #define CRONOS_FIELDS_1D = 1
 

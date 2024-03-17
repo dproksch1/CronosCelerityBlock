@@ -3,11 +3,12 @@
 
 using namespace std;
 
+//! @brief Get the solver's alpha carbuncle constant
 double RiemannSolver::getAlphaCarbuncle() {
 	return alpha_carbuncle;
 }
 
-
+//! @brief Set the verbosity constant for the solver
 void RiemannSolver::set_verbosity(int _verb) {
 	verbosity = _verb;
 }

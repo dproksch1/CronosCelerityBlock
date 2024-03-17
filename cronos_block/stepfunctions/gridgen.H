@@ -1,3 +1,11 @@
+/**
+ * @file
+ * @brief Grid setup and top-level simulation execution
+ *
+ * This file provides object-oriented setup and configuration functionality for the data grid
+ * and simulation. It additionally provides the simulation's top-level execution.
+ */
+
 #ifndef CRONOS_PROJ_H_INCLUDED
 #define CRONOS_PROJ_H_INCLUDED
 
@@ -29,6 +37,9 @@ typedef long long Long;
 #include "queue.H"
 #include "lazy_assertion.H"
 
+/*!
+ * @brief Provides grid setup and top-level simulation execution
+ */
 class Environment
 {
 public:
@@ -64,7 +75,7 @@ private:
 	bool CheckEnd_User(Data &, Queue &);
 	void CheckOut(Data &, Queue &);
 	void Output(Data &, bool, bool, bool);
-	void Output_Distributed(Queue &, Data &, bool, bool);
+	void Output_Distributed(Queue &, Data &, bool);
 	void Output_Master(Queue &, Data &, bool, bool);
 	void FetchDataBuffer(Data &gdata, Queue &queue);
 	string MakeFilename(const int [DIM], int, bool, bool);

@@ -1,3 +1,12 @@
+/**
+ * @file
+ * @brief Grid modification and writeout functionality
+ *
+ * This file provides a modification and writeout options for the Celerity and Non-Celerity versions
+ * of the data grid. It additionally provides a fetch option from the Celerity structures to the
+ * Non-Celerity structures.
+ */
+
 #ifndef CRONOS_GRIDFUNC_H
 #define CRONOS_GRIDFUNC_H
 

@@ -243,9 +243,6 @@ double HyperbolicSolver::singlestep(Data &gdata, GridFunc &gfunc,
 
 #endif
 
-// only necessary for super small domain sizes, we will find a better solution for this
-// queue.slow_full_sync();
-
 // ----------------------------------------------------------------
 //   Determine time at intermediate steps:
 // ----------------------------------------------------------------
@@ -317,7 +314,7 @@ double HyperbolicSolver::singlestep(Data &gdata, GridFunc &gfunc,
 	double delt4 = delt2 + delt3;
 
 	if(gdata.rank == 0) {
-		if(n == RK_STEPS-1 && Problem.get_Info() && Problem.checkout(5)) {
+		if(Problem.get_Info() && Problem.checkout(5)) {
 			cout << "------------------------------------------------------" << endl;
 			cout << " Time needed for substeps:  " << delt << " " << delt2 << " " << delt3 << endl;
 			cout << "             for full step: " << delt4 << endl;

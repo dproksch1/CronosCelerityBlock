@@ -430,7 +430,7 @@ void Environment::CheckOut(Data &gdata, Queue &queue)
 	// doing double output
 	if(outputflag[0] == 1) {
 #if (CRONOS_DISTR_OUTPUT == CRONOS_ON)
-		Output_Distributed(queue, gdata, false, false);
+		Output_Distributed(queue, gdata, false);
 #else
 		if(outputflag[1] == 1) {
 			Output_Master(queue, gdata, false, true);
@@ -446,7 +446,7 @@ void Environment::CheckOut(Data &gdata, Queue &queue)
 	// doing float output
 	if(outputflag[1] == 1) {
 #if (CRONOS_DISTR_OUTPUT == CRONOS_ON)
-		Output_Distributed(queue, gdata, true, false);
+		Output_Distributed(queue, gdata, true);
 #else
 		Output_Master(queue, gdata, true, false);
 #endif
@@ -581,17 +581,15 @@ int Environment::Finalize(Data &gdata, Queue &queue, string message)
 	}
 
 
-
 #if (CRONOS_DISTR_OUTPUT == CRONOS_ON)
-		Output_Distributed(queue, gdata, true, false);
+		Output_Distributed(queue, gdata, true);
 #else	
 		FetchDataBuffer(gdata, queue);
-		Output_Master(queue, gdata, true, true);
+		Output_Master(queue, gdata, true, false);
 #endif
 
 	return 1; // Indicate normal end of program
-	
-	// exit(1);
+
 }
 
 //! @brief Aborts the application and outputs error
@@ -629,7 +627,7 @@ void Environment::Output_Master(Queue &queue, Data &gdata, bool isfloat, bool sy
 }
 
 //! @brief Performs a distributed version of the application's HDF5 writeout of its NumMatrix structure
-void Environment::Output_Distributed(Queue &queue, Data &gdata, bool isfloat, bool terminate)
+void Environment::Output_Distributed(Queue &queue, Data &gdata, bool isfloat)
 {
 	/*
 	  Routine to write a hdf5 output file for double data -- can be used
@@ -645,11 +643,6 @@ void Environment::Output_Distributed(Queue &queue, Data &gdata, bool isfloat, bo
 		}
 		cout << " triggered at time: " << gdata.time << endl; 
 	}
-
-	// Get the number of processes and current rank
-    int size, rank;
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
 	string filename;
 	char dirname[255];
@@ -674,20 +667,18 @@ void Environment::Output_Distributed(Queue &queue, Data &gdata, bool isfloat, bo
 
 	filename = dirname;
 	filename += "/";
-	filename += MakeFilename(gdata.coords, gdata.tstep, terminate, isfloat);
+	filename += MakeFilename(gdata.coords, gdata.tstep, false, isfloat);
 
 	int n_Omega = N_OMEGA;
 	int n_omIntUser = N_OMINT_USER;
 	int n_omIntAll = N_OMINT_ALL;
 
 	int numout(n_omIntAll);
-	if(terminate) {
-		numout = n_Omega+ n_omIntAll -N_ADD;
-	}
 
 	if(!isfloat) {
 		numout = n_omIntAll + N_SUBS;
 	}
+
 	Hdf5Stream *h5out;
 	h5out = new Hdf5Stream(filename, numout, gdata.rank, true);
 

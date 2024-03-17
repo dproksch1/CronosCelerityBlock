@@ -1,5 +1,13 @@
+/**
+ * @file
+ * @brief General enum and type definitions for easy linkage
+ *
+ */
+
 #ifndef CRONOS_UTILS_H
 #define CRONOS_UTILS_H = 1
+
+
 
 namespace gpu {
 	enum {
@@ -51,11 +59,6 @@ namespace gpu {
 typedef double nomMat[N_OMINT];
 struct nom_t {
 	nomMat mat;
-};
-
-typedef double uPriMat[gpu::FaceMax][N_OMINT];
-struct uPri_t {
-	uPriMat mat;
 };
 
 

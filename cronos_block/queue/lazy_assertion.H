@@ -1,3 +1,10 @@
+/**
+ * @file
+ * @brief Lazy assertion option
+ *
+ * Provides a lazy assertion implementation 
+ */
+
 #ifndef CRONOS_LAZY_ASSERTION_H
 #define CRONOS_LAZY_ASSERTION_H = 1
 

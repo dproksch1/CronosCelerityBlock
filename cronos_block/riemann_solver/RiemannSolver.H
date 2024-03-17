@@ -1,3 +1,10 @@
+/**
+ * @file
+ * @brief The solver configuration functionality
+ *
+ * This file provides solver configuration functionality via object-oriented solver objects.
+ */
+
 #ifndef CRONOS_RIEMANNSOLVER_H
 #define CRONOS_RIEMANNSOLVER_H = 1
 
@@ -10,13 +17,9 @@
 #include <stdlib.h>
 
 
-/*-----------------------------------------------------
-
-  Base class for Riemann solvers supplying base variables and
-  interface
-
-  -----------------------------------------------------*/
-
+/*!
+ * @brief Base class for Riemann solvers supplying base variables and interface
+ */
 class RiemannSolver {
 public:
 	RiemannSolver(){
@@ -66,7 +69,10 @@ protected:
 	int q_rho, q_sx, q_sy, q_sz, q_Eges, q_Eadd;
 };
 
-// HLLC Solver for Hydrodynamics
+
+/*!
+ * @brief HLLC Solver for Hydrodynamics
+ */
 class HLLCSolver_Hydro: public RiemannSolverHD {
 public:
 	HLLCSolver_Hydro(const Data &, int, int);

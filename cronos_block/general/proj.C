@@ -93,6 +93,9 @@ int main(int argc, char* argv[])
 		EndProgram = solver.integrate(gdata, queue);
 	}
 
+	// manual execution of the queue's destructor to prevent desynchronized process termination
+	queue.~distr_queue();
+
 	if (EndProgram == 1) {
 		// Everything is fine -> exit normally
 		return 0;

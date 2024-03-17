@@ -1,3 +1,11 @@
+/**
+ * @file
+ * @brief The GPU-compatible compute step for the main kernel
+ *
+ * This file provides the compute step for the main kernel defined and executed in HyperbolicSolver::singlestep(Data&, GridFunc&,ProblemType&, int, Queue&).
+ * The function is executed 4 times per kernel iteration and utilizes additional functions defined in solver_func.H and reconstruction_block.H.
+ */
+
 #ifndef CRONOS_COMPUTE_STEP_H
 #define CRONOS_COMPUTE_STEP_H
 
@@ -8,7 +16,7 @@
 
 namespace gpu {
 
-    //! @brief the vertices and computes the numerical fluxes for the given cell
+    //! @brief Reconstructs the vertices and computes the numerical fluxes for the given cell
     template<typename omAccessorType, typename NumFluxAccessorType, typename NumPtotalAccessorType, typename CFlagAccessorType, typename IdxConstType, typename FluidConstType>
     void computeStep(const omAccessorType& om_rho_acc, const omAccessorType& om_sx_acc, const omAccessorType& om_sy_acc, const omAccessorType& om_sz_acc, const omAccessorType& om_Eges_acc,
                     size_t ix, size_t iy, size_t iz, double* cfl_lin, NumFluxAccessorType& numFlux,

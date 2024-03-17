@@ -1,3 +1,10 @@
+/**
+ * @file
+ * @brief A collection of GPU-compatible functions for the main kernel
+ *
+ * All functions used for calculations in gpu::compute_step() aside from reconstruction and proprietary Celerity/SYCL math functions
+ */
+
 #ifndef CRONOS_SOLVER_FUNC_H
 #define CRONOS_SOLVER_FUNC_H
 

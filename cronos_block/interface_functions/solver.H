@@ -1,3 +1,10 @@
+/**
+ * @file
+ * @brief Solver execution functions
+ *
+ * Provides the functionality for solver execution.
+ */
+
 #ifndef CRONOS_SOLVER_H
 #define CRONOS_SOLVER_H = 1
 

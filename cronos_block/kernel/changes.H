@@ -1,3 +1,10 @@
+/**
+ * @file
+ * @brief Provides GPU-compatible numerical flux computation
+ *
+ * This file provides the computation of numerical fluxes for the compute step that allows for the generation of cell update information.
+ */
+
 #ifndef CHANGES_H
 #define CHANGES_H = 1
 

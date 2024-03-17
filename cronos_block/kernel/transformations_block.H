@@ -1,3 +1,10 @@
+/**
+ * @file
+ * @brief Transformation functionality for Celerity and Non-Celerity data structures
+ *
+ * This file provides the transformation between different data representations for both utilized versions of data structures.
+ */
+
 #ifndef CRONOS_TRANSFORMATIONS_BLOCK_H
 #define CRONOS_TRANSFORMATIONS_BLOCK_H
 

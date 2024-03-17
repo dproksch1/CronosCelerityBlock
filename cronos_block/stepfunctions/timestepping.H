@@ -1,3 +1,11 @@
+/**
+ * @file
+ * @brief Time integration and cell update applications
+ *
+ * This file provides time integration functionality that allows for the application of cell updates
+ * determined by the main kernel.
+ */
+
 #ifndef CRONOS_TIME_STEPPING_H
 #define CRONOS_TIME_STEPPING_H = 1
 
