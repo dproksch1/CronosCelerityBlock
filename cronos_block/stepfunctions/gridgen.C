@@ -361,64 +361,58 @@ void Environment::CheckOut(Data &gdata, Queue &queue)
 	}
 #endif
 #else
+	const double dt_eps = gdata.dt*1.e-2;
 
-	// if(gdata.rank == 0) {
-		const double dt_eps = gdata.dt*1.e-2;
+	// Double output
+	const double tnext_dbl = dt_dbl*(numdbl_done);
+	const double dtnext_dbl = tnext_dbl - gdata.time;
 
-		// Double output
-		const double tnext_dbl = dt_dbl*(numdbl_done);
-		const double dtnext_dbl = tnext_dbl - gdata.time;
-
-		if(dtnext_dbl < dt_eps || numdbl_pass >= numdbl_out) {
-			outputflag[0] = 1;
-			buffer_fetch_necessary = true;
-		}
-
-    
-		// Float output
-		const double tnext_flt = dt_flt*(numflt_done);
-		const double dtnext_flt = tnext_flt - gdata.time;
-
-		if(dtnext_flt < dt_eps || numflt_pass >= numflt_out) {
-			outputflag[1] = 1;
-			buffer_fetch_necessary = true;
-		}
+	if(dtnext_dbl < dt_eps || numdbl_pass >= numdbl_out) {
+		outputflag[0] = 1;
+		buffer_fetch_necessary = true;
+	}
 
 
-		// Ascii output
-		const double tnext_ascii = dt_ascii*(numascii_done);
-		const double dtnext_ascii = tnext_ascii - gdata.time;
+	// Float output
+	const double tnext_flt = dt_flt*(numflt_done);
+	const double dtnext_flt = tnext_flt - gdata.time;
 
-		if(dtnext_ascii < dt_eps || numascii_pass >= numascii_out) {
-			outputflag[2] = 1;
-			buffer_fetch_necessary = true;
-		}
+	if(dtnext_flt < dt_eps || numflt_pass >= numflt_out) {
+		outputflag[1] = 1;
+		buffer_fetch_necessary = true;
+	}
 
 
-		// Screen output
-		const double tnext_info = dt_info*(numinfo_done);
-		const double dtnext_info = tnext_info - gdata.time;
+	// Ascii output
+	const double tnext_ascii = dt_ascii*(numascii_done);
+	const double dtnext_ascii = tnext_ascii - gdata.time;
 
-		if(dtnext_info< dt_eps || numinfo_pass >= numinfo_out) {
-			outputflag[3] = 1;
-			buffer_fetch_necessary = true;
-		}
+	if(dtnext_ascii < dt_eps || numascii_pass >= numascii_out) {
+		outputflag[2] = 1;
+		buffer_fetch_necessary = true;
+	}
+
+
+	// Screen output
+	const double tnext_info = dt_info*(numinfo_done);
+	const double dtnext_info = tnext_info - gdata.time;
+
+	if(dtnext_info< dt_eps || numinfo_pass >= numinfo_out) {
+		outputflag[3] = 1;
+		buffer_fetch_necessary = true;
+	}
 
 
 		// Movie output
 #if (CRONOS_MOVIE == CRONOS_ON)
-		double tnext_mov = dt_mov*(nummov_done);
-		double dtnext_mov = tnext_mov - gdata.time;
+	double tnext_mov = dt_mov*(nummov_done);
+	double dtnext_mov = tnext_mov - gdata.time;
 
-		if(dtnext_mov < dt_eps) {
-			outputflag[4] = 1;
-			buffer_fetch_necessary = true;
-		}
+	if(dtnext_mov < dt_eps) {
+		outputflag[4] = 1;
+		buffer_fetch_necessary = true;
+	}
 #endif
-
-
-	// }
-  
 #endif
 
 #if (CRONOS_DISTR_OUTPUT != CRONOS_ON)
@@ -438,8 +432,6 @@ void Environment::CheckOut(Data &gdata, Queue &queue)
 			Output_Master(queue, gdata, false, false);
 		}
 #endif
-		
-		// Output(gdata, false, false);
 		numdbl_pass = 0;
 	}
 
@@ -450,7 +442,6 @@ void Environment::CheckOut(Data &gdata, Queue &queue)
 #else
 		Output_Master(queue, gdata, true, false);
 #endif
-		// Output(gdata, true, false);
 		numflt_pass = 0;
 	}
 
@@ -560,13 +551,6 @@ int Environment::integrate(Data &gdata, Queue& queue)
 	if(EndProgram==0) {
 		EndProgram = CheckEnd(gdata, queue);
 	}
-
-	// step++;
-	// gdata.tstep++;
-
-	//if(gdata.tstep==1) {
-	//	EndProgram = Finalize(gdata, queue, "stopping for valgrind");
-	//}
 
 	return EndProgram;
 }

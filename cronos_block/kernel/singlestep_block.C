@@ -14,13 +14,8 @@
 #include "reconst_block.H"
 #include "transformations_block.H"
 #include "utils.H"
-
-// #if(STANDALONE_USAGE == TRUE)
-// #include "utils.H"
-// #else
 #include "queue.H"
 #include "lazy_assertion.H"
-// #endif
 
 using namespace std;
   
@@ -230,7 +225,7 @@ double HyperbolicSolver::singlestep(Data &gdata, GridFunc &gfunc,
 //   Determine domain to be integrated and apply changes:
 // ----------------------------------------------------------------
 
-	TimeIntegratorGeneric[0]->Substep(queue, gdata, omRange, gdata.nomSYCL, gdata.dt, n, nom_max);
+	TimeIntegratorGeneric[0]->Substep(queue, gdata, omRange, gdata.nomSYCL, gdata.dt, n);
 
 #if (OMS_USER == TRUE)
 

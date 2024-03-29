@@ -1,4 +1,4 @@
-Start testing: Oct 18 18:45 CEST
+Start testing: Mar 29 19:14 CET
 ----------------------------------------------------------
 Unable to find executable: mpirun -n 1
 1/8 Testing: small1_run
@@ -12,7 +12,7 @@ Output:
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"small1_run" end time: Oct 18 18:45 CEST
+"small1_run" end time: Mar 29 19:14 CET
 "small1_run" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -20,7 +20,7 @@ Test Passed.
 2/8 Test: small1_compare
 Command: "/usr/bin/h5diff" "-v" "-d 1.5e-11" "--exclude-path" "/Data/version" "/home/dproksch/master_thesis/CronosCelerityBlock/tests/SedovExplosionHllcRef_small/SedovCartesian_hllc_float/SedovCartesian_hllc_flt_step4.h5" "/home/dproksch/master_thesis/CronosCelerityBlock/tests/SedovExplosionHllcRef_small/SedovCartesian_hllc_float/SedovCartesian_hllc_flt_step4.h5"
 Directory: /home/dproksch/master_thesis/CronosCelerityBlock
-"small1_compare" start time: Oct 18 18:45 CEST
+"small1_compare" start time: Mar 29 19:14 CET
 Output:
 ----------------------------------------------------------
 
@@ -58,7 +58,7 @@ dataset: </fluid00/v_z> and </fluid00/v_z>
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"small1_compare" end time: Oct 18 18:45 CEST
+"small1_compare" end time: Mar 29 19:14 CET
 "small1_compare" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -74,7 +74,7 @@ Output:
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"small2_run" end time: Oct 18 18:45 CEST
+"small2_run" end time: Mar 29 19:14 CET
 "small2_run" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -90,7 +90,7 @@ Output:
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"small2_compare" end time: Oct 18 18:45 CEST
+"small2_compare" end time: Mar 29 19:14 CET
 "small2_compare" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -106,7 +106,7 @@ Output:
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"small4_run" end time: Oct 18 18:45 CEST
+"small4_run" end time: Mar 29 19:14 CET
 "small4_run" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -122,7 +122,7 @@ Output:
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"small4_compare" end time: Oct 18 18:45 CEST
+"small4_compare" end time: Mar 29 19:14 CET
 "small4_compare" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -138,7 +138,7 @@ Output:
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"small8_run" end time: Oct 18 18:45 CEST
+"small8_run" end time: Mar 29 19:14 CET
 "small8_run" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -154,8 +154,8 @@ Output:
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"small8_compare" end time: Oct 18 18:45 CEST
+"small8_compare" end time: Mar 29 19:14 CET
 "small8_compare" time elapsed: 00:00:00
 ----------------------------------------------------------
 
-End testing: Oct 18 18:45 CEST
+End testing: Mar 29 19:14 CET

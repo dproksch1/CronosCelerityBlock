@@ -41,7 +41,7 @@ const int N_ADD = 2;      // Used for div(B)
 
 const int N_P = 0;
 
-#define CRONOS_DISTR_OUTPUT CRONOS_OFF
+#define CRONOS_DISTR_OUTPUT CRONOS_ON
 
 #include "cronos_config.H"
 

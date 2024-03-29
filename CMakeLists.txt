@@ -31,7 +31,7 @@ if(MSVC)
 
 else()
 
-
+  add_compile_options("$<$<CONFIG:RELEASE>:-D_ITERATOR_DEBUG_LEVEL=0>")
 endif()
 
 ############################

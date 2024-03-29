@@ -43,7 +43,7 @@ RKSteps::RKSteps():
 //! @brief Performs integration via Runge-Kutta step for specified substep
 void RKSteps::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
 		CelerityBuffer<nom_t, 3> nomSYCL,
-		double dt, const int substep, size_t nom_max[3]) {
+		double dt, const int substep) {
 
 #if  (RK_STEPS == 2)
 
@@ -298,4 +298,4 @@ VanLeerIntegrator::VanLeerIntegrator():
 
 void VanLeerIntegrator::Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
                       CelerityBuffer<nom_t, 3> nomSYCL,
-                      double dt, const int substep, size_t nom_max[3]) {}
+                      double dt, const int substep) {}

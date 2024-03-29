@@ -26,7 +26,7 @@ public:
 	void set_corrField(int);
 	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
                       CelerityBuffer<nom_t, 3> nomSYCL,
-                      double dt, const int substep, size_t nom_max[]) = 0;
+                      double dt, const int substep) = 0;
 	
 
 protected:
@@ -41,7 +41,7 @@ public:
 	RKSteps();
 	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
                       CelerityBuffer<nom_t, 3> nomSYCL,
-                      double dt, const int substep, size_t nom_max[]);
+                      double dt, const int substep);
 
 private:
 	double oneThird, twoThirds;
@@ -53,7 +53,7 @@ public:
 	VanLeerIntegrator();
 	virtual void Substep(Queue &queue, const Data &gdata, CelerityRange<3> omRange,
                       CelerityBuffer<nom_t, 3> nomSYCL,
-                      double dt, const int substep, size_t nom_max[]);
+                      double dt, const int substep);
 
 };
 
