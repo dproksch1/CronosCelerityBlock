@@ -94,7 +94,9 @@ int main(int argc, char* argv[])
 	}
 
 	// manual execution of the queue's destructor to prevent desynchronized process termination
-	queue.~distr_queue();
+	// queue.~distr_queue();
+	queue.slow_full_sync();
+
 
 	if (EndProgram == 1) {
 		// Everything is fine -> exit normally
