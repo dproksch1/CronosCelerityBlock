@@ -106,7 +106,6 @@ else()
   include_directories(${CRONOSNUMLIB_INCLUDE_DIR}/CronosNumLib)
 endif()
 
-# include_directories(cronos_block/test)
 include_directories(cronos_block/data)
 include_directories(cronos_block/general)
 include_directories(cronos_block/interface_functions)
@@ -115,7 +114,6 @@ include_directories(cronos_block/queue)
 include_directories(cronos_block/reconstruction)
 include_directories(cronos_block/riemann_solver)
 include_directories(cronos_block/stepfunctions)
-# include_directories(cronos_block/utils)
 include_directories(cronos_block/configuration/standalone/cronos_block)
 # include_directories(cronos_block/configuration/ShockTubeSod)
 include_directories(cronos_block/configuration/SedovExplosion)
@@ -151,14 +149,9 @@ set(SOURCES
     cronos_block/stepfunctions/gridgen.C
     cronos_block/stepfunctions/Hdf5File_cbase.C
     cronos_block/stepfunctions/timestepping.C
-    #test/proj.C
-    #test/test_data.C
-    #test/singlestep_stub.C
     # cronos_block/configuration/ShockTubeSod/modules.C
     cronos_block/configuration/SedovExplosion/modules.C
     cronos_block/configuration/SedovExplosion/randgen/randgen.C
-
-    #cronos_block/utils/celerity_test.C
 )
 
 FILE(GLOB_RECURSE HEADERS "*.h")
