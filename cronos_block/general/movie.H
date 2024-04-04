@@ -62,29 +62,6 @@ class MovieSlice {
   /** Writes the hdf5 output of a given slice */
   bool writeHdf5(const Grid &grid, const std::string datasetName,
                  const NumMatrix<double, 2> &sliceData);
-
-#if (defined(parallel) && (MOV_HDF_PARALLEL_IO == CRONOS_OFF))
-  /** HDF5 Output buffer for the global slice (rank 0 writing strategy)
-   * Only allocated on rank 0
-   * subslice data from other ranks is merged
-   */
-  static std::array<NumMatrix<double, 2>, 3> globalSliceBuffer;
-
-  /** initialize global slice buffer */
-  void checkAndInitGlobalSliceBuffer(const Grid &grid);
-
-  /** write a local slice (patch) to the global buffer */
-  static void writeLocalToGlobalSlice(const NumMatrix<double, 2> &localSlice,
-                                      const std::array<int, 2> &offset,
-                                      const std::array<int, 2> &width,
-                                      NumMatrix<double, 2> &globalSlice);
-
-  /** Send local slices (patch) to rank 0 */
-  void SendDataToMaster(const Grid &grid, NumMatrix<double, 2> &sliceBuffer) const;
-
-  /** recieve local patches */
-  void RecvDataFromSlave(const Grid &grid, NumMatrix<double, 2> &globalSliceBuffer) const;
-#endif
 };
 
 class Movie {

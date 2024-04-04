@@ -16,16 +16,6 @@ void Environment::setType(Data &gdata) {
 
 }
 
-
-#if (NON_LINEAR_GRID == CRONOS_ON)
-void Grid::set_UserGridFunction(int dir, double beg, double end, double len) {
-//	myNonlinGrid[dir] = new GridFunction_Sin();
-	myNonlinGrid[dir] = new GridFunction_modEXP(beg,end,len);
-  // myNonlinGrid[dir] = new GridFunction_Lin();
-
-}
-#endif
-
 // In case of multifluid - add setup file
 #if(FLUID_TYPE == CRONOS_MULTIFLUID)
 #include "multifluid_setup.C"

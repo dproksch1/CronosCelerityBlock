@@ -4,8 +4,6 @@
 #include <matrix.H>
 
 #define ISODD(i) ((i)&1)
-////#define REAL double
-//#define NONE -1
 
 #include <sys/types.h>
 #include <sys/stat.h>   
@@ -82,7 +80,6 @@ int main(int argc, char* argv[])
 		gdata.time = 0.;
 		try {
 			solver.rksolver->init(queue, gdata, *solver.gfunc, *solver.Problem);
-			// solver->EulerSolver->init(gdata, *solver->gfunc, *solver->Problem);
 		} catch (CException exep) {
 			solver.Abort(gdata, exep);
 		}

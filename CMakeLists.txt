@@ -3,7 +3,6 @@ project (CronosCodeBlock C CXX)
 enable_language(Fortran)
 
 set(CMAKE_CXX_STANDARD 17)
-#set(CMAKE_VERBOSE_MAKEFILE ON)
 
 ##################
 # Compiler Setup #
@@ -115,6 +114,8 @@ include_directories(cronos_block/reconstruction)
 include_directories(cronos_block/riemann_solver)
 include_directories(cronos_block/stepfunctions)
 include_directories(cronos_block/configuration/standalone/cronos_block)
+
+### Problem Configuration Folders (add only the folders of ONE problem)
 # include_directories(cronos_block/configuration/ShockTubeSod)
 include_directories(cronos_block/configuration/SedovExplosion)
 include_directories(cronos_block/configuration/SedovExplosion/randgen)
@@ -149,6 +150,8 @@ set(SOURCES
     cronos_block/stepfunctions/gridgen.C
     cronos_block/stepfunctions/Hdf5File_cbase.C
     cronos_block/stepfunctions/timestepping.C
+
+    ### Problem Configuration Files (add only the files of ONE problem)
     # cronos_block/configuration/ShockTubeSod/modules.C
     cronos_block/configuration/SedovExplosion/modules.C
     cronos_block/configuration/SedovExplosion/randgen/randgen.C
@@ -157,10 +160,7 @@ set(SOURCES
 FILE(GLOB_RECURSE HEADERS "*.h")
 
 add_executable(proj ${SOURCES} cronos_block/general/proj.C ${HEADERS})
-#add_executable(proj ${SOURCES} test/proj.C ${HEADERS})
-
 set_property(TARGET proj PROPERTY CXX_STANDARD 17)
-#target_link_options (proj PRIVATE "$<$<BOOL:$<TARGET_PROPERTY:POSITION_INDEPENDENT_CODE>>:-fPIC>")
 
 # properly set up SYCL compiler in case of hipSYCL
 
@@ -193,18 +193,17 @@ target_link_libraries(proj PRIVATE ${HDF5_LIBRARIES})
 
 enable_testing()
 
+
+#### Sod shock tube test ####
+
 # configure_file(${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_tiny/SodToro5HllcRef.cat ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_tiny/SodToro5HllcRef.cat COPYONLY)
 # configure_file(${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_small/SodToro5HllcRef.cat ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_small/SodToro5HllcRef.cat COPYONLY)
-# configure_file(${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef.cat ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef.cat COPYONLY)
 
-# add_test(NAME tiny_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_tiny SodToro5HllcRef)
+# add_test(NAME tiny_run COMMAND mpirun -n 1 $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_tiny SodToro5HllcRef)
 # add_test(NAME tiny_compare COMMAND ${HDF5_DIFF_EXECUTABLE} -v -d 1.5e-11 --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_tiny/SodToro5HllcRef_float/SodToro5HllcRef_flt_step3.h5 ${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_tiny/SodToro5HllcRef_float/SodToro5HllcRef_flt_step3.h5)
 	
-# add_test(NAME small_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_small SodToro5HllcRef)
+# add_test(NAME small_run COMMAND mpirun -n 1 $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_small SodToro5HllcRef)
 # add_test(NAME small_compare COMMAND ${HDF5_DIFF_EXECUTABLE} -v -d 1.5e-11 --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_small/SodToro5HllcRef_float/SodToro5HllcRef_flt_step16.h5 ${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_small/SodToro5HllcRef_float/SodToro5HllcRef_flt_step16.h5)
-
-# add_test(NAME medium_run COMMAND $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_medium SodToro5HllcRef)
-# add_test(NAME medium_compare COMMAND ${HDF5_DIFF_EXECUTABLE} -v -d 1.5e-11 --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef_float/SodToro5HllcRef_flt_step990.h5 ${CMAKE_SOURCE_DIR}/tests/SodToro5HllcRef_medium/SodToro5HllcRef_float/SodToro5HllcRef_flt_step990.h5)
 
 # set_tests_properties(tiny_run PROPERTIES DEPENDS proj)
 # set_tests_properties(tiny_run PROPERTIES FIXTURES_SETUP EXEC_TINY)
@@ -213,17 +212,13 @@ enable_testing()
 # set_tests_properties(small_run PROPERTIES DEPENDS proj)
 # set_tests_properties(small_run PROPERTIES FIXTURES_SETUP EXEC_SMALL)
 # set_tests_properties(small_compare PROPERTIES FIXTURES_REQUIRED EXEC_SMALL)
-	
-# set_tests_properties(medium_run PROPERTIES DEPENDS proj)
-# set_tests_properties(medium_run PROPERTIES FIXTURES_SETUP EXEC_MEDIUM)
-# set_tests_properties(medium_compare PROPERTIES FIXTURES_REQUIRED EXEC_MEDIUM)
+
+
+#### Sedov-Explosion test ####
 
 configure_file(${CMAKE_SOURCE_DIR}/tests/SedovExplosionHllcRef_tiny/SedovCartesian_hllc.cat ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_tiny/SedovCartesian_hllc.cat COPYONLY)
 configure_file(${CMAKE_SOURCE_DIR}/tests/SedovExplosionHllcRef_small/SedovCartesian_hllc.cat ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_small/SedovCartesian_hllc.cat COPYONLY)
-# configure_file(${CMAKE_SOURCE_DIR}/tests/SedovExplosionHllcRef_medium/SedovCartesian_hllc.cat ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_medium/SedovCartesian_hllc.cat COPYONLY)
 
-# add_test(NAME tiny_run COMMAND mpirun -n 2 $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_tiny SedovCartesian_hllc)
-# add_test(NAME tiny_compare COMMAND ${HDF5_DIFF_EXECUTABLE} -v -d 1.5e-11 --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_tiny/SedovCartesian_hllc_float/SedovCartesian_hllc_flt_step1.h5 ${CMAKE_SOURCE_DIR}/tests/SedovExplosionHllcRef_tiny/SedovCartesian_hllc_float/SedovCartesian_hllc_flt_step1.h5)
 add_test(NAME small1_run COMMAND mpirun -n 1 $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_small SedovCartesian_hllc)
 add_test(NAME small1_compare COMMAND ${HDF5_DIFF_EXECUTABLE} --verbose=0 -d 1.5e-11 --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_small/SedovCartesian_hllc_float/SedovCartesian_hllc_flt_step4.h5 ${CMAKE_SOURCE_DIR}/tests/SedovExplosionHllcRef_small/SedovCartesian_hllc_float/SedovCartesian_hllc_flt_step4.h5)
 
@@ -235,15 +230,7 @@ add_test(NAME small4_compare COMMAND ${HDF5_DIFF_EXECUTABLE} --verbose=0 -d 1.5e
 
 add_test(NAME small8_run COMMAND mpirun -n 8 $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_small SedovCartesian_hllc)
 add_test(NAME small8_compare COMMAND ${HDF5_DIFF_EXECUTABLE} --verbose=0 -d 1.5e-11 --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_small/SedovCartesian_hllc_float/SedovCartesian_hllc_flt_step4.h5 ${CMAKE_SOURCE_DIR}/tests/SedovExplosionHllcRef_small/SedovCartesian_hllc_float/SedovCartesian_hllc_flt_step4.h5)
-# add_test(NAME small_compare COMMAND ${HDF5_DIFF_EXECUTABLE} -v -d 1.5e-11 --exclude-path /Data/version ${CMAKE_SOURCE_DIR}/tests/SedovExplosionHllcRef_small/SedovCartesian_hllc_float/SedovCartesian_hllc_flt_step4.h5 ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_small/SedovCartesian_hllc_float/SedovCartesian_hllc_flt_step4.h5)
-# add_test(NAME small_compare COMMAND ${HDF5_DIFF_EXECUTABLE} -v -d 1.5e-11 --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_small/SedovCartesian_hllc_double/SedovCartesian_hllc_dbl_step1.h5 ${CMAKE_SOURCE_DIR}/tests/SedovExplosionHllcRef_small/SedovCartesian_hllc_double/SedovCartesian_hllc_dbl_step1.h5)
-# add_test(NAME medium_run COMMAND mpirun -n 2 $<TARGET_FILE:proj> ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_medium SedovCartesian_hllc)
-# add_test(NAME medium_compare COMMAND ${HDF5_DIFF_EXECUTABLE} -v -d 1.5e-11 --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_medium/SedovCartesian_hllc_float/SedovCartesian_hllc_flt_step29.h5 ${CMAKE_SOURCE_DIR}/tests/SedovExplosionHllcRef_medium/SedovCartesian_hllc_float/SedovCartesian_hllc_flt_step29.h5)
-# add_test(NAME medium_compare COMMAND ${HDF5_DIFF_EXECUTABLE} -v -d 1.5e-11 --exclude-path /Data/version ${CMAKE_BINARY_DIR}/tests/SedovExplosionHllcRef_medium/SedovCartesian_hllc_double/SedovCartesian_hllc_dbl_step1.h5 ${CMAKE_SOURCE_DIR}/tests/SedovExplosionHllcRef_medium/SedovCartesian_hllc_double/SedovCartesian_hllc_dbl_step1.h5)
 
-# set_tests_properties(tiny_run PROPERTIES DEPENDS proj)
-# set_tests_properties(tiny_run PROPERTIES FIXTURES_SETUP EXEC_TINY)
-# set_tests_properties(tiny_compare PROPERTIES FIXTURES_REQUIRED EXEC_TINY)
 set_tests_properties(small1_run PROPERTIES DEPENDS proj)
 set_tests_properties(small1_run PROPERTIES FIXTURES_SETUP EXEC1_SMALL)
 set_tests_properties(small1_compare PROPERTIES FIXTURES_REQUIRED EXEC1_SMALL)
@@ -259,6 +246,3 @@ set_tests_properties(small4_compare PROPERTIES FIXTURES_REQUIRED EXEC4_SMALL)
 set_tests_properties(small8_run PROPERTIES DEPENDS proj)
 set_tests_properties(small8_run PROPERTIES FIXTURES_SETUP EXEC8_SMALL)
 set_tests_properties(small8_compare PROPERTIES FIXTURES_REQUIRED EXEC8_SMALL)
-# set_tests_properties(medium_run PROPERTIES DEPENDS proj)
-# set_tests_properties(medium_run PROPERTIES FIXTURES_SETUP EXEC_MEDIUM)
-# set_tests_properties(medium_compare PROPERTIES FIXTURES_REQUIRED EXEC_MEDIUM)

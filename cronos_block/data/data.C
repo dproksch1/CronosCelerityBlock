@@ -234,24 +234,6 @@ Data::Data() : cflSYCL (CelerityBuffer<double,1>(celerity::range{1})), nomSYCL (
     }
 #endif
 
-#if (GEOM == SPHERICAL)
-    massFlux.resize(Index::set(0), Index::set(mx[0]+1));
-
-    // Fill with corresponding area
-    radialArea = 0.;
-    for(int iPhi=0; iPhi<=mx[2]; ++iPhi) {
-    	for(int iTheta=0; iTheta<=mx[1]; ++iTheta) {
-#if (NON_LINEAR_GRID == CRONOS_OFF)
-    		double f_geom_x = h2(0.5,iTheta,iPhi)/h1(0.5,iTheta,iPhi);
-#else
-    		double f_geom_x = h2(0,iTheta,iPhi,1,0,0)/h1(0,iTheta,iPhi,1,0,0);
-#endif
-    		radialArea += f_geom_x*getCen_dx(1,iTheta)*getCen_dx(2,iPhi);
-    	}
-    }
-
-#endif
-
 	// Check whether thermal pressure is needed
     if(value_exists("use_carbuncleFlag")) {
     	use_carbuncleFlag = true;

@@ -14,7 +14,6 @@
 // indices.
 class Grid {
 	void include_coordinateAxis();
-	void init_nonlinearGrid();
 
 public:
   /** Construct a grid according to the new gridding layout (no centers on the boundaries) */
@@ -83,18 +82,6 @@ public:
 	/** Maps from local (mpi) indices to global ones */
 	int get_idx_global(int dir, int ii) const;
 
-#if (NON_LINEAR_GRID == CRONOS_ON)
-	// double get_GridFunction(ProblemType &Problem, int dir, double ratio);
-	//	double get_GridFunction(int dir, double ratio);
-	double get_GridFunction(int dir, double ratio, double (*func)(double));
-	double get_ExpGrid(int dir, double ratio);
-	void set_NonLinGridFunction();
-	void set_UserGridFunction(int dir, double beg, double end, double len);
-	void add_nonLinGridToHdf(Hdf5Stream &, int num_ghost);
-#endif
-	// void generate_Grid(ProblemType &Problem);
-	//	void generate_Grid();
-	//	void generate_Grid(double (*func)(int, double));
 	void generate_Grid();
 	int axis_treatment(int dir) const;
 	int get_singularity_treatment(int dir, int top) const;

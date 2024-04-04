@@ -105,7 +105,6 @@ namespace gpu {
 	#if  (NON_LINEAR_GRID == CRONOS_OFF)
 		double cfl_loc = vmax * idx[dir];
 	#else
-		//dproksch TODO implement case for non_linear grid
 		//double cfl_loc = vmax*gdata.getCen_idx(dir, iPos[dir]);
 		double cfl_loc = vmax*idx[dir];
 	#endif
