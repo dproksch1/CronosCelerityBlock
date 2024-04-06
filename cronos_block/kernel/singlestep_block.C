@@ -111,13 +111,6 @@ double HyperbolicSolver::singlestep(Data &gdata, GridFunc &gfunc,
 
 	int n_omInt = gdata.fluid.get_N_OMINT();
 
-	const int izStart = -n_ghost[2] + 1;
-	const int izEnd = gdata.mx[2] + n_ghost[2] - 1;
-	const int iyStart = -n_ghost[1] + 1;
-	const int iyEnd = gdata.mx[1] + n_ghost[1] - 1;
-	const int ixStart = -n_ghost[0] + 1;
-	const int ixEnd = gdata.mx[0] + n_ghost[0] - 1;
-
 	int fluidConst[] {gdata.fluid.get_q_rho(), gdata.fluid.get_q_sx(), gdata.fluid.get_q_sy(), gdata.fluid.get_q_sz(),
 						gdata.fluid.get_q_Eges(), gdata.fluid.get_q_Eadd(), gdata.fluid.get_q_Bx(), gdata.fluid.get_q_By(),
 						gdata.fluid.get_q_Bz()};
